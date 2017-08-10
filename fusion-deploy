@@ -20,6 +20,12 @@ elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   CLUSTER_TYPE_NAME='DC/OS Cluster'
 fi
 
+echo "***"
+echo " Cluster Type: ${CLUSTER_TYPE}"
+echo " Cluster Name: ${CLUSTER_TYPE_NAME}"
+echo " OVA Template: ${OVA_TEMPLATE_FILE}"
+echo "***"
+
 echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
 sudo date
 
