@@ -1,0 +1,12 @@
+cat > /etc/systemd/network/10-eth0-static-en.network << EOF
+[Match]
+Name=e*
+
+[Network]
+Address={{ ansible_host }}/24
+Gateway={{ network_gateway }}
+DNS={{ network_dns }}
+
+[DHCP]
+UseDNS=true
+EOF

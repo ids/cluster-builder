@@ -1,0 +1,37 @@
+
+---
+- name: Download DCOS config 
+  shell: curl -O http://{{ dcos_boot_server }}:{{ dcos_boot_server_port }}/dcos_install.sh
+  args:
+    chdir: /tmp/dcos
+
+- name: Install DC/OS on private agent nodes
+  become: true
+  become_method: sudo
+  shell: bash dcos_install.sh slave
+  when: "'dcos_agents_private' in group_names"
+  failed_when: "'ERROR' in private_output.stdout"
+  register: private_output
+  args:
+    chdir: /tmp/dcos
+
+- debug: msg="{{ private_output.stdout_lines }}"
+  when: "'dcos_agents_private' in group_names"
+- debug: msg="{{ private_output.stderr_lines }}"
+  when: "'dcos_agents_private' in group_names"
+
+- name: Install DC/OS on public agent nodes
+  become: true
+  become_method: sudo
+  shell: bash dcos_install.sh slave_public
+  when: "'dcos_agents_public' in group_names"
+  failed_when: "'ERROR' in public_output.stdout"
+  register: public_output
+  args:
+    chdir: /tmp/dcos
+
+- debug: msg="{{ public_output.stdout_lines }}"
+  when: "'dcos_agents_public' in group_names"
+- debug: msg="{{ public_output.stderr_lines }}"
+  when: "'dcos_agents_public' in group_names"
+  

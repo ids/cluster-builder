@@ -1,0 +1,21 @@
+---
+
+- hosts: docker_swarm_manager
+  remote_user: root
+  tasks:
+  - name: Fetch the client certs
+    fetch:
+      src: /certs/{{ item }}.pem
+      dest: ../client-certs/{{ inventory_hostname }}/
+      flat: yes        
+    with_items:
+      - ca
+      - key    
+      - cert                    
+
+  - name: Generate the client test script
+    local_action:
+      module: template
+      src: templates/test-swarm.j2
+      dest: ../client-certs/test-swarm
+      mode: 0766

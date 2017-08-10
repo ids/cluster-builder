@@ -1,0 +1,24 @@
+---
+cluster_name: dcos-local
+bootstrap_url: http://192.168.1.160:9580
+exhibitor_storage_backend: static
+exhibitor_zk_hosts: http://192.168.1.160:2181
+master_discovery: static
+master_list:
+- 192.168.1.170
+- 192.168.1.171
+- 192.168.1.172
+resolvers:
+- 8.8.4.4
+- 8.8.8.8
+superuser_username: admin
+superuser_password_hash: "$6$rounds=656000$123o/Qz.InhbkbsO$kn5IkpWm5CplEorQo7jG/27LkyDgWrml36lLxDtckZkCxu22uihAJ4DOJVVnNbsz/Y5MCK3B1InquE6E7Jmh30" # admin
+ssh_port: 22
+ssh_user: admin
+agent_list:
+- 192.168.1.180
+- 192.168.1.181
+- 192.168.1.182
+- 192.168.1.191
+check_time: false
+telemetry_enabled: 'false'

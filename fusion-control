@@ -1,0 +1,35 @@
+#!/bin/bash
+INVENTORY_FILE=$1
+ACTION=$2
+
+if [ -z $INVENTORY_FILE ]; then 
+  echo
+  echo "Inventory file not specified!\n"
+  echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop>"
+  exit 1
+fi
+
+if [ ! -f $INVENTORY_FILE ]; then
+  echo
+  echo "Unable to find inventory file @: ${INVENTORY_FILE}\n"
+  exit 1
+fi
+
+if [ -z $ACTION ]; then 
+  echo
+  echo "Action not specified!\n"
+  echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop>"
+  exit 1
+fi
+
+if [ -z $INVENTORY_FILE ]; then 
+  echo "usage: $ bash fusion-control <inventory-file> <action: start|suspend|stop|destroy>"
+  exit 1
+fi
+
+if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
+  ansible-playbook -i $INVENTORY_FILE ansible/fusion-control-vms.yml --e "vm_action=$ACTION"
+  vmrun list
+else
+  echo "You must specify an action that is one of: start, stop, suspend or destroy"
+fi

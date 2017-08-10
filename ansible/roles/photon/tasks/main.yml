@@ -1,0 +1,6 @@
+---
+- name: Set PhotonOS Hostname
+  include: hostname.yml
+
+- name: Disable PhotonOS Firewall
+  include: firewall.yml

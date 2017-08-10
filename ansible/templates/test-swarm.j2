@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker --tlsverify --tlscacert={{ inventory_hostname }}/ca.pem --tlscert={{ inventory_hostname }}/cert.pem --tlskey={{ inventory_hostname }}/key.pem -H={{ inventory_hostname }}:2376 info
+open http://{{ inventory_hostname }}:9000

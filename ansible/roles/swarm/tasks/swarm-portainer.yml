@@ -1,0 +1,59 @@
+---
+- name: install pip
+  shell: tdnf -y install python-pip
+  when: "'docker_swarm_manager' in group_names"
+
+- name: Install docker-py 1.9.0 to fix Ansible issue 17495
+  pip:
+    name: docker-py
+    version: 1.9.0
+    state: present
+  when: "'docker_swarm_manager' in group_names"
+
+- name: install docker-compose python module
+  pip: name={{ item }} state=latest
+  with_items:
+    - docker-compose
+  when: "'docker_swarm_manager' in group_names"
+
+- name: Pull Portainer image
+  shell: docker pull portainer/portainer:develop
+  when: "'docker_swarm_manager' in group_names"
+
+- name: Stop any existing Portainer container (if running)
+  shell: docker stop portainer
+  ignore_errors: true
+  when: "'docker_swarm_manager' in group_names"
+
+- name: Remove any existing Portainer container (if exists)
+  shell: docker rm portainer
+  ignore_errors: true
+  when: "'docker_swarm_manager' in group_names"
+
+- name: Start Portainer the old fashioned way
+  shell: docker run -d -p 9000:9000 --name portainer -v /certs:/certs -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify
+  ignore_errors: true
+  register: portainer_start
+  when: "'docker_swarm_manager' in group_names"
+
+- debug: msg="{{ portainer_start.stdout }}"
+  when: "'docker_swarm_manager' in group_names"
+
+#- name: Start Portainer
+#  docker_container:
+#    name: portainer
+#    image: portainer/portainer:develop
+#    command: --tlsverify
+#    ports:
+#      - "9000:9000"
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - /certs:/certs
+#    state: started
+#    pull: false
+#    env:
+#        DOCKER_TLS_VERIFY: 1
+#        DOCKER_HOST: unix:///var/run/docker.sock
+#  when: "'docker_swarm_manager' in group_names"
+
+#docker run -d -p 9000:9000 --name portainer -v /certs:/certs -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify

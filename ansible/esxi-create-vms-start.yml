@@ -1,0 +1,43 @@
+---
+- hosts: all
+  gather_facts: false
+  remote_user: root
+  vars:
+    esxi_user: root
+    esxi_password_param: \$1
+    ova_template_path: ../cluster-node-packer/output_ovas/cluster-node-photon1-x86_64.ova
+    gen_script_folder: ../tmp
+  tasks:  
+
+  - name: Ensure the target folder for generated scripts exists
+    local_action:
+      module: file
+      path: "{{ gen_script_folder }}"
+      state: directory
+
+  - name: Remove existing creation script
+    local_action:
+      module: file
+      path: "{{ gen_script_folder }}/esxi-create-vms"
+      state: absent
+    run_once: true
+
+  - name: Remove existing static net script
+    local_action:
+      module: file
+      path: "{{ gen_script_folder }}/esxi-set-statics"
+      state: absent
+    run_once: true
+
+  - name: Use ovftool to deploy cluster-node ova to ESXi.
+    local_action:
+      module: shell
+      _raw_params: echo ovftool -o --memorySize:vm={{ memsize }} --numberOfCpus:vm={{ numvcpus }} --name="{{ inventory_hostname }}" --diskMode=thin --powerOffTarget --powerOn --disableVerification  --noSSLVerify --datastore={{ esxi_ds }} --network=\""{{ esxi_net }}\"" {{ ova_template_path }} vi://{{ esxi_user }}:{{ esxi_password_param }}@{{ esxi_host }} >> {{ gen_script_folder }}/esxi-create-vms
+  
+  - name: Ensure script is executable 
+    local_action:
+      module: file
+      path: "{{ gen_script_folder }}/esxi-create-vms"
+      mode: 0711
+    when: inventory_hostname == groups['docker_swarm_manager'][0]
+  

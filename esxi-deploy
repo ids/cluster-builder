@@ -1,0 +1,74 @@
+#!/bin/bash
+TEMP_SCRIPT_PATH=./tmp
+
+read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
+
+INVENTORY_FILE=$1
+
+if [ -z INVENTORY_FILE ]; then
+  read -s "Enter the PhotonOS Swarm inventory file: " INVENTORY_FILE
+fi
+
+if [ ! -f $INVENTORY_FILE ]; then
+  echo
+  echo "Unable to find inventory file @: ${INVENTORY_FILE}\n"
+  exit 1
+fi
+
+CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
+OVA_TEMPLATE_FILE=`sed -n '/^ova_template=/ {s///p;q;}' $INVENTORY_FILE`
+
+if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
+  CLUSTER_TYPE_NAME='PhotonOS Swarm'
+elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
+  CLUSTER_TYPE_NAME='DC/OS Cluster'
+fi
+
+if [ ! -f $OVA_TEMPLATE_FILE ]; then
+    echo
+    echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}\n"
+    exit 1
+fi
+
+ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml 
+if [ $? -eq 0 ]; then
+  bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
+  if [ $? -eq 0 ]; then
+    echo "Waiting 50s to give the VMs time to spin up and get their temporary DHCP addresses..."
+    sleep 50s
+
+    echo "Generating the static ip configuration scripts"
+    ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml 
+    
+    bash $TEMP_SCRIPT_PATH/esxi-set-statics
+
+    echo "Waiting 90s for machines to come back online after IP assignment"
+    sleep 90s
+
+    rm $TEMP_SCRIPT_PATH/*_static.sh
+    rm $TEMP_SCRIPT_PATH/esxi-create-vms
+    rm $TEMP_SCRIPT_PATH/esxi-set-statics
+    ansible all -i $INVENTORY_FILE -m ping -u root
+
+    echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml    
+    if [ $? -eq 0 ]; then
+      sleep 5s
+      if [ "$CLUSTER_TYPE" == "photon-swarm" ]; then
+        cd client-certs
+        bash test-swarm
+        cd ..
+      fi
+      echo
+      echo "SUCCESS: ${CLUSTER_TYPE_NAME} created!"
+    else
+      echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+    fi
+    
+  else
+      echo "There was a problem deploying the VMs using ovftool"
+  fi
+else 
+    echo "There is a problem with the ESXi init-pre script"
+fi
+  

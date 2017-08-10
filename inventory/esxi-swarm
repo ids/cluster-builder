@@ -1,0 +1,45 @@
+[all:vars]
+cluster_type=photon-swarm
+ova_template=../cluster-node-packer/output_ovas/cluster-node-photon1-x86_64.ova
+
+swarm_name=esxi-swarm
+
+network_mask=255.255.255.0
+network_gateway=192.168.1.1
+network_dns=192.168.1.10
+network_dns2=8.8.8.8
+network_dns3=8.8.4.4
+network_dn=idstudios.local
+
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
+
+[docker_swarm_manager]
+swarm-m1 ansible_host=192.168.1.220
+
+[docker_swarm_worker]
+swarm-w1 ansible_host=192.168.1.221 swarm_labels='["db-node-1","mariadb-node","db-node-seed"]'
+swarm-w2 ansible_host=192.168.1.222 swarm_labels='["db-node-2"]'
+swarm-w3 ansible_host=192.168.1.223 swarm_labels='["db-node-3"]'
+
+[vmware_vms]
+swarm-m1 numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+swarm-w1 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+swarm-w2 numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-w3 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+
+[mariadb_seed]
+swarm-w1
+
+[galera_seed]
+swarm-w1
+
+[galera_node1]
+swarm-w1
+
+[galera_node2]
+swarm-w2
+
+[galera_node3]
+swarm-w3
+

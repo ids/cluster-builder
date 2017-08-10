@@ -1,0 +1,37 @@
+
+---
+- file:
+    path: /data
+    state: directory
+    mode: 0755
+  when: "'docker_swarm_worker' in group_names"
+
+- file:
+    path: /data/mariadb-seed
+    state: directory
+    mode: 0755    
+  when: "'mariadb_seed' in group_names"
+
+- file:
+    path: /data/galera-seed
+    state: directory
+    mode: 0755    
+  when: "'galera_seed' in group_names"
+
+- file:
+    path: /data/galera-node1
+    state: directory
+    mode: 0755    
+  when: "'galera_node1' in group_names"
+
+- file:
+    path: /data/galera-node2
+    state: directory
+    mode: 0755    
+  when: "'galera_node2' in group_names"
+
+- file:
+    path: /data/galera-node3
+    state: directory
+    mode: 0755    
+  when: "'galera_node3' in group_names"
