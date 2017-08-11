@@ -1,7 +1,7 @@
 
 ---
 - name: Install NTP
-  shell: tdnf -i install ntp
+  shell: tdnf -y install ntp
 
 - name: Configure the ntp time servers
   template:
@@ -21,7 +21,3 @@
 - name: Verify NTP Sources
   shell: ntpq -p
   register: ntp_out
-
-- name: Update local time
-  shell: ntpdate –u 0.ca.pool.ntp.org
-

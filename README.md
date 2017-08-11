@@ -75,7 +75,7 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 	demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**: _photon_-swarm__or _centos-dcos_.
+**cluster_type**: _photon-swarm_ or _centos-dcos_.
 
 **vmware_target**: _fusion_ or _esxi_.
 
@@ -136,6 +136,8 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 
 VMs are provisioned based on the **[vmware_vms]** group attributes.
 
+**exsi_host** is the target host where the VM will be deployed. **esxi-user** and **esxi-ds** are fairly straightforward.
+
 ### VMware Fusion Deployment
 VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.
 
@@ -178,7 +180,7 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 * The example esxi cluster inventory files are based on a bridged network of 192.168.1.0.  If this doesn't match your ESXi environment, you will need to create your own inventory file based on the example.
 ---
 
-> You will be prompted for the ESXi root password as it is required as the ovftool - which does not appear to work with passwordless SSH.
+> You will be prompted for the ESXi root password as it is required for the ovftool - which does not appear to work with passwordless SSH.
 
 > TODO: Future enhancements would switch to using PowerCLI or the vSphere API for remote control.
 
