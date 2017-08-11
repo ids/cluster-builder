@@ -101,7 +101,8 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
     echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
     echo "Attempting to build: ${OVA_BUILD_TYPE}"
     cd node-packer
-    bash build $OVA_BUILD_TYPE    
+    build $OVA_BUILD_TYPE
+    cd ..
 fi
 
 if [ ! -f $OVA_TEMPLATE_FILE ]; then
