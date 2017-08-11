@@ -75,17 +75,13 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 	demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**
-Either **photon_-swarm** or **centos-dcos**.
+**cluster_type**: _photon_-swarm__or _centos-dcos_.
 
-**vmware_target**
-Either **fusion** or **esxi**.
+**vmware_target**: _fusion_ or _esxi_.
 
-**fusion_net**
-The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
+**fusion_net**: The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
 
-**fusion_net_type**
-One of **nat**, **bridged** or **custom**.
+**fusion_net_type**: One of _nat_, _bridged_ or _custom_.
 
 #### ESXi Sample: esxi-dcos
 
@@ -136,7 +132,6 @@ One of **nat**, **bridged** or **custom**.
 
 VMs are provisioned based on the **[vmware_vms]** group attributes.
 
-
 ### VMware Fusion Deployment
 VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.
 
@@ -149,7 +144,8 @@ Sample Fusion inventory files:
 > **Note:** DC/OS requires at least 16GB of ram on the target machine.
 
 ---
-**Fusion Pre-requisites:**
+#### Fusion Pre-requisites
+
 * The examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created before attempting to deploy the fusion demos.
 
 * The VMware Fusion application should be running.
@@ -171,7 +167,8 @@ Once deployed to ESXI, the VMs are started to generate their MAC addresses and f
 At this stage all of the VMs have been deployed and **should be running**.  They should also have their correct static IPs.
 
 ---
-**ESXi Pre-requisites:**
+#### ESXi Pre-requisites
+
 * All of the ESXi hosts must be setup for root access with passwordless SSH.  The **authorized_keys** for the root account on each ESXi host must contain the public key for the account executing the script.  This should be the same public key used in the creation of the ova template images.
 
 * The example esxi cluster inventory files are based on a bridged network of 192.168.1.0.  If this doesn't match your ESXi environment, you will need to create your own inventory file based on the example.
@@ -190,7 +187,7 @@ Eg.
 
     $ bash cluster-deploy cluster/demo-swarm
 
-#### Controlling the VM Nodes
+## Controlling the Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
 Use the respective wrapper scripts:
