@@ -29,13 +29,15 @@ VMware ESXi is for staging and production deployments.
   - Ansible 2.3+ (brew install/upgrade ansible)
   - Packer 1.03
 
-> Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
 
 #### Pre-Requesites:
-It is necessary that the **id_rsa.pub** value of the **cluster-builder** operator account be set in the **packer/cluster-node/keys/authorized_keys**. This is required as the scripts use passwordless SSH to access the 
+
+* Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
+
+* It is necessary that the **id_rsa.pub** value of the **cluster-builder** operator account be set in the **packer/cluster-node/keys/authorized_keys**. This is required as the scripts use passwordless SSH to access the 
 VMs for provisioning.
 
-The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **packer/cluster-node/output_ovas**.  See the cluster node packer [readme](packer/cluster-node/Readme.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
+* The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **packer/cluster-node/output_ovas**.  See the cluster node packer [readme](packer/cluster-node/Readme.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
 ## Inventory File
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications.
