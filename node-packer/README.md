@@ -89,10 +89,5 @@ These OVA images are the first stage of a deployment workflow:
 
 > The combination of Git + Packer + Ansible should ensure that all configuration is documented and repeatable, with no manual or ad-hoc configuration.
 
-#### With a VM template created you can move on to building:
-
---- 
-> A **PhotonOS** based **Docker Swarm**: https://github.com/ids/photon-swarm
----
-> A **CentOS** based **DC/OS Cluster**: https://github.com/ids/centos-dcos
+#### With a VM template created you can move on to deploying a container orchestration cluster with [cluster-builder](https://github.com/ids/cluster-builder)
 ---
