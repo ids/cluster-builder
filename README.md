@@ -1,15 +1,17 @@
 # Cluster Builder
-Ansible scripts to configure a [DC/OS](https://dcos.io/), [Docker Swarm]() and [Kubernetes]() clusters.
+Ansible scripts to configure a [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
-## Cluster Types
-The **cluster-builder** can currently deploy two types of clusters:
+### Supported Clusters
+The **cluster-builder** currently supports two types of clusters:
 
-* PhotonOS Swarm
+* PhotonOS Docker Swarm
 * CentOS 7 DC/OS Cluster
 
 > **PhotonOS Kubernetes** is coming soon.
 
-## Deployment Options
+> **PhotonOS** is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems a bit chaotic in comparison.
+
+### Deployment Options
 There are currently two types of deployment:
 
 * VMware Fusion
