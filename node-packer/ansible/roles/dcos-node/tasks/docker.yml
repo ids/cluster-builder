@@ -11,9 +11,12 @@
       gpgcheck=1
       gpgkey=https://yum.dockerproject.org/gpg
 
+- name: Yum update packets
+  shell: sudo yum makecache fast
+
 - name: Install Docker
   yum: >
-    name=docker-engine
+    name=docker-ce
     state=present
 
 - name: Stop Docker
