@@ -44,7 +44,7 @@ function esxi_deploy () {
   fi
 
   sleep 5s
-  bash tmp/$CLUSTER_TYPE/test-cluster
+  bash tmp/$CLUSTER_NAME/test-cluster
   echo
   echo "SUCCESS: ${CLUSTER_TYPE_NAME} created!"
 
@@ -70,7 +70,7 @@ function fusion_deploy () {
   fi
 
   sleep 5s
-  bash tmp/test-cluster
+  bash tmp/$CLUSTER_NAME/test-cluster
   echo
   echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME} created!"
 
