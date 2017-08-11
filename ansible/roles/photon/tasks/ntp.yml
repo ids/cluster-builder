@@ -21,3 +21,5 @@
 - name: Verify NTP Sources
   shell: ntpq -p
   register: ntp_out
+
+- debug: msg="{{ ntp_out.stdout_lines }}"
