@@ -26,8 +26,8 @@ VMware ESXi is for staging and production deployments.
   - VMware Fusion 8+
   - VMware ESXi 6.5+ (optional)
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
+	- Packer 1.03+
   - Ansible 2.3+ (brew install/upgrade ansible)
-	- Packer 1.03
 
 > Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
 
