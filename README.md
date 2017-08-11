@@ -179,7 +179,7 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 > TODO: Future enhancements would switch to using PowerCLI or the vSphere API for remote control.
 
 ## Deploying a Cluster
-To deploy a cluster:
+To deploy a cluster use **cluster-deploy**:
 
     $ bash cluster-deploy <inventory-file>
 
@@ -190,7 +190,7 @@ Eg.
 ## Controlling the Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
-Use the respective wrapper scripts:
+Use the wrapper script **cluster-control**:
 
     bash cluster-control <inventory-file> <action: one of stop|suspend|start|destroy>
 
