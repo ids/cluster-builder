@@ -2,20 +2,20 @@
 - hosts: vmware_vms
   gather_facts: false
   tasks:  
-  - name: Start/Stop/Suspend the Photon VMs 
+  - name: Start/Stop/Suspend the VMs 
     local_action:
       module: shell
       _raw_params: vmrun {{ vm_action }} {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
     when: vm_action != 'destroy'
 
-  - name: Stop the Photon VMs 
+  - name: Stop the VMs 
     local_action:
       module: shell
       _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
     ignore_errors: true
     when: vm_action == 'destroy'
   
-  - name: Destroy the Photon VMs 
+  - name: Destroy the VMs 
     local_action:
       module: shell
       _raw_params: rm -rf {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm

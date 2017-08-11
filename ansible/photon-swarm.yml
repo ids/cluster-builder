@@ -18,3 +18,11 @@
   - role: photon
   - role: swarm
   
+  tasks:
+  - name: Generate the client test script
+    local_action:
+      module: template
+      src: templates/test-{{ cluster_type }}.j2
+      dest: ../tmp/test-cluster
+      mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"

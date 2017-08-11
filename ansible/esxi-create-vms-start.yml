@@ -5,7 +5,7 @@
   vars:
     esxi_user: root
     esxi_password_param: \$1
-    ova_template_path: ../cluster-node-packer/output_ovas/cluster-node-photon1-x86_64.ova
+    ova_template_path: "{{ ova_template }}"
     gen_script_folder: ../tmp
   tasks:  
 

@@ -1,8 +1,8 @@
 [all:vars]
 cluster_type=photon-swarm
-ova_template=../cluster-node-packer/output_ovas/cluster-node-photon1-x86_64.ova
+cluster_name=esxi-swarm
+ova_template=../../cluster-node-packer/output_ovas/cluster-node-photon1-x86_64.ova
 
-swarm_name=esxi-swarm
 
 network_mask=255.255.255.0
 network_gateway=192.168.1.1

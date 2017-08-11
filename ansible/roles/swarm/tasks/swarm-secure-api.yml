@@ -116,12 +116,4 @@
     - key    
     - cert                    
   when: "'docker_swarm_manager' in group_names"
-      
-- name: Generate the client test script
-  local_action:
-    module: template
-    src: templates/test-swarm.j2
-    dest: ../client-certs/test-swarm
-    mode: 0766
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
-      
+            

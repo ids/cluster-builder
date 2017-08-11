@@ -1,5 +1,5 @@
-# VMware CentOS7 DC/OS Cluster
-Ansible scripts to configure a [DC/OS](https://dcos.io/) cluster.
+# Cluster Builder
+Ansible scripts to configure a [DC/OS](https://dcos.io/), [Docker Swarm]() and [Kubernetes]() clusters.
 
 ## Requirements
   - VMware Fusion 8+
@@ -16,7 +16,7 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 > Sample inventory files are located in the inventory folder.
 
 	[all:vars]
-	dcos_cluster_name=dcos-fusion
+	cluster_name=dcos-fusion
 	dcos_boot_server=192.168.100.99
 	dcos_boot_server_port=9580
 

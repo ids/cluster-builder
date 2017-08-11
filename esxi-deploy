@@ -54,11 +54,7 @@ if [ $? -eq 0 ]; then
     ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml    
     if [ $? -eq 0 ]; then
       sleep 5s
-      if [ "$CLUSTER_TYPE" == "photon-swarm" ]; then
-        cd client-certs
-        bash test-swarm
-        cd ..
-      fi
+      bash tmp/test-cluster
       echo
       echo "SUCCESS: ${CLUSTER_TYPE_NAME} created!"
     else

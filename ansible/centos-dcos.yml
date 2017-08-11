@@ -34,6 +34,16 @@
   roles:
   - role: dcos_master
 
+  tasks:
+  - name: Generate the client test script
+    local_action:
+      module: template
+      src: templates/test-{{ cluster_type }}.j2
+      dest: ../tmp/test-cluster
+      mode: 0766
+    become: false
+    when: "inventory_hostname == groups['dcos_masters'][0]"
+  
 - hosts: dcos_agents_private,dcos_agents_public
   remote_user: admin
   become: true

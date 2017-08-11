@@ -1,8 +1,8 @@
 [all:vars]
 cluster_type=centos-dcos
-ova_template=../cluster-node-packer/output_ovas/cluster-node-centos7-x86_64.ova
+cluster_name=dcos-fusion
+ova_template=../../cluster-node-packer/output_ovas/cluster-node-centos7-x86_64.ova
 
-dcos_cluster_name=dcos-fusion
 dcos_boot_server=192.168.100.99
 dcos_boot_server_port=9580
 
