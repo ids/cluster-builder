@@ -21,7 +21,8 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
-## Requirements
+### Requirements
+
 	- Packer 1.03+
   - VMware Fusion 8+
   - VMware ESXi 6.5+ (optional)
@@ -34,7 +35,7 @@ VMware ESXi is for staging and production deployments.
 It is necessary that the **id_rsa.pub** value of the **cluster-builder** operator account be set in the **packer/cluster-node/keys/authorized_keys**. This is required as the scripts use passwordless SSH to access the 
 VMs for provisioning.
 
-The cluster provisioning scripts rely on a template ova that corresponds to the cluster type.  These are built by packer and located in **packer/cluster-node/output_ovas**.  See [packer/cluster-node/Readme.md].  The **cluster-deploy** script will attempt to build the ova if it is not found.
+The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **packer/cluster-node/output_ovas**.  See the cluster node packer [readme](packer/cluster-node/Readme.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
 ## Inventory File
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications.
@@ -140,12 +141,13 @@ VMs are provisioned based on the **[vmware_vms]** group attributes.
 ### VMware Fusion Deployment
 VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.  
 
-Example inventory file:
+Example inventory files:
 
 * demo-swarm
+* demo-swarm-mini
 * demo-dcos
 
-> **Note:** This requires at least 16GB of ram on the target machine.
+> **Note:** DC/OS requires at least 16GB of ram on the target machine.
 
 ---
 **Fusion Pre-requisites:**
