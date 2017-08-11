@@ -83,7 +83,7 @@ These OVA images are the first stage of a deployment workflow:
 1] Generate OVA cluster templates with Packer (this stage)
 2] Use **Ansible** to deploy your VM instances and configure your cluster
 
-> See https://github.com/ids/photon-swarm.
+> See https://github.com/ids/cluster-builder.
 
 3] Continue to use **Ansible** to manage and maintain your cluster.
 
