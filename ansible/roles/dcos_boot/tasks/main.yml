@@ -8,16 +8,16 @@
 
 - name: Copy genconf/config.yaml to boot server
   template:
-    src: ../..//templates/config.j2
+    src: ../../templates/config.j2
     dest: /home/admin/dcos/genconf/config.yaml
     owner: admin
     group: admin
     mode: 0644
 
 - name: Copy genconf/ip-detect to boot server
-  copy:
-    src: ../../../../dcos-boot/genconf/ip-detect
-    dest: /home/admin/dcos/genconf
+  template:
+    src: ../../templates/ip-detect.j2
+    dest: /home/admin/dcos/genconf/ip-detect
     owner: admin
     group: admin
     mode: 0644
