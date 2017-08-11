@@ -1,0 +1,29 @@
+#!/bin/bash
+
+OP_KEY=~/.ssh/id_rsa.pub 
+IMAGE=centos7
+if [ "$1" != "" ]; then
+  IMAGE=$1
+fi
+
+if [ ! -f keys/authorized_keys ]; then
+  if [ ! -f $OP_KEY ]; then
+    echo 
+    echo "Error: 'authorized_keys' must be set before the image is built, run 'bash keys/set-key' to use your current public key"
+    echo "Unable to find ${OP_KEY}, can't auto-set the authorized_keys!"
+    echo "Make sure keys/authorized_keys exists and has the cluster-builder operator key."
+    exit 1
+  fi
+  bash keys/set-key
+fi
+
+if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon1" ]; then
+  echo
+  echo 'Building VM image:' $IMAGE
+  rm -rf 'output_'$IMAGE'_vmx'
+  packer build cluster-node-$IMAGE.json
+else
+  echo
+  echo 'Error: Not a valid VM image type!'
+  echo 'usage: build [centos7 (default) or photon1]'
+fi

@@ -1,11 +1,11 @@
 [all:vars]
 cluster_type=centos-dcos
 cluster_name=dcos-fusion
-ova_template=../../cluster-node-packer/output_ovas/cluster-node-centos7-x86_64.ova
 
 dcos_boot_server=192.168.100.99
 dcos_boot_server_port=9580
 
+vmware_target=fusion
 fusion_net="vmnet2"
 fusion_net_type="custom"
 fusion_vm_folder="../virtuals"

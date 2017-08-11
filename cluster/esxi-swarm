@@ -3,6 +3,9 @@ cluster_type=photon-swarm
 cluster_name=esxi-swarm
 ova_template=../../cluster-node-packer/output_ovas/cluster-node-photon1-x86_64.ova
 
+vmware_target=esxi
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
 
 network_mask=255.255.255.0
 network_gateway=192.168.1.1
@@ -10,9 +13,6 @@ network_dns=192.168.1.10
 network_dns2=8.8.8.8
 network_dns3=8.8.4.4
 network_dn=idstudios.local
-
-esxi_net="VM Network" 
-esxi_net_prefix=192.168.1
 
 [docker_swarm_manager]
 swarm-m1 ansible_host=192.168.1.220

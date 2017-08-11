@@ -1,10 +1,13 @@
 [all:vars]
 cluster_type=centos-dcos
 cluster_name=dcos-c2
-ova_template=../../cluster-node-packer/output_ovas/cluster-node-centos7-x86_64.ova
 
 dcos_boot_server=192.168.1.160
 dcos_boot_server_port=9580
+
+vmware_target=esxi
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
 
 network_mask=255.255.255.0
 network_gateway=192.168.1.1
@@ -13,8 +16,6 @@ network_dns2=192.168.1.1
 network_dns3=8.8.8.8
 network_dn=idstudios.local
 
-esxi_net="VM Network" 
-esxi_net_prefix=192.168.1
 
 [dcos_boot]
 dcos-c2-boot ansible_host=192.168.1.160 

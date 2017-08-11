@@ -1,0 +1,7 @@
+output_centos7_vmx/**
+output_photon1_vmx/**
+output_ovas/*.ova
+iso/*.iso
+keys/authorized_keys
+packer_cache
+

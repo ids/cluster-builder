@@ -4,7 +4,7 @@
 
   vars:
     fusion_vm_folder: ../virtuals
-    ova_template_path: "{{ ova_template }}"
+    ova_template_path: "../{{ ova_template }}"
     gen_script_folder: ../tmp
 
   tasks:    

@@ -1,0 +1,52 @@
+{
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "{{.Vars}} bash '{{.Path}}'",
+      "script": "bin/photon-setup.sh"
+    }
+  ],
+
+  "post-processors": [{
+      "type": "shell-local",
+      "inline": [
+          "ovftool --overwrite output_photon1_vmx/cluster-node-photon1-x86_64.vmx output_ovas/cluster-node-photon1-x86_64.ova"
+      ]
+  }],
+ 
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-photon.cfg<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 256000,
+      "guest_os_type": "other",
+      "headless": true,
+      "http_directory": "http",
+      "iso_urls": [
+        "iso/photon-1.0-62c543d.iso",
+        "https://bintray.com/vmware/photon/download_file?file_path=photon-1.0-62c543d.iso"
+      ],
+      "iso_checksum_type": "sha1",
+      "iso_checksum": "c4c6cb94c261b162e7dac60fdffa96ddb5836d66",
+      "ssh_username": "root",
+      "ssh_password": "TempPass2017",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "sed -i '/PermitRootLogin/ s/yes/prohibit-password/' /etc/ssh/sshd_config && /sbin/halt -h -p",
+      "output_directory": "output_photon1_vmx",
+      "vmx_template_path": "cluster-node-template.vmx",
+      "vm_name": "cluster-node-photon1-x86_64",
+      "format": "ova",
+      "vmx_data": {
+        "memsize": "3072",
+        "numvcpus": "2"
+      },
+      "vmx_data_post": {
+        "ethernet0.connectionType": "bridged"
+      }
+    }
+  ]
+}

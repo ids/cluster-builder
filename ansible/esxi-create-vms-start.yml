@@ -5,7 +5,7 @@
   vars:
     esxi_user: root
     esxi_password_param: \$1
-    ova_template_path: "{{ ova_template }}"
+    ova_template_path: "../{{ ova_template }}"
     gen_script_folder: ../tmp
   tasks:  
 
