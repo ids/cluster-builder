@@ -190,7 +190,7 @@ Eg.
 ## Controlling the Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
-Use the wrapper script **cluster-control**:
+Use **cluster-control**:
 
     bash cluster-control <inventory-file> <action: one of stop|suspend|start|destroy>
 
