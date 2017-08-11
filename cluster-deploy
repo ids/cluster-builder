@@ -87,11 +87,11 @@ CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
 
 if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
-  OVA_TEMPLATE_FILE=packer/cluster-node/output_ovas/cluster-node-photon1-x86_64.ova
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon1-x86_64.ova
   OVA_BUILD_TYPE=photon1
   CLUSTER_TYPE_NAME='PhotonOS Swarm'
 elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
-  OVA_TEMPLATE_FILE=packer/cluster-node/output_ovas/cluster-node-centos7-x86_64.ova
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
   CLUSTER_TYPE_NAME='DC/OS Cluster'
   OVA_BUILD_TYPE=centos7
 fi
@@ -100,7 +100,7 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
     echo
     echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
     echo "Attempting to build: ${OVA_BUILD_TYPE}"
-    cd packer/cluster-node
+    cd node-packer
     bash build $OVA_BUILD_TYPE    
 fi
 
