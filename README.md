@@ -1,5 +1,5 @@
 # Cluster Builder
-Ansible scripts to configure a [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
+Ansible scripts to configure [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
 ### Supported Clusters
 The **cluster-builder** currently supports two types of clusters:
