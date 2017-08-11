@@ -35,11 +35,18 @@
   - role: dcos_master
 
   tasks:
+  - name: Ensure tmp cluster folder exists
+    local_action:
+      module: file
+      path: "../tmp/{{ cluster_name }}"
+      state: directory
+    become: false
+
   - name: Generate the client test script
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2
-      dest: ../tmp/test-cluster
+      dest: ../tmp/{{ cluster_name }}/test-cluster
       mode: 0766
     become: false
     when: "inventory_hostname == groups['dcos_masters'][0]"

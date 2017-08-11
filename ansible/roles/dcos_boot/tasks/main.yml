@@ -22,7 +22,7 @@
     group: admin
     mode: 0644
 
-- name: Download DCOS config generator
+- name: Download DC/OS config generator
   shell: curl -O https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
   args:
     chdir: /home/admin/dcos

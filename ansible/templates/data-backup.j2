@@ -1,0 +1,3 @@
+#!/bin/bash
+
+tar --ignore-failed-read -cvpzf /mnt/nfs/backups/dcos-data-{{ inventory_hostname }}-backup-$(date +%Y-%m-%d).tar.gz /data

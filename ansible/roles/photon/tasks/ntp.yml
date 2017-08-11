@@ -1,0 +1,27 @@
+
+---
+- name: Install NTP
+  shell: tdnf -i install ntp
+
+- name: Configure the ntp time servers
+  template:
+    src: templates/ntp-conf.j2
+    dest: /etc/ntp.conf
+  run_once: true
+
+- name: Enable NTP
+  shell: systemctl enable ntpd
+  
+- name: Start NTP
+  shell: systemctl start ntpd
+
+- name: Ensure network time sync is setup
+  shell: timedatectl set-ntp true
+
+- name: Verify NTP Sources
+  shell: ntpq -p
+  register: ntp_out
+
+- name: Update local time
+  shell: ntpdate –u 0.ca.pool.ntp.org
+

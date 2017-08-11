@@ -4,9 +4,8 @@
   remote_user: root
   vars:
     esxi_user: root
-    esxi_password_param: \$1
-    ova_template_path: "../{{ ova_template }}"
-    gen_script_folder: ../tmp
+    ova_template_path: "{{ ova_template }}"
+    gen_script_folder: ../tmp/{{ cluster_name }}
   tasks:  
 
   - name: Ensure the target folder for generated scripts exists
@@ -29,15 +28,11 @@
       state: absent
     run_once: true
 
-  - name: Use ovftool to deploy cluster-node ova to ESXi.
+  - name: Create ovftool script to deploy cluster-node ova to ESXi.
     local_action:
-      module: shell
-      _raw_params: echo ovftool -o --memorySize:vm={{ memsize }} --numberOfCpus:vm={{ numvcpus }} --name="{{ inventory_hostname }}" --diskMode=thin --powerOffTarget --powerOn --disableVerification  --noSSLVerify --datastore={{ esxi_ds }} --network=\""{{ esxi_net }}\"" {{ ova_template_path }} vi://{{ esxi_user }}:{{ esxi_password_param }}@{{ esxi_host }} >> {{ gen_script_folder }}/esxi-create-vms
-  
-  - name: Ensure script is executable 
-    local_action:
-      module: file
-      path: "{{ gen_script_folder }}/esxi-create-vms"
+      module: template
+      src: templates/ovftool.j2
+      dest: "{{ gen_script_folder }}/esxi-create-vms"
       mode: 0711
-    when: inventory_hostname == groups['docker_swarm_manager'][0]
+    run_once: true
   

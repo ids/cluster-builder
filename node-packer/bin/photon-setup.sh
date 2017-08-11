@@ -7,7 +7,7 @@ echo '***   - NFS Support'
 echo '***   - Upgrade Docker to 17.06.0'
 echo '***'
 
-tdnf -y install open-vm-tools nfs-utils tar gzip curl
+tdnf -y install open-vm-tools nfs-utils tar gzip curl ntp
 
 echo "*** Downloading Docker 17.06.0-ce"
 curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17.06.0-ce.tgz 

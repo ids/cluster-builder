@@ -1,6 +1,7 @@
 #!/bin/bash
-TEMP_SCRIPT_PATH=./tmp
 INVENTORY_FILE=$1
+SERVER_WAIT=90s
+REMOTE_USER=root
 
 function esxi_deploy () {
   
@@ -18,21 +19,22 @@ function esxi_deploy () {
     exit 1
   fi
 
-  echo "Waiting 50s to give the VMs time to spin up and get their temporary DHCP addresses..."
-  sleep 50s
+  echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up and get their temporary DHCP addresses..."
+  sleep $SERVER_WAIT
 
   echo "Generating the static ip configuration scripts"
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml 
   
+  echo "Assigning the static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
 
-  echo "Waiting 90s for machines to come back online after IP assignment"
-  sleep 90s
+  echo "Waiting ${SERVER_WAIT} for machines to come back online after IP assignment"
+  sleep $SERVER_WAIT
 
   rm $TEMP_SCRIPT_PATH/*_static.sh
   rm $TEMP_SCRIPT_PATH/esxi-create-vms
   rm $TEMP_SCRIPT_PATH/esxi-set-statics
-  ansible all -i $INVENTORY_FILE -m ping -u root
+  ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
 
   echo "Building cluster: ${CLUSTER_TYPE_NAME}"
   ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml    
@@ -42,7 +44,7 @@ function esxi_deploy () {
   fi
 
   sleep 5s
-  bash tmp/test-cluster
+  bash tmp/$CLUSTER_TYPE/test-cluster
   echo
   echo "SUCCESS: ${CLUSTER_TYPE_NAME} created!"
 
@@ -73,6 +75,7 @@ function fusion_deploy () {
   echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME} created!"
 
 }
+
 if [ -z INVENTORY_FILE ]; then
   read -s "Enter the target cluster inventory file: " INVENTORY_FILE
 fi
@@ -85,15 +88,21 @@ fi
 
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
+CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
+
+TEMP_SCRIPT_PATH=./tmp/$CLUSTER_NAME
 
 if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon1-x86_64.ova
   OVA_BUILD_TYPE=photon1
   CLUSTER_TYPE_NAME='PhotonOS Swarm'
+  REMOTE_USER=root
 elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
   CLUSTER_TYPE_NAME='DC/OS Cluster'
   OVA_BUILD_TYPE=centos7
+  SERVER_WAIT=240s
+  REMOTE_USER=admin
 fi
 
 if [ ! -f $OVA_TEMPLATE_FILE ]; then
@@ -113,8 +122,8 @@ fi
 
 echo
 echo "***"
-echo " Cluster Type: ${CLUSTER_TYPE}"
-echo " Cluster Name: ${CLUSTER_TYPE_NAME}"
+echo " Cluster Name: ${CLUSTER_NAME}"
+echo " Cluster Type: ${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}"
 echo " OVA Template: ${OVA_TEMPLATE_FILE}"
 echo " VMware Target: ${VMWARE_TARGET}"
 echo "***"

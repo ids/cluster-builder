@@ -1,8 +1,8 @@
 #!/bin/bash
 
-docker --tlsverify --tlscacert=./client-certs/{{ inventory_hostname }}/ca.pem \
-  --tlscert=./client-certs/{{ inventory_hostname }}/cert.pem \
-  --tlskey=./client-certs/{{ inventory_hostname }}/key.pem \
+docker --tlsverify --tlscacert=../client-certs/{{ inventory_hostname }}/ca.pem \
+  --tlscert=../client-certs/{{ inventory_hostname }}/cert.pem \
+  --tlskey=../client-certs/{{ inventory_hostname }}/key.pem \
   -H={{ inventory_hostname }}:2376 info
   
 open http://{{ inventory_hostname }}:9000

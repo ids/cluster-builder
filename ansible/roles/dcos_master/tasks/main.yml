@@ -1,6 +1,6 @@
 
 ---
-- name: Download DCOS config 
+- name: Download DC/OS config 
   shell: curl -O http://{{ dcos_boot_server }}:{{ dcos_boot_server_port }}/dcos_install.sh
   args:
     chdir: /tmp/dcos

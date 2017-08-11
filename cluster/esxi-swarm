@@ -18,28 +18,23 @@ network_dn=idstudios.local
 swarm-m1 ansible_host=192.168.1.220
 
 [docker_swarm_worker]
-swarm-w1 ansible_host=192.168.1.221 swarm_labels='["db-node-1","mariadb-node","db-node-seed"]'
-swarm-w2 ansible_host=192.168.1.222 swarm_labels='["db-node-2"]'
-swarm-w3 ansible_host=192.168.1.223 swarm_labels='["db-node-3"]'
+swarm-w1 ansible_host=192.168.1.221 swarm_labels='["front-end"]'
+swarm-w2 ansible_host=192.168.1.222 swarm_labels='["front-end"]'
+swarm-w3 ansible_host=192.168.1.223 swarm_labels='["front-end"]'
+swarm-w4 ansible_host=192.168.1.224 swarm_labels='["db-galera-node-1"]'
+swarm-w5 ansible_host=192.168.1.225 swarm_labels='["db-galera-node-2"]'
+swarm-w6 ansible_host=192.168.1.226 swarm_labels='["db-galera-node-3"]'
 
 [vmware_vms]
-swarm-m1 numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-swarm-w1 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-swarm-w2 numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-m1 numvcpus=2 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+swarm-w1 numvcpus=2 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+swarm-w2 numvcpus=2 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
 swarm-w3 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
 
-[mariadb_seed]
-swarm-w1
+[vmware_db_vms]
+swarm-w4 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+swarm-w5 numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-w6 numvcpus=2 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
 
-[galera_seed]
-swarm-w1
-
-[galera_node1]
-swarm-w1
-
-[galera_node2]
-swarm-w2
-
-[galera_node3]
-swarm-w3
-
+[vmware_vms:children]
+vmware_db_vms

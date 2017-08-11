@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: false
   vars:
-    gen_script_folder: ../tmp
+    gen_script_folder: ../tmp/{{ cluster_name }}
   tasks:  
   - name: Ensure the target folder for generated scripts exists
     local_action:
@@ -87,7 +87,7 @@
       module: file
       path: "{{ gen_script_folder }}/esxi-set-statics"
       state: absent
-    when: inventory_hostname == groups['docker_swarm_manager'][0]
+    run_once: true
 
   - name: Remove existing network config fragments
     local_action:
@@ -104,20 +104,20 @@
   - name: Generate the static networking config files
     local_action:
       module: template
-      src: templates/{{ cluster-type }}-static-net.j2
+      src: templates/{{ cluster_type }}-static-net.j2
       dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_static.sh"
 
   - name: Generate the static networking script files
     local_action:
       module: template
-      src: templates/{{ cluster-type }}-static-net-script.j2
+      src: templates/{{ cluster_type }}-static-net-script.j2
       dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_script.frag"
 
-  - name: Combine the scripts
+  - name: Combine the script fragments
     local_action:
       module: shell
       _raw_params: cat {{ gen_script_folder }}/*.frag >> {{ gen_script_folder }}/esxi-set-statics
-    when: inventory_hostname == groups['docker_swarm_manager'][0]
+    run_once: true
     
   - name: Remove existing network config fragments
     local_action:

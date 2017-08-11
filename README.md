@@ -64,9 +64,9 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 	demo-swarm-m1 ansible_host=192.168.100.90 
 
 	[docker_swarm_worker]
-	demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["db-node-1"]'
-	demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["db-node-2"]'
-	demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["db-node-3"]'
+	demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
+	demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
+	demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
 
 	[vmware_vms]
 	demo-swarm-m1 numvcpus=2 memsize=2048 
@@ -120,15 +120,19 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 	dcos-c2-p1 ansible_host=192.168.1.191 
 
 	[vmware_vms]
-	dcos-c2-boot numvcpus=2 memsize=1024 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3 
-	dcos-c2-m1 numvcpus=2 memsize=2048 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
-	dcos-c2-m2 numvcpus=2 memsize=1584 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-m3 numvcpus=2 memsize=1584 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-	dcos-c2-a1 numvcpus=2 memsize=4048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-a2 numvcpus=2 memsize=4048 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-	dcos-c2-a3 numvcpus=2 memsize=4048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-p1 numvcpus=2 memsize=2048 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+	dcos-c2-boot  numvcpus=2 memsize=1024 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
+	dcos-c2-m1    numvcpus=2 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
+	dcos-c2-m2    numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+	dcos-c2-m3    numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+	dcos-c2-a1    numvcpus=2 memsize=4096 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+	dcos-c2-a2    numvcpus=2 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+	dcos-c2-p1    numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
 
+	[vmware_db_vms]
+	dcos-c2-a3    numvcpus=2 memsize=5120 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
+
+	[vmware_vms:children]
+	vmware_db_vms
 
 VMs are provisioned based on the **[vmware_vms]** group attributes.
 

@@ -4,3 +4,6 @@
 
 - name: Disable PhotonOS Firewall
   include: firewall.yml
+
+- name: Setup NTP
+  include: ntp.yml

@@ -19,9 +19,9 @@ network_dn=idstudios.vmware
 demo-swarm-m1 ansible_host=192.168.100.90 
 
 [docker_swarm_worker]
-demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["db-node-1"]'
-demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["db-node-2"]'
-demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["db-node-3"]'
+demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
+demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
+demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
 
 [vmware_vms]
 demo-swarm-m1 numvcpus=1 memsize=512  

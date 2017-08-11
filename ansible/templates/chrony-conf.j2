@@ -1,0 +1,7 @@
+pool pool.ntp.org iburst
+{% for host in groups['all'] %}
+  {% if hostvars[host].inventory_hostname != inventory_hostname %}
+peer {{ hostvars[host].ansible_host }}
+  {% endif %}
+{% endfor %}
+local stratum 10
