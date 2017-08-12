@@ -1,20 +1,11 @@
 ---
-- name: Add docker yum repo
-  blockinfile:
-    dest: /etc/yum.repos.d/docker.repo
-    create: yes
-    block: |
-      [dockerrepo]
-      name=Docker Repository
-      baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/
-      enabled=1
-      gpgcheck=1
-      gpgkey=https://yum.dockerproject.org/gpg
+- name: Yum add Docker CE repo
+  shell: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-- name: Yum update packets
+- name: Yum update packages
   shell: sudo yum makecache fast
 
-- name: Install Docker
+- name: Install Docker CE
   yum: >
     name=docker-ce
     state=present

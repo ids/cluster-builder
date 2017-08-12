@@ -5,8 +5,6 @@ REMOTE_USER=root
 
 function esxi_deploy () {
   
-  read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
-
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
@@ -105,21 +103,6 @@ elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   REMOTE_USER=admin
 fi
 
-if [ ! -f $OVA_TEMPLATE_FILE ]; then
-    echo
-    echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
-    echo "Attempting to build: ${OVA_BUILD_TYPE}"
-    cd node-packer
-    bash build $OVA_BUILD_TYPE
-    cd ..
-fi
-
-if [ ! -f $OVA_TEMPLATE_FILE ]; then
-    echo
-    echo "Unable to build template ova: ${OVA_BUILD_TYPE}"
-    exit 1
-fi
-
 echo
 echo "***"
 echo " Cluster Name: ${CLUSTER_NAME}"
@@ -129,6 +112,24 @@ echo " VMware Target: ${VMWARE_TARGET}"
 echo "***"
 echo 
 
+if [ "$VMWARE_TARGET" == "esxi" ]; then
+  read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
+fi
+
+if [ ! -f $OVA_TEMPLATE_FILE ]; then
+  echo
+  echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
+  echo "Attempting to build: ${OVA_BUILD_TYPE}"
+  cd node-packer
+  bash build $OVA_BUILD_TYPE
+  cd ..
+fi
+
+if [ ! -f $OVA_TEMPLATE_FILE ]; then
+  echo
+  echo "Unable to build template ova: ${OVA_BUILD_TYPE}"
+  exit 1
+fi
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   esxi_deploy
