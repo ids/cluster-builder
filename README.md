@@ -45,8 +45,6 @@ It can even be built remotely directly on an ESXi server.
 
 For instructions see the [Cluster Builder Desktop](https://github.com/ids/cluster-builder-desktop).
 
-> Windows' Ubuntu Linux Subsystem should be fine for managing running cluster-builder to create and manage clusters, as long as the OVA template has been pre-created elsewhere (such as on the Cluster Builder Desktop)
-
 #### Pre-Requesites
 
 * Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
