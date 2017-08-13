@@ -23,7 +23,7 @@ VMware ESXi is for staging and production deployments.
 
 ### Requirements
 
-#### macOS / Linux
+##### macOS / Linux
 
   - VMware Fusion 8+ / Workstation 12+
   - VMware ESXi 6.5+ (optional)
@@ -31,7 +31,7 @@ VMware ESXi is for staging and production deployments.
   - Ansible 2.3+ (brew install/upgrade ansible)
 	- [Packer 1.04+](https://www.packer.io/downloads.html)
 
-#### Windows
+##### Windows
 Bash on Windows is still problematic.  Even the new Ubuntu Bash in Windows 10 is not much good for integration with VMware products, or virtualization in general.
 
 The [Cluster Builder Desktop](https://github.com/ids/cluster-builder-desktop) was created to solve this problem.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
