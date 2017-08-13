@@ -14,7 +14,7 @@ The **cluster-builder** currently supports two types of clusters:
 ### Deployment Options
 There are currently two types of deployment:
 
-* VMware Fusion
+* VMware Fusion 
 * VMware ESXi (vSphere)
 
 The VMware Fusion deployment is intended for local development.
@@ -23,14 +23,29 @@ VMware ESXi is for staging and production deployments.
 
 ### Requirements
 
-  - VMware Fusion 8+
+#### macOS / Linux
+
+  - VMware Fusion 8+ / Workstation 12+
   - VMware ESXi 6.5+ (optional)
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
   - Ansible 2.3+ (brew install/upgrade ansible)
-  - Packer 1.03
+	- [Packer 1.04+](https://www.packer.io/downloads.html)
 
+#### Windows
+Bash on Windows is still problematic.  Even the new Ubuntu Bash in Windows 10 is not much good for integration with VMware products, or virtualization in general.
 
-#### Pre-Requesites:
+The [Cluster Builder Desktop](https://github.com:ids/cluster-builder-desktop) was created to solve this problem.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
+
+It can be used:
+
+* Running locally on a Windows or Linux VMware Workstation, or VMware Fusion for macOS
+* Running remotely on an ESXi server
+
+It can even be built remotely directly on an ESXi server.
+
+For instructions see the [Cluster Builder Desktop](https://github.com:ids/cluster-builder-desktop).
+
+#### Pre-Requesites
 
 * Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
 
