@@ -1,12 +1,12 @@
 #!/bin/bash 
 
+# pass --overwrite and --powerOffTarget as ova_opts
+
 {% for host in groups['vmware_vms'] %}
-  ovftool --overwrite \
-        --memorySize:vm={{ hostvars[host].memsize }} \
+  ovftool "{{ ova_opts }}" --memorySize:vm={{ hostvars[host].memsize }} \
         --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
         --name="{{ hostvars[host].inventory_hostname }}" \
         --diskMode=thin \
-        --powerOffTarget \
         --powerOn \
         --disableVerification \
         --noSSLVerify \
@@ -14,4 +14,9 @@
         --network="{{ hostvars[host].esxi_net }}" \
         {{ ova_template_path }} \
         vi://{{ hostvars[host].esxi_user }}:$1@{{ hostvars[host].esxi_host }}
+  if [ $? -ne 0 ]; then
+    echo "FAIL: ovftool deployment failed!"
+    exit 1
+  fi
+        
 {% endfor %}

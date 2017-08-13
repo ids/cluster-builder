@@ -21,7 +21,7 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
-### Requirements
+### Required Software
 
 ##### macOS / Linux
 
@@ -44,6 +44,8 @@ It can be used:
 It can even be built remotely directly on an ESXi server.
 
 For instructions see the [Cluster Builder Desktop](https://github.com/ids/cluster-builder-desktop).
+
+> Windows' Ubuntu Linux Subsystem should be fine for managing running cluster-builder to create and manage clusters, as long as the OVA template has been pre-created elsewhere (such as on the Cluster Builder Desktop)
 
 #### Pre-Requesites
 
