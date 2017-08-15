@@ -29,7 +29,7 @@ VMware ESXi is for staging and production deployments.
   - VMware Fusion 8+ / Workstation 12+
   - VMware ESXi 6.5+ (optional)
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
-  - Ansible 2.3+ (brew install/upgrade ansible)
+  - Ansible 2.3+ `brew install/upgrade ansible`
 	- Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 
 ##### Windows
