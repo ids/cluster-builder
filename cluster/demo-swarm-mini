@@ -2,7 +2,6 @@
 cluster_type=photon-swarm
 cluster_name=mini-swarm
 
-
 vmware_target=fusion
 fusion_net="vmnet2"
 fusion_net_type="custom"
