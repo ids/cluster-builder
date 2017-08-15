@@ -41,7 +41,7 @@
       "vm_name": "cluster-node-photon1-x86_64",
       "format": "ova",
       "vmx_data": {
-        "memsize": "3072",
+        "memsize": "1024",
         "numvcpus": "2"
       },
       "vmx_data_post": {

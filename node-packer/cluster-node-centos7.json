@@ -73,7 +73,7 @@
       "vm_name": "cluster-node-centos7-x86_64",
       "format": "ova",
       "vmx_data": {
-        "memsize": "4096",
+        "memsize": "1536",
         "numvcpus": "2"
       },
       "vmx_data_post": {
