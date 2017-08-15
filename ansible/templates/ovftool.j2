@@ -1,9 +1,7 @@
 #!/bin/bash 
 
-# pass --overwrite and --powerOffTarget as ova_opts
-
 {% for host in groups['vmware_vms'] %}
-  ovftool {{ ova_opts }} --memorySize:vm={{ hostvars[host].memsize }} \
+  ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
         --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
         --name="{{ hostvars[host].inventory_hostname }}" \
         --diskMode=thin \

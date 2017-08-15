@@ -5,7 +5,7 @@ REMOTE_USER=root
 
 function esxi_deploy () {
   
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE},ova_opts=--overwrite --powerOffTarget"
+  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
    exit 1
