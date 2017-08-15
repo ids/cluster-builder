@@ -25,11 +25,12 @@ VMware ESXi is for staging and production deployments.
 
 ##### macOS / Linux
 
-	- [Packer 1.04+](https://www.packer.io/downloads.html)
+
   - VMware Fusion 8+ / Workstation 12+
   - VMware ESXi 6.5+ (optional)
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
   - Ansible 2.3+ (brew install/upgrade ansible)
+	- Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 
 ##### Windows
 Bash on Windows is still problematic.  Even the new Ubuntu Bash in Windows 10 is not much good for integration with VMware products, or virtualization in general.
