@@ -9,7 +9,7 @@ The **cluster-builder** currently supports two types of clusters:
 
 > **PhotonOS Kubernetes** is coming soon.
 
-> **PhotonOS** is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems a bit chaotic in comparison.
+> [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems a bit chaotic in comparison.
 
 ### Deployment Options
 There are currently two types of deployment:
