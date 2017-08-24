@@ -22,7 +22,7 @@
       ],
       "boot_wait": "10s",
       "disk_size": 256000,
-      "guest_os_type": "other",
+      "guest_os_type": "vmware-photon-64",
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
