@@ -1,7 +1,7 @@
 
-ssh -o StrictHostKeyChecking=no root@{{ vm_temp_ip.stdout }} "bash -s -- " < tmp/{{ cluster_name }}/{{ inventory_hostname }}_static.sh
-ssh -o StrictHostKeyChecking=no root@{{ vm_temp_ip.stdout }} chmod 644 /etc/systemd/network/*.network
-ssh -o StrictHostKeyChecking=no root@{{ vm_temp_ip.stdout }} rm /etc/systemd/network/10-dhcp-en.network
-ssh -o StrictHostKeyChecking=no root@{{ vm_temp_ip.stdout }} shutdown -r now
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ vm_temp_ip.stdout }} "bash -s -- " < tmp/{{ cluster_name }}/{{ inventory_hostname }}_static.sh
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ vm_temp_ip.stdout }} chmod 644 /etc/systemd/network/*.network
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ vm_temp_ip.stdout }} rm /etc/systemd/network/10-dhcp-en.network
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ vm_temp_ip.stdout }} shutdown -r now
 
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-ssh -o StrictHostKeyChecking=no admin@{{ vm_temp_ip.stdout }} "sudo bash -s -- " < tmp/{{ cluster_name }}/{{ inventory_hostname }}_static.sh
-ssh -o StrictHostKeyChecking=no admin@{{ vm_temp_ip.stdout }} sudo chmod 644 /etc/sysconfig/network-scripts/ifcfg-ens33
-ssh -o StrictHostKeyChecking=no admin@{{ vm_temp_ip.stdout }} sudo shutdown -r now
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null admin@{{ vm_temp_ip.stdout }} "sudo bash -s -- " < tmp/{{ cluster_name }}/{{ inventory_hostname }}_static.sh
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null admin@{{ vm_temp_ip.stdout }} sudo chmod 644 /etc/sysconfig/network-scripts/ifcfg-ens33
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null admin@{{ vm_temp_ip.stdout }} sudo shutdown -r now
 
 
