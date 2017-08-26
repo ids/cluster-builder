@@ -35,7 +35,7 @@ VMware ESXi is for staging and production deployments.
 ##### Windows
 Bash on Windows is still problematic.  Even the new Ubuntu Bash in Windows 10 is not much good for integration with VMware products, or virtualization in general.
 
-The [Cluster Builder Desktop](https://github.com/ids/cluster-builder-desktop) was created to solve this problem.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
+The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) was created to solve this problem.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
 
 It can be used:
 
@@ -44,7 +44,7 @@ It can be used:
 
 It can even be built remotely directly on an ESXi server.
 
-For instructions see the [Cluster Builder Desktop](https://github.com/ids/cluster-builder-desktop).
+For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
 #### Pre-Requesites
 
