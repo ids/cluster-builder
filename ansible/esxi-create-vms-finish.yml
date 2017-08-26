@@ -13,7 +13,7 @@
   - name: Scan the VMS for the VM ID
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep {{ inventory_hostname }} | cut -d" " -f1
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep {{ inventory_hostname }} | cut -d" " -f1
     register: vm_id
   
   - debug: msg="{{ vm_id.stdout }}"
@@ -21,37 +21,37 @@
   - name: Stop the VMs
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
     when: vm_id.stdout is defined
 
   - name: Adjust the memSize value on the ESXi VM
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} "sed '/memSize/s/.*/memSize\ =\ \"{{ memsize }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/memSize/s/.*/memSize\ =\ \"{{ memsize }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
     when: memsize is defined
 
   - name: Copy the adjusted vmx into place
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
     when: memsize is defined
 
   - name: Adjust the numvcpus value on the ESXi VM
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} "sed '/numvcpus/s/.*/numvcpus\ =\ \"{{ numvcpus }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/numvcpus/s/.*/numvcpus\ =\ \"{{ numvcpus }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
     when: numvcpus is defined
 
   - name: Copy the adjusted vmx into place
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
     when: numvcpus is defined
 
   - name: Start the VMs
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
     when: vm_id.stdout is defined
 
   - name: waiting 3 minutes VMs to finish starting up
@@ -61,7 +61,7 @@
   - name: Scan the VMS for the VM ID
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep {{ inventory_hostname }} | cut -d" " -f1
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep {{ inventory_hostname }} | cut -d" " -f1
     register: vm_id
   
   - debug: msg="{{ vm_id.stdout }}"
@@ -69,7 +69,7 @@
   - name: Find the MAC
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/device.getdevices {{ vm_id.stdout }} | grep macAddress | sed -e 's/         macAddress = "//g' | sed -e 's/", //g'
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/device.getdevices {{ vm_id.stdout }} | grep macAddress | sed -e 's/         macAddress = "//g' | sed -e 's/", //g'
     register: vm_mac
   
   - debug: msg="{{ vm_mac.stdout }}"
@@ -77,7 +77,7 @@
   - name: Find the Temp IP
     local_action:
       module: shell
-      _raw_params: ssh {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/get.guest {{ vm_id.stdout }} | grep 'ipAddress = "{{ esxi_net_prefix }}' | sed -n 1p | cut -d '"' -f 2
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/get.guest {{ vm_id.stdout }} | grep 'ipAddress = "{{ esxi_net_prefix }}' | sed -n 1p | cut -d '"' -f 2
     register: vm_temp_ip
   
   - debug: msg="{{ vm_temp_ip.stdout }}"
