@@ -50,11 +50,19 @@ function esxi_deploy () {
 
 function fusion_deploy () {
 
+  PLATFORM=`uname -ra`
+  DHCPD_BASE_DIR=/etc/vmware
+  DHCPD_CMD=/etc/init.d/vmware
+  if [[ $PLATFORM == *"Darwin"* ]]; then 
+    DHCPD_BASE_DIR='/Library/Preferences/VMware\ Fusion/'
+    DHCPD_CMD='/Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli'
+  fi 
+
   echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
   sudo date
 
   echo "Creating the Fusion VMs and configuring the network for static IP assignment..."
-  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE}"
+  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} vmware_dhcpd_base_path='${DHCPD_BASE_DIR}' vmware_dhcpd_cmd='${DHCPD_CMD}'"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
     exit 1
