@@ -27,3 +27,17 @@
       module: shell
       _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.suspend {{ vm_id.stdout }} 
     when: vm_id.stdout is defined and vm_action == 'suspend'
+
+  - name: Stop the VMs 
+    local_action:
+      module: shell
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
+    ignore_errors: true
+    when: vm_action == 'destroy'
+  
+  - name: Destroy the VMs 
+    local_action:
+      module: shell
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/destroy {{ vm_id.stdout }} 
+    when: vm_action == 'destroy'
+

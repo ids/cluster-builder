@@ -2,11 +2,15 @@
 INVENTORY_FILE=$1
 ACTION=$2
 
+function show_usage () {
+  echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop|destroy>"
+  exit 1
+}
+
 if [ -z $INVENTORY_FILE ]; then 
   echo
   echo "Inventory file not specified!"
-  echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop>"
-  exit 1
+  show_usage
 fi
 
 if [ ! -f $INVENTORY_FILE ]; then
@@ -18,19 +22,17 @@ fi
 if [ -z $ACTION ]; then 
   echo
   echo "Action not specified!\n"
-  echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop>"
-  exit 1
+  show_usage
 fi
 
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
-
   
-if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ]; then
+if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/$VMWARE_TARGET-control-vms.yml --e "vm_action=$ACTION"
   vmrun list
 else
   echo
-  echo "Invalid: You must specify an action that is one of: start, stop or suspend"
+  echo "Invalid: You must specify an action that is one of: start, stop, suspend or destroy"
   echo
 fi
