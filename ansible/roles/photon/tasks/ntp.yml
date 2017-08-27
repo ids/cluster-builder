@@ -7,7 +7,7 @@
   template:
     src: templates/ntp-conf.j2
     dest: /etc/ntp.conf
-  run_once: true
+    mode: 0644
 
 - name: Enable NTP
   shell: systemctl enable ntpd
