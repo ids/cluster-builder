@@ -3,6 +3,9 @@
 - name: Install NTP
   shell: tdnf -y install ntp
 
+- name: Start NTP
+  shell: systemctl stop ntpd
+
 - name: Configure the ntp time servers
   template:
     src: templates/ntp-conf.j2
