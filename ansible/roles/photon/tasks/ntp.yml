@@ -3,7 +3,7 @@
 - name: Install NTP
   shell: tdnf -y install ntp
 
-- name: Start NTP
+- name: Stop NTP
   shell: systemctl stop ntpd
 
 - name: Configure the ntp time servers
@@ -21,8 +21,17 @@
 - name: Ensure network time sync is setup
   shell: timedatectl set-ntp true
 
+- name: Restart NTP
+  shell: systemctl restart ntpd
+
 - name: Verify NTP Sources
   shell: ntpq -p
   register: ntp_out
 
 - debug: msg="{{ ntp_out.stdout_lines }}"
+
+- name: Verify NTP Configurations
+  shell: timedatectl
+  register: timedate_out
+
+- debug: msg="{{ timedate_out.stdout_lines }}"

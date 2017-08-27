@@ -41,7 +41,7 @@ function esxi_deploy () {
     exit 1
   fi
 
-  sleep 10s
+  sleep 30s
   bash tmp/$CLUSTER_NAME/test-cluster
   echo
   echo "SUCCESS: ${CLUSTER_TYPE_NAME} created!"
