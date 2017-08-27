@@ -3,9 +3,6 @@
 - name: Install NTP
   shell: tdnf -y install ntp
 
-- name: Stop NTP
-  shell: systemctl stop ntpd
-
 - name: Configure the ntp time servers
   template:
     src: templates/ntp-conf.j2
@@ -13,10 +10,10 @@
     mode: 0644
 
 - name: Enable NTP
-  shell: systemctl enable ntpd
-  
-- name: Start NTP
-  shell: systemctl start ntpd
+  service:
+    name: ntpd
+    state: started
+    enabled: yes  
 
 - name: Ensure network time sync is setup
   shell: timedatectl set-ntp true
