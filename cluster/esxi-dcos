@@ -34,15 +34,15 @@ dcos-c2-p1 ansible_host=192.168.1.191
 
 [vmware_vms]
 dcos-c2-boot  numvcpus=2 memsize=1024 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
-dcos-c2-m1    numvcpus=2 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
-dcos-c2-m2    numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-dcos-c2-m3    numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-dcos-c2-a1    numvcpus=4 memsize=4096 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-dcos-c2-a2    numvcpus=4 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+dcos-c2-m1    numvcpus=2 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+dcos-c2-m2    numvcpus=2 memsize=2048 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+dcos-c2-m3    numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+dcos-c2-a1    numvcpus=4 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+dcos-c2-a2    numvcpus=4 memsize=4096 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
 dcos-c2-p1    numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
 
 [vmware_db_vms]
-dcos-c2-a3    numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
+dcos-c2-a3    numvcpus=4 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
 
 [vmware_vms:children]
 vmware_db_vms
