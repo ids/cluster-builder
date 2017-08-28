@@ -9,17 +9,20 @@
     dest: /etc/ntp.conf
     mode: 0644
 
+- name: Stop NTP
+  shell: systemctl stop ntpd
+
+- name: Stop NTP
+  shell: ntpdate -u 0.ca.pool.ntp.org
+
+- name: Ensure network time sync is setup
+  shell: timedatectl set-ntp true
+
 - name: Enable NTP
   service:
     name: ntpd
     state: started
     enabled: yes  
-
-- name: Ensure network time sync is setup
-  shell: timedatectl set-ntp true
-
-- name: Restart NTP
-  shell: systemctl restart ntpd
 
 - name: Verify NTP Sources
   shell: ntpq -p
