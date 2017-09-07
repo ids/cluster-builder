@@ -37,7 +37,12 @@
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: Start Portainer the old fashioned way
-  shell: docker run -d -p 9000:9000 --name portainer -v /certs:/certs -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify
+  shell: 
+    cmd: | 
+      docker service create --constraint "node.role == manager" -p 9000:9000 \
+      --name portainer --mount type=bind,source=/certs,destination=/certs \
+      --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
+      portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify
   ignore_errors: true
   register: portainer_start
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"

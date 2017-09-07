@@ -1,0 +1,149 @@
+---
+- name: Configure the manager daemon.json file for metrics
+  template:
+    src: templates/manager_daemon.j2
+    dest: /etc/docker/daemon.json
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Configure the worker daemon.json file for metrics
+  template:
+    src: templates/worker_daemon.j2
+    dest: /etc/docker/daemon.json
+  when: "inventory_hostname not in groups['docker_metrics_server']"
+
+- name: Create prometheus host data volume
+  file:
+    path: /etc/prometheus
+    state: directory
+    mode: 0755
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Create and install the prometheus configuration file
+  template:
+    src: templates/prometheus.j2
+    dest: /etc/prometheus/prometheus.yml
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Create prometheus host data volume
+  file:
+    path: /data/prometheus
+    state: directory
+    mode: 0755
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Create monitoring network... system-monitoring 
+  shell: docker network create --driver overlay --subnet 10.0.2.0/24 system-monitoring
+  when: "inventory_hostname in groups['docker_metrics_server']"
+  run_once: true
+
+- name: Install prometheus 
+  shell: 
+    cmd: | 
+      docker service create --replicas 1 --name prometheus \
+      --network system-monitoring \
+      --constraint "node.role == manager" \
+      --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
+      --mount type=bind,source=/etc/prometheus/prometheus.yml,destination=/etc/prometheus/prometheus.yml \
+      --mount type=bind,source=/data/prometheus,destination=/prometheus \
+      --publish 9090:9090/tcp \
+      prom/prometheus
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Install node exporter on all nodes (service mode is global)
+  shell: 
+    cmd: | 
+      docker service create --mode global --name node-exporter \
+      --network system-monitoring \
+      --mount type=bind,source=/proc,destination=/host/proc,readonly \
+      --mount type=bind,source=/sys,destination=/host/sys,readonly \
+      --mount type=bind,source=/,destination=/rootfs,readonly \
+      --publish 9100:9100/tcp \
+      prom/node-exporter \
+      --collector.procfs /host/proc \
+      --collector.sysfs /host/sys \
+      --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"  
+  when: "inventory_hostname in groups['docker_metrics_server']"
+  run_once: true
+
+- name: Install cadvisor on all nodes (service mode is global)
+  shell: 
+    cmd: | 
+      docker service create --mode global --name cadvisor \
+      --network system-monitoring \
+      --mount type=bind,source=/proc,destination=/host/proc,readonly \
+      --mount type=bind,source=/sys,destination=/host/sys,readonly \
+      --mount type=bind,source=/,destination=/rootfs,readonly \
+      --mount type=bind,source=/var/run,destination=/var/run,readonly \
+      --mount type=bind,source=/var/lib/docker,destination=/var/lib/docker,readonly \
+      --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
+      --publish 9101:8080/tcp \
+      google/cadvisor:latest 
+  when: "inventory_hostname in groups['docker_metrics_server']"
+  run_once: true
+
+- name: Create grafana host data volume
+  file:
+    path: /data/grafana
+    state: directory
+    mode: 0755
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Install grafana 
+  shell: 
+    cmd: | 
+      docker service create --replicas 1 --name grafana \
+      --network system-monitoring \
+      --constraint "node.role == manager" \
+      --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
+      --mount type=bind,source=/data/grafana,destination=/var/lib/grafana \
+      --publish 3000:3000/tcp \
+      -e GF_SECURITY_ADMIN_PASSWORD=pass \
+      grafana/grafana:latest
+  when: "inventory_hostname in groups['docker_metrics_server']"
+
+- name: Create elasticsearch host data volume
+  file:
+    path: /data/elasticsearch
+    state: directory
+    mode: 0755
+  when: "inventory_hostname in groups['docker_log_server']"
+
+- name: Install elasticsearch 
+  shell: 
+    cmd: | 
+      docker service create --replicas 1 --name elasticsearch \
+      --network system-monitoring \
+      --constraint "node.role == manager" \
+      --mount type=bind,source=/data/elasticsearch,destination=/usr/share/elasticsearch/data \
+      --publish 9200:9200/tcp \
+      elasticsearch:latest
+  when: "inventory_hostname in groups['docker_log_server']"
+
+- name: Install kibana 
+  shell: 
+    cmd: | 
+      docker service create --replicas 1 --name kibana \
+      --network system-monitoring \
+      --constraint "node.role == manager" \
+      -e 'ELASTICSEARCH_URL=http://elasticsearch:9200' \
+      --publish 5601:5601/tcp \
+      kibana:latest
+  when: "inventory_hostname in groups['docker_log_server']"
+
+- name: Install logstash on all nodes (service mode is global)
+  shell: 
+    cmd: | 
+      docker service create --mode global --name logstash \
+      --network system-monitoring \
+      --publish 8082:8082 \
+      --publish 12201:12201/udp \
+      logstash:latest \
+      -e "input { gelf {} } output { elasticsearch { hosts => ['elasticsearch'] } }"
+  when: "inventory_hostname in groups['docker_log_server']"
+  run_once: true
+
+- name: Restart the docker daemons with monitoring configuration
+  service:
+    name: docker
+    state: restarted
+    enabled: yes  
