@@ -3,30 +3,31 @@
   template:
     src: templates/docker_daemon_jsonfile.j2
     dest: /etc/docker/daemon.json
+  when: "metric_host_count != 0"
 
 - name: Create prometheus host data volume
   file:
     path: /etc/prometheus
     state: directory
     mode: 0755
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
 
 - name: Create and install the prometheus configuration file
   template:
     src: templates/prometheus.j2
     dest: /etc/prometheus/prometheus.yml
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
 
 - name: Create prometheus host data volume
   file:
     path: /data/prometheus
     state: directory
     mode: 0755
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
 
 - name: Create monitoring network... monitor_network 
   shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
   run_once: true
 
 - name: Install prometheus 
@@ -40,7 +41,7 @@
       --mount type=bind,source=/data/prometheus,destination=/prometheus \
       --publish 9090:9090/tcp \
       prom/prometheus
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
 
 - name: Install node exporter on all nodes (service mode is global)
   shell: 
@@ -55,7 +56,7 @@
       --collector.procfs /host/proc \
       --collector.sysfs /host/sys \
       --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"  
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
   run_once: true
 
 - name: Install cadvisor on all nodes (service mode is global)
@@ -71,7 +72,7 @@
       --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
       --publish 9101:8080/tcp \
       google/cadvisor:latest 
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
   run_once: true
 
 - name: Create grafana host data volume
@@ -79,7 +80,7 @@
     path: /data/grafana
     state: directory
     mode: 0755
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
 
 - name: Install grafana 
   shell: 
@@ -92,10 +93,11 @@
       --publish 3000:3000/tcp \
       -e GF_SECURITY_ADMIN_PASSWORD=pass \
       grafana/grafana:latest
-  when: "inventory_hostname in groups['docker_metrics_server']"
+  when: "groups['docker_metrics_server'] is defined and inventory_hostname in groups['docker_metrics_server']"
 
 - name: Restart the docker daemons with monitoring configuration
   service:
     name: docker
     state: restarted
     enabled: yes  
+  when: "metric_host_count != 0"

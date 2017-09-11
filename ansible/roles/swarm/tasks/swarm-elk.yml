@@ -3,13 +3,14 @@
   template:
     src: templates/docker_daemon_gelf.j2
     dest: /etc/docker/daemon.json
+  when: "log_host_count != 0"
 
 - name: Create elasticsearch host data volume
   file:
     path: /data/elasticsearch
     state: directory
     mode: 0755
-  when: "inventory_hostname in groups['docker_log_server']"
+  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
 
 - name: Install elasticsearch 
   shell: 
@@ -20,7 +21,7 @@
       --mount type=bind,source=/data/elasticsearch,destination=/usr/share/elasticsearch/data \
       --publish 9200:9200/tcp \
       elasticsearch:latest
-  when: "inventory_hostname in groups['docker_log_server']"
+  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
 
 - name: Install kibana 
   shell: 
@@ -31,7 +32,7 @@
       -e 'ELASTICSEARCH_URL=http://monitor-elasticsearch:9200' \
       --publish 5601:5601/tcp \
       kibana:latest
-  when: "inventory_hostname in groups['docker_log_server']"
+  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
 
 - name: Install logstash on all nodes (service mode is global)
   shell: 
@@ -43,7 +44,7 @@
       --log-driver="json-file" \
       logstash:latest \
       -e "input { gelf {} } output { elasticsearch { hosts => ['monitor-elasticsearch'] } }"
-  when: "inventory_hostname in groups['docker_log_server']"
+  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
   run_once: true
 
 - name: Restart the docker daemons with elk logging configuration
@@ -51,3 +52,5 @@
     name: docker
     state: restarted
     enabled: yes  
+  when: "log_host_count != 0"
+    

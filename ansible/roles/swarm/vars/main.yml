@@ -1,0 +1,3 @@
+---
+metric_host_count: groups['docker_metrics_server'] | length
+log_host_count: groups['docker_log_server'] | length

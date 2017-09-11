@@ -21,7 +21,7 @@ fi
 
 if [ -z $ACTION ]; then 
   echo
-  echo "Action not specified!\n"
+  echo "Action not specified!"
   show_usage
 fi
 
