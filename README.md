@@ -7,7 +7,7 @@ The **cluster-builder** currently supports two types of clusters:
 * PhotonOS Docker Swarm
 * CentOS 7 DC/OS Cluster
 
-> **PhotonOS Kubernetes** was planned, but with [DC/OS 1.10 supporting Kubernetes] (https://mesosphere.com/blog/kubernetes-dcos/), it has been suspended.
+> **PhotonOS Kubernetes** was planned, but with [DC/OS 1.10 supporting Kubernetes](https://mesosphere.com/blog/kubernetes-dcos/), it has been suspended.
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems a bit chaotic in comparison.  It should be relatively straightforward to implement a Project Atomic variant, should the need arise.
 
