@@ -21,5 +21,5 @@ agent_list:
 {% for host in groups['dcos_agents_public'] %}
 - {{ hostvars[host].ansible_host }}
 {% endfor %}
-check_time: false
+enable_docker_gc: 'true'
 telemetry_enabled: 'false'

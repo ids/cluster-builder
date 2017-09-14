@@ -14,6 +14,26 @@
     name=*
     state=latest
 
+- name: Install Open VM Tools
+  yum: >
+    name=open-vm-tools
+    state=latest
+
+- name: Make sure the RTC is not local
+  command: timedatectl set-local-rtc 0
+
+- name: Stop Chronyd
+  become: true
+  command: systemctl stop chronyd
+
+- name: Force one time clock set
+  become: true
+  command: chronyd -q 'pool ca.pool.ntp.org iburst'
+
+- name: Start Chronyd
+  become: true
+  command: systemctl start chronyd
+
 - name: Find kernel version
   command: uname -r
   changed_when: false

@@ -5,6 +5,11 @@
     state: directory
     mode: 0755
   
+- name: Install nano
+  yum: >
+    name=nano
+    state=latest
+  
 - name: Remove warnings from DC/OS install for ip4
   lineinfile:
     path: "/etc/sysctl.conf"

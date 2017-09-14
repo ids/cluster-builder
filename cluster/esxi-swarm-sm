@@ -1,0 +1,28 @@
+[all:vars]
+cluster_type=photon-swarm
+cluster_name=esxi-swarm-sm
+
+vmware_target=esxi
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
+
+network_mask=255.255.255.0
+network_gateway=192.168.1.1
+network_dns=192.168.1.10
+network_dns2=8.8.8.8
+network_dns3=8.8.4.4
+network_dn=idstudios.local
+
+[docker_swarm_manager]
+swarm-m1 ansible_host=192.168.1.221
+
+[docker_swarm_worker]
+swarm-w1 ansible_host=192.168.1.231 swarm_labels='["front-end","db-galera-node-1"]'
+swarm-w2 ansible_host=192.168.1.232 swarm_labels='["front-end","db-galera-node-1"]'
+swarm-w3 ansible_host=192.168.1.233 swarm_labels='["front-end","db-galera-node-1"]'
+
+[vmware_vms]
+swarm-m1 numvcpus=2 memsize=2048 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+swarm-w1 numvcpus=2 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+swarm-w2 numvcpus=2 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+swarm-w3 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3

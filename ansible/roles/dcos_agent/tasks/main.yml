@@ -1,5 +1,10 @@
 
 ---
+- name: Install nfs-utils
+  yum: >
+    name=nfs-utils
+    state=latest
+
 - name: Download DC/OS config 
   shell: curl -O http://{{ dcos_boot_server }}:{{ dcos_boot_server_port }}/dcos_install.sh
   args:

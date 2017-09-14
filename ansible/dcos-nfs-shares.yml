@@ -1,5 +1,5 @@
 ---
-- hosts: vmware_vms
+- hosts: dcos_agents_private
   remote_user: "{{ remote_user }}"
   become: true
   gather_facts: false
