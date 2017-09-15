@@ -22,7 +22,7 @@ swarm-w2 ansible_host=192.168.1.232 swarm_labels='["front-end","db-galera-node-1
 swarm-w3 ansible_host=192.168.1.233 swarm_labels='["front-end","db-galera-node-1"]'
 
 [vmware_vms]
-swarm-m1 numvcpus=2 memsize=2048 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-swarm-w1 numvcpus=2 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-swarm-w2 numvcpus=2 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
-swarm-w3 numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+swarm-m1 numvcpus=4 memsize=2048 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
