@@ -41,7 +41,6 @@
   shell: 
     cmd: | 
       docker service create --mode global --name monitor-logstash \
-      --network monitor_network \
       --publish 8082:8082 \
       --publish 12201:12201/udp \
       --log-driver="json-file" \
