@@ -3,36 +3,39 @@
   template:
     src: templates/docker_daemon_gelf.j2
     dest: /etc/docker/daemon.json
-  when: "log_host_count != 0"
+  when: "elk_server is defined"
 
-- name: Create elasticsearch host data volume
-  file:
-    path: /data/elasticsearch
-    state: directory
-    mode: 0755
-  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
+# no point in including these internal to the cluster
+# reworked to direct the logs to an external ELK via logstash
 
-- name: Install elasticsearch 
-  shell: 
-    cmd: | 
-      docker service create --replicas 1 --name monitor-elasticsearch \
-      --network monitor_network \
-      --constraint "node.role == manager" \
-      --mount type=bind,source=/data/elasticsearch,destination=/usr/share/elasticsearch/data \
-      --publish 9200:9200/tcp \
-      elasticsearch:latest
-  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
+#- name: Create elasticsearch host data volume
+#  file:
+#    path: /data/elasticsearch
+#    state: directory
+#    mode: 0755
+#  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
 
-- name: Install kibana 
-  shell: 
-    cmd: | 
-      docker service create --replicas 1 --name monitor-kibana \
-      --network monitor_network \
-      --constraint "node.role == manager" \
-      -e 'ELASTICSEARCH_URL=http://monitor-elasticsearch:9200' \
-      --publish 5601:5601/tcp \
-      kibana:latest
-  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
+#- name: Install elasticsearch 
+#  shell: 
+#    cmd: | 
+#      docker service create --replicas 1 --name monitor-elasticsearch \
+#      --network monitor_network \
+#      --constraint "node.role == manager" \
+#      --mount type=bind,source=/data/elasticsearch,destination=/usr/share/elasticsearch/data \
+#      --publish 9200:9200/tcp \
+#      elasticsearch:latest
+#  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
+
+#- name: Install kibana 
+#  shell: 
+#    cmd: | 
+#      docker service create --replicas 1 --name monitor-kibana \
+#      --network monitor_network \
+#      --constraint "node.role == manager" \
+#      -e 'ELASTICSEARCH_URL=http://monitor-elasticsearch:9200' \
+#      --publish 5601:5601/tcp \
+#      kibana:latest
+#  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
 
 - name: Install logstash on all nodes (service mode is global)
   shell: 
@@ -43,8 +46,8 @@
       --publish 12201:12201/udp \
       --log-driver="json-file" \
       logstash:latest \
-      -e "input { gelf {} } output { elasticsearch { hosts => ['monitor-elasticsearch'] } }"
-  when: "groups['docker_log_server'] is defined and inventory_hostname in groups['docker_log_server']"
+      -e "input { gelf {} } output { elasticsearch { hosts => ['elastic.idstudios.local'] } }"
+  when: "elk_server is defined"
   run_once: true
 
 - name: Restart the docker daemons with elk logging configuration
@@ -52,5 +55,5 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "log_host_count != 0"
+  when: "elk_server is defined"
     

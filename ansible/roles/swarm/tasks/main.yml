@@ -11,8 +11,8 @@
 - name: Configure the Host DB Folders
   include: hostdb-folders.yml
 
-- name: Install Prometheus, Grafana and node-exporter for all nodes
-  include: swarm-metrics.yml
+#- name: Install Prometheus, Grafana and node-exporter for all nodes
+#  include: swarm-metrics.yml
 
 - name: Install ELK
   include: swarm-elk.yml
