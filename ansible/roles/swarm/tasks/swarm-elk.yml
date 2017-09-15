@@ -46,7 +46,7 @@
       --publish 12201:12201/udp \
       --log-driver="json-file" \
       logstash:latest \
-      -e "input { gelf {} } output { elasticsearch { hosts => ['elastic.idstudios.local'] } }"
+      -e "input { gelf {} } output { elasticsearch { hosts => ['{{ elk_server }}'] } }"
   when: "elk_server is defined"
   run_once: true
 
