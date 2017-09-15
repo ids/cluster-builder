@@ -1,0 +1,81 @@
+---
+# This playbook sets up the DC/OS cluster for ELK logging
+
+- hosts: dcos_masters,dcos_agents_private,dcos_agents_public
+  remote_user: admin
+  become: true
+  become_method: sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Download filebeat to each node 
+      shell: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.0.0-x86_64.rpm
+
+    - name: Install filebeat 
+      yum:
+        name: /home/admin/filebeat-5.0.0-x86_64.rpm
+        state: present
+
+    - name: Ensure /var/log/dcos directory exists
+      file:
+        path: "/var/log/dcos"
+        state: directory
+
+    - name: Backup existing filebeat.yml
+      shell: mv /etc/filebeat/filebeat.yml /etc/filebeat/filebeat.yml.BAK
+
+    - name: Generate proper filebeat.yml
+      template:
+        src: templates/dcos-filebeat.j2
+        dest: /etc/filebeat/filebeat.yml
+        mode: 0755
+  
+- hosts: dcos_masters
+  remote_user: admin
+  become: true
+  become_method: sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Generate journalctl-filebeat.service for Masters
+      template:
+        src: templates/dcos-journalctl-filebeat-master.j2
+        dest: /etc/systemd/system/dcos-journalctl-filebeat.service
+        mode: 0755
+
+- hosts: dcos_agents_private,dcos_agents_public
+  remote_user: admin
+  become: true
+  become_method: sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Generate journalctl-filebeat.service for Agents
+      template:
+        src: templates/dcos-journalctl-filebeat-agent.j2
+        dest: /etc/systemd/system/dcos-journalctl-filebeat.service
+        mode: 0755
+
+- hosts: dcos_masters,dcos_agents_private,dcos_agents_public
+  remote_user: admin
+  become: true
+  become_method: sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Add internal elastic DNS name to hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: '192.168.1.81 elastic.idstudios.local'
+
+    - name: daemon-reload 
+      shell: systemctl daemon-reload
+
+    - name: start journalctl-filebeat.service
+      service:
+        name: dcos-journalctl-filebeat.service
+        state: restarted
+        enabled: yes
+
+    - name: enable filebeat
+      service:
+        name: filebeat
+        state: restarted
+        enabled: yes
+
