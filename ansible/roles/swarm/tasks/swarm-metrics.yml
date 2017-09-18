@@ -3,7 +3,7 @@
   template:
     src: templates/docker_daemon_gelf.j2
     dest: /etc/docker/daemon.json
-  when: "docker_enable_metrics is true"
+  when: "docker_enable_metrics|default(false)|bool == true"
 
 - name: Create prometheus host data volume
   file:
@@ -56,7 +56,7 @@
       --collector.procfs /host/proc \
       --collector.sysfs /host/sys \
       --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"  
-  when: "docker_enable_metrics is true"
+  when: "docker_enable_metrics|default(false)|bool == true"
   run_once: true
 
 - name: Install cadvisor on all nodes (service mode is global)
@@ -72,7 +72,7 @@
       --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
       --publish 9101:8080/tcp \
       google/cadvisor:latest 
-  when: "docker_enable_metrics is true"
+  when: "docker_enable_metrics|default(false)|bool == true"
   run_once: true
 
 - name: Create grafana host data volume
@@ -100,4 +100,4 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "docker_enable_metrics is defined"
+  when: "docker_enable_metrics|default(false)|bool == true"
