@@ -49,7 +49,7 @@
       --publish 12201:12201/udp \
       --log-driver="json-file" \
       logstash:latest \
-      -e "input { gelf {} } output { elasticsearch { hosts => ['{{ docker_elk_server }}'] } }"
+      -e "input { gelf {} } output { elasticsearch { hosts => ['{{ docker_elk_target }}'] } }"
   when: "docker_elk_target is defined"
   run_once: true
 
