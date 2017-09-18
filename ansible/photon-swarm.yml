@@ -18,6 +18,8 @@
   roles:
   - role: photon
   - role: swarm
+  - role: swarm-hostdata
+  - role: swarm-monitoring
   
   tasks:
   - name: Ensure tmp cluster folder exists
