@@ -12,8 +12,8 @@
     mode: 0755
   when: "groups['docker_elk_server'] is defined and inventory_hostname in groups['docker_elk_server']"
 
-- name: Create monitoring network... monitor_network 
-  shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network		    
+- name: Create monitoring network...
+  shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
   when: "docker_elk_server is defined"
 
 - name: Install elasticsearch 
