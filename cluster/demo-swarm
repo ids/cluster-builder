@@ -14,6 +14,9 @@ network_dns2=8.8.8.8
 network_dns3=8.8.4.4
 network_dn=idstudios.vmware
 
+docker_elk_server=demo-swarm-m1:9200
+docker_enable_metrics=true
+
 [docker_swarm_manager]
 demo-swarm-m1 ansible_host=192.168.100.90 swarm_labels='["monitor", "logs"]'
 
@@ -22,10 +25,10 @@ demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera
 demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
 demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
 
-[docker_metrics_server]
+[docker_prometheus_server]
 demo-swarm-m1
 
-[docker_log_server]
+[docker_elk_server]
 demo-swarm-m1
 
 [vmware_vms]

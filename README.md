@@ -84,10 +84,10 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 	demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
 	demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
 
-	[docker_metrics_server]
+	[docker_prometheus_server]
 	demo-swarm-m1
 
-	[docker_log_server]
+	[docker_elk_server]
 	demo-swarm-m1
 
 	[vmware_vms]
@@ -105,9 +105,9 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 
 **fusion_net_type**: One of _nat_, _bridged_ or _custom_.
 
-__[docker_metrics_server]__: When a server is placed in this group it will have **prometheus** and **grafana** instances installed, and will configure global instances of **cAdvisor** and **node-exporter** on all nodes in the cluster.
+__[docker_prometheus_server]__: When a server is placed in this group it will have **prometheus** and **grafana** instances installed, and will configure global instances of **cAdvisor** and **node-exporter** on all nodes in the cluster.
 
-__[docker_log_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed, and will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash.
+__[docker_elk_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed, and will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash.
 
 
 #### ESXi Sample: esxi-dcos

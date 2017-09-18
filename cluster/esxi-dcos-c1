@@ -16,7 +16,7 @@ network_dns2=192.168.1.1
 network_dns3=8.8.8.8
 network_dn=idstudios.local
 
-elk_server=http://coordinator.elastic.l4lb.thisdcos.directory:9200
+dcos_elk_server=http://coordinator.elastic.l4lb.thisdcos.directory:9200
 
 [dcos_boot]
 dcos-c1-boot ansible_host=192.168.1.70 

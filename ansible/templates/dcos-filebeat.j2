@@ -7,4 +7,4 @@ filebeat.prospectors:
     - /var/log/dcos/dcos.log
 tail_files: true
 output.elasticsearch:
-  hosts: ["{{ elk_server }}"]
+  hosts: ["{{ dcos_elk_server }}"]
