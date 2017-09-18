@@ -14,7 +14,7 @@ network_dns2=8.8.8.8
 network_dns3=8.8.4.4
 network_dn=idstudios.vmware
 
-# docker_elk_server=demo-swarm-m1:9200
+# docker_elk_target=demo-swarm-m1:9200
 # docker_enable_metrics=true
 
 [docker_swarm_manager]

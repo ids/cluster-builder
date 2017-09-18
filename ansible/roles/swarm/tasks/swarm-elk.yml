@@ -3,7 +3,7 @@
   template:
     src: templates/docker_daemon_gelf.j2
     dest: /etc/docker/daemon.json
-  when: "docker_elk_server is defined"
+  when: "docker_elk_target is defined"
 
 - name: Create elasticsearch host data volume
   file:
@@ -14,7 +14,7 @@
 
 - name: Create monitoring network...
   shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
-  when: "docker_elk_server is defined"
+  when: "docker_elk_target is defined"
 
 - name: Install elasticsearch 
   shell: 
@@ -48,7 +48,7 @@
       --log-driver="json-file" \
       logstash:latest \
       -e "input { gelf {} } output { elasticsearch { hosts => ['{{ docker_elk_server }}'] } }"
-  when: "docker_elk_server is defined"
+  when: "docker_elk_target is defined"
   run_once: true
 
 - name: Restart the docker daemons with elk logging configuration
@@ -56,5 +56,5 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "docker_elk_server is defined"
+  when: "docker_elk_target is defined"
     

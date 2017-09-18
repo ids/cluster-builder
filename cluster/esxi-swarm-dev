@@ -13,7 +13,7 @@ network_dns2=8.8.8.8
 network_dns3=8.8.4.4
 network_dn=idstudios.local
 
-docker_elk_server=elastic.idstudios.local:9200
+docker_elk_target=elastic.idstudios.local:9200
 docker_enable_metrics=true
 
 [docker_swarm_manager]
