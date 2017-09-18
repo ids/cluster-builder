@@ -14,7 +14,8 @@
 
 - name: Create monitoring network...
   shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
-  when: "docker_elk_target is defined"
+  when: "docker_elk_target is defined and inventory_hostname in groups['docker_swarm_manager']"
+  run_once: true
 
 - name: Install elasticsearch 
   shell: 
