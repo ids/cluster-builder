@@ -4,8 +4,6 @@
 - hosts: all
   remote_user: root
   any_errors_fatal: true
-  vars:
-    docker_enable_metrics: false
   roles:
   - role: swarm-monitoring
   
