@@ -16,6 +16,6 @@
   - name: Generate the client test script
     local_action:
       module: template
-      src: templates/test-swarm.j2
+      src: templates/test-photon-swarm.j2
       dest: ../client-certs/test-swarm
       mode: 0766

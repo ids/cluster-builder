@@ -10,14 +10,24 @@
     name=nano
     state=latest
   
+- name: Get Before Date/Time
+  shell: date
+  register: before_out
+
 - name: Stop Chrony
-  shell: sudo systemctl stop chronyd
+  shell: systemctl stop chronyd
 
 - name: Sync time manually
-  shell: sudo chronyd -q 'server ca.pool.ntp.org iburst'
+  shell: chronyd -q 'server ca.pool.ntp.org iburst'
 
 - name: Start Chrony
-  shell: sudo systemctl stop chronyd
+  shell: systemctl start chronyd
+
+- name: Get After Date/Time
+  shell: date
+  register: after_out
+
+- debug: msg="{{ before_out.stdout_lines }} {{ after_out.stdout_lines }} "
 
 - name: Remove warnings from DC/OS install for ip4
   lineinfile:

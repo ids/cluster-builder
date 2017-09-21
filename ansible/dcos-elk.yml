@@ -62,7 +62,8 @@
     - name: Add internal elastic DNS name to hosts file
       lineinfile:
         path: /etc/hosts
-        line: '192.168.1.81 elastic.idstudios.local'
+        regexp: '^%elastic.idstudios.local'
+        line: '192.168.1.80 elastic.idstudios.local'
 
     - name: daemon-reload 
       shell: systemctl daemon-reload

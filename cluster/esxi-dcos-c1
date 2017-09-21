@@ -23,8 +23,6 @@ dcos-c1-boot ansible_host=192.168.1.70
 
 [dcos_masters]
 dcos-c1-m1 ansible_host=192.168.1.71 
-dcos-c1-m2 ansible_host=192.168.1.72 
-dcos-c1-m3 ansible_host=192.168.1.73 
 
 [dcos_agents_private]
 dcos-c1-a1 ansible_host=192.168.1.74 

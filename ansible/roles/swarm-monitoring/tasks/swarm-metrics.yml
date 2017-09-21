@@ -1,7 +1,7 @@
 ---
 - name: Configure the docker daemon.json file for metrics
   template:
-    src: templates/docker_daemon_gelf.j2
+    src: templates/docker_daemon_jsonfile.j2
     dest: /etc/docker/daemon.json
   when: "docker_enable_metrics|default(false)|bool == true"
 
@@ -34,6 +34,10 @@
   shell: 
     cmd: | 
       docker service create --replicas 1 --name monitor-prometheus \
+      --limit-cpu 1 \
+      --reserve-cpu 0.5 \
+      --limit-memory 1073741824 \
+      --reserve-memory 512m \
       --network monitor_network \
       --constraint "node.role == manager" \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
@@ -47,11 +51,16 @@
   shell: 
     cmd: | 
       docker service create --mode global --name monitor-node-exporter \
+      --limit-cpu 0.5 \
+      --reserve-cpu 0.3 \
+      --limit-memory 536870912 \
+      --reserve-memory 134217728 \
       --network monitor_network \
       --mount type=bind,source=/proc,destination=/host/proc,readonly \
       --mount type=bind,source=/sys,destination=/host/sys,readonly \
       --mount type=bind,source=/,destination=/rootfs,readonly \
       --publish 9100:9100/tcp \
+      --container-label com.docker.stack.namespace=monitor \
       prom/node-exporter \
       --collector.procfs /host/proc \
       --collector.sysfs /host/sys \
@@ -63,6 +72,10 @@
   shell: 
     cmd: | 
       docker service create --mode global --name monitor-cadvisor \
+      --limit-cpu 0.5 \
+      --reserve-cpu 0.3 \
+      --limit-memory 536870912 \
+      --reserve-memory 134217728 \
       --network monitor_network \
       --mount type=bind,source=/proc,destination=/host/proc,readonly \
       --mount type=bind,source=/sys,destination=/host/sys,readonly \
@@ -71,6 +84,7 @@
       --mount type=bind,source=/var/lib/docker,destination=/var/lib/docker,readonly \
       --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
       --publish 9101:8080/tcp \
+      --container-label com.docker.stack.namespace=monitor \
       google/cadvisor:latest 
   when: "docker_enable_metrics|default(false)|bool == true"
   run_once: true
@@ -86,6 +100,10 @@
   shell: 
     cmd: | 
       docker service create --replicas 1 --name monitor-grafana \
+      --limit-cpu 1 \
+      --reserve-cpu 0.5 \
+      --limit-memory 1073741824 \
+      --reserve-memory 536870912 \
       --network monitor_network \
       --constraint "node.role == manager" \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \

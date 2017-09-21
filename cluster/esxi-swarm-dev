@@ -13,7 +13,7 @@ network_dns2=8.8.8.8
 network_dns3=8.8.4.4
 network_dn=idstudios.local
 
-docker_elk_target=elastic.idstudios.local:9200
+# docker_elk_target=elastic.idstudios.local:9200
 docker_enable_metrics=true
 
 [docker_swarm_manager]
@@ -29,9 +29,9 @@ swarm-w6 ansible_host=192.168.1.236 swarm_labels='["db-galera-node-3"]'
 
 [vmware_vms]
 swarm-m1 numvcpus=4 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
-swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-md
+swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
 swarm-w4 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
 swarm-w5 numvcpus=4 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
 swarm-w6 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4

@@ -32,16 +32,19 @@ scrape_configs:
     static_configs:
 {% for host in groups['all'] %}
       -  targets: ['{{ hostvars[host].inventory_hostname }}:9323']
+         labels: {'host': '{{ hostvars[host].inventory_hostname }}'}
 {% endfor %}
 
   - job_name: 'cadvisor'
     static_configs:
 {% for host in groups['all'] %}
       -  targets: ['{{ hostvars[host].inventory_hostname }}:9101']
+         labels: {'host': '{{ hostvars[host].inventory_hostname }}'}
 {% endfor %}
             
   - job_name: 'node-exporter'
     static_configs:
 {% for host in groups['all'] %}
       -  targets: ['{{ hostvars[host].inventory_hostname }}:9100']
+         labels: {'host': '{{ hostvars[host].inventory_hostname }}'}
 {% endfor %}

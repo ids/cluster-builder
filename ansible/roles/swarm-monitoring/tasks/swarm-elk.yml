@@ -22,6 +22,10 @@
   shell: 
     cmd: | 
       docker service create --replicas 1 --name monitor-elasticsearch \
+      --limit-cpu 2 \
+      --reserve-cpu 1 \
+      --limit-memory 2147483648 \
+      --reserve-memory 1073741824 \
       --network monitor_network \
       --constraint "node.role == manager" \
       --mount type=bind,source=/data/elasticsearch,destination=/usr/share/elasticsearch/data \
@@ -33,6 +37,10 @@
   shell: 
     cmd: | 
       docker service create --replicas 1 --name monitor-kibana \
+      --limit-cpu 0.5 \
+      --reserve-cpu 0.3 \
+      --limit-memory 536870912 \
+      --reserve-memory 268435456 \
       --network monitor_network \
       --constraint "node.role == manager" \
       -e 'ELASTICSEARCH_URL=http://monitor-elasticsearch:9200' \
@@ -44,6 +52,10 @@
   shell: 
     cmd: | 
       docker service create --mode global --name monitor-logstash \
+      --limit-cpu 0.5 \
+      --reserve-cpu 0.3 \
+      --limit-memory 536870912 \
+      --reserve-memory 268435456 \
       --network monitor_network \
       --publish 8082:8082 \
       --publish 12201:12201/udp \
