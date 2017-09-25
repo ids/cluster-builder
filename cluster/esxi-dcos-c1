@@ -23,6 +23,8 @@ dcos-c1-boot ansible_host=192.168.1.70
 
 [dcos_masters]
 dcos-c1-m1 ansible_host=192.168.1.71 
+dcos-c1-m2 ansible_host=192.168.1.72 
+dcos-c1-m3 ansible_host=192.168.1.73 
 
 [dcos_agents_private]
 dcos-c1-a1 ansible_host=192.168.1.74 
@@ -31,22 +33,39 @@ dcos-c1-a3 ansible_host=192.168.1.76
 dcos-c1-a4 ansible_host=192.168.1.77 
 dcos-c1-a5 ansible_host=192.168.1.78 
 dcos-c1-a6 ansible_host=192.168.1.79 
+dcos-c1-a7 ansible_host=192.168.1.80 
+dcos-c1-a8 ansible_host=192.168.1.81 
+dcos-c1-a9 ansible_host=192.168.1.82 
+dcos-c1-a10 ansible_host=192.168.1.83 
+dcos-c1-a11 ansible_host=192.168.1.84 
+dcos-c1-a12 ansible_host=192.168.1.85 
 
 [dcos_agents_public]
-dcos-c1-p1 ansible_host=192.168.1.80 
+dcos-c1-p1 ansible_host=192.168.1.90 
 
 [vmware_vms]
-dcos-c1-boot  numvcpus=2 memsize=1024 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-ssd 
-dcos-c1-m1    numvcpus=4 memsize=4096 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-ssd 
+dcos-c1-boot  numvcpus=2 memsize=1024 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+
+dcos-c1-m1    numvcpus=4 memsize=4096 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+dcos-c1-m2    numvcpus=4 memsize=4096 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+dcos-c1-m3    numvcpus=4 memsize=4096 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+
 dcos-c1-a1    numvcpus=4 memsize=8192 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
 dcos-c1-a2    numvcpus=4 memsize=8192 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
 dcos-c1-a3    numvcpus=4 memsize=8192 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
-dcos-c1-p1    numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+dcos-c1-a4    numvcpus=4 memsize=8192 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+dcos-c1-a5    numvcpus=4 memsize=8192 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+dcos-c1-a6    numvcpus=4 memsize=8192 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+
+dcos-c1-p1    numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
 
 [vmware_db_vms]
-dcos-c1-a4    numvcpus=4 memsize=10240 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
-dcos-c1-a5    numvcpus=4 memsize=10240 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
-dcos-c1-a6    numvcpus=4 memsize=10240 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+dcos-c1-a7    numvcpus=4 memsize=8192 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+dcos-c1-a8    numvcpus=4 memsize=8192 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+dcos-c1-a9    numvcpus=4 memsize=8192 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2 
+dcos-c1-a10    numvcpus=4 memsize=8192 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+dcos-c1-a11    numvcpus=4 memsize=8192 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
+dcos-c1-a12    numvcpus=4 memsize=8192 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-hd 
 
 [vmware_vms:children]
 vmware_db_vms
