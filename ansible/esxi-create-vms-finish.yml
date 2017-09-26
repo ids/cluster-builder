@@ -54,9 +54,9 @@
       _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
     when: vm_id.stdout is defined
 
-  - name: waiting 3 minutes VMs to finish starting up
+  - name: waiting 5 minutes VMs to finish starting up
     pause:
-      minutes: 3
+      minutes: 5
 
   - name: Scan the VMS for the VM ID
     local_action:
