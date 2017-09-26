@@ -20,18 +20,23 @@ function esxi_deploy () {
   echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up and get their temporary DHCP addresses..."
   sleep $SERVER_WAIT
 
-  echo "Generating the static ip configuration scripts"
+  echo "Finishing up ESXi VM Configuration..."
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml 
   
-  echo "Assigning the static IPs"
+  echo "Assigning VM static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
 
-  echo "Waiting ${SERVER_WAIT} for machines to come back online after IP assignment"
-  sleep $SERVER_WAIT
+  echo "Waiting for the VMs to come up with their permanent IPs..."
+  ansible-playbook -i $INVENTORY_FILE ansible/wait-for-vms.yml 
+  if [ $? -ne 0 ]; then
+    echo "FAIL: All the VMs were not responsive at their permanent IPs within the timeout period."
+    exit 1
+  fi
 
-  rm $TEMP_SCRIPT_PATH/*_static.sh
-  rm $TEMP_SCRIPT_PATH/esxi-create-vms
-  rm $TEMP_SCRIPT_PATH/esxi-set-statics
+  #rm $TEMP_SCRIPT_PATH/*_static.sh
+  #rm $TEMP_SCRIPT_PATH/esxi-create-vms
+  #rm $TEMP_SCRIPT_PATH/esxi-set-statics
+  
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
 
   echo "Building cluster: ${CLUSTER_TYPE_NAME}"
