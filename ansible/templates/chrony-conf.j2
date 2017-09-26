@@ -1,3 +1,4 @@
+pool ca.pool.ntp.org iburst
 pool pool.ntp.org iburst
 {% for host in groups['all'] %}
   {% if hostvars[host].inventory_hostname != inventory_hostname %}

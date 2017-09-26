@@ -19,6 +19,7 @@
 
 - name: Sync time manually
   shell: chronyd -q 'server ca.pool.ntp.org iburst'
+  ignore_errors: true
 
 - name: Start Chrony
   shell: systemctl start chronyd
