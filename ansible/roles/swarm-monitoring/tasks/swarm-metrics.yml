@@ -25,9 +25,10 @@
     mode: 0755
   when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
 
-- name: Create monitoring network... monitor_network 
+- name: Create monitoring network...
   shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_enable_metrics|default(false)|bool == true"
+  ignore_errors: true
   run_once: true
 
 - name: Install prometheus 
