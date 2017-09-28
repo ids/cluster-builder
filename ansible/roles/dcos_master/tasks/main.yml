@@ -5,7 +5,7 @@
   args:
     chdir: /tmp/dcos
 
-- name: Install DC/OS on master nodes
+- name: Install DC/OS on master node
   become: true
   become_method: sudo
   shell: bash dcos_install.sh master
@@ -17,6 +17,6 @@
 - debug: msg="{{ master_output.stdout_lines }}"
 - debug: msg="{{ master_output.stderr_lines }}"
 
-- name: waiting 2 minutes for masters
+- name: waiting 1 minute for master to settle in
   pause:
-    minutes: 2
+    minutes: 1

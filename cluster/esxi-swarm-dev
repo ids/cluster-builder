@@ -1,6 +1,6 @@
 [all:vars]
 cluster_type=photon-swarm
-cluster_name=esxi-swarm-dev
+cluster_name=swarm-dev
 
 vmware_target=esxi
 esxi_net="VM Network" 
@@ -28,10 +28,10 @@ swarm-w5 ansible_host=192.168.1.235 swarm_labels='["db-galera-node-2"]'
 swarm-w6 ansible_host=192.168.1.236 swarm_labels='["db-galera-node-3"]'
 
 [vmware_vms]
-swarm-m1 numvcpus=4 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-md
-swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-swarm-w4 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
-swarm-w5 numvcpus=4 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-swarm-w6 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-m1 numvcpus=4 memsize=2048 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-ssd
+swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-ssd
+swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+swarm-w4 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+swarm-w5 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-md
+swarm-w6 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-md
