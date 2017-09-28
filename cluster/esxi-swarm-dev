@@ -33,5 +33,5 @@ swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datast
 swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-ssd
 swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
 swarm-w4 numvcpus=4 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-swarm-w5 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-md
-swarm-w6 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-md
+swarm-w5 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2
+swarm-w6 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2
