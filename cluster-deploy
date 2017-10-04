@@ -163,7 +163,7 @@ elif [ "$VMWARE_TARGET" == "fusion" ]; then
   fusion_deploy
 fi
 
-ELAPSED_TIME=$($SECONDS - $START_TIME)
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
 echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 
 
