@@ -56,6 +56,10 @@
       module: shell
       _raw_params: vmrun start {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
     become: false
+
+  - name: waiting 30s for VMs to generate MAC addresses
+    pause:
+      seconds: 60
     
   - name: Scan the VMX files for the mac addresses
     local_action:
@@ -64,6 +68,9 @@
     register: vm_mac
   
   - debug: msg="{{ vm_mac.stdout }}"
+
+  - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
+    when: vm_mac is not defined
 
   - name: Generate the DHCPD configuration entries
     local_action:
