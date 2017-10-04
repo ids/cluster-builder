@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+DOCKER_VERSION=17.09.0-ce
 
 echo '***'
 echo '*** Setting up authorized keys...'
@@ -15,17 +16,17 @@ echo '***'
 echo '*** Installing:'
 echo '***   - VMware Tools'
 echo '***   - NFS Support'
-echo '***   - Upgrade Docker to 17.06.0'
+echo '***   - Upgrade Docker to ${DOCKER_VERSION}'
 echo '***'
 
 tdnf -y install open-vm-tools nfs-utils tar gzip curl ntp
 
-echo "*** Downloading Docker 17.06.0-ce"
-curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17.06.0-ce.tgz 
-echo "*** Unpacking Docker 17.06.0-ce"
-tar --strip-components=1 -C /usr/bin -xzf docker-17.06.0-ce.tgz 
+echo "*** Downloading Docker ${DOCKER_VERSION}"
+curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz 
+echo "*** Unpacking Docker ${DOCKER_VERSION}"
+tar --strip-components=1 -C /usr/bin -xzf docker-${DOCKER_VERSION}.tgz 
 
-echo "*** Configuring Docker 17.06.0-ce"
+echo "*** Configuring Docker ${DOCKER_VERSION}"
 echo '[Unit]
 Description=Docker Daemon
 Documentation=http://docs.docker.com

@@ -1,0 +1,38 @@
+[all:vars]
+cluster_type=centos-swarm
+cluster_name=esxi-centos-swarm
+remote_user=admin
+
+vmware_target=esxi
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
+
+network_mask=255.255.255.0
+network_gateway=192.168.1.1
+network_dns=192.168.1.10
+network_dns2=8.8.8.8
+network_dns3=8.8.4.4
+network_dn=idstudios.local
+
+# docker_elk_target=elastic.idstudios.local:9200
+docker_enable_metrics=true
+
+[docker_swarm_manager]
+swarm-m1 ansible_host=192.168.1.221
+
+[docker_swarm_worker]
+swarm-w1 ansible_host=192.168.1.231 swarm_labels='["front-end"]'
+swarm-w2 ansible_host=192.168.1.232 swarm_labels='["front-end"]'
+swarm-w3 ansible_host=192.168.1.233 swarm_labels='["front-end"]'
+swarm-w4 ansible_host=192.168.1.234 swarm_labels='["db-galera-node-1"]'
+swarm-w5 ansible_host=192.168.1.235 swarm_labels='["db-galera-node-2"]'
+swarm-w6 ansible_host=192.168.1.236 swarm_labels='["db-galera-node-3"]'
+
+[vmware_vms]
+swarm-m1 numvcpus=4 memsize=2048 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-ssd
+swarm-w1 numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-ssd
+swarm-w2 numvcpus=4 memsize=3072 esxi_host=esxi-x2 esxi_user=root esxi_ds=datastore-ssd
+swarm-w3 numvcpus=4 memsize=3072 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+swarm-w4 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2
+swarm-w5 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2
+swarm-w6 numvcpus=4 memsize=3072 esxi_host=esxi-x esxi_user=root esxi_ds=datastore-m2

@@ -2,10 +2,18 @@
 Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 1.0 R2** for use in DC/OS & Swarm Clusters.
 
 ## Requirements
-  - Packer 1.0.3+ (brew install/upgrade packer)
-  - VMware (Fusion / Workstation)
+  - Packer 1.0.4+ (brew install/upgrade packer)
+  - VMware (Fusion Pro 8+/ Workstation Pro 12+)
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614)  in $PATH
   - Ansible 2.3+ (brew install/upgrade ansible)
+
+> Note: To save time you may want to seed the __iso__ folder with the respective iso files used in the creation of CentOS, Photon or Atomic based VMs.  Simply download them and place them in the __iso__ folder. Packer will download them on demand if they don't exist already in the folder.
+
+[PhotonOS ISO Download](https://bintray.com/vmware/photon/download_file?file_path=photon-1.0-62c543d.iso)
+
+[CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1708.iso)
+
+[Atomic7 ISO Download](http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7.1708-Installer.iso)
 
 ## Usage
 > Make sure to create **keys/authorized_keys** before you run build.  This is installed in the **root** account of the vm.  Provisioning scripts that use this image are based on passwordless ssh.
@@ -56,7 +64,7 @@ The Photon VM is not suitable for DC/OS, but may be used for Docker Swarm.  It h
 
 - open-vm-tools
 - nfs-utils
-- Docker 17.06.0-ce (manually upgraded on Photon OS minimal from 1.12)
+- Docker 17.09.0-ce (manually upgraded on Photon OS minimal from 1.12)
 
 ## Networking
 Default approach is to use DHCP to reserve addresses by MAC, and then statically assign IPs as needed. The OVA template has the primary NIC set for DHCP on boot.
