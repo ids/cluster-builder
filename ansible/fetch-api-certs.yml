@@ -1,13 +1,14 @@
 ---
 
 - hosts: docker_swarm_manager
-  remote_user: root
+  remote_user: "{{ remote_user }}"
   tasks:
   - name: Fetch the client certs
     fetch:
-      src: /certs/{{ item }}.pem
-      dest: ../client-certs/{{ inventory_hostname }}/
-      flat: yes        
+      src: /etc/certs/docker/{{ item }}.pem
+      dest: ../clusters/{{ cluster_name }}/api-certs/{{ inventory_hostname }}/
+      flat: yes     
+    become: true   
     with_items:
       - ca
       - key    
@@ -16,6 +17,8 @@
   - name: Generate the client test script
     local_action:
       module: template
-      src: templates/test-photon-swarm.j2
-      dest: ../client-certs/test-swarm
+      src: templates/test-{{ cluster_type }}.j2
+      dest: ../clusters/{{ cluster_name }}/test-cluster
       mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false

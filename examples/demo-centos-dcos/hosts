@@ -1,6 +1,6 @@
 [all:vars]
 cluster_type=centos-dcos
-cluster_name=dcos-fusion
+cluster_name=demo-centos-dcos
 
 dcos_boot_server=192.168.100.99
 dcos_boot_server_port=9580

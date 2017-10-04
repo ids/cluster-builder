@@ -17,21 +17,16 @@
   roles:
   - role: photon
   - role: swarm
-  - role: swarm-hostdata
-  - role: swarm-monitoring
+  - role: photon-swarm
+  - role: photon-hostdata
+  - role: photon-monitoring
   
   tasks:
-  - name: Ensure tmp cluster folder exists
-    local_action:
-      module: file
-      path: "../tmp/{{ cluster_name }}"
-      state: directory
-    become: false
-
   - name: Generate the client test script
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2
-      dest: ../tmp/{{ cluster_name }}/test-cluster
+      dest: ../clusters/{{ cluster_name }}/test-cluster
       mode: 0766
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false

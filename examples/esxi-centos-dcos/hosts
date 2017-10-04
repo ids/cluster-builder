@@ -1,6 +1,7 @@
 [all:vars]
 cluster_type=centos-dcos
-cluster_name=dcos-c1
+cluster_name=esxi-centos-dcos
+remote_user=admin
 
 dcos_boot_server=192.168.1.70
 dcos_boot_server_port=9580

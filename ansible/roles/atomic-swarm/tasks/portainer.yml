@@ -1,0 +1,88 @@
+#
+# Right now this just installs portainer on the first manager
+# TODO: breakout the scripts for secure-api and container so they can 
+# be run indendently - in case of m1 node failure, m2 or m3 can be
+# provisioned for remote api and portainer access on demand
+
+---
+
+- name: Install EPEL 
+  shell: rpm-ostree pkg-add epel-release
+  become: true
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+  ignore_errors: true
+
+- name: Reboot Atomic
+  shell: shutdown -r -t 5s 
+  become: true
+  ignore_errors: true
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: waiting 90 secs for servers to reboot post EPEL package add
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=90 timeout=240
+  become: false
+
+- name: Install PiP 
+  shell: rpm-ostree pkg-add python-pip
+  become: true
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Reboot Atomic
+  shell: shutdown -r -t 5s 
+  become: true
+  ignore_errors: true  
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: waiting 90 secs for servers to reboot post Pip package add
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=90 timeout=240
+  become: false
+
+- name: Install Docker Compose 
+  shell: rpm-ostree pkg-add docker-compose
+  become: true
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Reboot Atomic
+  shell: shutdown -r -t 5s 
+  become: true
+  ignore_errors: true  
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: waiting 90 secs for servers to reboot post Docker Compose package add
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=90 timeout=240
+  become: false
+
+- name: Ensure the docker daemon is running
+  service:
+    name: docker
+    state: started
+    enabled: yes  
+  become: true
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Pull Portainer image
+  shell: docker pull portainer/portainer:develop
+  become: true
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Remove any existing Portainer container (if exists)
+  shell: docker service rm portainer
+  become: true
+  ignore_errors: true
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Start Portainer the old fashioned way
+  shell: 
+    cmd: | 
+      docker service create --constraint "node.role == manager" -p 9000:9000 \
+      --name portainer --mount type=bind,source=/etc/certs/docker,destination=/certs \
+      --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
+      portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify
+  ignore_errors: true
+  become: true
+  register: portainer_start
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- debug: msg="{{ portainer_start.stdout }}"
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+

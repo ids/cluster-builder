@@ -96,11 +96,22 @@
   tags:
     - skip_ansible_lint # Suppressing the linter
 
+
+- name: Determine the node name when there is a network_dn
+  set_fact:
+    node_fqdn: "{{ inventory_hostname }}.{{ network_dn }}"
+  when: "network_dn != ''"
+
+- name: Determine the node name when there is no network_dn
+  set_fact:
+    node_fqdn: "{{ inventory_hostname }}"
+  when: "network_dn is undefined or network_dn == ''"
+
 - name: Get list of labels
   command: >-
         docker node inspect
         -f {% raw %}'{{range $key, $value := .Spec.Labels}}{{printf "%s\n" $key}}{{end}}'{% endraw %}
-        {{ inventory_hostname }}
+        {{ node_fqdn }}
   register: docker_swarm_labels
   changed_when: False
   delegate_to: "{{ groups['docker_swarm_manager'][0] }}"
@@ -113,7 +124,7 @@
     msg: "Labels: {{ docker_swarm_labels.stdout_lines }}"
 
 - name: Remove labels from swarm node
-  command: docker node update --label-rm {{ item }} {{ inventory_hostname }}
+  command: docker node update --label-rm {{ item }} {{ node_fqdn }}
   with_items: "{{ docker_swarm_labels.stdout_lines }}"
   when: "{{ docker_swarm_labels.stdout_lines | count > 0 }}"
   changed_when: False
@@ -124,7 +135,7 @@
     - swarm_labels
 
 - name: Asign labels to swarm nodes | if any
-  command: docker node update --label-add {{ item }}=true {{ inventory_hostname }}
+  command: docker node update --label-add {{ item }}=true {{ node_fqdn }}
   changed_when: False
   with_items:
     - "{{ swarm_labels  | default([]) }}"
@@ -133,3 +144,4 @@
   tags:
     - skip_ansible_lint
     - swarm_labels
+

@@ -1,6 +1,11 @@
 {
   "provisioners": [
     {
+      "type": "file",
+      "source": "keys/authorized_keys",
+      "destination": "/tmp/authorized_keys"
+    },     
+    {
       "type": "shell",
       "execute_command": "{{.Vars}} bash '{{.Path}}'",
       "script": "bin/photon-setup.sh"

@@ -2,12 +2,12 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'admin' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "bin/ansible.sh"
     },
     {
       "type": "shell",
-      "execute_command": "echo 'admin' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "bin/vmware-tools.sh"
     },
     {
@@ -23,7 +23,7 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo 'admin' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "inline": ["reboot"]
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "type": "shell",
-      "execute_command": "echo 'admin' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "bin/zerodisk.sh"
     }
   ],
@@ -64,10 +64,10 @@
       "iso_checksum_type": "sha256",
       "iso_checksum": "27bd866242ee058b7a5754e83d8ee8403e216b93d130d800852a96f41c34d86a",
       "ssh_username": "admin",
-      "ssh_password": "admin",
+      "ssh_password": "TempPass2017",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
-      "shutdown_command": "echo 'admin'|sudo -S /sbin/halt -h -p",
+      "shutdown_command": "echo 'TempPass2017'|sudo -S /sbin/halt -h -p",
       "output_directory": "output_centos7_vmx",
       "vmx_template_path": "cluster-node-template.vmx",
       "vm_name": "cluster-node-centos7-x86_64",

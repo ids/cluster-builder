@@ -2,14 +2,14 @@
 Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters.
 
 ### Supported Clusters
-The **cluster-builder** currently supports two types of clusters:
+The **cluster-builder** currently supports __Swarm__ and __DC/OS__ clusters on several platforms:
 
 * PhotonOS Docker Swarm
+* CentOS 7 Atomic Docker Swarm
+* CentOS 7 Docker Swarm
 * CentOS 7 DC/OS Cluster
 
-> **PhotonOS Kubernetes** was planned, but with [DC/OS 1.10 supporting Kubernetes](https://mesosphere.com/blog/kubernetes-dcos/), it has been suspended.
-
-> [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems a bit chaotic in comparison.  It should be relatively straightforward to implement a Project Atomic variant, should the need arise.
+> [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems more focused on their specific approach to Kubernetes then on being a general purpose container OS. 
 
 ### Deployment Options
 There are currently two types of deployment:
@@ -25,8 +25,7 @@ VMware ESXi is for staging and production deployments.
 
 ##### macOS / Linux
 
-
-- VMware Fusion 8+ / Workstation 12+
+- VMware Fusion Pro 8+ / Workstation Pro 12+
 - VMware ESXi 6.5+ (optional)
 - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
 - Ansible 2.3+ `brew install/upgrade ansible`
@@ -55,10 +54,17 @@ VMs for provisioning.
 
 * The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **node-packer/output_ovas**.  See the cluster node packer [readme](https://github.com/ids/cluster-builder/blob/master/node-packer/README.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
-## Inventory File
-Everything is based on the **Ansible inventory file**, which defines the cluster specifications. Sample inventory files are located in the **cluster** folder.
+## Cluster Definitons
+Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
 
-#### Fusion Sample: demo-swarm
+Eg. In the **examples** folder there is:
+
+		demo-atomic-swarm
+			|_ hosts
+
+Sample cluster packages are located in the **examples** folder and can be copied into the **clusters** folder.
+
+#### Fusion Sample: demo-photon-swarm hosts file
 
 	[all:vars]
 	cluster_type=photon-swarm
@@ -110,7 +116,7 @@ __[docker_prometheus_server]__: When a server is placed in this group it will ha
 __[docker_elk_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed, and will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash.
 
 
-#### ESXi Sample: esxi-dcos
+#### ESXi Sample: esxi-centos-dcos hosts file
 
 	[all:vars]
 	cluster_type=centos-dcos
@@ -168,12 +174,6 @@ VMs are provisioned based on the **[vmware_vms]** group attributes.
 ### VMware Fusion Deployment
 VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.
 
-Sample Fusion inventory files:
-
-* demo-swarm
-* demo-swarm-mini
-* demo-dcos
-
 > **Note:** DC/OS requires at least 16GB of ram on the target machine.
 
 ---
@@ -214,20 +214,20 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 ## Deploying a Cluster
 To deploy a cluster use **cluster-deploy**:
 
-    $ bash cluster-deploy <inventory-file>
+    $ bash cluster-deploy <inventory-package | cluster-name>
 
 Eg.
 
-    $ bash cluster-deploy cluster/demo-swarm
+    $ bash cluster-deploy demo-atomic-warm
 
 ## Controlling the Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
 Use **cluster-control**:
 
-    bash cluster-control <inventory-file> <action: one of stop|suspend|start|destroy>
+    bash cluster-control <inventory-package | cluster-name> <action: one of stop|suspend|start|destroy>
 
 Eg.
 
-    $ bash cluster-control cluster/demo-swarm suspend
+    $ bash cluster-control demo-atomic-swarm suspend
 

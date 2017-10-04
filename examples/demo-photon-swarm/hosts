@@ -1,6 +1,6 @@
 [all:vars]
 cluster_type=photon-swarm
-cluster_name=demo-swarm
+cluster_name=demo-photon-swarm
 
 vmware_target=fusion
 fusion_net="vmnet2"
@@ -12,7 +12,7 @@ network_gateway=192.168.100.1
 network_dns=192.168.100.1
 network_dns2=8.8.8.8
 network_dns3=8.8.4.4
-network_dn=idstudios.vmware
+network_dn=
 
 # docker_elk_target=demo-swarm-m1:9200
 # docker_enable_metrics=true

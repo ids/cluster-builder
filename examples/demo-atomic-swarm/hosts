@@ -1,6 +1,6 @@
 [all:vars]
-cluster_type=photon-swarm
-cluster_name=mini-swarm
+cluster_type=atomic-swarm
+cluster_name=demo-atomic-swarm
 
 vmware_target=fusion
 fusion_net="vmnet2"
@@ -12,10 +12,13 @@ network_gateway=192.168.100.1
 network_dns=192.168.100.1
 network_dns2=8.8.8.8
 network_dns3=8.8.4.4
-network_dn=idstudios.vmware
+network_dn=
+
+# docker_elk_target=demo-swarm-m1:9200
+# docker_enable_metrics=true
 
 [docker_swarm_manager]
-demo-swarm-m1 ansible_host=192.168.100.90 
+demo-swarm-m1 ansible_host=192.168.100.90 swarm_labels='["monitor", "logs"]'
 
 [docker_swarm_worker]
 demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
@@ -23,7 +26,7 @@ demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera
 demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
 
 [vmware_vms]
-demo-swarm-m1 numvcpus=1 memsize=512  
-demo-swarm-w1 numvcpus=1 memsize=1024 
-demo-swarm-w2 numvcpus=1 memsize=1024 
-demo-swarm-w3 numvcpus=1 memsize=1024 
+demo-swarm-m1 numvcpus=2 memsize=3072
+demo-swarm-w1 numvcpus=2 memsize=3072 
+demo-swarm-w2 numvcpus=2 memsize=3072 
+demo-swarm-w3 numvcpus=2 memsize=3072 

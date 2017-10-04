@@ -46,7 +46,7 @@
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2
-      dest: ../tmp/{{ cluster_name }}/test-cluster
+      dest: ../clusters/{{ cluster_name }}/test-cluster
       mode: 0766
     become: false
     when: "inventory_hostname == groups['dcos_masters'][0]"

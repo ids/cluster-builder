@@ -9,9 +9,11 @@ function show_usage () {
 
 if [ -z $INVENTORY_FILE ]; then 
   echo
-  echo "Inventory file not specified!"
+  echo "Cluster package not specified!"
   show_usage
 fi
+
+INVENTORY_FILE=./clusters/$INVENTORY_FILE/hosts
 
 if [ ! -f $INVENTORY_FILE ]; then
   echo

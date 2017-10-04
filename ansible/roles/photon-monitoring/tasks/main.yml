@@ -1,6 +1,6 @@
 ---
 - name: Install Prometheus, Grafana and node-exporter for all nodes
-  include: swarm-metrics.yml
+  include: metrics.yml
 
 - name: Install ELK
-  include: swarm-elk.yml
+  include: elk.yml

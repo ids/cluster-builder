@@ -1,0 +1,9 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+docker --tlsverify --tlscacert=$DIR/api-certs/ca.pem \
+  --tlscert=$DIR/api-certs/cert.pem \
+  --tlskey=$DIR/api-certs/key.pem \
+  -H={{ inventory_hostname }}:2376 info
+  
+open http://{{ inventory_hostname }}:9000

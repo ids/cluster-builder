@@ -88,9 +88,9 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
 
-    - name: waiting 120s for VMs to finish starting up
+    - name: waiting 60s for VMs to finish starting up
       pause:
-        seconds: 120
+        seconds: 60
 
     - name: Find the Temp IP
       local_action:

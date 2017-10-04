@@ -1,9 +1,3 @@
 ---
 - name: Create a Docker Swarm
   include: swarm-cluster.yml
-
-- name: Secure the Swarm Remote API
-  include: swarm-secure-api.yml
-
-- name: Install Portainer
-  include: swarm-portainer.yml

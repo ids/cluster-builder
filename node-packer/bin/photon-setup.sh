@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
 echo '***'
+echo '*** Setting up authorized keys...'
+echo '***'
+
+if [ ! -d /root/.ssh ]; then 
+  mkdir /root/.ssh
+  chmod 700 /root/.ssh
+fi 
+cp /tmp/authorized_keys /root/.ssh/authorized_keys
+chmod 600 /root/.ssh/authorized_keys
+
+echo '***'
 echo '*** Installing:'
 echo '***   - VMware Tools'
 echo '***   - NFS Support'

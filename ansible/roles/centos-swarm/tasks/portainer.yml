@@ -5,18 +5,7 @@
 # provisioned for remote api and portainer access on demand
 
 ---
-- name: install pip
-  shell: tdnf -y install python-pip
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
-
-- name: Install docker-py 1.9.0 to fix Ansible issue 17495
-  pip:
-    name: docker-py
-    version: 1.9.0
-    state: present
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
-
-- name: install docker-compose python module
+- name: Install docker-compose python module
   pip: name={{ item }} state=latest
   with_items:
     - docker-compose
@@ -40,7 +29,7 @@
   shell: 
     cmd: | 
       docker service create --constraint "node.role == manager" -p 9000:9000 \
-      --name portainer --mount type=bind,source=/certs,destination=/certs \
+      --name portainer --mount type=bind,source=/etc/certs/docker,destination=/certs \
       --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
       portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify
   ignore_errors: true
@@ -50,19 +39,3 @@
 - debug: msg="{{ portainer_start.stdout }}"
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-#- name: Start Portainer
-#  docker_container:
-#    name: portainer
-#    image: portainer/portainer:develop
-#    command: --tlsverify
-#    ports:
-#      - "9000:9000"
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#      - /certs:/certs
-#    state: started
-#    pull: false
-#    env:
-#        DOCKER_TLS_VERIFY: 1
-#        DOCKER_HOST: unix:///var/run/docker.sock
-#  when: "'docker_swarm_manager' in group_names"

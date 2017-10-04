@@ -1,6 +1,7 @@
 [all:vars]
 cluster_type=photon-swarm
-cluster_name=swarm-dev
+cluster_name=esxi-photon-swarm
+remote_user=root
 
 vmware_target=esxi
 esxi_net="VM Network" 

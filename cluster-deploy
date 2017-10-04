@@ -47,10 +47,9 @@ function esxi_deploy () {
   fi
 
   sleep 30s
-  bash tmp/$CLUSTER_NAME/test-cluster
+  bash clusters/$CLUSTER_NAME/test-cluster
   echo
-  echo "SUCCESS: ${CLUSTER_TYPE_NAME} created!"
-
+  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
 function fusion_deploy () {
@@ -81,15 +80,17 @@ function fusion_deploy () {
   fi
 
   sleep 10s
-  bash tmp/$CLUSTER_NAME/test-cluster
+  bash clusters/$CLUSTER_NAME/test-cluster
   echo
-  echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME} created!"
+  echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME}!"
 
 }
 
 if [ -z INVENTORY_FILE ]; then
-  read -s "Enter the target cluster inventory file: " INVENTORY_FILE
+  read -s "Enter the target cluster folder: " INVENTORY_FILE
 fi
+
+INVENTORY_FILE=./clusters/$INVENTORY_FILE/hosts
 
 if [ ! -f $INVENTORY_FILE ]; then
   echo
@@ -114,6 +115,16 @@ elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   OVA_BUILD_TYPE=centos7
   SERVER_WAIT=360s
   REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'atomic-swarm' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-atomic7-x86_64.ova
+  CLUSTER_TYPE_NAME='Atomic Swarm'
+  OVA_BUILD_TYPE=atomic7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'centos-swarm' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
+  CLUSTER_TYPE_NAME='CentOS Swarm'
+  OVA_BUILD_TYPE=centos7
+  REMOTE_USER=admin
 fi
 
 echo
@@ -128,6 +139,8 @@ echo
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
 fi
+
+START_TIME=$SECONDS
 
 if [ ! -f $OVA_TEMPLATE_FILE ]; then
   echo
@@ -149,5 +162,9 @@ if [ "$VMWARE_TARGET" == "esxi" ]; then
 elif [ "$VMWARE_TARGET" == "fusion" ]; then
   fusion_deploy
 fi
+
+ELAPSED_TIME=$($SECONDS - $START_TIME)
+echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+
 
   

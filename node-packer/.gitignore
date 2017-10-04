@@ -1,3 +1,4 @@
+output_atomic7_vmx/**
 output_centos7_vmx/**
 output_photon1_vmx/**
 output_ovas/*.ova

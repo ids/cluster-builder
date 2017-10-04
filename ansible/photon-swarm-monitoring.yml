@@ -5,5 +5,5 @@
   remote_user: root
   any_errors_fatal: true
   roles:
-  - role: swarm-monitoring
+  - role: photon-monitoring
   

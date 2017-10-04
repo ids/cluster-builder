@@ -1,5 +1,6 @@
 tmp
 ansible/*.retry
-client-certs/**
+clusters/**
+!clusters/README.md
 virtuals
 
