@@ -23,7 +23,8 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "inline": ["systemctl enable vmtoolsd"]
+      "inline": ["systemctl enable vmtoolsd"],
+      "pause_before": "30s"
     }
   ],
 

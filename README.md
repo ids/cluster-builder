@@ -21,6 +21,15 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
+There are at present four supported cluster types, or variants:
+
+- photon-swarm
+- centos-swarm
+- atomic-swarm
+- centos-dcos
+
+> Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
+
 ### Required Software
 
 ##### macOS / Linux
@@ -103,7 +112,7 @@ Sample cluster packages are located in the **examples** folder and can be copied
 	demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**: _photon-swarm_ or _centos-dcos_.
+**cluster_type**: _photon-swarm_, _centos-dcos_, _centos-swarm_ or _atomic-swarm_.
 
 **vmware_target**: _fusion_ or _esxi_.
 
@@ -111,10 +120,13 @@ Sample cluster packages are located in the **examples** folder and can be copied
 
 **fusion_net_type**: One of _nat_, _bridged_ or _custom_.
 
-__[docker_prometheus_server]__: When a server is placed in this group it will have **prometheus** and **grafana** instances installed, and will configure global instances of **cAdvisor** and **node-exporter** on all nodes in the cluster.
+__[docker_prometheus_server]__: When a server is placed in this group it will have **prometheus** and **grafana** instances installed.
 
-__[docker_elk_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed, and will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash.
+__docker_enable_metrics=true__: When this is set global instances of **cAdvisor** and **node-exporter** on all nodes in the cluster.
 
+__[docker_elk_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed. 
+
+__docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
 
 #### ESXi Sample: esxi-centos-dcos hosts file
 

@@ -117,7 +117,7 @@
 - name: Fetch the client certs
   fetch:
     src: /etc/certs/docker/{{ item }}.pem
-    dest: ./clusters/{{ cluster_name }}/api-certs/
+    dest: ../clusters/{{ cluster_name }}/api-certs/
     flat: yes        
   with_items:
     - ca
