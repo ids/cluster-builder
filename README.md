@@ -1,7 +1,9 @@
-# Cluster Builder
+Cluster Builder
+===============
+
 Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters.
 
-### Supported Clusters
+## Supported Clusters
 The **cluster-builder** currently supports __Swarm__ and __DC/OS__ clusters on several platforms:
 
 * PhotonOS Docker Swarm
@@ -11,7 +13,7 @@ The **cluster-builder** currently supports __Swarm__ and __DC/OS__ clusters on s
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems more focused on their specific approach to Kubernetes then on being a general purpose container OS. 
 
-### Deployment Options
+## Deployment Options
 There are currently two types of deployment:
 
 * VMware Fusion 
@@ -30,9 +32,9 @@ There are at present four supported cluster types, or variants:
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
-### Required Software
+## Required Software
 
-##### macOS / Linux
+### macOS / Linux
 
 - VMware Fusion Pro 8+ / Workstation Pro 12+
 - VMware ESXi 6.5+ (optional)
@@ -40,7 +42,8 @@ There are at present four supported cluster types, or variants:
 - Ansible 2.3+ `brew install/upgrade ansible`
 - Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 
-##### Windows
+### Windows
+
 Bash on Windows is still problematic.  Even the new Ubuntu Bash in Windows 10 is not much good for integration with VMware products, or virtualization in general.
 
 The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) was created to solve this problem.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
@@ -54,7 +57,7 @@ It can even be built remotely directly on an ESXi server.
 
 For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
-#### Pre-Requesites
+## Pre-Requesites
 
 * Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
 
@@ -63,7 +66,8 @@ VMs for provisioning.
 
 * The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **node-packer/output_ovas**.  See the cluster node packer [readme](https://github.com/ids/cluster-builder/blob/master/node-packer/README.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
-## Cluster Definitons
+## Cluster Definitions
+
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
 
 Eg. In the **examples** folder there is:
@@ -73,7 +77,7 @@ Eg. In the **examples** folder there is:
 
 Sample cluster packages are located in the **examples** folder and can be copied into the **clusters** folder.
 
-#### Fusion Sample: demo-photon-swarm hosts file
+### Fusion Sample: demo-photon-swarm hosts file
 
 	[all:vars]
 	cluster_type=photon-swarm
@@ -128,7 +132,7 @@ __[docker_elk_server]__: When a server is placed in this group it will have **el
 
 __docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
 
-#### ESXi Sample: esxi-centos-dcos hosts file
+### ESXi Sample: esxi-centos-dcos hosts file
 
 	[all:vars]
 	cluster_type=centos-dcos
@@ -189,7 +193,7 @@ VMware Fusion deployment is geared toward building small clusters on a laptop fo
 > **Note:** DC/OS requires at least 16GB of ram on the target machine.
 
 ---
-#### Fusion Pre-requisites
+### Fusion Pre-requisites
 
 * The examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created before attempting to deploy the fusion demos.
 
@@ -202,7 +206,7 @@ The ansible scripts will adjust your local VMware network dhcpd.conf file based 
 
 Once the VMs have been created, assigned their correct addresses, and are running, cluster provisioning process will begin.
 
-### VMware ESXi Deployment
+## VMware ESXi Deployment
 ESXi deployment assumes that you have SSH enabled, and that your operator **id_rsa.pub** has been registered in the ESXi server's authorized_keys.
 
 > **Note**: ESXi deployment uses static IP addresses auto-assigned during the deployment process.
@@ -212,7 +216,7 @@ Once deployed to ESXI, the VMs are started to generate their MAC addresses and f
 At this stage all of the VMs have been deployed and **should be running**.  They should also have their correct static IPs.
 
 ---
-#### ESXi Pre-requisites
+### ESXi Pre-requisites
 
 * All of the ESXi hosts must be setup for root access with passwordless SSH.  The **authorized_keys** for the root account on each ESXi host must contain the public key for the account executing the script.  This should be the same public key used in the creation of the ova template images.
 
