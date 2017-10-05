@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 DOCKER_VERSION=17.09.0-ce
 
-echo '***'
-echo '*** Setting up authorized keys...'
-echo '***'
+echo "***"
+echo "*** Setting up authorized keys..."
+echo "***"
 
 if [ ! -d /root/.ssh ]; then 
   mkdir /root/.ssh
@@ -12,12 +12,12 @@ fi
 cp /tmp/authorized_keys /root/.ssh/authorized_keys
 chmod 600 /root/.ssh/authorized_keys
 
-echo '***'
-echo '*** Installing:'
-echo '***   - VMware Tools'
-echo '***   - NFS Support'
-echo '***   - Upgrade Docker to ${DOCKER_VERSION}'
-echo '***'
+echo "***"
+echo "*** Installing:"
+echo "***   - VMware Tools"
+echo "***   - NFS Support"
+echo "***   - Upgrade Docker to ${DOCKER_VERSION}"
+echo "***"
 
 tdnf -y install open-vm-tools nfs-utils tar gzip curl ntp
 
