@@ -260,8 +260,8 @@ It is easiest to download the VIB to a shared datastore accessible to all of the
 
 Eg.
 
-		esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib
+	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib
 
 The plugin is automatically installed as part of the cluster-builder swarm provisioning process. However, this can also be manually done on cluster nodes with the following command:
 
-		docker plugin install --grant-all-permissions --alias vsphere store/vmware/docker-volume-vsphere:latest
+	docker plugin install --grant-all-permissions --alias vsphere store/vmware/docker-volume-vsphere:latest
