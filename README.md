@@ -252,16 +252,13 @@ Eg.
 
 In order to make use of the VMware Volume Driver Plugin (nDVS) for persistent data volume management the VIB must be installed on all of the ESX servers used for the cluster.
 
-Download the [VIB](https://bintray.com/vmware/vDVS/VIB/0.17#read
-https://bintray.com/vmware/vDVS/download_file?file_path=VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib) for the nDVS.
+Download the [VIB](https://bintray.com/vmware/vDVS/download_file?file_path=VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib) for the nDVS.
 
 It is easiest to download the VIB to a shared datastore accessible to all of the ESX servers, and then copy it locally to the /tmp folder during each install.
 
 > Make sure to put the VIB in tmp on the ESX server and reference it absolutely:
 
 Eg.
-
-		cp *.vib /tmp
 
 		esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib
 
