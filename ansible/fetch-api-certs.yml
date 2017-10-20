@@ -1,5 +1,4 @@
 ---
-
 - hosts: docker_swarm_manager
   remote_user: "{{ remote_user }}"
   tasks:
