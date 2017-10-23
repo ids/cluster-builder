@@ -3,4 +3,4 @@
   include: swarm-cluster.yml
 
 - name: Install the VMware Volume Driver Plugin
-  include: ndvs-plugin.yml
+  include: vdvs-plugin.yml
