@@ -35,10 +35,10 @@
 - name: Download Docker EE GPG Key
   shell: curl -OL "{{ ucp_download_url }}/centos/gpg"
   args: 
-    chdir: ~/
+    chdir: /tmp
 
 - name: Move Docker EE GPG Key
-  shell: mv ~/gpg /etc/dockeree_gpg
+  shell: mv /tmp/gpg /etc/dockeree_gpg
     
 - name: Import Docker EE GPG Key
   shell: rpm --import /etc/dockeree_gpg

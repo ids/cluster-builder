@@ -1,4 +1,11 @@
 
+- name: Ensure the Docker Daemon is started
+  service:
+    name: docker
+    state: started
+    enabled: yes  
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
 - name: Copy the Docker EE License File
   copy:
     src: ../clusters/{{ cluster_name }}/docker_subscription.lic
