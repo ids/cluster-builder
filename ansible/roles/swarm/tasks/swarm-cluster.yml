@@ -123,16 +123,20 @@
 - debug:
     msg: "Labels: {{ docker_swarm_labels.stdout_lines }}"
 
-- name: Remove labels from swarm node
-  command: docker node update --label-rm {{ item }} {{ node_fqdn }}
-  with_items: "{{ docker_swarm_labels.stdout_lines }}"
-  when: "{{ docker_swarm_labels.stdout_lines | count > 0 }}"
-  changed_when: False
-  delegate_to: "{{ groups['docker_swarm_manager'][0] }}"
-  delegate_facts: True
-  tags:
-    - skip_ansible_lint
-    - swarm_labels
+# This mangles existing labels on swarms, such as those placed by UCP
+# need a cleaner approach for relabels, but this is mostly used
+# in cluster creation.
+#
+#- name: Remove labels from swarm node
+#  command: docker node update --label-rm {{ item }} {{ node_fqdn }}
+#  with_items: "{{ docker_swarm_labels.stdout_lines }}"
+#  when: "{{ docker_swarm_labels.stdout_lines | count > 0 }}"
+#  changed_when: False
+#  delegate_to: "{{ groups['docker_swarm_manager'][0] }}"
+#  delegate_facts: True
+#  tags:
+#    - skip_ansible_lint
+#    - swarm_labels
 
 - name: Asign labels to swarm nodes | if any
   command: docker node update --label-add {{ item }}=true {{ node_fqdn }}

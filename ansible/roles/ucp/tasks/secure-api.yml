@@ -1,0 +1,127 @@
+---
+- file:
+    path: /etc/certs/docker
+    state: directory
+    mode: 0755
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate CA private key
+  shell: openssl genrsa -out ca-key.pem 4096 
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate CA public key
+  shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ inventory_hostname }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate Server private key
+  shell: openssl genrsa -out server-key.pem 4096
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate Server public key
+  shell: openssl req -subj "/CN={{ inventory_hostname }}" -sha256 -new -key server-key.pem -out server.csr
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate Server extfile
+  shell: echo subjectAltName = DNS:{{ inventory_hostname }},DNS:{{ inventory_hostname }}.{{ network_dn }},IP:{{ ansible_host }},IP:127.0.0.1 > extfile.cnf
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: sign Server public key
+  shell: openssl x509 -req -days 365 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    
+- name: generate Client private key
+  shell: openssl genrsa -out key.pem 4096
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate Client request
+  shell: openssl req -subj '/CN=client' -new -key key.pem -out client.csr
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: generate Client extfile
+  shell: echo extendedKeyUsage = clientAuth > client-extfile.cnf
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: sign Client private key
+  shell: openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out cert.pem -extfile client-extfile.cnf
+  args:
+    chdir: /etc/certs/docker
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Clean csrs
+  file:
+    state: absent
+    path: "/etc/certs/docker/*.csr"
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: restrict the keys
+  file:
+    state: file
+    mode: 0400
+    path: "/etc/certs/docker/{{ item }}"
+  with_items:
+    - "ca-key.pem"
+    - "server-key.pem"
+    - "key.pem"      
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: restrict the certs
+  file:
+    state: file
+    mode: 0444
+    path: "/etc/certs/docker/{{ item }}"
+  with_items:
+    - "ca.pem"
+    - "server-cert.pem"    
+    - "cert.pem"   
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Stop the current docker daemon
+  service:
+    name: docker
+    state: stopped
+    enabled: no  
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Copy the custom the docker.service
+  template:
+    src: templates/docker-service-ucp.j2
+    dest: /usr/lib/systemd/system/docker.service
+    mode: 0644
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Restart the docker daemon with the certs
+  service:
+    name: docker
+    state: started
+    enabled: yes  
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Fetch the client certs
+  fetch:
+    src: /etc/certs/docker/{{ item }}.pem
+    dest: ../clusters/{{ cluster_name }}/api-certs/
+    flat: yes        
+  with_items:
+    - ca
+    - key    
+    - cert                    
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+            

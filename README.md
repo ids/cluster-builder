@@ -9,6 +9,7 @@ The **cluster-builder** currently supports __Swarm__ and __DC/OS__ clusters on s
 * PhotonOS Docker Swarm
 * CentOS 7 Atomic Docker Swarm
 * CentOS 7 Docker Swarm
+* CentOS 7 Docker EE UCP
 * CentOS 7 DC/OS Cluster
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems more focused on their specific approach to Kubernetes then on being a general purpose container OS. 
@@ -23,11 +24,12 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
-There are at present four supported cluster types, or variants:
+There are at present 5 supported cluster types, or variants:
 
 - photon-swarm
 - centos-swarm
 - atomic-swarm
+- centos-ucp
 - centos-dcos
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
@@ -41,6 +43,8 @@ There are at present four supported cluster types, or variants:
 - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
 - Ansible 2.3+ `brew install/upgrade ansible`
 - Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+
+> Note: For Docker EE edition you will need to provide a valid Docker EE download URL and license file.
 
 ### Windows
 
@@ -131,6 +135,15 @@ __docker_enable_metrics=true__: When this is set global instances of **cAdvisor*
 __[docker_elk_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed. 
 
 __docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
+
+For deploying Docker EE UCP, there are also additional fields required:
+
+__ucp_download_url__: The Docker EE Engine Download Url (eg. https://storebits.docker.com/ee/centos/sub-64babdad-637c-469e-8e42-0c13d6b629fa)
+
+__ucp_admin_user__: The admin user for the UCP
+
+__ucp_admin_password__: The admin password for the UCP
+
 
 ### ESXi Sample: esxi-centos-dcos hosts file
 

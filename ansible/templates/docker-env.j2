@@ -4,6 +4,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export DOCKER_CERT_PATH=$DIR/api-certs
 export DOCKER_TLS_VERIFY=1
-export DOCKER_HOST={{ inventory_hostname }}:2376
+export DOCKER_HOST={{ inventory_hostname }}:{{ docker_tls_port }}
 
 docker $@

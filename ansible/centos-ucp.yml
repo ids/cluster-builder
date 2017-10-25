@@ -1,5 +1,5 @@
 ---
-# This playbook creates an atomic docker swarm
+# This playbook creates an centos7 docker swarm
 
 - hosts: all
   remote_user: admin
@@ -15,11 +15,13 @@
     docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
     docker_swarm_port: 2377
-    docker_tls_port: 2376
-roles:
-  - role: atomic
+    docker_tls_port: 2378
+
+  roles:
+  - role: centos
+  - role: ucp
   - role: swarm
-  - role: atomic-swarm
+  - role: centos-swarm
   
   tasks:
   - name: Ensure tmp cluster folder exists

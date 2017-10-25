@@ -1,0 +1,1 @@
+docker container run --rm -it --name ucp -v /var/run/docker.sock:/var/run/docker.sock docker/ucp:2.2.3 install --license `cat /etc/dockeree_license.lic` --host-address {{ inventory_hostname }} 
