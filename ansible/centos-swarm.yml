@@ -41,6 +41,15 @@
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     become: false
 
+  - name: Generate the wrapper docker-env2 script
+    local_action:
+      module: template
+      src: templates/docker-env2.j2
+      dest: ../clusters/{{ cluster_name }}/docker-env2
+      mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false
+
   - name: Generate the client test script
     local_action:
       module: template
