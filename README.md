@@ -6,11 +6,11 @@ Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https:
 ## Supported Clusters
 The **cluster-builder** currently supports __Swarm__ and __DC/OS__ clusters on several platforms:
 
-* PhotonOS Docker Swarm
-* CentOS 7 Atomic Docker Swarm
-* CentOS 7 Docker Swarm
-* CentOS 7 Docker EE UCP
-* CentOS 7 DC/OS Cluster
+* PhotonOS Docker CE
+* CentOS 7 Atomic Docker CE
+* CentOS 7 Docker CE
+* CentOS 7 Docker EE 
+* CentOS 7 DC/OS 
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems more focused on their specific approach to Kubernetes then on being a general purpose container OS. 
 
