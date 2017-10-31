@@ -2,8 +2,8 @@
 - name: Install the UCP
   include: ucp-install.yml
 
-#- name: Create the Secure API Certificates
-#  include: secure-api.yml
+- name: Configure Docker Storage
+  include: device-mapper-manual.yml
 
 - name: Start the UCP
   include: ucp-start.yml

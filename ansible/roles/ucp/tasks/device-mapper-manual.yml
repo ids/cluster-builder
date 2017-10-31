@@ -68,7 +68,7 @@
 - name: Remove existing docker volume data
   shell: rm -rf /var/lib/docker.bk
 
-- name: waiting 60s for Docker to recover from the LVM changes
+- name: waiting for Docker to recover from the LVM changes...
   pause:
     seconds: 60
       

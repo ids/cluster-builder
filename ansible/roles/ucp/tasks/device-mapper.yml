@@ -7,24 +7,6 @@
     - device-mapper-persistent-data
     - lvm2
 
-- name: Ensure there are no partitions on the 2nd block device dedicated for Docker direct-lvm
-  ignore_errors: true
-  shell: 
-    cmd: | 
-      fdisk /dev/sdb <<EOF
-      d
-      w
-      EOF
-
-- name: Restart machines to clear partition table.
-  shell: sleep 2 && shutdown -r now
-  async: 1
-  poll: 0
-
-- name: waiting 90 secs for servers to come back
-  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=90 timeout=180
-  become: false
-
 - name: Configure the docker daemon.json 
   template:
     src: templates/docker_daemon_devicemapper.j2

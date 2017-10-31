@@ -17,6 +17,6 @@
 - debug: msg="{{ master_output.stdout_lines }}"
 - debug: msg="{{ master_output.stderr_lines }}"
 
-- name: waiting 1 minute for master to settle in
+- name: waiting for master to settle in...
   pause:
     minutes: 1

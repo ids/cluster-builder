@@ -57,7 +57,7 @@
       _raw_params: vmrun start {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
     become: false
 
-  - name: waiting 30s for VMs to generate MAC addresses
+  - name: Waiting for VMs to generate MAC addresses
     pause:
       seconds: 60
     
