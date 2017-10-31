@@ -1,0 +1,11 @@
+{
+  "metrics-addr" : "0.0.0.0:9323",
+  "experimental" : true,
+
+  "storage-driver": "devicemapper",
+  "storage-opts": [
+    "dm.thinpooldev=/dev/mapper/docker-thinpool",
+    "dm.use_deferred_removal=true",
+    "dm.use_deferred_deletion=true"
+    ]
+}

@@ -1,0 +1,2 @@
+- name: Configure Docker Storage
+  include: device-mapper-manual.yml

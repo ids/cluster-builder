@@ -1,5 +1,2 @@
 - name: Configure Docker Firewall Rules
   include: firewalld.yml
-
-- name: Configure Docker Storage
-  include: device-mapper.yml

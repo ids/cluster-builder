@@ -22,6 +22,7 @@
   - role: ucp
   - role: swarm
   - role: centos-swarm
+  - role: docker-devicemapper
   
   tasks:
   - name: Ensure tmp cluster folder exists

@@ -2,5 +2,5 @@
 - name: Install Prometheus, Grafana and node-exporter for all nodes
   include: metrics.yml
 
-- name: Install ELK
-  include: elk.yml
+- name: Install Logging
+  include: logging.yml

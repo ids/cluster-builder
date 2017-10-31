@@ -42,6 +42,20 @@
   "post-processors": [{
       "type": "shell-local",
       "inline": [
+        "vmware-vdiskmanager -c -t 0 -s 250GB -a scsi output_centos7_vmx/docker-disk.vmdk"
+      ]
+    },
+    {
+      "type": "shell-local",
+      "inline": ["echo 'scsi0:1.present = \"TRUE\"' >> output_centos7_vmx/cluster-node-centos7-x86_64.vmx "]
+    },
+    {
+      "type": "shell-local",
+      "inline": ["echo 'scsi0:1.fileName = \"docker-disk.vmdk\"' >> output_centos7_vmx/cluster-node-centos7-x86_64.vmx "]
+    },
+    {
+      "type": "shell-local",
+      "inline": [
           "ovftool --overwrite output_centos7_vmx/cluster-node-centos7-x86_64.vmx output_ovas/cluster-node-centos7-x86_64.ova"
       ]
   }],
@@ -53,7 +67,6 @@
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos.cfg<enter><wait>"
       ],
       "boot_wait": "10s",
-      "disk_additional_size": [256000],
       "disk_size": 256000,
       "guest_os_type": "centos-64",
       "headless": true,

@@ -1,0 +1,6 @@
+---
+- name: Configure metrics and node-exporter for all nodes
+  include: metrics.yml
+
+- name: Configure Logging
+  include: logging.yml
