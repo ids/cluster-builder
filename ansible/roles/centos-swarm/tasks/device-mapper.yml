@@ -20,6 +20,16 @@
     src: templates/docker_daemon_jsonfile.j2
     dest: /etc/docker/daemon.json
 
+- name: Add the storage configuration into daemon.json
+  lineinfile:
+    dest: /etc/docker/daemon.json
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '^kernel.shmall', line: 'kernel.shmall = 2097152' }
+    - { regexp: '^kernel.shmmax', line: 'kernel.shmmax = 134217728' }
+    - { regexp: '^fs.file-max', line: 'fs.file-max = 65536' }
+
 - name: 
   blockinfile:
     path: /etc/docker/daemon.json
