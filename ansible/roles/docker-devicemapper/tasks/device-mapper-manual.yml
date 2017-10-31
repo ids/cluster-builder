@@ -70,6 +70,6 @@
 
 - name: waiting 60s for Docker to recover from the LVM changes
   pause:
-    seconds: 60s
+    seconds: 60
       
       
