@@ -53,10 +53,4 @@
   with_items:
     - docker-ee
 
-- name: Configure the UCP docker daemon.json 
-  template:
-    src: templates/docker_daemon_ucp.j2
-    dest: /etc/docker/daemon.json
-
-
 

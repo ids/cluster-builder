@@ -53,6 +53,7 @@
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos.cfg<enter><wait>"
       ],
       "boot_wait": "10s",
+      "disk_additional_size": [256000],
       "disk_size": 256000,
       "guest_os_type": "centos-64",
       "headless": true,

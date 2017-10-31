@@ -6,6 +6,8 @@ remote_user=admin
 vmware_target=esxi
 esxi_net="VM Network" 
 esxi_net_prefix=192.168.1
+vcenter_server=itsocass
+vcenter_user=user@server.ca
 
 network_mask=255.255.255.0
 network_gateway=192.168.1.1
