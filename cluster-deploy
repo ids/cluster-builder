@@ -48,6 +48,7 @@ function esxi_deploy () {
 
   sleep 30s
   bash clusters/$CLUSTER_NAME/test-cluster
+
   echo
   echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
@@ -81,6 +82,7 @@ function fusion_deploy () {
 
   sleep 10s
   bash clusters/$CLUSTER_NAME/test-cluster
+
   echo
   echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME}!"
 

@@ -19,6 +19,7 @@
 
   roles:
   - role: centos
+  - role: centos-hardening
   - role: ucp
   - role: swarm
   
@@ -30,3 +31,20 @@
       state: directory
     become: false
 
+  - name: Generate the wrapper docker-env script
+    local_action:
+      module: template
+      src: templates/docker-env.j2
+      dest: ../clusters/{{ cluster_name }}/docker-env
+      mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false
+
+  - name: Generate the client test script
+    local_action:
+      module: template
+      src: templates/test-{{ cluster_type }}.j2
+      dest: ../clusters/{{ cluster_name }}/test-cluster
+      mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false

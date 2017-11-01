@@ -1,0 +1,2 @@
+- name: Security Hardening of CentOS
+  include: hardening.yml
