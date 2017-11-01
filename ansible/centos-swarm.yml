@@ -19,8 +19,8 @@
 
   roles:
   - role: centos
+  - role: centos-swarm-prep
   - role: swarm
-  - role: centos-swarm
   - role: swarm-secure-api
   - role: portainer
   

@@ -279,11 +279,3 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 	docker plugin install --grant-all-permissions --alias vsphere store/vmware/docker-volume-vsphere:latest
 
-
-## TODO
-
-* Implement periodic backups of the UCP in production deployments: [see](https://docs.docker.com/datacenter/ucp/2.2/reference/cli/backup/#description)
-* Implement the direct-lvm devicemapper configuration for CentOS deployments: [see](https://docs.docker.com/engine/userguide/storagedriver/device-mapper-driver)
-* Implement automated DTR installation and configuration.  Research shared volume usage for HA DTR implementations.
-* Run security scanning and verification test on output clusters
-* Investigate EE LDAP integration configurations
