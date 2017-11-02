@@ -227,7 +227,7 @@ ESXi deployment assumes that you have SSH enabled, and that your operator **id_r
 
 > **Note**: ESXi deployment uses static IP addresses auto-assigned during the deployment process.
 
-Once deployed to ESXI, the VMs are started to generate their MAC addresses and fetch temporary DHCP IP addresses.  These are then used to create some BASH scripts that will configure the CentOS VMs with static IPs, as per the inventory file.
+Once deployed to ESXI, the VMs are started to generate their MAC addresses and fetch temporary DHCP IP addresses.  These are then used to create some BASH scripts that will configure the VMs with static IPs, as per the inventory file.
 
 At this stage all of the VMs have been deployed and **should be running**.  They should also have their correct static IPs.
 
@@ -250,7 +250,7 @@ To deploy a cluster use **cluster-deploy**:
 
 Eg.
 
-    $ bash cluster-deploy demo-atomic-warm
+    $ bash cluster-deploy demo-centos-swarm
 
 ## Controlling the Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
