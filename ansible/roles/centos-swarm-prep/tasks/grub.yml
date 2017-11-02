@@ -1,0 +1,19 @@
+---
+- name: Add required kernel options to GRUB
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX'
+    line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet cgroup_enable=memory swapaccount=1"'
+    state: present
+
+- name: Update GRUB
+  shell: grub-update
+
+- name: Reboot CentOS with new kernel options
+  shell: shutdown -r -t 5s 
+  become: true
+  ignore_errors: true
+
+- name: Waiting 90 secs for servers to reboot post kernel option adjustment
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=90 timeout=240
+  become: false
