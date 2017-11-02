@@ -70,6 +70,9 @@ VMs for provisioning.
 
 * The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **node-packer/output_ovas**.  See the cluster node packer [readme](https://github.com/ids/cluster-builder/blob/master/node-packer/README.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
+__Note for Docker EE__
+The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __docker_subscription.lic__ file.
+
 ## Cluster Definitions
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
@@ -138,7 +141,7 @@ __docker_elk_target=<elk-server:port>__: Will configure global instances of **lo
 
 For deploying Docker EE UCP, there are also additional fields required:
 
-__ucp_download_url__: The Docker EE Engine Download Url (eg. https://storebits.docker.com/ee/centos/sub-64babdad-637c-469e-8e42-0c13d6b629fa)
+__ucp_download_url__: The Docker EE Engine Download Url
 
 __ucp_admin_user__: The admin user for the UCP
 
