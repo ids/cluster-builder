@@ -4,7 +4,7 @@ Cluster Builder
 Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters.
 
 ## Supported Clusters
-The **cluster-builder** currently supports __Swarm__ and __DC/OS__ clusters on several platforms:
+The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
 
 * PhotonOS Docker CE
 * CentOS 7 Atomic Docker CE
