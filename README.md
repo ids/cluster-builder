@@ -99,7 +99,7 @@ Sample cluster packages are located in the **examples** folder and can be copied
 
 	[all:vars]
 	cluster_type=photon-swarm
-	cluster_name=demo-swarm
+	cluster_name=demo-photon-swarm
 
 	vmware_target=fusion
 	fusion_net="vmnet2"
@@ -163,7 +163,7 @@ __ucp_admin_password__: The admin password for the UCP
 
 	[all:vars]
 	cluster_type=centos-dcos
-	cluster_name=dcos-c2
+	cluster_name=esxi-centos-dcos
 
 	dcos_boot_server=192.168.1.160
 	dcos_boot_server_port=9580
@@ -220,7 +220,7 @@ VMware Fusion deployment is geared toward building small clusters on a laptop fo
 > **Note:** DC/OS requires at least 16GB of ram on the target machine.
 
 ---
-### Fusion Pre-requisites
+### Fusion Preparation
 
 * The examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created before attempting to deploy the fusion demos.
 
@@ -243,7 +243,7 @@ Once deployed to ESXI, the VMs are started to generate their MAC addresses and f
 At this stage all of the VMs have been deployed and **should be running**.  They should also have their correct static IPs.
 
 ---
-### ESXi Pre-requisites
+### ESXi Preparation
 
 * All of the ESXi hosts must be setup for root access with passwordless SSH.  The **authorized_keys** for the root account on each ESXi host must contain the public key for the account executing the script.  This should be the same public key used in the creation of the ova template images.
 
