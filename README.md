@@ -298,14 +298,33 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 Currently in a pre-production state, but rapidly approaching production readiness with the CentOS variant of Docker CE and EE.
 
-### Lynis
+### Security
+
+Currently two automated security audits of the  __cluster-builder CentOS Docker EE/CE__ clusters have been conducted:
+
+> November 1st, 2017
+
+#### Lynis
 
 [Lynis](https://cisofy.com/lynis/) security scanning has been conducted on the current CentOS node.  Relevant suggestions were implemented as part of an [ansible hardening script](ansible/roles/centos-hardening/tasks/hardening.yml).
 
 The report output is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-lynis.md).
 
-### CIS Docker Benchmark
+#### CIS Docker Benchmark
 
 The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-docker-cis.md).
 
-> Reports last evaluated on November 1st, 2017
+
+### Profile
+
+A general overview of the highlights:
+
+* Docker versions: __Docker CE:__ 17.0.9-ce (or later), __Docker EE:__ 2.2.3 (ucp)
+* CentOS base VM image OVA template is __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
+* CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
+* The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
+* Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ services are configured and verified.
+* Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
+* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
+* Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified deployment model for both Docker EE and CE.
+
