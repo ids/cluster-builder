@@ -1,4 +1,4 @@
-# VMware Cluster Node Builder
+# VMware Cluster Node Packer
 Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 1.0 R2** for use in DC/OS & Swarm Clusters.
 
 ## Requirements
