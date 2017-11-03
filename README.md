@@ -302,8 +302,8 @@ Currently in a pre-production state, but rapidly approaching production readines
 
 [Lynis](https://cisofy.com/lynis/) security scanning has been conducted on the current CentOS node.  Relevant suggestions were implemented as part of an [ansible hardening script](ansible/roles/centos-hardening/tasks/hardening.yml).
 
-The report output is available [here](xtras/security-reports/centos-lynis.md).
+The report output is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-lynis.md).
 
 ### CIS Docker Benchmark
 
-The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](xtras/security-reports/centos-docker-cis.md).
+The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-docker-cis.md).
