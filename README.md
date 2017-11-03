@@ -14,7 +14,7 @@ Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https:
 9. [Production Readiness](#production-readiness)
 
 
-(## Supported Clusters)
+## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
 
 * PhotonOS Docker CE
