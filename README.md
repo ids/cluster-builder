@@ -3,7 +3,18 @@ Cluster Builder
 
 Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters.
 
-## Supported Clusters
+1. [Supported Clusters](#supported-clusters)
+2. [Deployment Options](#deployment-options)
+3. [Required Software](#required-software)
+4. [General Prerequisites](#general-prerequisites)
+5. [Cluster Definition Packages](#cluster-definition-packages)
+6. [Deploying a Cluster](#deploying-a-cluster)
+7. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+8. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
+9. [Production Readiness](#production-readiness)
+
+
+(## Supported Clusters)
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
 
 * PhotonOS Docker CE
@@ -61,7 +72,7 @@ It can even be built remotely directly on an ESXi server.
 
 For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
-## Pre-Requesites
+## General Pre-Requesites
 
 * Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
 
@@ -73,7 +84,7 @@ VMs for provisioning.
 __Note for Docker EE__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __docker_subscription.lic__ file.
 
-## Cluster Definitions
+## Cluster Definition Packages
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
 
@@ -252,7 +263,7 @@ Eg.
 
     $ bash cluster-deploy demo-centos-swarm
 
-## Controlling the Cluster VM Nodes
+## Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
 Use **cluster-control**:
@@ -282,3 +293,17 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 	docker plugin install --grant-all-permissions --alias vsphere store/vmware/docker-volume-vsphere:latest
 
+
+## Production Readiness
+
+Currently in a pre-production state, but rapidly approaching production readiness with the CentOS variant of Docker CE and EE.
+
+### Lynis
+
+[Lynis](https://cisofy.com/lynis/) security scanning has been conducted on the current CentOS node.  Relevant suggestions were implemented as part of an [ansible hardening script](ansible/roles/centos-hardening/tasks/hardening.yml).
+
+The report output is available [here](xtras/security-reports/centos-lynis.md).
+
+### CIS Docker Benchmark
+
+The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](xtras/security-reports/centos-docker-cis.md).
