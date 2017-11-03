@@ -328,5 +328,5 @@ A general overview of the highlights:
 * Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
 * Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
 
-> Note that all details relating to the information provided above exist within this codebase, as cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase.
+> Note that all details relating to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
 
