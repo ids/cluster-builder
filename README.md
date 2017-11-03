@@ -315,7 +315,7 @@ The report output is available [here](https://raw.githubusercontent.com/ids/clus
 The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-docker-cis.md).
 
 
-### Profile
+### System Profile
 
 A general overview of the highlights:
 
