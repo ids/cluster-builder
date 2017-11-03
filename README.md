@@ -326,5 +326,5 @@ A general overview of the highlights:
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ services are configured and verified.
 * Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
 * Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
-* Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified deployment model for both Docker EE and CE.
+* Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
 
