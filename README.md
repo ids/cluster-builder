@@ -6,7 +6,7 @@ Ansible scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https:
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
 3. [Required Software](#required-software)
-4. [General Prerequisites](#general-prerequisites)
+4. [Preparation](#preparation)
 5. [Cluster Definition Packages](#cluster-definition-packages)
 6. [Deploying a Cluster](#deploying-a-cluster)
 7. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
@@ -72,7 +72,7 @@ It can even be built remotely directly on an ESXi server.
 
 For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
-## General Pre-Requesites
+## Preparation
 
 * Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
 
