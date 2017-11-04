@@ -16,7 +16,7 @@
 # 0=Silent
 # 1=printk, print failure message
 # 2=panic, halt system
--f 1
+-f 0
 
 ###################
 # Audit the audit logs.
@@ -185,7 +185,7 @@
 
 
 ####################
-# CIS Settings
+# CIS Docker Settings
 ####################
 # 1.5  - Ensure auditing is configured for the Docker daemon
 -w /usr/bin/docker -p wa
