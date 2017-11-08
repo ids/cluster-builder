@@ -1,6 +1,3 @@
 ---
 - name: Create a Docker Swarm
   include: swarm-cluster.yml
-
-- name: Install the VMware Volume Driver Plugin
-  include: vdvs-plugin.yml

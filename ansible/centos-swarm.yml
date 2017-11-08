@@ -24,6 +24,7 @@
   - role: swarm
   - role: swarm-secure-api
   - role: portainer
+  - role: vmware-vdvs
   
   tasks:
   - name: Ensure tmp cluster folder exists

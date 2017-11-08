@@ -22,7 +22,8 @@
   - role: centos-hardening
   - role: ucp
   - role: swarm
-  
+  - role: vmware-vdvs
+    
   tasks:
   - name: Ensure tmp cluster folder exists
     local_action:
