@@ -17,11 +17,16 @@ if [ ! -f keys/authorized_keys ]; then
   bash keys/set-key
 fi
 
+PACKER_CMD="packer build cluster-node-${IMAGE}.json"
+if [ `uname -r | grep Microsoft | wc` == "1" ]; then 
+  PACKER_CMD="/mnt/c/Windows/System32/cmd.exe /k \"packer build cluster-node-${IMAGE}.json && exit\""
+fi
+
 if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon1" ] || [ "$IMAGE" == "atomic7" ]; then
   echo
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'
-  packer build cluster-node-$IMAGE.json
+  eval $PACKER_CMD
 else
   echo
   echo 'Error: Not a valid VM image type!'

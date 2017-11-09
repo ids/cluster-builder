@@ -7,10 +7,11 @@ if [ -f /mnt/vmware-tools/ovftool.exe ]; then
   echo "Using ovftool.exe alias for Windows!"
   shopt -s expand_aliases
   alias ovftool=/mnt/vmware-tools/ovftool.exe
-  OVA_TEMPLATE_PATH="file://C:/Users/`whoami`/AppData/Local/lxss/home/`whoami`/Workspace/cluster-builder/{{ ova_template_path }}"
+  CPATH=/mnt/c/Users/`whoami`
+  USER_PATH=${PWD/$CPATH/''}
+  OVA_TEMPLATE_PATH="file://C:/Users/`whoami`$USER_PATH/{{ ova_template_path }}"
   echo "Using OVA: ${OVA_TEMPLATE_PATH}"
 fi
-
 
 
 {% for host in groups['vmware_vms'] %}
