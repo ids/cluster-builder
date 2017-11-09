@@ -1,5 +1,0 @@
-#!/bin/bash
-
-CPATH=/mnt/c/Users/`whoami`
-HOME_PATH=${PWD/$CPATH/''}
-echo $HOME_PATH

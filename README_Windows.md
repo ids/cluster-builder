@@ -78,6 +78,13 @@ And then when you are in your Windows workspace, typing:
 
 Will open up VS Code in the expected folder.
 
+### 8. Turn off git file mode checking
+
+This is very important as the Windows filesystem views all files as mode 777 within the WSL, which trips up git.
+
+    git config core.fileMode false
+
+    
 ## Good to GO!
 
 That should do it... make sure to use the WSL Bash shell.  It will call on CMD as required.
