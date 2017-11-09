@@ -1,5 +1,10 @@
 #!/bin/bash 
 
+# this here for experimental windows support
+if [ -f /mnt/vmware-tools/ovftool.exe ]; then
+  alias ovftool=/mnt/vmware-tools/ovftool.exe
+fi
+
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
 
