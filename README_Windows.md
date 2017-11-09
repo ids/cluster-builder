@@ -84,9 +84,13 @@ This is very important as the Windows filesystem views all files as mode 777 wit
 
     git config core.fileMode false
 
-    
+
 ## Good to GO!
 
 That should do it... make sure to use the WSL Bash shell.  It will call on CMD as required.
 
 > CRLF Alert!  When you create files in VS Code you are doing it from Windows perspective, and they will likely default to CRLF, which is problematic within the WSL Bash.  Make sure to default your settings to LF.
+
+> If your terminal looks like I think it does, which is to say, the default, you seriously need to read [this](http://blog.programster.org/fix-font-colors-in-windows-10-bash).  
+
+;)
