@@ -1,11 +1,17 @@
 #!/bin/bash 
 
+OVA_TEMPLATE_PATH={{ ova_template_path }}
+
 # this here for experimental windows support
 if [ -f /mnt/vmware-tools/ovftool.exe ]; then
   echo "Using ovftool.exe alias for Windows!"
   shopt -s expand_aliases
   alias ovftool=/mnt/vmware-tools/ovftool.exe
+  OVA_TEMPLATE_PATH="file://C:/Users/`whoami`/AppData/Local/lxss/home/`whoami`/Workspace/cluster-builder/{{ ova_template_path }}"
+  echo "Using OVA: ${OVA_TEMPLATE_PATH}"
 fi
+
+
 
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
@@ -19,7 +25,7 @@ fi
         --noSSLVerify \
         --datastore="{{ hostvars[host].esxi_ds }}" \
         --network="{{ hostvars[host].esxi_net }}" \
-        {{ ova_template_path }} \
+        $OVA_TEMPLATE_PATH \
         vi://{{ hostvars[host].vcenter_user }}:$1@{{ hostvars[host].vcenter_server }}/?ip={{ hostvars[host].esxi_host }}
   
   {% else %}
@@ -33,7 +39,7 @@ fi
         --noSSLVerify \
         --datastore="{{ hostvars[host].esxi_ds }}" \
         --network="{{ hostvars[host].esxi_net }}" \
-        {{ ova_template_path }} \
+        $OVA_TEMPLATE_PATH \
         vi://{{ hostvars[host].esxi_user }}:$1@{{ hostvars[host].esxi_host }}
         
   {% endif %}
