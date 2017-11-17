@@ -32,7 +32,7 @@
 
 - name: Create monitoring network...
   shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
-  when: "docker_enable_metrics|default(false)|bool == true"
+  when: "docker_enable_metrics == true"
   ignore_errors: true
   run_once: true
 
@@ -71,7 +71,7 @@
       --collector.procfs /host/proc \
       --collector.sysfs /host/sys \
       --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"  
-  when: "docker_enable_metrics|default(false)|bool == true"
+  when: "docker_enable_metrics == true"
   run_once: true
 
 - name: Install cadvisor on all nodes (service mode is global)
@@ -92,7 +92,7 @@
       --publish 9101:8080/tcp \
       --container-label com.docker.stack.namespace=monitor \
       google/cadvisor:latest 
-  when: "docker_enable_metrics|default(false)|bool == true"
+  when: "docker_enable_metrics == true"
   run_once: true
 
 - name: Create grafana host data volume
