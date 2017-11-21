@@ -2,7 +2,7 @@
   file:
     path: /opt/node_exporter
     state: directory
-    mode: 0766
+    mode: 0755
 
 - name: Download and extract node-exporter
   unarchive:
@@ -15,7 +15,7 @@
   template:
     src: templates/node-exporter-service.j2
     dest: /etc/systemd/system/node-exporter.service
-    mode: 0766
+    mode: 0755
 
 - name: Reload systemd configuration
   shell: systemctl daemon-reload
