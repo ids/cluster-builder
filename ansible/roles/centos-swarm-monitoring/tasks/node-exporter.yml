@@ -3,6 +3,12 @@
     url: https://github.com/prometheus/node_exporter/releases/download/v0.15.1/node_exporter-0.15.1.linux-amd64.tar.gz
     dest: /tmp/node-exporter.tar.gz
 
+- name: Create /opt/node-exporter
+  file:
+    path: /opt/node-exporter
+    state: directory
+    mode: 0766
+
 - name: Extract archive
   unarchive: src=/tmp/node-exporter.tar.gz
              dest=/opt/node-exporter
