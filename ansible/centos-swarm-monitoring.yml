@@ -7,4 +7,4 @@
   any_errors_fatal: true
 
   roles:
-  - role: centos-monitoring 
+  - role: centos-swarm-monitoring 
