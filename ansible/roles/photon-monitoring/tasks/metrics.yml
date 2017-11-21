@@ -1,16 +1,14 @@
 ---
-- name: Configure the docker daemon.json file for metrics
-  template:
-    src: templates/docker_daemon_jsonfile.j2
+- name: Add the storage configuration into daemon.json
+  lineinfile:
     dest: /etc/docker/daemon.json
-  when: "docker_enable_metrics|default(false)|bool == true"
-
-- name: Create prometheus host data volume
-  file:
-    path: /etc/prometheus
-    state: directory
-    mode: 0755
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    insertafter: "{"
+  with_items:
+    - { regexp: 'metrics-addr', line: '"metrics-addr" : "0.0.0.0:9323",' }
+    - { regexp: 'experimental', line: '"experimental" : true,' }
 
 - name: Create and install the prometheus configuration file
   template:
@@ -25,12 +23,6 @@
     mode: 0755
   when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
 
-- name: Create monitoring network...
-  shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitor_network
-  when: "docker_enable_metrics|default(false)|bool == true"
-  ignore_errors: true
-  run_once: true
-
 - name: Install prometheus 
   shell: 
     cmd: | 
@@ -39,56 +31,42 @@
       --reserve-cpu 0.5 \
       --limit-memory 1073741824 \
       --reserve-memory 512m \
-      --network monitor_network \
       --constraint "node.role == manager" \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
       --mount type=bind,source=/etc/prometheus/prometheus.yml,destination=/etc/prometheus/prometheus.yml \
-      --mount type=bind,source=/data/prometheus,destination=/prometheus \
+      --mount source=prometheus-data,destination=/prometheus \
       --publish 9090:9090/tcp \
       prom/prometheus
   when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
 
-- name: Install node exporter on all nodes (service mode is global)
-  shell: 
-    cmd: | 
-      docker service create --mode global --name monitor-node-exporter \
-      --limit-cpu 0.5 \
-      --reserve-cpu 0.3 \
-      --limit-memory 536870912 \
-      --reserve-memory 134217728 \
-      --network monitor_network \
-      --mount type=bind,source=/proc,destination=/host/proc,readonly \
-      --mount type=bind,source=/sys,destination=/host/sys,readonly \
-      --mount type=bind,source=/,destination=/rootfs,readonly \
-      --publish 9100:9100/tcp \
-      --container-label com.docker.stack.namespace=monitor \
-      prom/node-exporter \
-      --collector.procfs /host/proc \
-      --collector.sysfs /host/sys \
-      --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"  
-  when: "docker_enable_metrics|default(false)|bool == true"
-  run_once: true
+- name: Stop cadvisor on all nodes 
+  shell: docker stop cadvisor
+  when: "docker_enable_metrics"
+  ignore_errors: true
 
-- name: Install cadvisor on all nodes (service mode is global)
+- name: Remove cadvisor on all nodes 
+  shell: docker rm cadvisor
+  when: "docker_enable_metrics"
+  ignore_errors: true
+
+- name: Install cadvisor on all nodes 
   shell: 
     cmd: | 
-      docker service create --mode global --name monitor-cadvisor \
-      --limit-cpu 0.5 \
-      --reserve-cpu 0.3 \
-      --limit-memory 536870912 \
-      --reserve-memory 134217728 \
-      --network monitor_network \
-      --mount type=bind,source=/proc,destination=/host/proc,readonly \
-      --mount type=bind,source=/sys,destination=/host/sys,readonly \
-      --mount type=bind,source=/,destination=/rootfs,readonly \
-      --mount type=bind,source=/var/run,destination=/var/run,readonly \
-      --mount type=bind,source=/var/lib/docker,destination=/var/lib/docker,readonly \
-      --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
-      --publish 9101:8080/tcp \
-      --container-label com.docker.stack.namespace=monitor \
-      google/cadvisor:latest 
-  when: "docker_enable_metrics|default(false)|bool == true"
-  run_once: true
+      docker run \
+        --privileged=true \
+        --restart=always \
+        --memory 536870912 \
+        --volume=/cgroup:/cgroup:ro \
+        --volume=/:/rootfs:ro \
+        --volume=/var/run:/var/run:rw \
+        --volume=/sys:/sys:ro \
+        --volume=/var/lib/docker/:/var/lib/docker:ro \
+        --volume=/dev/disk/:/dev/disk:ro \
+        --publish=9101:8080 \
+        --detach=true \
+        --name=cadvisor \
+        google/cadvisor:latest    
+  when: "docker_enable_metrics"
 
 - name: Create grafana host data volume
   file:
@@ -105,7 +83,6 @@
       --reserve-cpu 0.5 \
       --limit-memory 1073741824 \
       --reserve-memory 536870912 \
-      --network monitor_network \
       --constraint "node.role == manager" \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
       --mount type=bind,source=/data/grafana,destination=/var/lib/grafana \
@@ -119,4 +96,4 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "docker_enable_metrics|default(false)|bool == true"
+  when: "docker_enable_metrics"

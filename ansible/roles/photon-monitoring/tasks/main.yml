@@ -1,5 +1,8 @@
 ---
-- name: Install Prometheus, Grafana and node-exporter for all nodes
+- name: Configure node-exporter for all nodes
+  include: node-exporter.yml
+
+- name: Install Prometheus, Grafana
   include: metrics.yml
 
 - name: Install Logging
