@@ -1,18 +1,13 @@
-#- name: Download node-exporter
-#  get_url: 
-#    url: https://github.com/prometheus/node_exporter/releases/download/v0.15.1/node_exporter-0.15.1.linux-amd64.tar.gz
-#    dest: /tmp/node-exporter.tar.gz
-
-- name: Create /opt/node-exporter
+- name: Create /opt/node_exporter
   file:
-    path: /opt/node-exporter
+    path: /opt/node_exporter
     state: directory
     mode: 0766
 
 - name: Download and extract node-exporter
   unarchive:
     src: https://github.com/prometheus/node_exporter/releases/download/v0.15.1/node_exporter-0.15.1.linux-amd64.tar.gz
-    dest: /opt/node-exporter/
+    dest: /opt/node_exporter/
     remote_src: yes
     extra_opts: [--strip-components=1]
 
