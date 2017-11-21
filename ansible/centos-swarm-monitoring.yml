@@ -1,0 +1,10 @@
+---
+# This playbook adds monitoring to a centos7 docker swarm
+
+- hosts: all
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+
+  roles:
+  - role: centos-monitoring 

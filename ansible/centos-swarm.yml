@@ -23,6 +23,7 @@
   - role: centos-hardening
   - role: swarm
   - role: swarm-secure-api
+  - role: centos-monitoring
   - role: portainer
   - role: vmware-vdvs
   

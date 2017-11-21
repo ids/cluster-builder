@@ -124,4 +124,4 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "docker_enable_metrics|default(false)|bool == true"
+  when: "docker_enable_metrics == true"
