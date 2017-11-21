@@ -43,8 +43,8 @@
   shell: 
     cmd: | 
       docker run \
-        --privileged=true
-        --restart=always
+        --privileged=true \
+        --restart=always \
         --memory 536870912 \
         --volume=/cgroup:/cgroup:ro \
         --volume=/:/rootfs:ro \
