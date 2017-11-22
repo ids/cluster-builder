@@ -1,0 +1,9 @@
+---
+- name: Set RHEL Hostname
+  include: hostname.yml
+
+- name: Register with Satellite server
+  include: register.yml
+
+- name: Configure Chronyd
+  include: chronyd.yml

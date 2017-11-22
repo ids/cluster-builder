@@ -1,0 +1,64 @@
+---
+# Upgrae RHEL to latest kernel, enable OverlayFS, and disable kdump
+
+- name: Find kernel version
+  command: uname -r
+  changed_when: false
+  register: kernel_version
+
+- debug: msg="RHEL base image at {{ kernel_version.stdout }}"
+
+# Upgrade/Update all packages to latest version
+- name: Upgrade RHEL
+  yum: >
+    name=*
+    state=latest
+
+- name: Install Open VM Tools
+  yum: >
+    name=open-vm-tools
+    state=latest
+
+- name: Make sure the RTC is not local
+  command: timedatectl set-local-rtc 0
+
+- name: Stop Chronyd
+  become: true
+  command: systemctl stop chronyd
+
+- name: Force one time clock set
+  become: true
+  command: chronyd -q 'pool ca.pool.ntp.org iburst'
+
+- name: Start Chronyd
+  become: true
+  command: systemctl start chronyd
+
+- name: Find kernel version
+  command: uname -r
+  changed_when: false
+  register: kernel_version
+
+- debug: msg="RHEL upgraded to {{ kernel_version.stdout }}"
+
+- name: Enable OverlayFS
+  copy: >
+    content=overlay
+    dest=/etc/modules-load.d/overlay.conf
+
+# kdump's default config will not work on machines with less than 2GB memory.
+# But machine memory is configurable at runtime.
+# So just disable kdump (bonus: frees up active memory).
+# https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/s2-kdump-configuration-cli.html
+# https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Kernel_Crash_Dump_Guide/sect-kdump-config-cli.html
+- name: Disable kdump
+  service:
+    name: kdump
+    state: stopped
+    enabled: no
+
+- name: Install Docker CE
+  include: docker.yml
+
+
+

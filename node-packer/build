@@ -17,7 +17,7 @@ if [ ! -f keys/authorized_keys ]; then
   bash keys/set-key
 fi
 
-if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon1" ] || [ "$IMAGE" == "atomic7" ]; then
+if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon1" ] || [ "$IMAGE" == "atomic7" ] || [ "$IMAGE" == "rhel7" ]; then
   echo
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'
