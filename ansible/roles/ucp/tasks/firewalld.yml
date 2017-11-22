@@ -14,6 +14,10 @@
     mode: 644
   when: "inventory_hostname in groups['docker_swarm_worker']"
 
+- name: waiting 30s for service definitions to finish installing
+  pause:
+    seconds: 30
+
 - name: Enable Firewalld
   service:
     name: firewalld
@@ -53,5 +57,5 @@
   service:
     name: docker
     state: started
-    enabled: yes  
+    enabled: yes
 

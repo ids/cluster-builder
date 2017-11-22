@@ -1,0 +1,12 @@
+---
+# This playbook upgrades RHEL7
+
+- hosts: all
+  gather_facts: no
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: ssh
+  - role: rhel
+  

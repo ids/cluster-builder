@@ -23,7 +23,7 @@ if [ "`uname -r | grep Microsoft | wc -l | xargs`" == "1" ]; then
   PACKER_CMD="/mnt/c/Windows/System32/cmd.exe /k \"packer build cluster-node-${IMAGE}.json && exit\""
 fi
 
-if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon" ] || [ "$IMAGE" == "atomic7" ]; then
+if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon" ] || [ "$IMAGE" == "atomic7" ]  || [ "$IMAGE" == "rhel7" ]; then
   echo
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'

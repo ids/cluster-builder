@@ -1,8 +1,9 @@
 output_atomic7_vmx/**
 output_centos7_vmx/**
 output_photon_vmx/**
+output_photon1_vmx/**
+output_rhel7_vmx/**
 output_ovas/*.ova
 iso/*.iso
 keys/authorized_keys
 packer_cache
-

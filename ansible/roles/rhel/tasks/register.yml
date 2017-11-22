@@ -1,0 +1,8 @@
+
+---
+  - name: Register RHEL with Satellite.
+    shell: sudo bash rhel7-setup.sh {{ rhel_activation_key }}
+    args:
+      chdir: /tmp
+
+
