@@ -1,14 +1,9 @@
 ---
-- name: Add the storage configuration into daemon.json
-  lineinfile:
+- name: Configure the docker daemon.json 
+  template:
+    src: templates/docker_daemon_jsonfile.j2
     dest: /etc/docker/daemon.json
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-    insertafter: "{"
-  with_items:
-    - { regexp: 'metrics-addr', line: '"metrics-addr" : "0.0.0.0:9323",' }
-    - { regexp: 'experimental', line: '"experimental" : true,' }
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
 
 - name: Create and install the prometheus configuration file
   template:
@@ -41,12 +36,12 @@
 
 - name: Stop cadvisor on all nodes 
   shell: docker stop cadvisor
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
   ignore_errors: true
 
 - name: Remove cadvisor on all nodes 
   shell: docker rm cadvisor
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
   ignore_errors: true
 
 - name: Install cadvisor on all nodes 
@@ -96,4 +91,4 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
