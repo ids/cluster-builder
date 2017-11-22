@@ -59,16 +59,16 @@ There are at present 5 supported cluster types, or variants:
 
 ### Windows
 
-Bash on Windows is still problematic.  Even the new Ubuntu Bash in Windows 10 is not much good for integration with VMware products, or virtualization in general.
+There is now experimental Windows support for ESXi deployments. See the [Windows Readme](README_Windows.md).
 
-The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) was created to solve this problem.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
+The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) is also an alternative.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
 
 It can be used:
 
 * Running locally on a Windows or Linux VMware Workstation, or VMware Fusion for macOS
 * Running remotely on an ESXi server
 
-It can even be built remotely directly on an ESXi server.
+It can even be built remotely directly on an ESXi server, which is the intended purpose.  For production deployments it can form the foundation for a control station that operates within the ESX environment and is used to centralize management of the clusters.
 
 For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
