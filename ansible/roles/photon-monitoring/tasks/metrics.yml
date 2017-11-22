@@ -61,7 +61,7 @@
         --detach=true \
         --name=cadvisor \
         google/cadvisor:latest    
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
 
 - name: Create grafana host data volume
   file:

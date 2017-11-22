@@ -2,4 +2,4 @@
 
 rm -rf output_ovas/*.ova 
 rm -rf output_centos7_vmx
-rm -rf output_photon1_vmx
+rm -rf output_photon_vmx

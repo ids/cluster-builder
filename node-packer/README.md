@@ -26,11 +26,11 @@ To build the vmx and ova node image use the wrapper script and specify the type:
 
 or
 
-    bash build photon1
+    bash build photon
 
 
 ## Output
-The builder creates a VMX in the respective **output_**<centos7|photon1>**_vmx** folder.
+The builder creates a VMX in the respective **output_**<centos7|photon>**_vmx** folder.
 
 This is post-processed using **ovftool** into a single file OVA template located in the **output_ova** folder.
 

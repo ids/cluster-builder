@@ -107,8 +107,8 @@ CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_NAME
 
 if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon1-x86_64.ova
-  OVA_BUILD_TYPE=photon1
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon-x86_64.ova
+  OVA_BUILD_TYPE=photon
   CLUSTER_TYPE_NAME='PhotonOS Swarm'
   REMOTE_USER=root
 elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
