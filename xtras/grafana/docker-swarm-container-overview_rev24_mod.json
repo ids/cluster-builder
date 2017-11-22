@@ -1,19 +1,20 @@
 {
   "__inputs": [
     {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
+      "name": "DS_ESXI_SWARM PROMETHEUS",
+      "label": "Esxi Swarm Prometheus",
       "description": "",
       "type": "datasource",
       "pluginId": "prometheus",
       "pluginName": "Prometheus"
-    }],
+    }
+  ],
   "__requires": [
     {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "4.4.3"
+      "version": "4.6.2"
     },
     {
       "type": "panel",
@@ -46,6 +47,19 @@
       "version": ""
     }
   ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
   "description": "Overview of the most important Docker swarm and container metrics. (cAdvisor/NodeExporter/Prometheus)",
   "editable": true,
   "gnetId": 609,
@@ -53,7 +67,7 @@
   "hideControls": false,
   "id": null,
   "links": [],
-  "refresh": "1m",
+  "refresh": "10s",
   "rows": [
     {
       "collapse": false,
@@ -68,7 +82,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "format": "none",
@@ -144,7 +158,7 @@
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "decimals": 0,
           "editable": true,
           "error": false,
@@ -228,7 +242,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 3,
@@ -313,7 +327,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -434,7 +448,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 4,
@@ -659,7 +673,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -766,7 +780,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 5,
@@ -859,7 +873,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -990,46 +1004,13 @@
       "height": 250,
       "panels": [
         {
-          "alert": {
-            "conditions": [
-              {
-                "evaluator": {
-                  "params": [
-                    4
-                  ],
-                  "type": "gt"
-                },
-                "operator": {
-                  "type": "and"
-                },
-                "query": {
-                  "params": [
-                    "B",
-                    "5m",
-                    "now"
-                  ]
-                },
-                "reducer": {
-                  "params": [],
-                  "type": "avg"
-                },
-                "type": "query"
-              }
-            ],
-            "executionErrorState": "keep_state",
-            "frequency": "30s",
-            "handler": 1,
-            "name": "System Load on Node alert",
-            "noDataState": "keep_state",
-            "notifications": []
-          },
           "aliasColors": {
             "node_load15": "#CCA300"
           },
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "decimals": 2,
           "editable": true,
           "error": false,
@@ -1073,44 +1054,16 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "node_load1{instance=~\"$instance\"} * ON(instance) GROUP_LEFT(host) host",
+              "expr": "node_load1\n",
               "format": "time_series",
               "intervalFactor": 2,
               "legendFormat": "load1 {{host}}",
               "metric": "node",
               "refId": "A",
               "step": 120
-            },
-            {
-              "expr": "node_load5{instance=~\"$instance\"} * ON(instance) GROUP_LEFT(host) host",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "load5 {{host}}",
-              "metric": "node",
-              "refId": "B",
-              "step": 120
-            },
-            {
-              "expr": "node_load15{instance=~\"$instance\"} * ON(instance) GROUP_LEFT(host) host",
-              "format": "time_series",
-              "hide": false,
-              "intervalFactor": 2,
-              "legendFormat": "load15 {{host}}",
-              "metric": "node",
-              "refId": "C",
-              "step": 120
             }
           ],
-          "thresholds": [
-            {
-              "colorMode": "critical",
-              "fill": true,
-              "line": true,
-              "op": "gt",
-              "value": 4
-            }
-          ],
+          "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
           "title": "System Load on Node",
@@ -1164,7 +1117,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "decimals": 2,
           "editable": true,
           "error": false,
@@ -1250,7 +1203,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "fill": 1,
           "id": 30,
           "legend": {
@@ -1337,7 +1290,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1431,7 +1384,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1523,7 +1476,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1615,7 +1568,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1719,7 +1672,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "fill": 3,
@@ -1810,7 +1763,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "decimals": 2,
           "editable": true,
           "error": false,
@@ -1909,7 +1862,7 @@
               "value": "avg"
             }
           ],
-          "datasource": "${DS_PROMETHEUS}",
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "filterNull": false,
@@ -1999,6 +1952,7 @@
               "value": "current"
             }
           ],
+          "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
           "editable": true,
           "error": false,
           "filterNull": false,
@@ -2092,7 +2046,7 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
         "hide": 0,
         "includeAll": true,
         "label": "Node ID",
@@ -2112,7 +2066,7 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
         "hide": 0,
         "includeAll": false,
         "label": "Hostnames",
@@ -2124,12 +2078,7 @@
         "regex": "/instance=\"([^\"]+)\"/",
         "sort": 0,
         "tagValuesQuery": "label_values({host=\"$tag\"},instance)",
-        "tags": [
-          "ip-10-139-0-134.eu-west-1.compute.internal",
-          "ip-10-139-13-208.eu-west-1.compute.internal",
-          "ip-10-139-16-158.eu-west-1.compute.internal",
-          "ip-10-139-12-102.eu-west-1.compute.internal"
-        ],
+        "tags": [],
         "tagsQuery": "label_values(host, host)",
         "type": "query",
         "useTags": true
@@ -2137,7 +2086,7 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
         "hide": 0,
         "includeAll": true,
         "label": "Stack",
@@ -2157,7 +2106,7 @@
       {
         "allValue": ".+",
         "current": {},
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
         "hide": 0,
         "includeAll": true,
         "label": "Service",
@@ -2177,7 +2126,7 @@
       {
         "allValue": "",
         "current": {},
-        "datasource": "${DS_PROMETHEUS}",
+        "datasource": "${DS_ESXI_SWARM PROMETHEUS}",
         "hide": 0,
         "includeAll": true,
         "label": "Proxy",
@@ -2346,7 +2295,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -2376,5 +2325,5 @@
   },
   "timezone": "browser",
   "title": "Docker Swarm & Container Overview",
-  "version": 4
+  "version": 2
 }
