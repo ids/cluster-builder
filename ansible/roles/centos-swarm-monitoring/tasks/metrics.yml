@@ -41,12 +41,12 @@
 
 - name: Stop cadvisor on all nodes 
   shell: docker stop cadvisor
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
   ignore_errors: true
 
 - name: Remove cadvisor on all nodes 
   shell: docker rm cadvisor
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
   ignore_errors: true
 
 - name: Install cadvisor on all nodes 
@@ -96,4 +96,4 @@
     name: docker
     state: restarted
     enabled: yes  
-  when: "docker_enable_metrics"
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
