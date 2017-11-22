@@ -1,0 +1,47 @@
+[all:vars]
+cluster_type=rhel-swarm
+cluster_name=esxi-rhel-swarm
+remote_user=admin
+
+rhel_activation_key=1-4fa7xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ucp_download_url=https://storebits.docker.com/ee/centos/sub-64babdad-637c-469e-8e42-0c13d6b629fa
+ucp_admin_user=admin
+ucp_admin_password=xxxxxx
+
+vmware_target=esxi
+esxi_net="vlanxxxx"
+esxi_net_prefix=10.46.x
+vcenter_server="vctr01.uc.ucalgary.ca"
+vcenter_user='username@uc.ucalgary.ca'
+
+network_mask=255.255.255.0
+network_gateway=10.46.x.1
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dns3=192.168.1.10
+network_dn=uc.ucalgary.ca
+
+# docker_elk_target=elastic.idstudios.local:9200
+docker_enable_metrics=true
+
+[docker_swarm_manager]
+itswarm-m1 ansible_host=10.46.x.y
+
+[docker_swarm_worker]
+itswarm-w1 ansible_host=10.46.x.y swarm_labels='["front-end"]'
+#itswarm-w2 ansible_host=10.46.x.y swarm_labels='["front-end"]'
+#itswarm-w3 ansible_host=10.46.x.y swarm_labels='["front-end"]'
+itswarm-w4 ansible_host=10.46.x.y swarm_labels='["db-galera-node-1"]'
+#itswarm-w5 ansible_host=10.46.x.y swarm_labels='["db-galera-node-1"]'
+#itswarm-w6 ansible_host=10.46.x.y swarm_labels='["db-galera-node-1"]'
+
+
+[vmware_vms]
+itswarm-m1 numvcpus=4 memsize=2048 esxi_host=10.46.z.a esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+itswarm-w1 numvcpus=4 memsize=3072 esxi_host=10.46.z.b esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+#itswarm-w2 numvcpus=4 memsize=3072 esxi_host=10.46.z.a esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+#itswarm-w3 numvcpus=4 memsize=3072 esxi_host=10.46.z.b esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+itswarm-w4 numvcpus=4 memsize=3072 esxi_host=10.46.z.a esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+#itswarm-w5 numvcpus=4 memsize=3072 esxi_host=10.46.z.b esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+#itswarm-w6 numvcpus=4 memsize=3072 esxi_host=10.46.z.a esxi_user=root esxi_ds=SC03_itsocaaslab_LUN01
+
