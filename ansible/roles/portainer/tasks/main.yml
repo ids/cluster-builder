@@ -29,7 +29,9 @@
   shell: 
     cmd: | 
       docker service create --constraint "node.role == manager" -p 9000:9000 \
-      --name portainer --mount type=bind,source=/etc/certs/docker,destination=/certs \
+      --name portainer \
+      --mount source=portainer-data,destination=/data \
+      --mount type=bind,source=/etc/certs/docker,destination=/certs \
       --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
       portainer/portainer:develop -H unix:///var/run/docker.sock --tlsverify
   ignore_errors: true

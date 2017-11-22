@@ -52,6 +52,6 @@
 - name: Restart the docker daemon with the new firewall rules
   service:
     name: docker
-    state: started
+    state: restarted
     enabled: yes  
 

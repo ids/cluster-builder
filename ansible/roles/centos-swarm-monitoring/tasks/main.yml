@@ -2,8 +2,8 @@
 - name: Configure node-exporter for all nodes
   include: node-exporter.yml
 
-- name: Install Prometheus, Grafana
+- name: Configure metrics and cAdvisor for all nodes
   include: metrics.yml
 
-- name: Install Logging
+- name: Configure Logging
   include: logging.yml

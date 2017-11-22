@@ -1,0 +1,10 @@
+---
+# This playbook adjusts the centos7 docker swarm firewalld settings
+
+- hosts: all
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+
+  roles:
+  - role: centos-swarm-firewall 
