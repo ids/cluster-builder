@@ -1,0 +1,55 @@
+---
+# This playbook creates a rhel7 docker swarm
+
+- hosts: all
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+  vars:
+    # Docker swarm network can be define in order to be sure that
+    # swarm cluster doesn't overlap with you infrastructure
+    # docker_swarm_network: 10.10.8.0/24
+
+    # You can set any interface, that is listened by docker engine.
+    # e.g. docker_swarm_interface: "eth1"
+    docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
+    docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
+    docker_swarm_port: 2377
+    docker_tls_port: 2376
+
+  roles:
+  - role: rhel
+  - role: centos-swarm-graphdriver
+  - role: centos-swarm-firewall
+  - role: rhel-hardening
+  - role: swarm
+  - role: swarm-secure-api
+  - role: centos-swarm-monitoring
+  - role: portainer
+  - role: vmware-vdvs
+  
+  tasks:
+  - name: Ensure tmp cluster folder exists
+    local_action:
+      module: file
+      path: "../tmp/{{ cluster_name }}"
+      state: directory
+    become: false
+
+  - name: Generate the wrapper docker-env script
+    local_action:
+      module: template
+      src: templates/docker-env.j2
+      dest: ../clusters/{{ cluster_name }}/docker-env
+      mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false
+
+  - name: Generate the client test script
+    local_action:
+      module: template
+      src: templates/test-{{ cluster_type }}.j2
+      dest: ../clusters/{{ cluster_name }}/test-cluster
+      mode: 0766
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    become: false

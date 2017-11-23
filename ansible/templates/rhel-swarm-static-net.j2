@@ -1,0 +1,26 @@
+cat > /etc/sysconfig/network-scripts/ifcfg-ens32 << EOF
+DEVICE="ens32"
+ONBOOT="yes"
+BOOTPROTO=static
+IPADDR={{ ansible_host }}
+NETMASK={{ network_mask }}
+GATEWAY={{ network_gateway }}
+DNS1={{ network_dns }}
+DNS2={{ network_dns2 }}
+DNS3={{ network_dns3 }}
+EOF
+
+cat > /etc/sysconfig/network << EOF
+HOSTNAME={{ inventory_hostname}}.{{ network_dn }}
+DNS1={{ network_dns }}
+DNS2={{ network_dns2 }}
+DNS3={{ network_dns3 }}
+SEARCH={{ network_dn }}
+EOF
+
+cat > /etc/resolv.conf << EOF
+nameserver {{ network_dns }}
+nameserver {{ network_dns2 }}
+nameserver {{ network_dns3 }}
+EOF
+

@@ -25,7 +25,7 @@ network_dn=uc.ucalgary.ca
 docker_enable_metrics=true
 
 [docker_swarm_manager]
-itucp-m1 ansible_host=10.46.224.x
+itucp-m1 ansible_host=10.46.x.y
 
 [docker_swarm_worker]
 itucp-w1 ansible_host=10.46.x.y swarm_labels='["front-end"]'
