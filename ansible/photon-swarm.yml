@@ -24,7 +24,6 @@
   - role: photon-swarm
   - role: photon-hostdata
   - role: photon-monitoring
-  - role: portainer
   - role: vmware-vdvs
   
   tasks:
