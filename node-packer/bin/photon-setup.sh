@@ -19,7 +19,7 @@ echo "***   - NFS Support"
 echo "***   - Upgrade Docker to ${DOCKER_VERSION}"
 echo "***"
 
-tdnf -y install open-vm-tools nfs-utils tar gzip curl ntp
+tdnf -y install open-vm-tools nfs-utils tar gzip curl ntp python2
 
 echo "*** Downloading Docker ${DOCKER_VERSION}"
 curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz 
@@ -28,23 +28,36 @@ tar --strip-components=1 -C /usr/bin -xzf docker-${DOCKER_VERSION}.tgz
 
 echo "*** Configuring Docker ${DOCKER_VERSION}"
 echo '[Unit]
-Description=Docker Daemon
-Documentation=http://docs.docker.com
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network-online.target
 Wants=network-online.target
-After=network-online.target docker-containerd.service
-Requires=docker-containerd.service
 
 [Service]
 Type=notify
+# the default is not to use systemd for cgroups because the delegate issues still
+# exists and systemd currently does not support the cgroup feature set required
+# for containers run by docker
 EnvironmentFile=-/etc/default/docker
-ExecStart=/usr/bin/dockerd $DOCKER_OPTS \
-          --containerd /run/containerd.sock
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=process
-Restart=on-abnormal
-LimitNOFILE=1048576
-LimitNPROC=1048576
+ExecStart=/usr/bin/dockerd $DOCKER_OPTS
+ExecReload=/bin/kill -s HUP $MAINPID
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=infinity
+LimitNPROC=infinity
 LimitCORE=infinity
+# Uncomment TasksMax if your systemd version supports it.
+# Only systemd 226 and above support this version.
+#TasksMax=infinity
+TimeoutStartSec=0
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+# restart the docker process if it exits prematurely
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
 
 [Install]
 WantedBy=multi-user.target

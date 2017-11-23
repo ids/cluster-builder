@@ -3,6 +3,16 @@ INVENTORY_FILE=$1
 SERVER_WAIT=90s
 REMOTE_USER=root
 
+function check_docker_license () {
+  if [ ! -f clusters/$CLUSTER_NAME/docker_subscription.lic ]; then 
+    echo "** Missing Docker EE License File **"
+    echo
+    echo "To build a Docker Enterprise Edition cluster you need to have a docker_subscription.lic file located in your ${CLUSTER_NAME} cluster package."
+    echo
+    exit 1
+  fi
+}
+
 function esxi_deploy () {
   
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE}"
@@ -128,11 +138,13 @@ elif [ "$CLUSTER_TYPE" == 'centos-swarm' ]; then
   OVA_BUILD_TYPE=centos7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'centos-ucp' ]; then
+  check_docker_license
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
   CLUSTER_TYPE_NAME='CentOS UCP'
   OVA_BUILD_TYPE=centos7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
+  check_docker_license
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
   CLUSTER_TYPE_NAME='RHEL UCP'
   OVA_BUILD_TYPE=rhel7

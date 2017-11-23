@@ -1,10 +1,4 @@
 ---
-- name: Hide the mail_name from postfix configuration. [MAIL-8818] 
-  lineinfile:
-    path: /etc/postfix/main.cf
-    regexp: '^#smtpd_banner = $myhostname ESMTP $mail_name'
-    line: 'smtpd_banner = $myhostname ESMTP'
-
 - name: Hardening SSH configuration [SSH-7408] AllowTcpForwarding (YES --> NO)
   lineinfile:
     path: /etc/ssh/sshd_config
@@ -41,11 +35,11 @@
     regexp: '^#MaxSessions 10'
     line: 'MaxSessions 2'
 
-- name: Hardening SSH configuration [SSH-7408] PermitRootLogin (YES --> NO)
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^#PermitRootLogin yes'
-    line: 'PermitRootLogin no'
+#- name: Hardening SSH configuration [SSH-7408] PermitRootLogin (YES --> NO)
+#  lineinfile:
+#    path: /etc/ssh/sshd_config
+#    regexp: '^#PermitRootLogin yes'
+#    line: 'PermitRootLogin no'
 
 - name: Hardening SSH configuration [SSH-7408] TCPKeepAlive (YES --> NO)
   lineinfile:
@@ -65,21 +59,21 @@
     regexp: '^#AllowAgentForwarding yes'
     line: 'AllowAgentForwarding no'
 
-- name: Audit daemon config [ACCT-9630]  
-  template:
-    src: templates/auditd_conf.j2
-    dest: /etc/audit/auditd.conf
+#- name: Install Audit Daemon
+#  shell: tdnf install -y audit
 
-- name: Audit daemon rules [ACCT-9630]  
-  template:
-    src: templates/auditd_rules.j2
-    dest: /etc/audit/rules.d/audit.rules
+#- name: Audit daemon config [ACCT-9630]  
+#  template:
+#    src: templates/auditd_conf.j2
+#    dest: /etc/audit/auditd.conf
 
-- name: Restart machines with hardened profile
-  shell: sleep 2 && shutdown -r now
-  async: 1
-  poll: 0
+#- name: Audit daemon rules [ACCT-9630]  
+#  template:
+#    src: templates/auditd_rules.j2
+#    dest: /etc/audit/rules.d/audit.rules
 
-- name: Waiting 180 secs for VMs to come online
-  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=180 timeout=600
-  become: false
+#- name: Start auditd
+#  service:
+#    name: auditd
+#    state: started
+#    enabled: true
