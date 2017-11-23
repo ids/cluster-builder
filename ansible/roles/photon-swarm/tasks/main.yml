@@ -1,5 +1,5 @@
 - name: Secure the Swarm Remote API
   include: secure-api.yml
 
-- name: Install Portainer
-  include: portainer.yml
+#- name: Install Portainer
+#  include: portainer.yml

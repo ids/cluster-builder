@@ -1,0 +1,26 @@
+---
+- hosts: nfs_shares
+  remote_user: root
+  become: false
+  gather_facts: false
+  tasks:  
+
+  - name: Ensure the NFS mounts exist
+    file:
+      path: "{{ nfs_local_mount }}"
+      state: directory
+  
+  - name: Create fstab entry for shared storage and backup volumes
+    lineinfile:
+      path: "/etc/fstab"
+      state: present
+      line: "{{ nfs_fstab }}"
+
+  - name: Mount the volumes
+    shell: mount {{ nfs_local_mount }}
+
+  - name: List the volume
+    shell: ls -al "{{ nfs_local_mount }}"
+    register: local_out
+
+  - debug: msg="{{ local_out.stdout_lines }}"

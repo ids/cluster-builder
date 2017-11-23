@@ -5,6 +5,13 @@
     dest: /etc/docker/daemon.json
   when: "docker_enable_metrics is defined and docker_enable_metrics"
 
+- name: Create prometheus etc
+  file:
+    path: /etc/prometheus
+    state: directory
+    mode: 0755
+  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+
 - name: Create and install the prometheus configuration file
   template:
     src: templates/prometheus.j2
