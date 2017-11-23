@@ -14,9 +14,9 @@
 
 - name: Create the node-exporter service file
   template:
-    src: templates/node-exporter-service.j2
+    src: templates/node-exporter-service-photon.j2
     dest: /etc/systemd/system/node-exporter.service
-    mode: 0755
+    mode: 0744
 
 - name: Reload systemd configuration
   shell: systemctl daemon-reload

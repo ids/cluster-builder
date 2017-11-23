@@ -3,6 +3,7 @@
   template:
     src: templates/docker_daemon_jsonfile.j2
     dest: /etc/docker/daemon.json
+    mode: 0755
   when: "docker_enable_metrics is defined and docker_enable_metrics"
 
 - name: Create prometheus etc
@@ -16,6 +17,7 @@
   template:
     src: templates/prometheus.j2
     dest: /etc/prometheus/prometheus.yml
+    mode: 0755
   when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
 
 - name: Create prometheus host data volume

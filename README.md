@@ -12,6 +12,8 @@ Ansible and Packer Iac() scripts to configure [DC/OS](https://dcos.io/) and [Doc
 7. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
 8. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
 9. [Production Readiness](#production-readiness)
+10. [Prometheus Monitoring](#prometheus-monitoring)
+11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 
 
 ## Supported Clusters
@@ -330,3 +332,60 @@ A general overview of the highlights:
 
 > Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
 
+## Prometheus Monitoring
+
+Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS and PhotonOS Swarms, with metrics enabled by default.
+
+When the following is added to a cluster package hosts file:
+
+	[docker_prometheus_server]
+	<ansible inventory hostname>
+
+Eg.
+
+	[docker_prometheus_server]
+	swarm-m1
+
+
+Prometheus and Grafana containers will be installed on the specified node.
+
+Promethus can then be reached at: http://<cluster node>:9090
+
+Grafana at: http://<cluster node>:3000
+
+> TODO: These need to be TLS secured and made production ready
+
+## Host Mounted NFS Storage
+
+Place the following file in the cluster definition package folder:
+
+	nfs_shares.yml
+
+In the format:
+
+	nfs_shares:
+		- folder: the name of the local mount folder
+			fstab: the fstab entry
+			group: an inventory group of hosts on which to setup this mount
+
+Eg.
+
+	nfs_shares:
+		- folder: /mnt/nfs/shared
+			fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
+			group: "docker_swarm_worker"
+		- folder: /mnt/nfs/shared
+			fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"   
+			group: "docker_swarm_worker"
+    
+And then run the ansible playbook for the platform:
+
+Eg.
+
+	ansible-playbook -i clusters/esxi-photon-swarm/hosts ansible/photon-nfs-shares.yml
+
+or
+
+	ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
+
+And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.

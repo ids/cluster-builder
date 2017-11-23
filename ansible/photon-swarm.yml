@@ -22,7 +22,6 @@
   - role: photon-hardening
   - role: swarm
   - role: photon-swarm
-  - role: photon-hostdata
   - role: photon-monitoring
   - role: vmware-vdvs
   
