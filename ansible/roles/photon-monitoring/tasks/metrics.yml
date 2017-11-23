@@ -56,22 +56,42 @@
 - name: Install cadvisor on all nodes 
   shell: 
     cmd: | 
-      docker service create --mode global --name monitor-cadvisor \
-        --limit-cpu 0.5 \
-        --reserve-cpu 0.3 \
-        --limit-memory 536870912 \
-        --reserve-memory 134217728 \
-        --mount type=bind,source=/proc,destination=/host/proc,readonly \
-        --mount type=bind,source=/sys,destination=/host/sys,readonly \
-        --mount type=bind,source=/,destination=/rootfs,readonly \
-        --mount type=bind,source=/var/run,destination=/var/run,readonly \
-        --mount type=bind,source=/var/lib/docker,destination=/var/lib/docker,readonly \
-        --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
-        --publish mode=host,target=8080,published=9101 \
-        --container-label com.docker.stack.namespace=monitor \
-        google/cadvisor:latest
+      docker run \
+        --privileged=true \
+        --restart=always \
+        --memory 536870912 \
+        --volume=/cgroup:/cgroup:ro \
+        --volume=/:/rootfs:ro \
+        --volume=/var/run:/var/run:rw \
+        --volume=/sys:/sys:ro \
+        --volume=/var/lib/docker/:/var/lib/docker:ro \
+        --volume=/dev/disk/:/dev/disk:ro \
+        --publish=9101:8080 \
+        --detach=true \
+        --name=cadvisor \
+        google/cadvisor:latest    
   when: "docker_enable_metrics is defined and docker_enable_metrics and inventory_hostname == groups['docker_swarm_manager'][0]"
   run_once: true
+
+#- name: Install cadvisor on all nodes 
+#  shell: 
+#    cmd: | 
+#      docker service create --mode global --name monitor-cadvisor \
+#        --limit-cpu 0.5 \
+#        --reserve-cpu 0.3 \
+#        --limit-memory 536870912 \
+#        --reserve-memory 134217728 \
+#        --mount type=bind,source=/proc,destination=/host/proc,readonly \
+#        --mount type=bind,source=/sys,destination=/host/sys,readonly \
+#        --mount type=bind,source=/,destination=/rootfs,readonly \
+#        --mount type=bind,source=/var/run,destination=/var/run,readonly \
+#        --mount type=bind,source=/var/lib/docker,destination=/var/lib/docker,readonly \
+#        --mount type=bind,source=/dev/disk,destination=/dev/disk,readonly \
+#        --publish mode=host,target=8080,published=9101 \
+#        --container-label com.docker.stack.namespace=monitor \
+#        google/cadvisor:latest
+#  when: "docker_enable_metrics is defined and docker_enable_metrics and inventory_hostname == groups['docker_swarm_manager'][0]"
+#  run_once: true
 
 - name: Create grafana host data volume
   file:
