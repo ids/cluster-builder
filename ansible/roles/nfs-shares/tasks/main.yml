@@ -24,7 +24,7 @@
       - "{{ nfs_shares }}"
 
   - name: Unmount the volumes
-    shell: mount {{ item.folder }}
+    shell: umount {{ item.folder }}
     when: "item.group is undefined or item.group in group_names"
     ignore_errors: true
     with_items: 
