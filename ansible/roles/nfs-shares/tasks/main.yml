@@ -26,7 +26,7 @@
   - name: Unmount the volumes
     shell: mount {{ item.folder }}
     when: "item.group in group_names"
-    ingore_errors: true
+    ignore_errors: true
     with_items: 
       - "{{ nfs_shares }}"
     
