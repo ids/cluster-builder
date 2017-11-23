@@ -25,6 +25,7 @@
   - role: photon-hostdata
   - role: photon-monitoring
   - role: vmware-vdvs
+  - role: nfs-shares
   
   tasks:
 
