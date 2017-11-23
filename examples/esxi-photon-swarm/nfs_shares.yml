@@ -1,0 +1,5 @@
+nfs_shares:
+  - folder: /mnt/nfs/shared
+    fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
+  - folder: /mnt/nfs/shared
+    fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"   
