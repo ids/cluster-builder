@@ -1,35 +1,24 @@
 
 ---
-- name: Stop iptables
-  service:
-    name: iptables
-    state: stopped
+- name: iptables INPUT.
+  shell: iptables -P INPUT ACCEPT 
 
 - name: iptables INPUT.
-  lineinfile:
-    path: /etc/systemd/scripts/iptables
-    regexp: '^iptables -P INPUT'
-    line: 'iptables -P INPUT ACCEPT'  
+  shell: iptables -P OUTPUT ACCEPT 
 
-- name: iptables OUTPUT.
-  lineinfile:
-    path: /etc/systemd/scripts/iptables
-    regexp: '^iptables -P OUTPUT'
-    line: 'iptables -P OUTPUT ACCEPT'  
+- name: iptables INPUT.
+  shell: iptables -P FORWARD ACCEPT 
 
-- name: iptables FORWARD.
-  lineinfile:
-    path: /etc/systemd/scripts/iptables
-    regexp: '^iptables -P FORWARD'
-    line: 'iptables -P FORWARD ACCEPT'  
-
-- name: iptables disable ip4save.
-  replace:
-    path: /etc/systemd/scripts/iptables
-    regexp: '^iptables-restore < /etc/systemd/scripts/ip4save'
-    replace: '#iptables-restore < /etc/systemd/scripts/ip4save'
+- name: iptables INPUT.
+  shell: iptables-save > /etc/systemd/scripts/ip4save
 
 - name: Start iptables
   service:
     name: iptables
-    state: started
+    state: restarted
+
+- name: Restart the docker daemon 
+  service:
+    name: docker
+    state: restarted
+    enabled: yes  
