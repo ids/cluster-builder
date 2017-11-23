@@ -42,8 +42,3 @@
     when: "item.group is undefined or item.group in group_names"
     with_items: 
       - "{{ nfs_shares }}"
-
-  - debug: msg="{{ local_out.stdout_lines }}"
-    when: "item.group is undefined or item.group in group_names"
-    with_items: 
-      - "{{ nfs_shares }}"
