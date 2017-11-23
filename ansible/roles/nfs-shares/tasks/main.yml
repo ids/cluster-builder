@@ -10,7 +10,7 @@
     file:
       path: "{{ item.folder }}"
       state: directory
-    when: "item.group in group_names"
+    when: "item.group is undefined or item.group is in group_names"
     with_items: 
       - "{{ nfs_shares }}"
 
@@ -19,31 +19,31 @@
       path: "/etc/fstab"
       state: present
       line: "{{ item.fstab }}"
-    when: "item.group in group_names"
+    when: "item.group is undefined or item.group is in group_names"
     with_items: 
       - "{{ nfs_shares }}"
 
   - name: Unmount the volumes
     shell: mount {{ item.folder }}
-    when: "item.group in group_names"
+    when: "item.group is undefined or item.group is in group_names"
     ignore_errors: true
     with_items: 
       - "{{ nfs_shares }}"
     
   - name: Mount the volumes
     shell: mount {{ item.folder }}
-    when: "item.group in group_names"
+    when: "item.group is undefined or item.group is in group_names"
     with_items: 
       - "{{ nfs_shares }}"
 
   - name: List the volume
     shell: ls -al "{{ item.folder }}"
     register: local_out
-    when: "item.group in group_names"
+    when: "item.group is undefined or item.group is in group_names"
     with_items: 
       - "{{ nfs_shares }}"
 
   - debug: msg="{{ local_out.stdout_lines }}"
-    when: "item.group in group_names"
+    when: "item.group is undefined or item.group is in group_names"
     with_items: 
       - "{{ nfs_shares }}"
