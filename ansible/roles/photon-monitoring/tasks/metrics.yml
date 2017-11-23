@@ -70,8 +70,7 @@
         --detach=true \
         --name=cadvisor \
         google/cadvisor:latest    
-  when: "docker_enable_metrics is defined and docker_enable_metrics and inventory_hostname == groups['docker_swarm_manager'][0]"
-  run_once: true
+  when: "docker_enable_metrics is defined and docker_enable_metrics"
 
 #- name: Install cadvisor on all nodes 
 #  shell: 
