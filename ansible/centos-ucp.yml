@@ -24,6 +24,8 @@
   - role: swarm
   - role: centos-monitoring
   - role: vmware-vdvs
+  - role: centos-nfs
+  - role: nfs-shares
     
   tasks:
   - name: Ensure tmp cluster folder exists

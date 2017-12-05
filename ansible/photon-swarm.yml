@@ -24,6 +24,7 @@
   - role: photon-swarm
   - role: photon-monitoring
   - role: vmware-vdvs
+  - role: nfs-shares
   
   tasks:
 
