@@ -5,6 +5,9 @@
 - name: Configure Chronyd
   include: chronyd.yml
 
+- name: Configure Base Docker options
+  include: docker-base.yml
+
 - name: Remove warnings from CentOS install for ip4
   lineinfile:
     path: "/etc/sysctl.conf"

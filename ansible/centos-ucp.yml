@@ -22,6 +22,7 @@
   - role: centos-hardening
   - role: ucp
   - role: swarm
+  - role: centos-monitoring
   - role: vmware-vdvs
     
   tasks:

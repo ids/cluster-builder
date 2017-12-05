@@ -1,0 +1,24 @@
+---
+- name: Stop Docker
+  service:
+    name: docker
+    state: stopped
+
+- name: Uninstall Docker CE
+  yum: > 
+    pkg={{item}} 
+    state=absent
+  with_items:
+    - docker-ce
+    - docker-engine
+  ignore_errors: true
+
+- name: Download Docker EE 
+  shell: curl -OL "{{ ucp_download_url }}/centos/7/x86_64/stable-17.06/Packages/docker-ee-17.06.2.ee.6-3.el7.centos.x86_64.rpm"
+  args: 
+    chdir: /tmp
+
+- name: Install Docker EE
+  shell: yum install -y /tmp/docker-ee-17.06.2.ee.6-3.el7.centos.x86_64.rpm
+
+

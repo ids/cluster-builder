@@ -1,0 +1,6 @@
+---
+- name: Install the UCP
+  include: ucp-install.yml
+
+- name: Start the UCP
+  include: ucp-start.yml

@@ -51,6 +51,14 @@
       line: 'memsize = "{{ memsize }}"'
     when: memsize is defined
 
+  - name: Remove 2nd interface when there is no data network
+    local_action:
+      module: lineinfile
+      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      state: absent
+      regexp: 'ethernet1'
+    when: fusion_data_net is undefined
+
   - name: Start the VMs to get the generated MAC addresses
     local_action:
       module: shell
@@ -61,7 +69,7 @@
     pause:
       seconds: 60
     
-  - name: Scan the VMX files for the mac addresses
+  - name: Scan the VMX files for the Control/Data mac addresses
     local_action:
       module: shell
       _raw_params: cat {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
@@ -72,18 +80,38 @@
   - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
     when: vm_mac is not defined
 
-  - name: Generate the DHCPD configuration entries
+#  - name: Scan the VMX files for the Data mac addresses
+#    local_action:
+#      module: shell
+#      _raw_params: cat {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx | grep "ethernet1.generatedAddress = " | sed -e 's/ethernet1.generatedAddress = //g' -e 's/"//g'
+#    register: vm_data_mac
+#    when: fusion_data_net is defined
+  
+#  - debug: msg="{{ vm_data_mac.stdout }}"
+#    when: fusion_data_net is defined
+
+#  - fail: msg="No MAC Found! Unable to get the Data MAC address from the VMX!"
+#    when: fusion_data_net is defined and vm_data_mac is undefined
+
+  - name: Generate the DHCPD Control/Data configuration entries
     local_action:
       module: template
       src: templates/dhcpd_entry.j2
       dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
   
+#  - name: Generate the DHCPD Data configuration entries
+#    local_action:
+#      module: template
+#      src: templates/dhcpd_data_entry.j2
+#      dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_data_dhcpd.conf"
+#    when: fusion_data_net is defined
+
   - name: Stop the VMs 
     local_action:
       module: shell
       _raw_params: vmrun stop {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
 
-  - name: Assign the Fusion Network Connection Type
+  - name: Assign the Fusion Control/Data Network Connection Type
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
@@ -91,7 +119,16 @@
       regexp: '^ethernet0.connectionType =\s'
       line: 'ethernet0.connectionType = "{{ fusion_net_type }}"'
 
-  - name: Assign the Fusion Network
+#  - name: Assign the Fusion Data Network Connection Type
+#    local_action:
+#      module: lineinfile
+#      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+#      state: present
+#      regexp: '^ethernet1.connectionType =\s'
+#      line: 'ethernet1.connectionType = "{{ fusion_data_net_type }}"'
+#    when: fusion_data_net is defined
+
+  - name: Assign the Fusion Control/Data Network to Interface One
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
@@ -99,29 +136,66 @@
       regexp: '^ethernet0.vnet =\s'
       line: 'ethernet0.vnet = "{{ fusion_net }}"'
 
-  - name: Remove the DHCPD fragment file
+#  - name: Assign the Fusion Data Network to Interface Two
+#    local_action:
+#      module: lineinfile
+#      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+#      state: present
+#      regexp: '^ethernet1.vnet =\s'
+#      line: 'ethernet1.vnet = "{{ fusion_data_net }}"'
+#    when: fusion_data_net is defined
+
+  - name: Remove the DHCPD Control/Data fragment file
     local_action:
       module: shell
       _raw_params: rm {{ gen_script_folder }}/dhcpd_frag.conf
     ignore_errors: true
     run_once: true
 
-  - name: Concatenate the entry header
+#  - name: Remove the DHCPD Data fragment file
+#    local_action:
+#      module: shell
+#      _raw_params: rm {{ gen_script_folder }}/dhcpd_data_frag.conf
+#    ignore_errors: true
+#    run_once: true
+#    when: fusion_data_net is defined
+
+  - name: Concatenate the Control/Data entry header
     local_action:
       module: shell
       _raw_params: echo '### photon-swarm:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_frag.conf
     run_once: true
 
-  - name: Concatenate the new entries
+  - name: Concatenate the new Control/Data entries
     local_action:
       module: shell
       _raw_params: cat {{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf >> {{ gen_script_folder }}/dhcpd_frag.conf
 
-  - name: Concatenate the entry footer
+  - name: Concatenate the Control/Data entry footer
     local_action:
       module: shell
       _raw_params: echo '### photon-swarm:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_frag.conf
     run_once: true
+
+#  - name: Concatenate the Data entry header
+#    local_action:
+#      module: shell
+#      _raw_params: echo '### photon-swarm:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_data_frag.conf
+#    run_once: true
+#    when: fusion_data_net is defined
+
+#  - name: Concatenate the new Data entries
+#    local_action:
+#      module: shell
+#      _raw_params: cat {{ gen_script_folder }}/{{ inventory_hostname }}_data_dhcpd.conf >> {{ gen_script_folder }}/dhcpd_data_frag.conf
+#    when: fusion_data_net is defined
+
+#  - name: Concatenate the Data entry footer
+#    local_action:
+#      module: shell
+#      _raw_params: echo '### photon-swarm:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_data_frag.conf
+#    run_once: true
+#    when: fusion_data_net is defined
 
   - name: Stop the VM Network
     local_action:
@@ -131,7 +205,7 @@
     become: true
     run_once: true
 
-  - name: Remove any block for the current cluster
+  - name: Remove any Control/Data block for the current cluster
     local_action:
       module: shell
       _raw_params: sed '/### photon-swarm:{{ cluster_name }}:start/,/### photon-swarm:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
@@ -139,7 +213,16 @@
     become: true
     run_once: true
 
-  - name: Add current DHCP block for cluster
+#  - name: Remove any Data block for the current cluster
+#    local_action:
+#      module: shell
+#      _raw_params: sed '/### photon-swarm:{{ cluster_name }}:start/,/### photon-swarm:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd-temp.conf
+#    delegate_to: 127.0.0.1
+#    become: true
+#    run_once: true
+#    when: fusion_data_net is defined
+
+  - name: Add current DHCP Control/Data block for cluster
     local_action:
       module: shell
       _raw_params: cat {{ gen_script_folder }}/dhcpd_frag.conf >> {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
@@ -147,7 +230,16 @@
     become: true
     run_once: true
 
-  - name: Backup current DHCP
+#  - name: Add current DHCP Data block for cluster
+#    local_action:
+#      module: shell
+#      _raw_params: cat {{ gen_script_folder }}/dhcpd_data_frag.conf >> {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd-temp.conf
+#    delegate_to: 127.0.0.1
+#    become: true
+#    run_once: true
+#    when: fusion_data_net is defined
+
+  - name: Backup current Control/Data DHCP
     local_action:
       module: shell
       _raw_params: cp {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-backup.conf
@@ -155,13 +247,31 @@
     become: true
     run_once: true
 
-  - name: Replace current DHCP
+#  - name: Backup current Data DHCP
+#    local_action:
+#      module: shell
+#      _raw_params: cp {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd.conf {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd-backup.conf
+#    delegate_to: 127.0.0.1
+#    become: true
+#    run_once: true
+#    when: fusion_data_net is defined
+
+  - name: Replace current Control/Data DHCP
     local_action:
       module: shell
       _raw_params: mv {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true
+
+ # - name: Replace current Data DHCP
+ #   local_action:
+ #     module: shell
+ #     _raw_params: mv {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd-temp.conf {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd.conf
+ #   delegate_to: 127.0.0.1
+ #   become: true
+ #   run_once: true
+ #   when: fusion_data_net is defined
 
   - name: Start the VM Network
     local_action:
@@ -171,13 +281,21 @@
     become: true
     run_once: true
 
-  - name: Remove the DHCPD configuration file fragments
+  - name: Remove the DHCPD Control/Data configuration file fragments
     local_action:
       module: file
       path: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
       state: absent
     delegate_to: 127.0.0.1
     
+ # - name: Remove the DHCPD Data configuration file fragments
+ #   local_action:
+ #     module: file
+ #     path: "{{ gen_script_folder }}/{{ inventory_hostname }}_data_dhcpd.conf"
+ #     state: absent
+ #   delegate_to: 127.0.0.1
+ #   when: fusion_data_net is defined
+
   - name: Start the VMs 
     local_action:
       module: shell

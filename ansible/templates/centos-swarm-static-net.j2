@@ -1,4 +1,6 @@
-cat > /etc/sysconfig/network-scripts/ifcfg-ens33 << EOF
+rm /etc/sysconfig/network-scripts/ifcfg-ens*
+
+cat > /etc/sysconfig/network-scripts/ifcfg-ens32 << EOF
 DEVICE="ens32"
 ONBOOT="yes"
 BOOTPROTO=static

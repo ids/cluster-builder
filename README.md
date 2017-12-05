@@ -160,6 +160,8 @@ __ucp_admin_user__: The admin user for the UCP
 
 __ucp_admin_password__: The admin password for the UCP
 
+__update_kernel=true__: Updates CentOS7 Kernel to latest LT version (4.4+)
+
 
 ### ESXi Sample: esxi-centos-dcos hosts file
 
@@ -281,7 +283,8 @@ Eg.
 
 In order to make use of the VMware Volume Driver Plugin (vDVS) for persistent data volume management the VIB must be installed on all of the ESX servers used for the cluster.
 
-Download the [VIB](https://bintray.com/vmware/vDVS/download_file?file_path=VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib) for the vDVS.
+Download the [VIB](https://bintray.com/vmware/vDVS/download_file?file_path=VMWare_bootbank_esx-vmdkops-service_0.19.641f741-0.0.1.vib) for the vDVS.
+
 
 It is easiest to download the VIB to a shared datastore accessible to all of the ESX servers, and then copy it locally to the /tmp folder during each install.
 
@@ -289,7 +292,7 @@ It is easiest to download the VIB to a shared datastore accessible to all of the
 
 Eg.
 
-	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.17.c2aef31-0.0.1.vib
+	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.19.641f741-0.0.1.vib
 
 The plugin is automatically installed as part of the cluster-builder swarm provisioning process. However, this can also be manually done on cluster nodes with the following command:
 
@@ -321,11 +324,34 @@ The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been app
 
 A general overview of the highlights:
 
-* Docker versions: __Docker CE:__ 17.0.9-ce (or later), __Docker EE:__ 2.2.3 (ucp)
+#### Docker Versions
+
+__Docker CE:__ 17.0.9-ce (or later)
+centos-swarm
+photon-swarm
+atomic-swarm
+rhel-swarm
+
+__Docker EE:__ 2.2.3 (ucp)
+centos-ucp
+rhel-ucp
+
+#### CentOS Based Clusters
+
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
 * CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
+* Default linux kernel is 3.10.x, with __update_kernel=true__ a 4.4.x+ kernel is installed.
+
+#### PhotonOS Based Clusters
+
+* PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __223MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
+* PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
+* PhotonOS VMs are automatically configured with the future state __overlay2__ driver as they have a 4.x kernel
+
+#### All Clusters
+
 * The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
-* Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ services are configured and verified.
+* Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
 * Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
 * Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
 * Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.

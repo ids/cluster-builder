@@ -1,0 +1,35 @@
+
+- name: Ensure the Docker Daemon is started
+  service:
+    name: docker
+    state: started
+    enabled: yes  
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Copy the Docker EE License File
+  copy:
+    src: ../clusters/{{ cluster_name }}/docker_subscription.lic
+    dest: /etc/dockeree_license.lic
+    mode: 777
+
+- name: Start the UCP
+  shell: 
+    cmd: | 
+      docker container run --rm -i --name ucp \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      docker/ucp:2.2.3 install \
+      --admin-username {{ ucp_admin_user }} \
+      --admin-password {{ ucp_admin_password }} \
+      --license `cat /etc/dockeree_license.lic` \
+      --host-address {{ ansible_host }} 
+  become: true
+  register: ucp_start
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- debug: msg="{{ ucp_start.stdout_lines }}"
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Remove the Docker EE License File
+  file:
+    path: /etc/dockeree_license.lic
+    state: absent
