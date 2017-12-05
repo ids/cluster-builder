@@ -1,5 +1,5 @@
 ---
-- name: Add the storage configuration into daemon.json
+- name: Ensure metrics are enabled in daemon.json
   lineinfile:
     dest: /etc/docker/daemon.json
     regexp: "{{ item.regexp }}"
@@ -8,7 +8,6 @@
     insertafter: "{"
   with_items:
     - { regexp: 'metrics-addr', line: '"metrics-addr" : "0.0.0.0:9323",' }
-    - { regexp: 'experimental', line: '"experimental" : true,' }
 
 - name: Create prometheus etc
   file:

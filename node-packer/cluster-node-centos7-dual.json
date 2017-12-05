@@ -1,0 +1,107 @@
+{
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "bin/ansible.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "bin/vmware-tools.sh"
+    },
+    {
+      "type": "file",
+      "source": "keys/authorized_keys",
+      "destination": "/tmp/authorized_keys"
+    },     
+    {
+      "type": "ansible-local",
+      "playbook_file": "ansible/centos.yml",
+      "playbook_dir": "ansible",
+      "extra_arguments": "-vvvvv"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": ["reboot"]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "ansible/dcos-node.yml",
+      "playbook_dir": "ansible",
+      "extra_arguments": "-vvvvv"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "bin/zerodisk.sh"
+    }
+  ],
+
+  "post-processors": [{
+      "type": "shell-local",
+      "inline": [
+        "vmware-vdiskmanager -c -t 0 -s 250GB -a scsi output_centos7_vmx/docker-disk.vmdk"
+      ]
+    },
+    {
+      "type": "shell-local",
+      "inline": ["echo 'scsi0:1.present = \"TRUE\"' >> output_centos7_vmx/cluster-node-centos7-x86_64.vmx "]
+    },
+    {
+      "type": "shell-local",
+      "inline": ["echo 'scsi0:1.fileName = \"docker-disk.vmdk\"' >> output_centos7_vmx/cluster-node-centos7-x86_64.vmx "]
+    },
+    {
+      "type": "shell-local",
+      "inline": [
+          "ovftool --overwrite output_centos7_vmx/cluster-node-centos7-x86_64.vmx output_ovas/cluster-node-centos7-x86_64.ova"
+      ]
+  }],
+ 
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos.cfg<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 256000,
+      "guest_os_type": "centos-64",
+      "headless": true,
+      "http_directory": "http",
+      "iso_urls": [
+        "iso/CentOS-7-x86_64-Minimal-1708.iso",
+        "http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1708.iso"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "bba314624956961a2ea31dd460cd860a77911c1e0a56e4820a12b9c5dad363f5",
+      "ssh_username": "admin",
+      "ssh_password": "TempPass2017",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'TempPass2017'|sudo -S /sbin/halt -h -p",
+      "output_directory": "output_centos7_vmx",
+      "vmx_template_path": "cluster-node-template.vmx",
+      "vm_name": "cluster-node-centos7-x86_64",
+      "format": "ova",
+      "vmx_data": {
+        "memsize": "1536",
+        "numvcpus": "2"
+      },
+      "vmx_data_post": {
+        "ethernet0.connectionType": "bridged",
+        "ethernet1.connectionType": "bridged",
+        "ethernet1.linkStatePropagation.enable": "FALSE",
+        "ethernet1.pciSlotNumber": "160",
+        "ethernet1.present": "TRUE",
+        "ethernet1.virtualDev": "vmxnet3",
+        "ethernet1.wakeOnPcktRcv": "FALSE",
+        "ethernet1.addressType": "generated",
+        "ethernet1.uptCompatibility": "TRUE",
+        "ethernet1.generatedAddressOffset": "10"        
+      }
+    }
+  ]
+}

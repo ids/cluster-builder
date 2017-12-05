@@ -1,0 +1,7 @@
+
+host {{ inventory_hostname }}-data {
+    hardware ethernet {{ vm_data_mac.stdout }};
+    fixed-address {{ data_host }};
+    option host-name "{{ inventory_hostname }}-data";
+    option domain-name-servers 8.8.8.8, 8.8.4.4;
+}

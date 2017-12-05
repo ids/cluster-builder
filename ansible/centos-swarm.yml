@@ -12,14 +12,17 @@
 
     # You can set any interface, that is listened by docker engine.
     # e.g. docker_swarm_interface: "eth1"
+    #docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
     docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
     docker_swarm_port: 2377
     docker_tls_port: 2376
     docker_enable_metrics: true
+    contiv_remote_user: admin
 
   roles:
   - role: centos
+  - role: centos-kernel
   - role: centos-swarm-graphdriver
   - role: centos-swarm-firewall
   - role: centos-hardening
@@ -28,6 +31,8 @@
   - role: centos-swarm-monitoring
   - role: portainer
   - role: vmware-vdvs
+  - role: centos-nfs
+  - role: nfs-shares
   
   tasks:
   - name: Ensure tmp cluster folder exists

@@ -1,0 +1,47 @@
+- name: Download the Contiv installer
+  shell: "curl -L -O https://github.com/contiv/install/releases/download/{{ contiv_netplugin_version }}/contiv-{{ contiv_netplugin_version }}.tgz"
+  args: 
+    chdir: "/tmp"
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Extract the Contiv bundle locally
+  shell: "tar oxf contiv-{{ contiv_netplugin_version }}.tgz"
+  args: 
+    chdir: "/tmp"
+  run_once: true
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Generate the Contiv contiv-cfg.yml installation file
+  template:
+    src: templates/contiv-cfg.j2
+    dest: "/tmp/contiv-{{ contiv_netplugin_version }}/contiv-cfg.yml"
+    mode: 0766
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Copy up the private key
+  copy:
+    src: "{{ contiv_netplugin_ssh_key }}"
+    dest: "/tmp/contiv-{{ contiv_netplugin_version }}/secretstuff"
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Run the Contiv installer
+  shell: "./install/ansible/install_swarm.sh -f contiv-cfg.yml -e secretstuff -u {{ contiv_remote_user }} -p"
+  args: 
+    chdir: "/tmp/contiv-{{ contiv_netplugin_version }}"
+  register: contiv_out
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- debug: msg="{{ contiv_out.stdout_lines }}"
+
+- name: Remove the downloaded tar bundle
+  file:
+    path: "/tmp/contiv-{{ contiv_netplugin_version }}.tgz"
+    state: absent
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
+- name: Remove the Contiv install directory
+  file:
+    path: "/tmp/contiv-{{ contiv_netplugin_version }}"
+    state: absent
+  when: "contiv_netplugin is defined and contiv_netplugin and inventory_hostname == groups['docker_swarm_manager'][0]"
+
