@@ -103,14 +103,7 @@
 - name: Stop the current docker daemon
   service:
     name: docker
-    state: stopped
-    enabled: no  
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
-
-- name: Restart the docker daemon with the certs
-  service:
-    name: docker
-    state: started
+    state: restarted
     enabled: yes  
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 

@@ -21,11 +21,11 @@
     contiv_remote_user: admin
 
   roles:
-  - role: centos
   - role: centos-kernel
+  - role: centos
   - role: centos-swarm-graphdriver
-  - role: centos-swarm-firewall
   - role: centos-hardening
+  - role: centos-swarm-firewall
   - role: swarm
   - role: swarm-secure-api
   - role: centos-swarm-monitoring
@@ -34,7 +34,7 @@
   - role: centos-nfs
   - role: nfs-shares
   
-  tasks:
+  tasks:  
   - name: Ensure tmp cluster folder exists
     local_action:
       module: file
