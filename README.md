@@ -230,6 +230,7 @@ VMware Fusion deployment is geared toward building small clusters on a laptop fo
 * The examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created before attempting to deploy the fusion demos.
 
 * The VMware Fusion application should be running.
+
 ---
 
 > The script requires an active local sudo session as the VMware network controls require sudo, but this is difficult to prompt for with ansible.  If you don't have one, the script will prompt you for your local SUDO machine password.
@@ -253,6 +254,7 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 * All of the ESXi hosts must be setup for root access with passwordless SSH.  The **authorized_keys** for the root account on each ESXi host must contain the public key for the account executing the script.  This should be the same public key used in the creation of the ova template images.
 
 * The example esxi cluster inventory files are based on a bridged network of 192.168.1.0.  If this doesn't match your ESXi environment, you will need to create your own inventory file based on the example.
+
 ---
 
 > You will be prompted for the ESXi root password as it is required for the ovftool - which does not appear to work with passwordless SSH.
