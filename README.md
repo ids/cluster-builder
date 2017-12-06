@@ -160,9 +160,12 @@ __ucp_admin_user__: The admin user for the UCP
 
 __ucp_admin_password__: The admin password for the UCP
 
+Experimental options:
+
 __update_kernel=true__: Updates CentOS7 Kernel to latest LT version (4.4+)
 
 > Note, __update_kernel__ is for testing and experimentation.  At the present time it introduces instability into a CentOS7 based Docker CE/EE environment.
+
 
 ### ESXi Sample: esxi-centos-dcos hosts file
 
