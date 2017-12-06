@@ -1,7 +1,7 @@
 Cluster Builder
 ===============
 
-Ansible and Packer Iac() scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters and deploy them into VMware environments:
+Ansible and Packer IaC() scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters and deploy them into VMware environments:
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
