@@ -302,7 +302,7 @@ Eg.
 
 The plugin is automatically installed as part of the cluster-builder swarm provisioning process. However, this can also be manually done on cluster nodes with the following command:
 
-	docker plugin install --grant-all-permissions --alias vsphere store/vmware/docker-volume-vsphere:latest
+	docker plugin install --grant-all-permissions --alias vsphere vmware/docker-volume-vsphere:latest
 
 
 ## Production Readiness
@@ -346,7 +346,7 @@ rhel-ucp
 
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
 * CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
-* Default linux kernel is 3.10.x, with __update_kernel=true__ a 4.4.x+ kernel is installed.
+* Default linux kernel is 3.10.x, with __update_kernel=true__ a 4.4.x+ kernel is installed, however this has not been deemed production ready and is only for experimentation.  The CentOS7 variant with a 3.10.x kernel is the current production candidate (ported to RHEL7 prior to go-live).
 
 #### PhotonOS Based Clusters
 

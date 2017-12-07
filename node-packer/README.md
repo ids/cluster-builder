@@ -1,5 +1,5 @@
 # VMware Cluster Node Packer
-Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 1.0 R2** for use in DC/OS & Swarm Clusters.
+Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 2.0** for use in DC/OS & Swarm Clusters.
 
 ## Requirements
   - Packer 1.0.4+ (brew install/upgrade packer)
@@ -9,7 +9,7 @@ Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 1.0 R2** for us
 
 > Note: To save time you may want to seed the __iso__ folder with the respective iso files used in the creation of CentOS, Photon or Atomic based VMs.  Simply download them and place them in the __iso__ folder. Packer will download them on demand if they don't exist already in the folder.
 
-[PhotonOS ISO Download](https://bintray.com/vmware/photon/download_file?file_path=photon-1.0-62c543d.iso)
+[PhotonOS ISO Download](http://dl.bintray.com/vmware/photon/2.0/GA/iso/photon-2.0-304b817.iso)
 
 [CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1708.iso)
 
@@ -59,7 +59,7 @@ The CentOS 7 VM is provisioned to be used as a DC/OS node but is also suitable f
   - net-utils
 - Zero out free space to improve image compression
 
-### Photon OS 1.0 R2
+### Photon OS 2.0
 The Photon VM is not suitable for DC/OS, but may be used for Docker Swarm.  It has a minimal footprint.
 
 - open-vm-tools
@@ -69,21 +69,9 @@ The Photon VM is not suitable for DC/OS, but may be used for Docker Swarm.  It h
 ## Networking
 Default approach is to use DHCP to reserve addresses by MAC, and then statically assign IPs as needed. The OVA template has the primary NIC set for DHCP on boot.
 
-When the OVA is imported and booted for the first time it will be assigned a mac address by VMware for the life of the VM instance - this is then manually registered in the DHCP server as a static assignment.  When rebooted, the server is assigned its **static (DHCP) address** and **hostname**.
+When the OVA is imported and booted for the first time it will be assigned a mac address by VMware for the life of the VM instance - DHCP will assign a temporary address when the machine is first launched.  After the first phase of cluster-builder provisioning, the server is assigned its **static (DHCP) address** and **hostname**, and the temporary DHCP address is put back into the pool (only to be used during deployment activity).
 
-For VMware Fusion, DHCP is the way to go. For ESXi, we use ansible to configure a static IP as part of the deployment process in **photon-swarm** and **centos-dcos**.
-
-### Deployment Steps
-These steps describe the manual workflow.  This is automated in the **photon-swarm** and **centos-dcos** deployment projects.
-
-#### Using DHCP Static Reservations:
-1. Register the OVA with VMware (import/deploy it as a new VM instance)
-2. Capture the MAC Address generated and register with DHCP Server as static assignment
-3. Reboot the VM
-4. Configure VM with Ansible (setup the Docker swarm)
-
-#### Using Manual Static IP Assignment:
-For Step 2. Use ansible, or log into the VM and configure the static IP Address.
+For VMware Fusion, DHCP is the way to go and is how static IPs are assigned on local workstations. For ESXi, we use ansible to configure a static IP as part of the deployment process.
 
 ## Workflow
 These OVA images are the first stage of a deployment workflow:
@@ -97,5 +85,3 @@ These OVA images are the first stage of a deployment workflow:
 
 > The combination of Git + Packer + Ansible should ensure that all configuration is documented and repeatable, with no manual or ad-hoc configuration.
 
-#### With a VM template created you can move on to deploying a container orchestration cluster with [cluster-builder](https://github.com/ids/cluster-builder)
----
