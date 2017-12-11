@@ -495,5 +495,21 @@ Specify the settings for the 2nd dedicated data network inferface, also in the h
 	data_network_dns2=8.4.4.4
 	data_network_dn=idstudios.data.local
 
+> Make sure the settings match your target network
+
 __Note__ the prefix "data_" in front of the settings.  The original settings that do not contain the "data_" prefix are used as the __Control and Management Plane Interface__.
 
+Also make sure to assign the data plane interface IP address as **data_ip** for each VM node in the swarm:
+
+	[docker_swarm_manager]
+	swarm-m1 ansible_host=192.168.1.221 data_ip=192.168.2.221 
+
+	[docker_swarm_worker]
+	swarm-w1 ansible_host=192.168.1.231 data_ip=192.168.2.231 swarm_labels='["front-end"]'
+	swarm-w2 ansible_host=192.168.1.232 data_ip=192.168.2.232 swarm_labels='["front-end"]'
+	swarm-w3 ansible_host=192.168.1.233 data_ip=192.168.2.233 swarm_labels='["front-end"]'
+	swarm-w4 ansible_host=192.168.1.234 data_ip=192.168.2.234 swarm_labels='["db-galera-node-1"]'
+	swarm-w5 ansible_host=192.168.1.235 data_ip=192.168.2.235 swarm_labels='["db-galera-node-2"]'
+	swarm-w6 ansible_host=192.168.1.236 data_ip=192.168.2.236 swarm_labels='["db-galera-node-3"]'
+
+__Note__ the **data_ip** variable containing the ip address assignment for the data plane network.
