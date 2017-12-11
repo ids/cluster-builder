@@ -14,6 +14,8 @@ Ansible and Packer IaC() scripts to configure [DC/OS](https://dcos.io/) and [Doc
 9. [Production Readiness](#production-readiness)
 10. [Prometheus Monitoring](#prometheus-monitoring)
 11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+12. [Change Cluster Password](#change-cluster-password)
+13. [Separate Management and Data Interfaces](#separate-manager-and-data-interfaces)
 
 
 ## Supported Clusters
@@ -421,3 +423,77 @@ or
 	ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
+
+## Change Cluster Password
+Change password is now integrated into the cluster deployment process.
+
+For __CentOS__ deployments, both the __root__ and __admin__ passwords are prompted for change at the end of the cluster deployment.
+
+For __PhotonOS__ deployments, only the __root__ will prompt.
+
+> A bit of an annoyance, but it is integrated to ensure that clusters are never deployed into production with default root passwords.  TODO: Enhance to support headless deployments.
+
+This functionality is also available as as top level script:
+
+	bash cluster-passwd <cluster package> [user to change]
+
+Eg.
+
+	bash cluster-passwd esxi-centos-swarm admin
+
+It is intended to be run on a regular basis as per the standard operating procedures for password change management.
+
+## Separate Management and Data Interfaces
+
+As of Docker Engine 17.06 is now possible to specify separate interfaces for the Management and Control traffic and the Swarm/Container Data traffic.
+
+> See https://docs.docker.com/engine/swarm/networking
+
+__cluster-builder__ now supports this via some additional directives in the cluster package inventory hosts file.
+
+> __Note__: Currently only supported on CentOS variants.
+
+### Separate Interface Preparation
+
+If you haven't already done so, you will need to rebuild the __CentOS OVA__ so it contains the required two interfaces.
+
+> This has been recently added to the centos7 packer build and only needs to be done once.
+
+__Note__ that this separation does require additional network configuration external to the clusters.  The data plane will need access to a default gateway within the designated data plane subnet.
+
+#### ESXI
+
+Ensure there are two networks on the ESX hosts that all hosts can access.  This will likely mean the creation of two dedicated VLANs (or port groups).
+
+The inventory hosts file __esxi_data_net__ should match the name of the ESX VLAN port group.
+
+Inventory hosts file additions:
+
+Eg.
+
+	esxi_data_net="Data Network" 
+	esxi_data_net_prefix=192.168.2
+
+#### Fusion
+
+Ensure a __vmnet3__ private custom network has been created.
+
+Eg.
+
+Inventory hosts file additions:
+
+	fusion_data_net="vmnet3"
+	fusion_data_net_type="custom"
+
+#### Both ESXI/Fusion
+
+Specify the settings for the 2nd dedicated data network inferface, also in the hosts file:
+
+	data_network_mask=255.255.255.0
+	data_network_gateway=192.168.2.1
+	data_network_dns=8.8.8.8
+	data_network_dns2=8.4.4.4
+	data_network_dn=idstudios.data.local
+
+__Note__ the prefix "data_" in front of the settings.  The original settings that do not contain the "data_" prefix are used as the __Control and Management Plane Interface__.
+

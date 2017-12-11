@@ -26,11 +26,23 @@
   tags:
     - skip_ansible_lint # Suppressing the linter
 
-- name: Init "Swarm Mode" on the first manager.
+- name: Init "Swarm Mode" on the first manager (Combined Mgmt/Data Interface).
   shell: docker swarm init
         --listen-addr {{ docker_swarm_addr }}:{{ docker_swarm_port }}
         --advertise-addr {{ docker_swarm_addr }}
   when: "docker_info.stdout.find('Swarm: active') == -1
+    and data_ip is undefined
+    and inventory_hostname == groups['docker_swarm_manager'][0]"
+  tags:
+    - skip_ansible_lint # Suppressing the linter
+
+- name: Init "Swarm Mode" on the first manager (Separated Mgmt and Data Interface).
+  shell: docker swarm init
+        --listen-addr {{ docker_swarm_addr }}:{{ docker_swarm_port }}
+        --advertise-addr {{ docker_swarm_addr }}
+        --data-path-addr {{ data_ip }}
+  when: "docker_info.stdout.find('Swarm: active') == -1
+    and data_ip is defined
     and inventory_hostname == groups['docker_swarm_manager'][0]"
   tags:
     - skip_ansible_lint # Suppressing the linter
@@ -69,7 +81,7 @@
     docker_manager_address: "{{hostvars[groups['docker_swarm_manager'][0]]['docker_manager_address'] }}"
   when: "inventory_hostname != groups['docker_swarm_manager'][0]"
 
-- name: Join the pending Swarm worker nodes.
+- name: Join the pending Swarm worker nodes (Combined Mgmt/Data Interface).
   shell: docker swarm join
         --listen-addr {{ docker_swarm_addr }}:{{ docker_swarm_port }}
         --advertise-addr {{ docker_swarm_addr }}
@@ -78,11 +90,27 @@
   changed_when: False
   when: "docker_info.stdout.find('Swarm: active') == -1
     and docker_info.stdout.find('Swarm: pending') == -1
+    and data_ip is undefined
     and 'docker_swarm_worker' in group_names"
   tags:
     - skip_ansible_lint # Suppressing the linter
 
-- name: Join the pending Swarm manager nodes.
+- name: Join the pending Swarm worker nodes (Seperate Mgmt and Data Interface).
+  shell: docker swarm join
+        --listen-addr {{ docker_swarm_addr }}:{{ docker_swarm_port }}
+        --advertise-addr {{ docker_swarm_addr }}
+        --data-path-addr {{ data_ip }}
+        --token "{{ docker_worker_token.stdout }}"
+        {{ docker_manager_address }}
+  changed_when: False
+  when: "docker_info.stdout.find('Swarm: active') == -1
+    and docker_info.stdout.find('Swarm: pending') == -1
+    and data_ip is defined
+    and 'docker_swarm_worker' in group_names"
+  tags:
+    - skip_ansible_lint # Suppressing the linter
+
+- name: Join the pending Swarm manager nodes (Combined Mgmt/Data Interface).
   shell: docker swarm join
         --listen-addr {{ docker_swarm_addr }}:{{ docker_swarm_port }}
         --advertise-addr {{ docker_swarm_addr }}
@@ -91,6 +119,23 @@
   changed_when: False
   when: "docker_info.stdout.find('Swarm: active') == -1
     and docker_info.stdout.find('Swarm: pending') == -1
+    and data_ip is undefined
+    and 'docker_swarm_manager' in group_names
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
+  tags:
+    - skip_ansible_lint # Suppressing the linter
+
+- name: Join the pending Swarm manager nodes (Combined Mgmt/Data Interface).
+  shell: docker swarm join
+        --listen-addr {{ docker_swarm_addr }}:{{ docker_swarm_port }}
+        --advertise-addr {{ docker_swarm_addr }}
+        --data-path-addr {{ data_ip }}
+        --token "{{ docker_manager_token.stdout }}"
+        {{ docker_manager_address }}
+  changed_when: False
+  when: "docker_info.stdout.find('Swarm: active') == -1
+    and docker_info.stdout.find('Swarm: pending') == -1
+    and data_ip is defined
     and 'docker_swarm_manager' in group_names
     and inventory_hostname != groups['docker_swarm_manager'][0]"
   tags:

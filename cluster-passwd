@@ -16,7 +16,7 @@ if [ ! -f $INVENTORY_FILE ]; then
   exit 1
 fi
 
-echo "Verifying passlib is installed..."
+echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
 sudo -H pip install passlib
 
 if [ -z $TARGET_USER ]; then 

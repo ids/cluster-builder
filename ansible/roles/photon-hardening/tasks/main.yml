@@ -59,6 +59,12 @@
     regexp: '^#AllowAgentForwarding yes'
     line: 'AllowAgentForwarding no'
 
+- name: Hardening SSH configuration AllowUsers
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^AllowUsers'
+    line: 'AllowUsers {{ remote_user }}'
+
 #- name: Install Audit Daemon
 #  shell: tdnf install -y audit
 

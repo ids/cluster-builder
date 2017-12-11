@@ -91,7 +91,16 @@
         "numvcpus": "2"
       },
       "vmx_data_post": {
-        "ethernet0.connectionType": "bridged"
+        "ethernet0.connectionType": "bridged",
+        "ethernet1.connectionType": "bridged",
+        "ethernet1.linkStatePropagation.enable": "FALSE",
+        "ethernet1.pciSlotNumber": "160",
+        "ethernet1.present": "TRUE",
+        "ethernet1.virtualDev": "vmxnet3",
+        "ethernet1.wakeOnPcktRcv": "FALSE",
+        "ethernet1.addressType": "generated",
+        "ethernet1.uptCompatibility": "TRUE",
+        "ethernet1.generatedAddressOffset": "10"        
       }
     }
   ]

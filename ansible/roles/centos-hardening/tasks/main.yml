@@ -65,6 +65,12 @@
     regexp: '^#AllowAgentForwarding yes'
     line: 'AllowAgentForwarding no'
 
+- name: Hardening SSH configuration AllowUsers
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^AllowUsers'
+    line: 'AllowUsers {{ remote_user }}'
+
 - name: Audit daemon config [ACCT-9630]  
   template:
     src: templates/auditd_conf.j2
