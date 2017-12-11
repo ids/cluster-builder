@@ -15,7 +15,7 @@ Ansible and Packer IaC() scripts to configure [DC/OS](https://dcos.io/) and [Doc
 10. [Prometheus Monitoring](#prometheus-monitoring)
 11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 12. [Change Cluster Password](#change-cluster-password)
-13. [Separate Management and Data Interfaces](#separate-manager-and-data-interfaces)
+13. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
 
 
 ## Supported Clusters
