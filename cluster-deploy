@@ -90,7 +90,14 @@ function fusion_deploy () {
     exit 1
   fi
 
-  sleep 10s
+  echo "Change the initial ROOT password on VM Nodes..."
+  bash cluster-passwd $CLUSTER_NAME root
+
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
+    bash cluster-passwd $CLUSTER_NAME $REMOTE_USER
+  fi 
+
   bash clusters/$CLUSTER_NAME/test-cluster
 
   echo
@@ -113,6 +120,7 @@ fi
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
+REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE`
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_NAME
 

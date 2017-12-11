@@ -1,0 +1,43 @@
+#!/bin/bash 
+
+INVENTORY_FILE=$1
+TARGET_USER=$2
+
+if [ -z INVENTORY_FILE ]; then
+  read -s "Enter the target cluster folder: " INVENTORY_FILE
+  echo
+fi
+
+INVENTORY_FILE=./clusters/$INVENTORY_FILE/hosts
+
+if [ ! -f $INVENTORY_FILE ]; then
+  echo
+  echo "Unable to find inventory file @: ${INVENTORY_FILE}"
+  exit 1
+fi
+
+echo "Verifying passlib is installed..."
+sudo -H pip install passlib
+
+if [ -z $TARGET_USER ]; then 
+  read -p "Enter user: " TARGET_USER
+fi 
+
+echo
+read -s -p "Enter NEW password: " NEW_PASSWORD
+echo
+read -s -p "Confirm NEW password: " CONFIRM_PASSWORD
+echo
+
+if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+  echo
+  echo "** Passwords do not match!"
+  echo
+  exit 1
+fi 
+
+PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${NEW_PASSWORD}')"
+TARGET_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+
+echo "Changing cluster password for ${TARGET_USER}..."
+ansible-playbook -i $INVENTORY_FILE ansible/change-password.yml --extra-vars="target_user=${TARGET_USER} target_password_hash='${TARGET_PASSWORD_HASH}'"
