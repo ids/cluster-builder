@@ -3,7 +3,7 @@
     path: /etc/certs/docker
     state: directory
     mode: 0755
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+  when: "inventory_hostname in groups['docker_swarm_manager']"
 
 - name: generate CA private key
   shell: openssl genrsa -out ca-key.pem 4096 
