@@ -12,7 +12,7 @@
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate CA public key
-  shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ inventory_hostname }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
+  shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ docker_swarm_mgmt_dn }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
   args:
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
@@ -24,13 +24,13 @@
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate Server public key
-  shell: openssl req -subj "/CN={{ inventory_hostname }}" -sha256 -new -key server-key.pem -out server.csr
+  shell: openssl req -subj "/CN={{ docker_swarm_mgmt_dn }}" -sha256 -new -key server-key.pem -out server.csr
   args:
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate Server extfile
-  shell: echo subjectAltName = DNS:{{ inventory_hostname }},IP:{{ ansible_host }},IP:127.0.0.1 > extfile.cnf
+  shell: echo subjectAltName = DNS:{{ docker_swarm_mgmt_dn }},IP:{{ ansible_host }},IP:127.0.0.1 > extfile.cnf
   args:
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
@@ -75,32 +75,32 @@
   file:
     state: file
     mode: 0400
-    path: "/etc/certs/docker/{{ item }}"
+    path: "/etc/certs/docker/{{ item }}.pem"
   with_items:
-    - "ca-key.pem"
-    - "server-key.pem"
-    - "key.pem"      
+    - "ca-key"
+    - "server-key"
+    - "key"      
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: restrict the certs
   file:
     state: file
     mode: 0444
-    path: "/etc/certs/docker/{{ item }}"
+    path: "/etc/certs/docker/{{ item }}.pem"
   with_items:
-    - "ca.pem"
-    - "server-cert.pem"    
-    - "cert.pem"   
+    - "ca"
+    - "server-cert"    
+    - "cert"   
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Copy the custom the docker.service
+- name: Copy the custom docker.service
   template:
     src: templates/docker-service.j2
     dest: /etc/systemd/system/docker.service
     mode: 0644
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Stop the current docker daemon
+- name: Restart the docker daemon
   service:
     name: docker
     state: restarted
@@ -113,8 +113,77 @@
     dest: ../clusters/{{ cluster_name }}/api-certs/
     flat: yes        
   with_items:
+    - ca-key
     - ca
     - key    
-    - cert                    
+    - cert
+    - server-key
+    - server-cert                    
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+            
+- name: Copy up the shared manager certs and keys to other manager nodes
+  copy:
+    src: ../clusters/{{ cluster_name }}/api-certs/{{ item }}.pem
+    dest: /etc/certs/docker/{{ item }}.pem
+    flat: yes        
+  with_items:
+    - ca-key
+    - ca
+    - key    
+    - cert
+    - server-key
+    - server-cert                    
+  when: "inventory_hostname in groups['docker_swarm_manager'] 
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
+            
+- name: Remove local temp server related pem files
+  file:
+    path: ../clusters/{{ cluster_name }}/api-certs/{{ item }}.pem
+    state: absent
+  with_items:
+    - ca-key
+    - server-key
+    - server-cert                    
+  when: "inventory_hostname in groups['docker_swarm_manager'] 
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
+            
+- name: restrict the keys
+  file:
+    state: file
+    mode: 0400
+    path: "/etc/certs/docker/{{ item }}.pem"
+  with_items:
+    - "ca-key"
+    - "server-key"
+    - "key"      
+  when: "inventory_hostname in groups['docker_swarm_manager'] 
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
+
+- name: restrict the certs
+  file:
+    state: file
+    mode: 0444
+    path: "/etc/certs/docker/{{ item }}.pem"
+  with_items:
+    - "ca"
+    - "server-cert"    
+    - "cert"   
+  when: "inventory_hostname in groups['docker_swarm_manager'] 
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
+
+- name: Copy the custom docker.service
+  template:
+    src: templates/docker-service.j2
+    dest: /etc/systemd/system/docker.service
+    mode: 0644
+  when: "inventory_hostname in groups['docker_swarm_manager'] 
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
+
+- name: Restart the docker daemon
+  service:
+    name: docker
+    state: restarted
+    enabled: yes  
+  when: "inventory_hostname in groups['docker_swarm_manager'] 
+    and inventory_hostname != groups['docker_swarm_manager'][0]"
             
