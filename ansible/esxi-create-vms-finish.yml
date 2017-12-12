@@ -82,6 +82,18 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: numvcpus is defined
 
+    - name: Adjust the Primary interface network name
+      local_action:
+        module: shell
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/ethernet0.networkName/s/.*/ethernet0.networkName\ =\ \"{{ esxi_net }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
+      when: esxi_net is defined
+
+    - name: Copy the adjusted vmx into place
+      local_action:
+        module: shell
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
+      when: esxi_net is defined
+
     - name: Remove the 2nd interface when Data network is undefined
       local_action:
         module: shell
