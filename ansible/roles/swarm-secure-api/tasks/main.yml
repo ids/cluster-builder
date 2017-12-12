@@ -125,7 +125,6 @@
   copy:
     src: ../clusters/{{ cluster_name }}/api-certs/{{ item }}.pem
     dest: /etc/certs/docker/{{ item }}.pem
-    flat: yes        
   with_items:
     - ca-key
     - ca
