@@ -18,6 +18,7 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "expect_disconnect": true,
       "inline": ["reboot"]
     },
     {
