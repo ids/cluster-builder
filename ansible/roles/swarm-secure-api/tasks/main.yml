@@ -136,16 +136,18 @@
     and inventory_hostname != groups['docker_swarm_manager'][0]"
             
 - name: Remove local temp server related pem files
-  file:
-    path: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem
-    state: absent
-  with_items:
+  local_action:
+    module: file
+      path: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem
+      state: absent
+    with_items:
     - ca-key
     - server-key
     - server-cert                    
   when: "inventory_hostname in groups['docker_swarm_manager'] 
     and inventory_hostname != groups['docker_swarm_manager'][0]"
-            
+  run_once: true
+
 - name: restrict the keys
   file:
     state: file
