@@ -15,7 +15,7 @@ function check_docker_license () {
 
 function esxi_deploy () {
   
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE}"
+  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
    exit 1
