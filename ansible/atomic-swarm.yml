@@ -17,6 +17,7 @@
     docker_swarm_port: 2377
     docker_tls_port: 2376
 roles:
+  - role: common
   - role: atomic
   - role: swarm
   - role: atomic-swarm

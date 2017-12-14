@@ -1,13 +1,9 @@
 ---
+# This playbook tests common
+
 - hosts: all
-  remote_user: admin
   become: true
   any_errors_fatal: true
-  vars: 
-    contiv_remote_user: admin
-
   roles:
   - role: common
-  - role: contiv
-  
   

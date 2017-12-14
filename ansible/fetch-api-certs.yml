@@ -1,6 +1,9 @@
 ---
 - hosts: docker_swarm_manager
   remote_user: "{{ remote_user }}"
+  roles:
+  - role: common
+      
   tasks:
   - name: Fetch the client certs
     fetch:

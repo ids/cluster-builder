@@ -1,0 +1,9 @@
+---
+- name: Determine cluster_pkg_folder (quick fix)
+  set_fact:
+    cluster_pkg_folder: "{{ cluster_name }}"
+  when: cluster_pkg_folder is undefined
+  run_once: true
+
+- debug: var=cluster_pkg_folder
+  run_once: true

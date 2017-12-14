@@ -7,4 +7,5 @@
   any_errors_fatal: true
 
   roles:
+  - role: common
   - role: centos-swarm-firewall 

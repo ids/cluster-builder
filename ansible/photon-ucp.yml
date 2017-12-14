@@ -17,6 +17,7 @@
     docker_tls_port: 2378
 
   roles:
+  - role: common
   - role: photon
   - role: photon-hardening
   - role: photon-ucp

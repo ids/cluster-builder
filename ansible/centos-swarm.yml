@@ -21,6 +21,7 @@
     contiv_remote_user: admin
 
   roles:
+  - role: common
   - role: centos-kernel
   - role: centos
   - role: centos-swarm-graphdriver

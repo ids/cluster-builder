@@ -18,6 +18,7 @@
     docker_tls_port: 2378
 
   roles:
+  - role: common
   - role: rhel
   - role: rhel-hardening
   - role: ucp

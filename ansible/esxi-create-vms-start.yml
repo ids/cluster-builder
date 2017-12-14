@@ -7,8 +7,10 @@
     ova_opts: ""
     ova_template_path: "{{ ova_template }}"
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
+  roles:
+  - role: common
+      
   tasks:  
-
   - name: Ensure the target folder for generated scripts exists
     local_action:
       module: file

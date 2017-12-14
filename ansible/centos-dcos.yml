@@ -9,6 +9,7 @@
   vars:
 
   roles:
+  - role: common
   - role: centos
   - role: dcos
   

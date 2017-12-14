@@ -18,6 +18,7 @@
     docker_enable_metrics: true
 
   roles:
+  - role: common
   - role: photon
   - role: photon-hardening
   - role: swarm

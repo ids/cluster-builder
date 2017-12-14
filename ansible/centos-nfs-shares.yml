@@ -4,5 +4,6 @@
   become: true
   any_errors_fatal: true
   roles:
+  - role: common
   - role: centos-nfs
   - role: nfs-shares
