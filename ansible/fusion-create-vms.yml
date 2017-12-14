@@ -5,7 +5,7 @@
   vars:
     fusion_vm_folder: ../virtuals
     ova_template_path: "../{{ ova_template }}"
-    gen_script_folder: ../tmp/{{ cluster_name }}
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
     vmware_dhcpd_base_path: '/Library/Preferences/VMware\ Fusion/'
     vmware_dhcpd_cmd: vmnet-cli
 
@@ -163,7 +163,7 @@
   - name: Concatenate the Control/Data entry header
     local_action:
       module: shell
-      _raw_params: echo '### photon-swarm:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_frag.conf
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_frag.conf
     run_once: true
 
   - name: Concatenate the new Control/Data entries
@@ -174,13 +174,13 @@
   - name: Concatenate the Control/Data entry footer
     local_action:
       module: shell
-      _raw_params: echo '### photon-swarm:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_frag.conf
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_frag.conf
     run_once: true
 
   - name: Concatenate the Data entry header
     local_action:
       module: shell
-      _raw_params: echo '### photon-swarm:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_data_frag.conf
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_data_frag.conf
     run_once: true
     when: fusion_data_net is defined
 
@@ -193,7 +193,7 @@
   - name: Concatenate the Data entry footer
     local_action:
       module: shell
-      _raw_params: echo '### photon-swarm:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_data_frag.conf
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_data_frag.conf
     run_once: true
     when: fusion_data_net is defined
 
@@ -208,7 +208,7 @@
   - name: Remove any Control/Data block for the current cluster
     local_action:
       module: shell
-      _raw_params: sed '/### photon-swarm:{{ cluster_name }}:start/,/### photon-swarm:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -216,7 +216,7 @@
   - name: Remove any Data block for the current cluster
     local_action:
       module: shell
-      _raw_params: sed '/### photon-swarm:{{ cluster_name }}:start/,/### photon-swarm:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd-temp.conf
+      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_data_net }}/dhcpd-temp.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true

@@ -28,7 +28,7 @@
   - name: Ensure tmp cluster folder exists
     local_action:
       module: file
-      path: "../tmp/{{ cluster_name }}"
+      path: "../tmp/{{ cluster_pkg_folder }}"
       state: directory
     become: false
 
@@ -36,7 +36,7 @@
     local_action:
       module: template
       src: templates/docker-env.j2
-      dest: ../clusters/{{ cluster_name }}/docker-env
+      dest: ../clusters/{{ cluster_pkg_folder }}/docker-env
       mode: 0766
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     become: false
@@ -45,7 +45,7 @@
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2
-      dest: ../clusters/{{ cluster_name }}/test-cluster
+      dest: ../clusters/{{ cluster_pkg_folder }}/test-cluster
       mode: 0766
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     become: false

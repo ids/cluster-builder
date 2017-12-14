@@ -8,7 +8,7 @@
 
 - name: Copy the Docker EE License File
   copy:
-    src: ../clusters/{{ cluster_name }}/docker_subscription.lic
+    src: ../clusters/{{ cluster_pkg_folder }}/docker_subscription.lic
     dest: /etc/dockeree_license.lic
     mode: 777
 

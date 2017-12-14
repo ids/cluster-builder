@@ -110,7 +110,7 @@
 - name: Fetch the client certs
   fetch:
     src: /etc/certs/docker/{{ item }}.pem
-    dest: ../clusters/{{ cluster_name }}/api-certs/
+    dest: ../clusters/{{ cluster_pkg_folder }}/api-certs/
     flat: yes        
   with_items:
     - ca-key
@@ -123,7 +123,7 @@
             
 - name: Copy up the shared manager certs and keys to other manager nodes
   copy:
-    src: ../clusters/{{ cluster_name }}/api-certs/{{ item }}.pem
+    src: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem
     dest: /etc/certs/docker/{{ item }}.pem
   with_items:
     - ca-key
@@ -137,7 +137,7 @@
             
 - name: Remove local temp server related pem files
   file:
-    path: ../clusters/{{ cluster_name }}/api-certs/{{ item }}.pem
+    path: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem
     state: absent
   with_items:
     - ca-key

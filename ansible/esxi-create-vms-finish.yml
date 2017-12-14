@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: false
   vars:
-    gen_script_folder: ../tmp/{{ cluster_name }}
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   tasks:  
     - name: Remove existing creation script
       local_action:
@@ -27,7 +27,7 @@
   gather_facts: false
   serial: 1
   vars:
-    gen_script_folder: ../tmp/{{ cluster_name }}
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   tasks:  
 
     - name: Ensure the target folder for generated scripts exists
@@ -146,7 +146,7 @@
 - hosts: all
   gather_facts: false
   vars:
-    gen_script_folder: ../tmp/{{ cluster_name }}
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   tasks:  
 
     - name: Combine the script fragments

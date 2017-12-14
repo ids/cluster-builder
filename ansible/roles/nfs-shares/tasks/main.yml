@@ -1,14 +1,14 @@
   - name: Verify NFS Shares file
     local_action:
       module: stat
-      path: "../clusters/{{ cluster_name }}/nfs_shares.yml"
+      path: "../clusters/{{ cluster_pkg_folder }}/nfs_shares.yml"
     register: nfs_shares_config
     run_once: true
     become: false
   
   - name: Load NFS Shares file
     include_vars:
-      file: "../clusters/{{ cluster_name }}/nfs_shares.yml"
+      file: "../clusters/{{ cluster_pkg_folder }}/nfs_shares.yml"
     run_once: true
     when: nfs_shares_config.stat.exists == True
 

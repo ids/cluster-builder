@@ -6,7 +6,7 @@
     esxi_user: root
     ova_opts: ""
     ova_template_path: "{{ ova_template }}"
-    gen_script_folder: ../tmp/{{ cluster_name }}
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   tasks:  
 
   - name: Ensure the target folder for generated scripts exists
