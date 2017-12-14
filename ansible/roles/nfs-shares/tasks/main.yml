@@ -34,6 +34,7 @@
     lineinfile:
       path: "/etc/fstab"
       state: present
+      regexp: "{{ item.folder }}"
       line: "{{ item.fstab }}"
     when: "item.fstab is defined and (item.group is undefined or item.group in group_names)"
     with_items: 

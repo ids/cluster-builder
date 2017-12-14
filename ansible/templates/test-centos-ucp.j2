@@ -4,4 +4,8 @@
   
 #bash $DIR/docker-env info
   
-open https://{{ inventory_hostname }}
+{% if docker_swarm_mgmt_gw is defined %}  
+open https://{{ docker_swarm_mgmt_gw }}
+{% else %}
+open http://{{ inventory_hostname }}
+{% endif %}
