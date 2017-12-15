@@ -164,7 +164,7 @@ See the example package [esxi-centos-swarm-advanced](../examples/esxi-centos-swa
 
 In the __Advanced Swarm Deployment__ configuration, all access to the Remote API is load balanced over the 3-manager-nodes (HA).
 
-This requires __docker_swarm_mgmt_sn__ to be set in the __hosts__file.
+This requires __docker_swarm_mgmt_sn__ to be set in the __hosts__ file.
 
 Eg.
 
@@ -238,6 +238,8 @@ Upload the certificate that will be used for the offloading to pfSense __System 
 ![pfSense Certificate Manager](images/pfsense-certs.png)
 
 This will be used by HAProxy.
+
+> If you need to create your own self signed certificate there are numerous step-by-step guides on the internet, just google __openssl create self-signed certificate__.
 
 ### Setup HAProxy Backends
 
