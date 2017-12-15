@@ -255,6 +255,36 @@ VMware Fusion deployment is geared toward building small clusters on a laptop fo
 
 * The VMware Fusion application should be running.
 
+* The VMware tools need to be in the PATH
+
+* The Swarm Node hostnames must be specific in the host machine /etc/hosts
+
+#### VMware Tools Path
+
+Ensure the VMware CLI tools are setup in the BASH PATH:
+
+Eg.
+
+		export VM_TOOLS="/Library/Application Support/VMware Fusion"
+		export PATH=$PATH:/usr/local/bin:/usr/bin:~/bin:$VM_TOOLS
+
+		if [ -d "/Applications/VMware Fusion.app/Contents/Library" ]; then
+		export PATH=$PATH:"/Applications/VMware Fusion.app/Contents/Library"
+		fi
+
+		if [ -d "/Applications/VMware OVF Tool/" ]; then
+		export PATH=$PATH:"/Applications/VMware OVF Tool/"
+		fi
+
+#### Host /etc/hosts
+
+The hostnames of the target VM nodes used in the cluster definition package:
+
+		192.168.100.90  demo-swarm-m1 atomic-swarm-m1 drupal.idstudios.vmware
+		192.168.100.91	demo-swarm-w1 atomic-swarm-w1
+		192.168.100.92	demo-swarm-w2 atomic-swarm-w2
+		192.168.100.93	demo-swarm-w3 atomic-swarm-w3
+
 ---
 
 > The script requires an active local sudo session as the VMware network controls require sudo, but this is difficult to prompt for with ansible.  If you don't have one, the script will prompt you for your local SUDO machine password.

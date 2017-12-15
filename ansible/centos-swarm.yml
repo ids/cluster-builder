@@ -59,4 +59,5 @@
       module: shell
       _raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"
     become: false
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     ignore_errors: true
