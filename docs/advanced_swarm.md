@@ -64,10 +64,10 @@ It is useful to configure your cluster __hosts__ file to establish the various D
 
 Examples, based on the internal example domain of __idstudios.local__:
 
-  cluster-gateway.idstudios.local -> physical gateway address
-  remote-api.idstudios.local -> physical gateway address
-  swarm-m[1-3] -> private VLAN data plane addresses
-  swarm-w[1-6] -> private VLAN data plan addresses
+    cluster-gateway.idstudios.local -> physical gateway address
+    remote-api.idstudios.local -> physical gateway address
+    swarm-m[1-3] -> private VLAN data plane addresses
+    swarm-w[1-6] -> private VLAN data plan addresses
 
 ## Install pfSense Swarm Gateway VM
 
