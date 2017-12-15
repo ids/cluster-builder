@@ -56,7 +56,7 @@ There are at present 5 supported cluster types, or variants:
 
 - VMware Fusion Pro 8+ / Workstation Pro 12+
 - VMware ESXi 6.5+ (optional)
-- VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614) in $PATH
+- VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 - Ansible 2.3+ `brew install/upgrade ansible`
 - Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 

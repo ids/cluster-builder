@@ -9,12 +9,13 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 5. [Deploy Cluster Builder Control Station](#deploy-cluster-builder-control-station)
 6. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
 7. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
-8. [Setup Remote API Load Balancer](#setup-remote-api-load-balancer)
-9. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
-10. [Setup Passthrough Traefik Load Balancer](#setup-passthrough-traefik-load-balancer)
-11. [Setup NFS Server](#setup-nfs-server)
-12. [Deploy Cluster](#deploy-cluster)
-13. [Troubleshooting](#troubleshooting)
+8. [Configure Remote API for Load Balancing](#configure-remote-api-for-load-balancing)
+9. [Setup Remote API & Traefik Passthrough Load Balancers](#setup-remote-api-&-traefik-passthrough-load-balancers)
+10. [Setup pfSense WAN Firewll Rules](#setup-pfsense-wan-firewall-rules)
+11. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
+12. [Setup NFS Server](#setup-nfs-server)
+13. [Deploy Cluster](#deploy-cluster)
+14. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -90,7 +91,13 @@ Create a new VM with this ISO, and make sure of the following:
   * Nic on the Data plane VLAN - this is for the LAN_DATA side
   * (optional) Nic on the Mgmt/Control plan VLAN - this is for the LAN_MGMT side
 
-We will configure pfSense based on the network configuration of our deployed swarm.
+The pfSense configuration will be based on the network configuration of our deployed swarm.
+
+There are a few initial general configuration settings to make:
+
+1. In __System > Advanced Setup__ set the pfSense __cluster-gateway__ webConfigurator to use HTTPS, and __port 4444__. 
+
+2. In the same location, make sure __Disable webConfigurator redirect rule__ is enabled.  This way the __cluster-gateway__ can receive 80 and 443 for production traffic (though any ports can be used, these simply align with the example)
 
 ## Deploy Cluster Builder Control Station
 
@@ -101,6 +108,19 @@ It is important that the __cluster-builder-control__ vm have at least 3 nics (ad
 As shown in the overview diagram, the __cluster-builder-control__ station must reside on all three subnets.
 
 > It may only need to reside on the data plane network - this needs to be confirmed.
+
+Once the __cluster-builder-control__ VM has been deployed, it can be accessed directly through VMware:
+
+![cluster control launch from ESX web interface](images/cluster-control-launch.png)
+
+![cluster control launch prompt](images/cluster-control-launch-prompt.png)
+
+![cluster control login](images/cluster-control-login.png)
+
+And provides a full Gnome 3.x desktop environment:
+![cluster control screenshot](images/cluster-control-screenshot.png)
+
+The __cluster-builder-control__ vm will be used to deploy the swarms into the private VLAN environment.
 
 ## Setup Cluster Package Definition Repository
 
@@ -140,9 +160,9 @@ Updates and enhancements made to the __cluster-builder__ toolkit are abstracted 
 
 See the example package [esxi-centos-swarm-advanced](../examples/esxi-centos-swarm-advanced/hosts) __hosts__ file for the example configuration for the layout illustrated in the overview.
 
-## Setup Remote API Load Balancer
+## Configure Remote API for Load Balancing
 
-With the __Advanced Swarm Deployment__ access to the Remote API is load balanced over the 3-manager-node HA configuration.
+In the __Advanced Swarm Deployment__ configuration, all access to the Remote API is load balanced over the 3-manager-nodes (HA).
 
 This requires __docker_swarm_mgmt_sn__ to be set in the __hosts__file.
 
@@ -160,23 +180,98 @@ __pfSense__ is configured to allow traffic for __port 2376__ and load balance it
 ### Docker EE
 __pfSense__ is configured to allow traffic for __port 443__ and load balance it over the manager nodes on the data plane
 
+## Setup Remote API & Traefik Passthrough Load Balancers
+
+The standard pfSense load balancer in __Services > Load Balancer__ is used for passthrough load balancing (where the SSL is passed through to the destination host).  This is used for:
+
+* Remote API
+* Production Traefik
+
+Production traffic is proxied by the swarm integrated Traefik proxy.  Traefik will manage SSL termination for the various services, and will route traffic based on host-header, using only a single IP/port for ingress.
+
+The __cluster-gateway__ is configured to allow traffic from port 80 and load balance it over the worker nodes, via the standard load balancer, letting Traefik handle the end service routing.
+
+#### Setup pfSense Pools
+
+Create the load balancer pools as depicted:
+
+![pfSense cluster-gateway load balancer pools](images/pfsense-lb-pools.png)
+
+With the following sample values:
+
+![pfSense cluster-gateway pool detail](images/pfsense-lb-pool-detail.png)
+
+#### Setup pfSense Virtual Servers
+
+And then the corresponding virtual servers:
+
+![pfSense cluster-gateway virtual servers](images/pfsense-lb-virtual-servers.png)
+
+With the configuration as shown in this example:
+
+![pfSense cluster-gateway virtual server detail](images/pfsense-virtual-server-detail.png)
+
+## Setup pfSense WAN Firewall Rules
+
+In __Firewall > Rules > WAN__ add the following rules (as depicted):
+
+![pfSense cluster-gateway firewall WAN rules](images/pfsense-wan-rules.png)
+
+> __Note__ do not create the entries shown that are linked to incoming NAT port forwarding.  These are listed near the bottom and show __NAT__ in the description.  They will be created as part of the NAT inbound port forwarding.
+
 ## Setup HAProxy SSL Offloaded Services
 
-__pfSense__ can run __HAProxy__ as an integrated package.  
+__pfSense__ can run __HAProxy__ as an integrated package.
 
 Install __HAProxy__ on your __cluster-gateway__ through __System > Package Manager__, and search for __haproxy__.
+
+![pfSense HAProxy install](images/pfsense-haproxy-install.png)
 
 Once installed, it can be accessed through __Services > HAProxy__.
 
 Prometheus, Grafana and Portainer are all secured and accessed through HAProxy.
 
-> TODO: walkthrough of the setup of HAProxy front end, back end and use of the pfSense Certificate Manager for SSL offloading.
+### Install the self-signed (internal) certificate for management services
 
-## Setup Passthrough Traefik Load Balancer
+Upload the certificate that will be used for the offloading to pfSense __System > Certificate Manager__:
 
-Production traffic is proxied by the swarm integrated Traefik proxy.  Traefik will also manage SSL termination for the various services, and will route traffic based on host-header, using only a single IP/port for ingress.
+![pfSense Certificate Manager](images/pfsense-certs.png)
 
-__pfSense__ is configured to allow traffic from port 80 and load balance it over the worker nodes, using SSL passthrough, letting Traefik handle the end service routing.
+This will be used by HAProxy.
+
+### Setup HAProxy Backends
+
+Create the three required HAProxy Backend pools:
+
+![pfSense HAProxy Backends](images/pfsense-haproxy-backends.png)
+
+As per the example settings shown here for the general pool detail:
+
+![pfSense HAProxy Backend Pool Detail](images/pfsense-haproxy-backend-pool.png)
+
+And ensure that the health check is set to basic:
+
+![pfSense HAProxy Backend healthcheck](images/pfsense-haproxy-backend-health.png)
+
+### Setup HAProxy Frontends
+
+Create the three required HAProxy Frontends:
+
+![pfSense HAProxy Frontends](images/pfsense-haproxy-frontends.png)
+
+As per the example settings shown here for the general frontend detail:
+
+![pfSense HAProxy Frontend detail](images/pfsense-haproxy-frontend-general.png)
+
+__Note__: Ensure to set the correct default backend:
+
+![pfSense HAProxy Frontend backend](images/pfsense-haproxy-frontend-backend.png)
+
+And select the correct SSL certificate:
+
+![pfSense HAProxy SSL offloading](images/pfsense-haproxy-frontend-ssl-offloading.png)
+
+The __cluster-gateway__ HAProxy should now be correctly configured.
 
 ## Setup NFS Server
 
