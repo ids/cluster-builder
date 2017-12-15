@@ -12,12 +12,12 @@ Ansible and Packer IaC() scripts to configure [DC/OS](https://dcos.io/) and [Doc
 7. [Deploying a Cluster](#deploying-a-cluster)
 8. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
 9. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
-10. [Production Readiness](#production-readiness)
-11. [Prometheus Monitoring](#prometheus-monitoring)
-12. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-13. [Change Cluster Password](#change-cluster-password)
-14. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
-15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+10. [Prometheus Monitoring](#prometheus-monitoring)
+11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+12. [Change Cluster Password](#change-cluster-password)
+13. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
+14. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+15. [Production Readiness](#production-readiness)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
@@ -377,66 +377,6 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 	docker plugin install --grant-all-permissions --alias vsphere vmware/docker-volume-vsphere:latest
 
-
-## Production Readiness
-
-Currently in a pre-production state, but rapidly approaching production readiness with the CentOS variant of Docker CE and EE.
-
-### Security
-
-Currently two automated security audits of the  __cluster-builder CentOS Docker EE/CE__ clusters have been conducted:
-
-> November 1st, 2017
-
-#### Lynis
-
-[Lynis](https://cisofy.com/lynis/) security scanning has been conducted on the current CentOS node.  Relevant suggestions were implemented as part of an [ansible hardening script](ansible/roles/centos-hardening/tasks/hardening.yml).
-
-The report output is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-lynis.md).
-
-#### CIS Docker Benchmark
-
-The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-docker-cis.md).
-
-
-### System Profile
-
-A general overview of the highlights:
-
-#### Docker Versions
-
-__Docker CE:__ 17.0.9-ce (or later)
-centos-swarm
-photon-swarm
-atomic-swarm
-rhel-swarm
-
-__Docker EE:__ 2.2.3 (ucp)
-centos-ucp
-rhel-ucp
-
-#### CentOS Based Clusters
-
-* CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
-* CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
-* Default linux kernel is 3.10.x, with __update_kernel=true__ a 4.4.x+ kernel is installed, however this has not been deemed production ready and is only for experimentation.  The CentOS7 variant with a 3.10.x kernel is the current production candidate (ported to RHEL7 prior to go-live).
-
-#### PhotonOS Based Clusters
-
-* PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __223MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
-* PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
-* PhotonOS VMs are automatically configured with the future state __overlay2__ driver as they have a 4.x kernel
-
-#### All Clusters
-
-* The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
-* Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
-* Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
-* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
-* Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
-
-> Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
-
 ## Prometheus Monitoring
 
 Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS and PhotonOS Swarms, with metrics enabled by default.
@@ -596,3 +536,62 @@ The advanced swarm deployment configuration represents the current candidate pro
 * All management services are secured by HTTPS
 
 For detailed step-by-step configuration instructions see the [Advanced Swarm Deployment Guide](docs/advanced_swarm.md)
+
+## Production Readiness
+
+Currently in a pre-production state, but rapidly approaching production readiness with the CentOS variant of Docker CE and EE.
+
+### Security
+
+Currently two automated security audits of the  __cluster-builder CentOS Docker EE/CE__ clusters have been conducted:
+
+> November 1st, 2017
+
+#### Lynis
+
+[Lynis](https://cisofy.com/lynis/) security scanning has been conducted on the current CentOS node.  Relevant suggestions were implemented as part of an [ansible hardening script](ansible/roles/centos-hardening/tasks/hardening.yml).
+
+The report output is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-lynis.md).
+
+#### CIS Docker Benchmark
+
+The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-docker-cis.md).
+
+
+### System Profile
+
+A general overview of the highlights:
+
+#### Docker Versions
+
+__Docker CE:__ 17.0.9-ce (or later)
+centos-swarm
+photon-swarm
+atomic-swarm
+rhel-swarm
+
+__Docker EE:__ 2.2.3 (ucp)
+centos-ucp
+rhel-ucp
+
+#### CentOS Based Clusters
+
+* CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
+* CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
+* Default linux kernel is 3.10.x, with __update_kernel=true__ a 4.4.x+ kernel is installed, however this has not been deemed production ready and is only for experimentation.  The CentOS7 variant with a 3.10.x kernel is the current production candidate (ported to RHEL7 prior to go-live).
+
+#### PhotonOS Based Clusters
+
+* PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __223MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
+* PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
+* PhotonOS VMs are automatically configured with the future state __overlay2__ driver as they have a 4.x kernel
+
+#### All Clusters
+
+* The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
+* Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
+* Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
+* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
+* Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
+
+> Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
