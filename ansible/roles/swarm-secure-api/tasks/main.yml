@@ -12,7 +12,7 @@
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate CA public key
-  shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ docker_swarm_mgmt_dn }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
+  shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ docker_swarm_mgmt_sn }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
   args:
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
@@ -24,13 +24,13 @@
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate Server public key
-  shell: openssl req -subj "/CN={{ docker_swarm_mgmt_dn }}" -sha256 -new -key server-key.pem -out server.csr
+  shell: openssl req -subj "/CN={{ docker_swarm_mgmt_sn }}" -sha256 -new -key server-key.pem -out server.csr
   args:
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate Server extfile
-  shell: echo subjectAltName = DNS:{{ docker_swarm_mgmt_dn }},IP:{{ ansible_host }},IP:127.0.0.1 > extfile.cnf
+  shell: echo subjectAltName = DNS:{{ docker_swarm_mgmt_sn }},IP:{{ ansible_host }},IP:127.0.0.1 > extfile.cnf
   args:
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
@@ -123,8 +123,8 @@
             
 - name: Copy up the shared manager certs and keys to other manager nodes
   copy:
-    src: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem
-    dest: /etc/certs/docker/{{ item }}.pem
+    src: "../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem"
+    dest: "/etc/certs/docker/{{ item }}.pem"
   with_items:
     - ca-key
     - ca
@@ -138,9 +138,9 @@
 - name: Remove local temp server related pem files
   local_action:
     module: file
-      path: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem
-      state: absent
-    with_items:
+    path: "../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem"
+    state: absent
+  with_items:
     - ca-key
     - server-key
     - server-cert                    

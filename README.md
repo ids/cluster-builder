@@ -16,7 +16,7 @@ Ansible and Packer IaC() scripts to configure [DC/OS](https://dcos.io/) and [Doc
 11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 12. [Change Cluster Password](#change-cluster-password)
 13. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
-
+14. [Advanced Swarm Deployment](#advanced-swarm-deployment)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
@@ -162,11 +162,29 @@ __ucp_admin_user__: The admin user for the UCP
 
 __ucp_admin_password__: The admin password for the UCP
 
-Experimental options:
+#### Experimental options:
 
 __update_kernel=true__: Updates CentOS7 Kernel to latest LT version (4.4+)
 
 > Note, __update_kernel__ is for testing and experimentation.  At the present time it introduces instability into a CentOS7 based Docker CE/EE environment.
+
+#### Advanced options:
+
+__docker_swarm_mgmt_sn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
+
+__docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
+
+__esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
+__esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
+__data_network_mask__: The network mask for the data network
+__data_network_gateway__: The gateway address for the data network
+
+> When deploying two interface nodes, the Data plane interface should be assigned the default gateway, and the Control/Mgmt plane interface should NOT be assigned a default gateway.
+
+__data_network_dns__: DNS entry for the data plane interface
+__data_network_dns2__: 2nd DNS entry for the data plane interface
+__data_network_dns3__: 3rd DNS entry for the data plane interface
+__data_network_dn__: Domain name for the data interface subnet
 
 
 ### ESXi Sample: esxi-centos-dcos hosts file
@@ -513,3 +531,15 @@ Also make sure to assign the data plane interface IP address as **data_ip** for 
 	swarm-w6 ansible_host=192.168.1.236 data_ip=192.168.2.236 swarm_labels='["db-galera-node-3"]'
 
 __Note__ the **data_ip** variable containing the ip address assignment for the data plane network.
+
+## Advanced Swarm Deployment
+
+The advanced swarm deployment configuration represents the current candidate production deployment model.  It involves the following key aspects:
+
+* Separate interfaces for Control and Data plane underlay networks (each VM node in the swarm has two nics on two different subnets)
+* Cluster VM nodes are fully contained within a private VLAN
+* All cluster access is controlled via a Firewall/gateway
+* All management services are load balanced over 3 or more manager nodes
+* All management services are secured by HTTPS
+
+For detailed step-by-step configuration instructions see the [Advanced Swarm Deployment Guide](docs/advanced_swarm.md)

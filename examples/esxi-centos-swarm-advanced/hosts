@@ -20,15 +20,16 @@ esxi_data_net_prefix=192.168.2
 
 data_network_mask=255.255.255.0
 data_network_gateway=192.168.2.1
-network_dns=192.168.1.10
-network_dns2=8.8.8.8
-network_dns3=8.8.4.4
+data_network_dns=192.168.1.10
+data_network_dns2=8.8.8.8
+data_network_dns3=8.8.4.4
 data_network_dn=idstudios.data.local
 
 # docker_elk_target=elastic.idstudios.local:9200
 
 docker_enable_metrics=true
-docker_swarm_mgmt_dn=remote-api.idstudios.local
+docker_swarm_mgmt_sn=remote-api.idstudios.local
+docker_swarm_mgmt_gw=cluster-gateway.idstudios.local
 
 [docker_prometheus_server]
 swarm-m1

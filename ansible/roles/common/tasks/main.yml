@@ -16,3 +16,8 @@
 
 - debug: var=cluster_pkg_folder
   run_once: true
+
+- name: Determine docker_swarm_mgmt_sn
+  set_fact:
+    docker_swarm_mgmt_sn: "{{ inventory_hostname }}"
+  when: docker_swarm_mgmt_sn is undefined and inventory_hostname == groups['docker_swarm_manager'][0]
