@@ -57,6 +57,6 @@
   - name: Remove tmp cluster folder if exists
     local_action:
       module: shell
-        raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"
+      _raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"
     become: false
     ignore_errors: true
