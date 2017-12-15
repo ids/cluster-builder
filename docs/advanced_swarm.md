@@ -18,7 +18,7 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 13. [Troubleshooting](#troubleshooting)
 
 ## Overview
-![Advanced Swarm Overview](docs/images/advanced-overview.png)
+![Advanced Swarm Overview](images/advanced-overview.png)
 
 ## Configure VMware VLANs
 
