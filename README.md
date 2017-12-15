@@ -176,15 +176,21 @@ __docker_swarm_mgmt_sn__: The fully qualified server name to use for the remote 
 __docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
 
 __esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
+
 __esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
+
 __data_network_mask__: The network mask for the data network
+
 __data_network_gateway__: The gateway address for the data network
 
 > When deploying two interface nodes, the Data plane interface should be assigned the default gateway, and the Control/Mgmt plane interface should NOT be assigned a default gateway.
 
 __data_network_dns__: DNS entry for the data plane interface
+
 __data_network_dns2__: 2nd DNS entry for the data plane interface
+
 __data_network_dns3__: 3rd DNS entry for the data plane interface
+
 __data_network_dn__: Domain name for the data interface subnet
 
 
