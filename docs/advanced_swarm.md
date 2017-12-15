@@ -18,7 +18,17 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 13. [Troubleshooting](#troubleshooting)
 
 ## Overview
+The following diagram illustrates the advanced swarm deployment configuration:
+
 ![Advanced Swarm Overview](images/advanced-overview.png)
+
+With this configuration, the __cluster-control__ vm is connected to the private VLANs used by the swarm vm nodes.  Direct access to the underlying swarm virtual machine nodes is not permitted from the external physical network.  All management of the swarm nodes is done through the __cluster-control__ station.
+
+The private VLANs are implemented in the VMware ESX environment.
+
+Access to the management services is secured and load balanced by the dedciated __cluster-gateway__, which provides firewall and load balancing services.  In this example __pfSense CE__ is used as the __cluster-gateway__, and it is installed as a virtual machine.
+
+Control and Data plane traffic in the Docker Swarm has been separated each assigned a dedicated interface (subnet), with all inbound traffic directed to the data plane interfaces.
 
 ## Configure VMware VLANs
 
