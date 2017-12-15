@@ -110,29 +110,29 @@ Eg.
 
 For my company __Intelligent Design Studios__ I created the __ids__ folder for all of our cluster deployment packages:
 
-  clusters
-    |_ids
+    clusters
+      |_ids
 
 This is initialized as a private git repository, which is stored in a secure on-prem gitlab instance.  Within the __ids__ folder, the cluster packages are kept (as per those in examples).
 
-  clusters
-    |_ids
-      |_swarm-dev
+    clusters
+      |_ids
+        |_swarm-dev
 
 After a deployment the resulting certificates for secured TLS remote api access are then stored within this managed, versioned private git repo.
 
 After successful deployment:
 
-  cd clusters/ids
-  git push origin master
+    cd clusters/ids
+    git push origin master
 
 Which keeps the cluster definition packages and resulting certificates safe and secure.
 
 At any point the entire structure of the toolset can be restored with two simple git clone commands:
 
-  git clone git@github.com:ids/cluster-builder.git
-  cd cluster-builder/clusters
-  git clone git@myprivategitlab.com:ids/ops/ids-clusters.git ids
+    git clone git@github.com:ids/cluster-builder.git
+    cd cluster-builder/clusters
+    git clone git@myprivategitlab.com:ids/ops/ids-clusters.git ids
 
 Updates and enhancements made to the __cluster-builder__ toolkit are abstracted from the user specific cluster package definition packages.
 
@@ -148,7 +148,7 @@ This requires __docker_swarm_mgmt_sn__ to be set in the __hosts__file.
 
 Eg.
 
-  docker_swarm_mgmt_sn=remote-api.idstudios.local
+    docker_swarm_mgmt_sn=remote-api.idstudios.local
 
 The server name specified should be the DNS entry that maps to the __cluster-gateway__ WAN interface address.
 
