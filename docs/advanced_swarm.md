@@ -177,8 +177,12 @@ This value is then used when creating the self signed TLS certificates shared by
 ### Docker CE
 __pfSense__ is configured to allow traffic for __port 2376__ and load balance it over the manager nodes on the data plane
 
+![pfSense Docker CE Overview](images/advanced-ce-gateway.png)
+
 ### Docker EE
 __pfSense__ is configured to allow traffic for __port 443__ and load balance it over the manager nodes on the data plane
+
+![pfSense Docker CE Overview](images/advanced-ee-gateway.png)
 
 ## Setup Remote API & Traefik Passthrough Load Balancers
 
