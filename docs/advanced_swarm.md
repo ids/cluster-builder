@@ -6,14 +6,14 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 2. [Configure VMware VLANs](#configure-vmware-vlans)
 3. [Configure DNS](#configure-dns)
 4. [Install pfSense Swarm Gateway VM](#install-pfsense-gateway-vm)
-5. [Deploy Cluster Builder Control Station](#deploy-cluster-builder-control-station)
+5. [Deploy Cluster Builder Control Station VM](#deploy-cluster-builder-control-station-vm)
 6. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
 7. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
 8. [Configure Remote API for Load Balancing](#configure-remote-api-for-load-balancing)
 9. [Setup Remote API & Traefik Passthrough Load Balancers](#setup-remote-api-&-traefik-passthrough-load-balancers)
 10. [Setup pfSense WAN Firewll Rules](#setup-pfsense-wan-firewall-rules)
 11. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
-12. [Setup NFS Server](#setup-nfs-server)
+12. [Setup NFS Server VM](#setup-nfs-server-vm)
 13. [Deploy Cluster](#deploy-cluster)
 14. [Troubleshooting](#troubleshooting)
 
@@ -99,17 +99,17 @@ There are a few initial general configuration settings to make:
 
 2. In the same location, make sure __Disable webConfigurator redirect rule__ is enabled.  This way the __cluster-gateway__ can receive 80 and 443 for production traffic (though any ports can be used, these simply align with the example)
 
-## Deploy Cluster Builder Control Station
+## Deploy Cluster Builder Control Station VM
 
-Follow the deployment guidelines for the __cluster-builder-control__ workstation VM (as per the project readmes).
+Follow the deployment guidelines for the __cluster-control__ workstation VM (as per the project readmes).
 
-It is important that the __cluster-builder-control__ vm have at least 3 nics (additional virtual nics can be added and configured post deployment).
+It is important that the __cluster-control__ vm have at least 3 nics (additional virtual nics can be added and configured post deployment).
 
-As shown in the overview diagram, the __cluster-builder-control__ station must reside on all three subnets.
+As shown in the overview diagram, the __cluster-control__ station must reside on all three subnets.
 
 > It may only need to reside on the data plane network - this needs to be confirmed.
 
-Once the __cluster-builder-control__ VM has been deployed, it can be accessed directly through VMware:
+Once the __cluster-control__ VM has been deployed, it can be accessed directly through VMware:
 
 ![cluster control launch from ESX web interface](images/cluster-control-launch.png)
 
@@ -120,7 +120,7 @@ Once the __cluster-builder-control__ VM has been deployed, it can be accessed di
 And provides a full Gnome 3.x desktop environment:
 ![cluster control screenshot](images/cluster-control-screenshot.png)
 
-The __cluster-builder-control__ vm will be used to deploy the swarms into the private VLAN environment.
+The __cluster-control__ vm will be used to deploy the swarms into the private VLAN environment.
 
 ## Setup Cluster Package Definition Repository
 
@@ -279,7 +279,7 @@ And select the correct SSL certificate:
 
 The __cluster-gateway__ HAProxy should now be correctly configured.
 
-## Setup NFS Server
+## Setup NFS Server VM
 
 > TODO: basic NFS setup in support of shared volume usage (i.e. drupal) within the advanced configuration.
 
