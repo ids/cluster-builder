@@ -3,6 +3,7 @@
 
 - hosts: all
   become: true
+  gather_facts: false
   any_errors_fatal: true
   roles:
   - role: common

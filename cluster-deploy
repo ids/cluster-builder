@@ -124,14 +124,13 @@ if [ ! -f $INVENTORY_FILE ]; then
   exit 1
 fi
 
-
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE`
 
 CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
-CLUSTER_PKG_FOLDER=`basename $CLUSTER_PKG_PATH`
+CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
 

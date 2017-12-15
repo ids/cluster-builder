@@ -1,7 +1,16 @@
 ---
-- name: Determine cluster_pkg_folder (quick fix)
+- name: Determine base control-builder path
   set_fact:
-    cluster_pkg_folder: "{{ cluster_name }}"
+    cluster_builder_dir: "{{ playbook_dir | replace('/ansible', '') }}"
+  when: cluster_pkg_folder is undefined
+  run_once: true
+
+- debug: var=cluster_builder_dir
+  run_once: true
+
+- name: Determine cluster_pkg_folder
+  set_fact:
+    cluster_pkg_folder: "{{ inventory_dir | replace(cluster_builder_dir + '/clusters/', '') }}"
   when: cluster_pkg_folder is undefined
   run_once: true
 
