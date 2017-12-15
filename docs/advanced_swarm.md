@@ -42,7 +42,7 @@ For each ESX host, in __Networking > Port Groups__:
 
 Create two new port groups (VLANs) for the Control and Data plane interfaces of the swarm:
 
-![VMware Add Port Group](images/vmware-add-portgroup.png)
+![VMware Add Port Group](images/vmware-vlan-add-portgroup.png)
 
 If there are multiple ESX hosts, the __managed switch__ needs to be configured to tag the outgoing packets with the designated VLAN ID.  This passes encapsulated VLAN packets between the switch ports.
 
