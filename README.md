@@ -8,15 +8,16 @@ Ansible and Packer IaC() scripts to configure [DC/OS](https://dcos.io/) and [Doc
 3. [Required Software](#required-software)
 4. [Preparation](#preparation)
 5. [Cluster Definition Packages](#cluster-definition-packages)
-6. [Deploying a Cluster](#deploying-a-cluster)
-7. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-8. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
-9. [Production Readiness](#production-readiness)
-10. [Prometheus Monitoring](#prometheus-monitoring)
-11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-12. [Change Cluster Password](#change-cluster-password)
-13. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
-14. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+6. [Cluster Builder Usage](#cluster-builder-usage)
+7. [Deploying a Cluster](#deploying-a-cluster)
+8. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+9. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
+10. [Production Readiness](#production-readiness)
+11. [Prometheus Monitoring](#prometheus-monitoring)
+12. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+13. [Change Cluster Password](#change-cluster-password)
+14. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
+15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
@@ -283,6 +284,22 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 > You will be prompted for the ESXi root password as it is required for the ovftool - which does not appear to work with passwordless SSH.
 
 > TODO: Future enhancements would switch to using PowerCLI or the vSphere API for remote control.
+
+## Cluster Builder Usage
+
+The __cluster-builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages with are kept in the __clusters__ folder.
+
+It is recommended that an organization establish a base folder git repository within the __clusters__ folder to store their cluster definition packages.  Anything kept in __clusters__ will be ignored by the parent cluster-builder git repository.
+
+Eg.
+
+	cluster-builder
+		|_ clusters
+			|_ ids (my organization - git repo - named anything - shorter is better)
+				|_ swarm-dev (my cluster definition package)
+					|_ hosts (the cluster inventory hosts file)
+
+All resulting artifacts from __cluster-builder__ are then stored within the cluster definition package.
 
 ## Deploying a Cluster
 To deploy a cluster use **cluster-deploy**:

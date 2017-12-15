@@ -36,13 +36,6 @@
   - role: nfs-shares
   
   tasks:  
-  - name: Ensure tmp cluster folder exists
-    local_action:
-      module: file
-      path: "../tmp/{{ cluster_pkg_folder }}"
-      state: directory
-    become: false
-
   - name: Generate the wrapper docker-env script
     local_action:
       module: template
@@ -60,3 +53,10 @@
       mode: 0766
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     become: false
+
+  - name: Remove tmp cluster folder if exists
+    local_action:
+      module: shell
+        raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"
+    become: false
+    ignore_errors: true
