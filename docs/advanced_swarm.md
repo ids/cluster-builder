@@ -114,7 +114,7 @@ And for the Control/Mgmt plane enable DHCP in support of the deployment process:
 
 ## Deploy Cluster Builder Control Station VM
 
-Follow the deployment guidelines for the __cluster-control__ workstation VM (as per the project readmes).
+Follow the deployment guidelines for the __cluster-control__ workstation VM (as per the [project](https://github.com/ids/cluster-builder-control) readme instructions).
 
 It is important that the __cluster-control__ vm have at least 3 nics (additional virtual nics can be added and configured post deployment).
 
