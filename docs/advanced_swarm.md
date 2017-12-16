@@ -6,16 +6,17 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 2. [Configure VMware VLANs](#configure-vmware-vlans)
 3. [Configure DNS](#configure-dns)
 4. [Install pfSense Swarm Gateway VM](#install-pfsense-swarm-gateway-vm)
-5. [Deploy Cluster Builder Control Station VM](#deploy-cluster-builder-control-station-vm)
-6. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
-7. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
-8. [Configure Remote API for Load Balancing](#configure-remote-api-for-load-balancing)
-9. [Setup Remote API & Traefik Passthrough Load Balancers](#setup-remote-api-&-traefik-passthrough-load-balancers)
-10. [Setup pfSense WAN Firewll Rules](#setup-pfsense-wan-firewall-rules)
-11. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
-12. [Setup NFS Server VM](#setup-nfs-server-vm)
-13. [Deploy Cluster](#deploy-cluster)
-14. [Troubleshooting](#troubleshooting)
+5. [Setup pfSense LAN Interfaces and DHCP](#setup-pfsense-lan-interfaces-and-dhcp)
+6. [Deploy Cluster Builder Control Station VM](#deploy-cluster-builder-control-station-vm)
+7. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
+8. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
+9. [Configure Remote API for Load Balancing](#configure-remote-api-for-load-balancing)
+10. [Setup Remote API & Traefik Passthrough Load Balancers](#setup-remote-api-&11raefik-passthrough-load-balancers)
+12. [Setup pfSense WAN Firewll Rules](#setup-pfsense-wan-firewall-rules)
+13. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
+14. [Setup NFS Server VM](#setup-nfs-server-vm)
+15. [Deploy Cluster](#deploy-cluster)
+16. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -99,6 +100,18 @@ There are a few initial general configuration settings to make:
 
 2. In the same location, make sure __Disable webConfigurator redirect rule__ is enabled.  This way the __cluster-gateway__ can receive 80 and 443 for production traffic (though any ports can be used, these simply align with the example)
 
+## Setup pfSense LAN Interfaces and DHCP
+
+As installation occurs on the Control/Mgmt plane interface but traffic is routed on the Data plane interface, the __cluster-gateway__ should have a LAN interface for each of the subnets.
+
+![pfSense LAN interfaces](images/pfsense-lan-interfaces.png)
+
+And for the Control/Mgmt plane enable DHCP in support of the deployment process:
+
+![pfSense Control plane DHCP](images/pfsense-control-plane-dhcp.png)
+
+> DHCP can be enabled only for the deployment process, and then disabled.
+
 ## Deploy Cluster Builder Control Station VM
 
 Follow the deployment guidelines for the __cluster-control__ workstation VM (as per the project readmes).
@@ -106,8 +119,6 @@ Follow the deployment guidelines for the __cluster-control__ workstation VM (as 
 It is important that the __cluster-control__ vm have at least 3 nics (additional virtual nics can be added and configured post deployment).
 
 As shown in the overview diagram, the __cluster-control__ station must reside on all three subnets.
-
-> It may only need to reside on the data plane network - this needs to be confirmed.
 
 Once the __cluster-control__ VM has been deployed, it can be accessed directly through VMware:
 
