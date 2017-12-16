@@ -5,7 +5,7 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 1. [Overview](#overview)
 2. [Configure VMware VLANs](#configure-vmware-vlans)
 3. [Configure DNS](#configure-dns)
-4. [Install pfSense Swarm Gateway VM](#install-pfsense-gateway-vm)
+4. [Install pfSense Swarm Gateway VM](#install-pfsense-swarm-gateway-vm)
 5. [Deploy Cluster Builder Control Station VM](#deploy-cluster-builder-control-station-vm)
 6. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
 7. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
