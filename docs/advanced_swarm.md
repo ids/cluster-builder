@@ -329,7 +329,13 @@ The shares should then be available to mount.  Remember to configure the __nfs_s
 
 ## Deploy Cluster
 
-> TODO: deployment considerations from within the private VLAN control station.
+Swarm cluster deployment must be done from the __control-station__ but is otherwise the same:
+
+Eg.
+
+    bash cluster-deploy ids/swarm-prod
+
+> __Note__ use the cluster definition package created earlier.
 
 ## Troubleshooting
 
