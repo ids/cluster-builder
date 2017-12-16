@@ -73,7 +73,7 @@ Examples, based on the internal example domain of __idstudios.local__:
 
 ## Install pfSense Swarm Gateway VM
 
-__pfSense Community Edition__ is a free to use firewall appliance with numerous advanced capabilities, such as:
+[pfSense Community Edition](https://www.pfsense.org/) is a free to use firewall appliance with numerous advanced capabilities, such as:
 
 * Professional Grade Firewall
 * Integrated General Purpose Load Balancer
