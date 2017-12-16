@@ -154,7 +154,7 @@ At any point the entire structure of the toolset can be restored with two simple
     cd cluster-builder/clusters
     git clone git@myprivategitlab.com:ids/ops/ids-clusters.git ids
 
-Updates and enhancements made to the __cluster-builder__ toolkit are abstracted from the user specific cluster package definition packages.
+Updates and enhancements made to the __cluster-builder__ toolkit are abstracted from the user specific cluster definition packages.
 
 ## Advanced Cluster Configuration Package
 
