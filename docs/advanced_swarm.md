@@ -175,14 +175,18 @@ The server name specified should be the DNS entry that maps to the __cluster-gat
 This value is then used when creating the self signed TLS certificates shared by all of the manager nodes.  It is used for the CN value, and must match the address used for client access.
 
 ### Docker CE
-__pfSense__ is configured to allow traffic for __port 2376__ and load balance it over the manager nodes on the data plane
+
+pfSense example configuration:
 
 ![pfSense Docker CE Overview](images/advanced-ce-gateway.png)
 
 ### Docker EE
-__pfSense__ is configured to allow traffic for __port 443__ and load balance it over the manager nodes on the data plane
 
-![pfSense Docker CE Overview](images/advanced-ee-gateway.png)
+pfSense example configuration:
+
+![pfSense Docker EE Overview](images/advanced-ee-gateway.png)
+
+> __Note__ that in Docker EE the UCP handles both Web UI and Remote API over the same port 443.  With Docker CE there is no built in Web UI, and in place of this we use Portainer on port 9000 (with SSL offloading) and Remote API over 2376 (with SSL handled by the managers).
 
 ## Setup Remote API & Traefik Passthrough Load Balancers
 
