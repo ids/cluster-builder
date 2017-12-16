@@ -146,6 +146,7 @@
     - server-cert                    
   when: "inventory_hostname in groups['docker_swarm_manager'] 
     and inventory_hostname != groups['docker_swarm_manager'][0]"
+  become: false
   run_once: true
 
 - name: restrict the keys
