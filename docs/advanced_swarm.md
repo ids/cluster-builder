@@ -24,7 +24,7 @@ The following diagram illustrates the advanced swarm deployment configuration:
 
 ![Advanced Swarm Overview](images/advanced-overview.png)
 
-With this configuration, the __cluster-control__ vm is connected to the private VLANs used by the swarm vm nodes.  Direct access to the underlying swarm virtual machine nodes is not permitted from the external physical network.  All management of the swarm nodes is done through the __cluster-control__ station.
+With this configuration, the __cluster-control__ vm is connected to the private VLANs used by the swarm virtual machine nodes.  Direct access to the underlying vm nodes is not permitted from the external physical network.  All management is done through the __cluster-control__ station.
 
 The private VLANs are implemented in the VMware ESX environment.
 
