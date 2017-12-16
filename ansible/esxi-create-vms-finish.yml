@@ -1,14 +1,12 @@
 ---
 - hosts: all
   gather_facts: false
-  roles:
-  - role: common
-    
----
-- hosts: all
-  gather_facts: false
   vars:
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
+  
+  roles:
+    - role: common
+  
   tasks:  
     - name: Remove existing creation script
       local_action:
