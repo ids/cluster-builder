@@ -300,7 +300,32 @@ The __cluster-gateway__ HAProxy should now be correctly configured.
 
 ## Setup NFS Server VM
 
-> TODO: basic NFS setup in support of shared volume usage (i.e. drupal) within the advanced configuration.
+If NFS services are required for development or testing purposes it is relatively easy to setup an NFS server VM.
+
+Using the CentOS7 template OVA (found in __node-packer/output_ovas__), create a new VM in ESX and call it __nfs-server__.
+
+Make sure NFS is installed:
+
+    yum install nfs-utils
+
+Assign it an IP address on the Data plane network (192.168.2).
+
+Create a local volume to share:
+
+Eg.
+
+    sudo mkdir -p /data/shared
+
+Edit the __/etc/exports__ file.
+
+    /data/shared *(rw,sync,no_root_squash)
+
+And restart/enable the __nfsd__
+
+    sudo systemctl restart nfs
+    sudo systemctl enable nfs
+
+The shares should then be available to mount.  Remember to configure the __nfs_shares.yml__ file accordingly in the cluster definition package prior to deployment.
 
 ## Deploy Cluster
 
