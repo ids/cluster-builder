@@ -100,6 +100,8 @@ There are a few initial general configuration settings required:
 
 2. In the same location, make sure __Disable webConfigurator redirect rule__ is enabled.  This way the __cluster-gateway__ can receive 80 and 443 for production traffic (though any ports can be used, these simply align with the example)
 
+![pfSense Dashboard](images/pfsense-dashboard.png)
+
 ## Setup pfSense LAN Interfaces and DHCP
 
 As installation occurs on the Control/Mgmt plane interface but traffic is routed on the Data plane interface, the __cluster-gateway__ should have a LAN interface for each of the subnets.
@@ -157,9 +159,11 @@ After a deployment the resulting certificates for secured TLS remote api access 
 After successful deployment:
 
     cd clusters/ids
+    git add -A
+    git commit -a -m "deployed swarm-dev"
     git push origin master
 
-Which keeps the cluster definition packages and resulting certificates safe and secure.
+Which keeps the cluster definition packages and resulting certificates safe and secure.  It also enables them to be easily shared and re-used, such as on a development workstation.
 
 At any point the entire structure of the toolset can be restored with two simple git clone commands:
 
@@ -298,11 +302,44 @@ The __cluster-gateway__ HAProxy should now be correctly configured.
 
 ## Setup NFS Server VM
 
-> TODO: basic NFS setup in support of shared volume usage (i.e. drupal) within the advanced configuration.
+If NFS services are required for development or testing purposes it is relatively easy to setup an NFS server VM.
+
+Using the CentOS7 template OVA (found in __node-packer/output_ovas__), create a new VM in ESX and call it __nfs-server__.
+
+Make sure NFS is installed:
+
+    yum install nfs-utils
+
+Assign it an IP address on the Data plane network (192.168.2).
+
+Create a local volume to share:
+
+Eg.
+
+    sudo mkdir -p /data/shared
+
+Edit the __/etc/exports__ file.
+
+    /data/shared *(rw,sync,no_root_squash)
+
+And restart/enable the __nfsd__
+
+    sudo systemctl restart nfs
+    sudo systemctl enable nfs
+
+The shares should then be available to mount.  Remember to configure the __nfs_shares.yml__ file accordingly in the cluster definition package prior to deployment.
 
 ## Deploy Cluster
 
-> TODO: deployment considerations from within the private VLAN control station.
+Swarm cluster deployment must be done from the __control-station__ but is otherwise the same:
+
+Eg.
+
+    bash cluster-deploy ids/swarm-prod
+
+> __Note__ use the cluster definition package created earlier.
+
+> __Note__ that once the environment has been established and properly configured the swarm can be deployed and redeployed as normal.
 
 ## Troubleshooting
 
