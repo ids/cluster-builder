@@ -86,7 +86,7 @@ Download the __pfSense__ ISO, and upload it to a shared datastore available to t
 
 Create a new VM with this ISO, and make sure of the following:
 
-* VM has at least 2GB of RAM
+* VM has at least 1GB of RAM
 * VM has two or three nics:
   * Nic on the physical bridged VM Network (accessible by the physical network) - this is for the WAN side of the firewall
   * Nic on the Data plane VLAN - this is for the LAN_DATA side
