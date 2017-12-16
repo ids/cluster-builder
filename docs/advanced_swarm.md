@@ -100,6 +100,8 @@ There are a few initial general configuration settings required:
 
 2. In the same location, make sure __Disable webConfigurator redirect rule__ is enabled.  This way the __cluster-gateway__ can receive 80 and 443 for production traffic (though any ports can be used, these simply align with the example)
 
+![pfSense Dashboard](images/pfsense-dashboard.png)
+
 ## Setup pfSense LAN Interfaces and DHCP
 
 As installation occurs on the Control/Mgmt plane interface but traffic is routed on the Data plane interface, the __cluster-gateway__ should have a LAN interface for each of the subnets.
