@@ -28,7 +28,7 @@ With this configuration, the __cluster-control__ vm is connected to the private 
 
 The private VLANs are implemented in the VMware ESX environment.
 
-Access to the management services is secured and load balanced by the dedciated __cluster-gateway__, which provides firewall and load balancing services.  In this example __pfSense CE__ is used as the __cluster-gateway__, and it is installed as a virtual machine.
+Access to the management services is secured and load balanced by the dedciated __cluster-gateway__, which provides firewall and load balancing services.  In this example [pfSense Community Edition](https://www.pfsense.org/) is used as the __cluster-gateway__, and it is installed as a virtual machine.
 
 Control and Data plane traffic in the Docker Swarm has been separated each assigned a dedicated interface (subnet), with all inbound traffic directed to the data plane interfaces.
 
