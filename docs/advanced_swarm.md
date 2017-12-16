@@ -87,14 +87,14 @@ Download the __pfSense__ ISO, and upload it to a shared datastore available to t
 Create a new VM with this ISO, and make sure of the following:
 
 * VM has at least 1GB of RAM
-* VM has two or three nics:
+* VM has three nics:
   * Nic on the physical bridged VM Network (accessible by the physical network) - this is for the WAN side of the firewall
   * Nic on the Data plane VLAN - this is for the LAN_DATA side
-  * (optional) Nic on the Mgmt/Control plan VLAN - this is for the LAN_MGMT side
+  * Nic on the Mgmt/Control plan VLAN w/ DHCP Service - this is for the LAN_MGMT side
 
 The pfSense configuration will be based on the network configuration of our deployed swarm.
 
-There are a few initial general configuration settings to make:
+There are a few initial general configuration settings required:
 
 1. In __System > Advanced Setup__ set the pfSense __cluster-gateway__ webConfigurator to use HTTPS, and __port 4444__. 
 
