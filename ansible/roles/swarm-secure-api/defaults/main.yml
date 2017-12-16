@@ -1,1 +1,1 @@
-docker_swarm_mgmt_sn: "{{ inventory_hostname }}"
+docker_swarm_mgmt_cn: "{{ inventory_hostname }}"

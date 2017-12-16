@@ -177,11 +177,11 @@ See the example package [esxi-centos-swarm-advanced](../examples/esxi-centos-swa
 
 In the __Advanced Swarm Deployment__ configuration, all access to the Remote API is load balanced over the 3-manager-nodes (HA).
 
-This requires __docker_swarm_mgmt_sn__ to be set in the __hosts__ file.
+This requires __docker_swarm_mgmt_cn__ to be set in the __hosts__ file.
 
 Eg.
 
-    docker_swarm_mgmt_sn=remote-api.idstudios.local
+    docker_swarm_mgmt_cn=remote-api.idstudios.local
 
 The server name specified should be the DNS entry that maps to the __cluster-gateway__ WAN interface address.
 

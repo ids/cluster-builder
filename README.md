@@ -171,7 +171,7 @@ __update_kernel=true__: Updates CentOS7 Kernel to latest LT version (4.4+)
 
 #### Advanced options:
 
-__docker_swarm_mgmt_sn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
+__docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
 
 __docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
 
