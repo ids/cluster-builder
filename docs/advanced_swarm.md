@@ -337,6 +337,8 @@ Eg.
 
 > __Note__ use the cluster definition package created earlier.
 
+> __Note__ that once the environment has been established and properly configured the swarm can be deployed and redeployed as normal.
+
 ## Troubleshooting
 
 > TODO: common issues
