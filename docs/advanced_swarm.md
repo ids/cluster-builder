@@ -6,16 +6,17 @@ This a step-by-step guide to configuring a VMware ESX based Docker CE/EE Swarm i
 2. [Configure VMware VLANs](#configure-vmware-vlans)
 3. [Configure DNS](#configure-dns)
 4. [Install pfSense Swarm Gateway VM](#install-pfsense-swarm-gateway-vm)
-5. [Deploy Cluster Builder Control Station VM](#deploy-cluster-builder-control-station-vm)
-6. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
-7. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
-8. [Configure Remote API for Load Balancing](#configure-remote-api-for-load-balancing)
-9. [Setup Remote API & Traefik Passthrough Load Balancers](#setup-remote-api-&-traefik-passthrough-load-balancers)
-10. [Setup pfSense WAN Firewll Rules](#setup-pfsense-wan-firewall-rules)
-11. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
-12. [Setup NFS Server VM](#setup-nfs-server-vm)
-13. [Deploy Cluster](#deploy-cluster)
-14. [Troubleshooting](#troubleshooting)
+5. [Setup pfSense LAN Interfaces and DHCP](#setup-pfsense-lan-interfaces-and-dhcp)
+6. [Deploy Cluster Builder Control Station VM](#deploy-cluster-builder-control-station-vm)
+7. [Setup Cluster Package Definition Repository](#setup-cluster-package-definition-repository)
+8. [Advanced Cluster Configuration Package](#advanced-cluster-configuration-package)
+9. [Configure Remote API for Load Balancing](#configure-remote-api-for-load-balancing)
+10. [Setup Remote API & Traefik Passthrough Load Balancers](#setup-remote-api-&11raefik-passthrough-load-balancers)
+12. [Setup pfSense WAN Firewll Rules](#setup-pfsense-wan-firewall-rules)
+13. [Setup HAProxy SSL Offloaded Services](#setup-haproxy-ssl-offloaded-services)
+14. [Setup NFS Server VM](#setup-nfs-server-vm)
+15. [Deploy Cluster](#deploy-cluster)
+16. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -23,11 +24,11 @@ The following diagram illustrates the advanced swarm deployment configuration:
 
 ![Advanced Swarm Overview](images/advanced-overview.png)
 
-With this configuration, the __cluster-control__ vm is connected to the private VLANs used by the swarm vm nodes.  Direct access to the underlying swarm virtual machine nodes is not permitted from the external physical network.  All management of the swarm nodes is done through the __cluster-control__ station.
+With this configuration, the __cluster-control__ vm is connected to the private VLANs used by the swarm virtual machine nodes.  Direct access to the underlying vm nodes is not permitted from the external physical network.  All management is done through the __cluster-control__ station.
 
 The private VLANs are implemented in the VMware ESX environment.
 
-Access to the management services is secured and load balanced by the dedciated __cluster-gateway__, which provides firewall and load balancing services.  In this example __pfSense CE__ is used as the __cluster-gateway__, and it is installed as a virtual machine.
+Access to the management services is secured and load balanced by the dedciated __cluster-gateway__, which provides firewall and load balancing services.  In this example [pfSense Community Edition](https://www.pfsense.org/) is used as the __cluster-gateway__, and it is installed as a virtual machine.
 
 Control and Data plane traffic in the Docker Swarm has been separated each assigned a dedicated interface (subnet), with all inbound traffic directed to the data plane interfaces.
 
@@ -72,7 +73,7 @@ Examples, based on the internal example domain of __idstudios.local__:
 
 ## Install pfSense Swarm Gateway VM
 
-__pfSense Community Edition__ is a free to use firewall appliance with numerous advanced capabilities, such as:
+[pfSense Community Edition](https://www.pfsense.org/) is a free to use firewall appliance with numerous advanced capabilities, such as:
 
 * Professional Grade Firewall
 * Integrated General Purpose Load Balancer
@@ -85,29 +86,41 @@ Download the __pfSense__ ISO, and upload it to a shared datastore available to t
 
 Create a new VM with this ISO, and make sure of the following:
 
-* VM has at least 2GB of RAM
-* VM has two or three nics:
+* VM has at least 1GB of RAM
+* VM has three nics:
   * Nic on the physical bridged VM Network (accessible by the physical network) - this is for the WAN side of the firewall
   * Nic on the Data plane VLAN - this is for the LAN_DATA side
-  * (optional) Nic on the Mgmt/Control plan VLAN - this is for the LAN_MGMT side
+  * Nic on the Mgmt/Control plan VLAN w/ DHCP Service - this is for the LAN_MGMT side
 
 The pfSense configuration will be based on the network configuration of our deployed swarm.
 
-There are a few initial general configuration settings to make:
+There are a few initial general configuration settings required:
 
 1. In __System > Advanced Setup__ set the pfSense __cluster-gateway__ webConfigurator to use HTTPS, and __port 4444__. 
 
 2. In the same location, make sure __Disable webConfigurator redirect rule__ is enabled.  This way the __cluster-gateway__ can receive 80 and 443 for production traffic (though any ports can be used, these simply align with the example)
 
+## Setup pfSense LAN Interfaces and DHCP
+
+As installation occurs on the Control/Mgmt plane interface but traffic is routed on the Data plane interface, the __cluster-gateway__ should have a LAN interface for each of the subnets.
+
+![pfSense LAN interfaces](images/pfsense-lan-interfaces.png)
+
+And for the Control/Mgmt plane enable DHCP in support of the deployment process:
+
+![pfSense Control plane DHCP](images/pfsense-control-plane-dhcp.png)
+
+> DHCP can be enabled only for the deployment process, and then disabled.
+
 ## Deploy Cluster Builder Control Station VM
 
-Follow the deployment guidelines for the __cluster-control__ workstation VM (as per the project readmes).
+Follow the deployment guidelines for the __cluster-control__ workstation VM (as per the [project](https://github.com/ids/cluster-builder-control) readme instructions).
 
-It is important that the __cluster-control__ vm have at least 3 nics (additional virtual nics can be added and configured post deployment).
+It is important that the __cluster-control__ vm have at least 3 nics.
+
+> The default build of __cluster-builder-control__ has only a single nic, but additional virtual nics can be added and configured manually post deployment).
 
 As shown in the overview diagram, the __cluster-control__ station must reside on all three subnets.
-
-> It may only need to reside on the data plane network - this needs to be confirmed.
 
 Once the __cluster-control__ VM has been deployed, it can be accessed directly through VMware:
 
@@ -164,11 +177,11 @@ See the example package [esxi-centos-swarm-advanced](../examples/esxi-centos-swa
 
 In the __Advanced Swarm Deployment__ configuration, all access to the Remote API is load balanced over the 3-manager-nodes (HA).
 
-This requires __docker_swarm_mgmt_sn__ to be set in the __hosts__ file.
+This requires __docker_swarm_mgmt_cn__ to be set in the __hosts__ file.
 
 Eg.
 
-    docker_swarm_mgmt_sn=remote-api.idstudios.local
+    docker_swarm_mgmt_cn=remote-api.idstudios.local
 
 The server name specified should be the DNS entry that maps to the __cluster-gateway__ WAN interface address.
 

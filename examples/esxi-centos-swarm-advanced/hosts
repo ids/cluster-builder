@@ -28,7 +28,7 @@ data_network_dn=idstudios.data.local
 # docker_elk_target=elastic.idstudios.local:9200
 
 docker_enable_metrics=true
-docker_swarm_mgmt_sn=remote-api.idstudios.local
+docker_swarm_mgmt_cn=remote-api.idstudios.local
 docker_swarm_mgmt_gw=cluster-gateway.idstudios.local
 
 [docker_prometheus_server]
