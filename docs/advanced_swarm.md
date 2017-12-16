@@ -159,9 +159,11 @@ After a deployment the resulting certificates for secured TLS remote api access 
 After successful deployment:
 
     cd clusters/ids
+    git add -A
+    git commit -a -m "deployed swarm-dev"
     git push origin master
 
-Which keeps the cluster definition packages and resulting certificates safe and secure.
+Which keeps the cluster definition packages and resulting certificates safe and secure.  It also enables them to be easily shared and re-used, such as on a development workstation.
 
 At any point the entire structure of the toolset can be restored with two simple git clone commands:
 
