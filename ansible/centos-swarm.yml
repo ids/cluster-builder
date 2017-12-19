@@ -13,9 +13,10 @@
     # You can set any interface, that is listened by docker engine.
     # e.g. docker_swarm_interface: "eth1"
     #docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
-    docker_swarm_interface: "ens32"
+    #docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
 
-    docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
+    #docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
+    docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
     docker_swarm_port: 2377
     docker_tls_port: 2376
     docker_enable_metrics: true

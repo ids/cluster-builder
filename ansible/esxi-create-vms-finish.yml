@@ -3,7 +3,8 @@
   gather_facts: false
   vars:
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
-  
+    parallelism: 50
+
   roles:
     - role: common
   
@@ -29,7 +30,6 @@
 
 - hosts: all
   gather_facts: false
-  serial: 1
   vars:
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   tasks:  
@@ -124,7 +124,7 @@
 
     - name: waiting for VMs to finish starting up
       pause:
-        seconds: 120
+        seconds: 300
 
     - name: Find the Temp IP
       local_action:

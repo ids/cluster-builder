@@ -11,6 +11,9 @@
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
+- name: using the CN value
+  debug: msg="{{ docker_swarm_mgmt_cn }}"
+
 - name: generate CA public key
   shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ docker_swarm_mgmt_cn }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
   args:
@@ -33,7 +36,7 @@
   shell: echo subjectAltName = DNS:{{ docker_swarm_mgmt_cn }},IP:{{ ansible_host }},IP:127.0.0.1 > extfile.cnf
   args:
     chdir: /etc/certs/docker
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+  when: "inventory_hostname == groups['docker_swarm_manager'][0] and data_ip is undefined"
 
 - name: sign Server public key
   shell: openssl x509 -req -days 365 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf

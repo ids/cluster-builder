@@ -41,7 +41,7 @@ fi
         --datastore="{{ hostvars[host].esxi_ds }}" \
         --network="{{ hostvars[host].esxi_net }}" \
         $OVA_TEMPLATE_PATH \
-        vi://{{ hostvars[host].esxi_user }}:$1@{{ hostvars[host].esxi_host }}
+        vi://{{ hostvars[host].esxi_user }}:$1@{{ hostvars[host].esxi_host }} &
         
   {% endif %}
   if [ $? -ne 0 ]; then
@@ -50,3 +50,5 @@ fi
   fi
         
 {% endfor %}
+
+wait
