@@ -4,6 +4,7 @@
 - hosts: all
   remote_user: admin
   become: true
+  gather_facts: false
   become_method: sudo
   any_errors_fatal: true
   vars:
@@ -16,6 +17,7 @@
   
 - hosts: dcos_boot
   remote_user: admin
+  gather_facts: false
   become: true
   become_method: sudo
   any_errors_fatal: true
@@ -27,6 +29,7 @@
 - hosts: dcos_masters
   serial: 1
   remote_user: admin
+  gather_facts: false
   become: true
   become_method: sudo
   any_errors_fatal: true
@@ -57,6 +60,7 @@
   remote_user: admin
   become: true
   become_method: sudo
+  gather_facts: false
   any_errors_fatal: true
   vars:
   
