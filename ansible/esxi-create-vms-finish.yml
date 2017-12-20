@@ -3,7 +3,7 @@
   gather_facts: false
   vars:
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
-    parallelism: 50
+    deployment_scale: "{{ deployment_scale | default(50) }}"
 
   roles:
     - role: common
