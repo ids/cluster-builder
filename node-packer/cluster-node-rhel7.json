@@ -1,4 +1,8 @@
 {
+  "variables": 
+  {
+    "rhel_lic": ""
+  },
   "provisioners": [
     {
     "type": "file",
@@ -8,7 +12,7 @@
     {
       "type": "shell",
       "execute_command": "sh '{{ .Path }}'",
-      "inline": ["sudo bash /tmp/rhel7-setup.sh 1-4fa7fd521719cc31b907219b8f8339ca"]
+      "inline": ["sudo bash /tmp/rhel7-setup.sh {{user `rhel_lic`}}"]
     },
     {
       "type": "shell",

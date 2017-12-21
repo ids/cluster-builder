@@ -4,10 +4,10 @@ SERVER_WAIT=90s
 REMOTE_USER=root
 
 function check_docker_license () {
-  if [ ! -f clusters/$CLUSTER_NAME/docker_subscription.lic ]; then 
+  if [ ! -f clusters/$CLUSTER_PKG_FOLDER/docker_subscription.lic ]; then 
     echo "** Missing Docker EE License File **"
     echo
-    echo "To build a Docker Enterprise Edition cluster you need to have a docker_subscription.lic file located in your ${CLUSTER_NAME} cluster package."
+    echo "To build a Docker Enterprise Edition cluster you need to have a docker_subscription.lic file located in your ${CLUSTER_PKG_FOLDER} cluster package."
     echo
     exit 1
   fi
@@ -15,7 +15,7 @@ function check_docker_license () {
 
 function esxi_deploy () {
   
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE}"
+  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
    exit 1
@@ -31,7 +31,7 @@ function esxi_deploy () {
   sleep $SERVER_WAIT
 
   echo "Finishing up ESXi VM Configuration..."
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml 
+  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   
   echo "Assigning VM static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
@@ -43,21 +43,28 @@ function esxi_deploy () {
     exit 1
   fi
 
-  #rm $TEMP_SCRIPT_PATH/*_static.sh
-  #rm $TEMP_SCRIPT_PATH/esxi-create-vms
-  #rm $TEMP_SCRIPT_PATH/esxi-set-statics
+  rm $TEMP_SCRIPT_PATH/*_static.sh
+  rm $TEMP_SCRIPT_PATH/esxi-create-vms
+  rm $TEMP_SCRIPT_PATH/esxi-set-statics
   
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
 
   echo "Building cluster: ${CLUSTER_TYPE_NAME}"
-  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml    
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
     echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
     exit 1
   fi
 
-  sleep 30s
-  bash clusters/$CLUSTER_NAME/test-cluster
+  echo "Change the initial ROOT password on VM Nodes..."
+  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
+    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+  fi 
+
+  bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
 
   echo
   echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
@@ -77,21 +84,28 @@ function fusion_deploy () {
   sudo date
 
   echo "Creating the Fusion VMs and configuring the network for static IP assignment..."
-  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} vmware_dhcpd_base_path='${DHCPD_BASE_DIR}' vmware_dhcpd_cmd='${DHCPD_CMD}'"
+  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} vmware_dhcpd_base_path='${DHCPD_BASE_DIR}' vmware_dhcpd_cmd='${DHCPD_CMD}' cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
     exit 1
   fi
   
   echo "Configuring the ${CLUSTER_TYPE_NAME} Cluster..."
-  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml 
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
     echo "FAIL: Fusion ${CLUSTER_TYPE_NAME} creation failed!"
     exit 1
   fi
 
-  sleep 10s
-  bash clusters/$CLUSTER_NAME/test-cluster
+  echo "Change the initial ROOT password on VM Nodes..."
+  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
+    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+  fi 
+
+  bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
 
   echo
   echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME}!"
@@ -113,8 +127,12 @@ fi
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
+REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE`
 
-TEMP_SCRIPT_PATH=./tmp/$CLUSTER_NAME
+CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
+CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
+
+TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
 
 if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon-x86_64.ova
@@ -144,12 +162,14 @@ elif [ "$CLUSTER_TYPE" == 'centos-ucp' ]; then
   OVA_BUILD_TYPE=centos7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
+  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
   CLUSTER_TYPE_NAME='RHEL Swarm'
-  OVA_BUILD_TYPE=centos7
+  OVA_BUILD_TYPE=rhel7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
   check_docker_license
+  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
   CLUSTER_TYPE_NAME='RHEL UCP'
   OVA_BUILD_TYPE=rhel7
@@ -159,11 +179,12 @@ fi
 echo
 echo "***"
 echo " Cluster Name: ${CLUSTER_NAME}"
+echo " Cluster Package Folder: ${CLUSTER_PKG_FOLDER}"
 echo " Cluster Type: ${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}"
 echo " OVA Template: ${OVA_TEMPLATE_FILE}"
 echo " VMware Target: ${VMWARE_TARGET}"
 echo "***"
-echo 
+echo
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
@@ -176,7 +197,7 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
   echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
   echo "Attempting to build: ${OVA_BUILD_TYPE}"
   cd node-packer
-  bash build $OVA_BUILD_TYPE
+  bash build $OVA_BUILD_TYPE $RHEL_LIC
   cd ..
 fi
 
