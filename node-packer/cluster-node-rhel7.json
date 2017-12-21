@@ -1,12 +1,13 @@
 {
   "variables": 
   {
+    "rhel_folder": "",
     "rhel_lic": ""
   },
   "provisioners": [
     {
     "type": "file",
-    "source": "bin/rhel7-setup.sh",
+    "source": "../clusters/{{user `rhel_folder`}}/rhel7-setup.sh",
     "destination": "/tmp/rhel7-setup.sh"
     },
     {
