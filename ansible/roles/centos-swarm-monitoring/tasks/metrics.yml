@@ -1,4 +1,9 @@
 ---
+- name: Establish prometheus server settings
+  set_fact: 
+    docker_prometheus_server: "{{ groups['docker_prometheus_server'][0] }}"
+  when: docker_prometheus_server is undefined and groups['docker_prometheus_server'] is defined
+
 - name: Ensure metrics are enabled in daemon.json
   lineinfile:
     dest: /etc/docker/daemon.json
@@ -14,20 +19,31 @@
     path: /etc/prometheus
     state: directory
     mode: 0755
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
 
 - name: Create and install the prometheus configuration file
   template:
     src: templates/prometheus.j2
     dest: /etc/prometheus/prometheus.yml
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
 
 - name: Create prometheus host data volume
   file:
     path: /data/prometheus
     state: directory
     mode: 0755
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
+
+- name: Remove any running prometheus server 
+  shell: docker service rm monitor-prometheus
+  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+  ignore_errors: true
+
+#- name: Create monitoring network...
+#  shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitoring
+#  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+#  ignore_errors: true
+#  run_once: true
 
 - name: Install prometheus 
   shell: 
@@ -37,13 +53,15 @@
       --reserve-cpu 0.5 \
       --limit-memory 1073741824 \
       --reserve-memory 512m \
-      --constraint "node.role == manager" \
+      --constraint "node.hostname == {{ docker_prometheus_server }}" \
+      --network bridge \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
       --mount type=bind,source=/etc/prometheus/prometheus.yml,destination=/etc/prometheus/prometheus.yml \
       --mount source=prometheus-data,destination=/prometheus \
       --publish 9090:9090/tcp \
       prom/prometheus
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+  run_once: true
 
 - name: Stop cadvisor on all nodes 
   shell: docker stop cadvisor
@@ -79,7 +97,12 @@
     path: /data/grafana
     state: directory
     mode: 0755
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
+
+- name: Remove any running grafana server 
+  shell: docker service rm monitor-grafana
+  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+  ignore_errors: true
 
 - name: Install grafana 
   shell: 
@@ -89,13 +112,15 @@
       --reserve-cpu 0.5 \
       --limit-memory 1073741824 \
       --reserve-memory 536870912 \
-      --constraint "node.role == manager" \
+      --network bridge \
+      --constraint "node.hostname == {{ docker_prometheus_server }}" \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
       --mount type=bind,source=/data/grafana,destination=/var/lib/grafana \
       --publish 3000:3000/tcp \
       -e GF_SECURITY_ADMIN_PASSWORD=pass \
       grafana/grafana:latest
-  when: "groups['docker_prometheus_server'] is defined and inventory_hostname in groups['docker_prometheus_server']"
+  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+  run_once: true
 
 - name: Restart the docker daemons with monitoring configuration
   service:
