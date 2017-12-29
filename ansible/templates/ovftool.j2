@@ -12,8 +12,7 @@ if [ -f /mnt/vmware-tools/ovftool.exe ]; then
   OVA_TEMPLATE_PATH="file://C:/Users/`whoami`$USER_PATH/{{ ova_template_path }}"
   echo "Using OVA: ${OVA_TEMPLATE_PATH}"
 fi
-
-
+  
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
 
@@ -52,3 +51,4 @@ fi
 {% endfor %}
 
 wait
+

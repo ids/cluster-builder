@@ -1,0 +1,72 @@
+---
+- name: Hide the mail_name from postfix configuration. [MAIL-8818] 
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^#smtpd_banner = $myhostname ESMTP $mail_name'
+    line: 'smtpd_banner = $myhostname ESMTP'
+
+- name: Hardening SSH configuration [SSH-7408] AllowTcpForwarding (YES --> NO)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#AllowTcpForwarding yes'
+    line: 'AllowTcpForwarding no'
+
+- name: Hardening SSH configuration [SSH-7408] ClientAliveCountMax (3 --> 2)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#ClientAliveCountMax 3'
+    line: 'ClientAliveCountMax 2'
+
+- name: Hardening SSH configuration [SSH-7408] Compression (YES --> NO)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#Compression delayed'
+    line: 'Compression no'
+
+- name: Hardening SSH configuration [SSH-7408] LogLevel (INFO --> VERBOSE)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#LogLevel INFO'
+    line: 'LogLevel VERBOSE'
+
+- name: Hardening SSH configuration [SSH-7408] MaxAuthTries (6 --> 2)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#MaxAuthTries 6'
+    line: 'MaxAuthTries 2'
+
+- name: Hardening SSH configuration [SSH-7408] MaxSessions (10 --> 2)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#MaxSessions 10'
+    line: 'MaxSessions 2'
+
+- name: Hardening SSH configuration [SSH-7408] PermitRootLogin (YES --> NO)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PermitRootLogin yes'
+    line: 'PermitRootLogin no'
+
+- name: Hardening SSH configuration [SSH-7408] TCPKeepAlive (YES --> NO)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#TCPKeepAlive yes'
+    line: 'TCPKeepAlive no'
+
+- name: Hardening SSH configuration [SSH-7408] X11Forwarding (YES --> NO)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^X11Forwarding yes'
+    line: 'X11Forwarding no'
+
+- name: Hardening SSH configuration [SSH-7408] AllowAgentForwarding (YES --> NO)
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#AllowAgentForwarding yes'
+    line: 'AllowAgentForwarding no'
+
+- name: Hardening SSH configuration AllowUsers
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^AllowUsers'
+    line: 'AllowUsers {{ remote_user }}'

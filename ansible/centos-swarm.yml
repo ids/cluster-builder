@@ -24,17 +24,16 @@
 
   roles:
   - role: common
-  - role: centos-kernel
   - role: centos
-  - role: centos-swarm-graphdriver
-  - role: centos-hardening
+#  - role: centos-swarm-graphdriver
+#  - role: centos-hardening
   - role: centos-swarm-firewall
   - role: swarm
   - role: swarm-secure-api
-  - role: vmware-vdvs
+ # - role: vmware-vdvs
   - role: portainer
   - role: centos-swarm-monitoring
-  - role: centos-nfs
+ # - role: centos-nfs
   - role: nfs-shares
   
   tasks:  

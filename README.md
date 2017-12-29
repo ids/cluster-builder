@@ -163,12 +163,6 @@ __ucp_admin_user__: The admin user for the UCP
 
 __ucp_admin_password__: The admin password for the UCP
 
-#### Experimental options:
-
-__update_kernel=true__: Updates CentOS7 Kernel to latest LT version (4.4+)
-
-> Note, __update_kernel__ is for testing and experimentation.  At the present time it introduces instability into a CentOS7 based Docker CE/EE environment.
-
 #### Advanced options:
 
 __docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
@@ -578,7 +572,7 @@ rhel-ucp
 
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
 * CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
-* Default linux kernel is 3.10.x, with __update_kernel=true__ a 4.4.x+ kernel is installed, however this has not been deemed production ready and is only for experimentation.  The CentOS7 variant with a 3.10.x kernel is the current production candidate (ported to RHEL7 prior to go-live).
+* Default linux kernel is 3.10.x
 
 #### PhotonOS Based Clusters
 

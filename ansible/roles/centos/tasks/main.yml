@@ -5,8 +5,8 @@
 - name: Configure Chronyd
   include: chronyd.yml
 
-- name: Configure Base Docker options
-  include: docker-base.yml
+#- name: Configure Base Docker options
+#  include: docker-base.yml
 
 - name: Remove warnings from CentOS install for ip4
   lineinfile:
@@ -25,8 +25,5 @@
 - name: Remove warnings from CentOS install for ip4
   shell: sysctl net.bridge.bridge-nf-call-iptables=1
   
-- name: Remove warnings from CentOS install for ip6
-  shell: sysctl net.bridge.bridge-nf-call-iptables=1
-
 - name: Attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf

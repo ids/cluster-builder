@@ -122,9 +122,3 @@
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   run_once: true
 
-- name: Restart the docker daemons with monitoring configuration
-  service:
-    name: docker
-    state: restarted
-    enabled: yes  
-  when: "docker_enable_metrics is defined and docker_enable_metrics"

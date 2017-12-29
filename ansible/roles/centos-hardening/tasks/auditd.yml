@@ -1,0 +1,9 @@
+- name: Audit daemon config [ACCT-9630]  
+  template:
+    src: templates/auditd_conf.j2
+    dest: /etc/audit/auditd.conf
+
+- name: Audit daemon rules [ACCT-9630]  
+  template:
+    src: templates/auditd_rules.j2
+    dest: /etc/audit/rules.d/audit.rules

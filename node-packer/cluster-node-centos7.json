@@ -29,7 +29,7 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "ansible/dcos-node.yml",
+      "playbook_file": "ansible/docker.yml",
       "playbook_dir": "ansible",
       "extra_arguments": "-vvvvv"
     },
@@ -40,20 +40,7 @@
     }
   ],
 
-  "post-processors": [{
-      "type": "shell-local",
-      "inline": [
-        "vmware-vdiskmanager -c -t 0 -s 250GB -a scsi output_centos7_vmx/docker-disk.vmdk"
-      ]
-    },
-    {
-      "type": "shell-local",
-      "inline": ["echo 'scsi0:1.present = \"TRUE\"' >> output_centos7_vmx/cluster-node-centos7-x86_64.vmx "]
-    },
-    {
-      "type": "shell-local",
-      "inline": ["echo 'scsi0:1.fileName = \"docker-disk.vmdk\"' >> output_centos7_vmx/cluster-node-centos7-x86_64.vmx "]
-    },
+  "post-processors": [
     {
       "type": "shell-local",
       "inline": [

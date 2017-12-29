@@ -1,0 +1,28 @@
+---
+- name: Ensure metrics are enabled in daemon.json
+  lineinfile:
+    dest: /etc/docker/daemon.json
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    insertafter: "{"
+  with_items:
+    - { regexp: 'metrics-addr', line: '"metrics-addr" : "0.0.0.0:9323",' }
+
+- name: Install cadvisor on all nodes 
+  shell: 
+    cmd: | 
+      docker run \
+        --privileged=true \
+        --restart=always \
+        --memory 536870912 \
+        --volume=/cgroup:/cgroup:ro \
+        --volume=/:/rootfs:ro \
+        --volume=/var/run:/var/run:rw \
+        --volume=/sys:/sys:ro \
+        --volume=/var/lib/docker/:/var/lib/docker:ro \
+        --volume=/dev/disk/:/dev/disk:ro \
+        --publish=9101:8080 \
+        --detach=true \
+        --name=cadvisor \
+        google/cadvisor:latest    

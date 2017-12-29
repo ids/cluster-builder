@@ -10,26 +10,32 @@
     name=docker-ce
     state=present
 
+- name: Start Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+#- name: Delete all Docker volumes
+#  file:
+#    path: /var/lib/docker
+#    state: absent
+
+#- name: Configure Docker to use OverlayFS (part 1)
+#  set_fact:
+#    dockerd_cmd: "docker daemon"
+#    dockerd_arg: "--storage-driver=overlay"
+
+#- name: Configure Docker to use OverlayFS (part 2)
+#  replace: >
+#    dest=/usr/lib/systemd/system/docker.service
+#    regexp="^(ExecStart=(.*){{ dockerd_cmd }}) (?!{{ dockerd_arg }})"
+#    replace="\1 {{ dockerd_arg }} "
+
 - name: Stop Docker
   service:
     name: docker
     state: stopped
-
-- name: Delete all Docker volumes
-  file:
-    path: /var/lib/docker
-    state: absent
-
-- name: Configure Docker to use OverlayFS (part 1)
-  set_fact:
-    dockerd_cmd: "docker daemon"
-    dockerd_arg: "--storage-driver=overlay"
-
-- name: Configure Docker to use OverlayFS (part 2)
-  replace: >
-    dest=/usr/lib/systemd/system/docker.service
-    regexp="^(ExecStart=(.*){{ dockerd_cmd }}) (?!{{ dockerd_arg }})"
-    replace="\1 {{ dockerd_arg }} "
 
 - name: Create docker group
   group: >
@@ -44,11 +50,27 @@
   with_items:
   - docker
 
+- name: Ensures /etc/docker exists
+  file: 
+    path: /etc/docker/ 
+    state: directory
+
+- name: Configure the docker daemon.json 
+  template:
+    src: templates/docker-daemon-default.j2
+    dest: /etc/docker/daemon.json
+
 - name: Start Docker
   service:
     name: docker
     state: started
     enabled: yes
+
+- name: Verify Docker Configuration
+  shell: docker info
+  register: docker_out
+
+- debug: msg="{{ docker_out.stdout_lines }}"
 
 - name: Set SELinux to permissive mode
   selinux: policy=targeted state=permissive
@@ -70,11 +92,11 @@
   - net.ipv6.conf.default.disable_ipv6
 
 # TODO: may be needed at Vagrant provisioning time if added by vagrant
-- name: Disable IPv6 loopback alias
-  lineinfile:
-    dest: /etc/hosts
-    regexp: "^::1"
-    state: absent
+#- name: Disable IPv6 loopback alias
+#  lineinfile:
+#    dest: /etc/hosts
+#    regexp: "^::1"
+#    state: absent
 
 - name: Enable IPv4 Forwarding
   sysctl:

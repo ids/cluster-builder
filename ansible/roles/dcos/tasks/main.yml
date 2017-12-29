@@ -1,15 +1,35 @@
 ---
+# Installer pre-flight validates these dependencies
+# https://github.com/dcos/dcos/blob/1.8.4/gen/installer/bash.py#L324-L331
+# CentOS 7 comes with systemd-container pre-installed.
+# Avoid installing systemd, which may conflict with systemd-container.
+- name: Install packages required by DC/OS installer
+  yum: >
+    name={{item}}
+    state=present
+  with_items:
+   - curl
+   - bash
+   - iputils # for ping
+   - tar
+   - xz
+   - nano
+   - unzip
+   - ipset
+   - device-mapper-persistent-data 
+   - lvm2
+
+- name: Create DC/OS user directory
+  file:
+    path: ~/dcos
+    state: directory
+    
 - name: Ensure tmp location exists 
   file:
     path: /tmp/dcos
     state: directory
     mode: 0755
-  
-- name: Install nano
-  yum: >
-    name=nano
-    state=latest
-  
+    
 - name: Get Before Date/Time
   shell: date
   register: before_out
@@ -29,3 +49,36 @@
   register: after_out
 
 - debug: msg="{{ before_out.stdout_lines }} {{ after_out.stdout_lines }} "
+
+- name: Disable firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: Install Docker-Py
+  pip: name=docker-py version=1.9.0
+
+- name: Cache jplock/zookeeper docker image
+  docker:
+    name: zookeeper
+    image: jplock/zookeeper:latest #TODO: use 3.4.8
+    state: present
+    pull: missing # don't start, just pull
+    net: default # workaround bug: https://github.com/ansible/ansible-modules-core/issues/1885
+
+- name: Cache nginx docker image
+  docker:
+    name: nginx
+    image: nginx:latest #TODO: use 1.11.3-alpine
+    state: present
+    pull: missing # don't start, just pull
+    net: default # workaround bug: https://github.com/ansible/ansible-modules-core/issues/1885
+
+- name: Cache registry docker image
+  docker:
+    name: registry
+    image: registry:2 #TODO: use 2.5.0
+    state: present
+    pull: missing # don't start, just pull
+    net: default # workaround bug: https://github.com/ansible/ansible-modules-core/issues/1885

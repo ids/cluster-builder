@@ -1,0 +1,14 @@
+---
+# This playbook prepares a Centos7 VM with Docker
+
+- hosts: all
+  gather_facts: no
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: docker
+  - role: docker-monitoring
+  - role: vmware-vdvs
+  
+  
