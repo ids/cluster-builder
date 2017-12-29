@@ -118,6 +118,8 @@ Sample cluster packages are located in the **examples** folder and can be copied
 	network_dns3=8.8.4.4
 	network_dn=idstudios.vmware
 
+	docker_prometheus_server=demo-swarm-m1
+
 	[docker_swarm_manager]
 	demo-swarm-m1 ansible_host=192.168.100.90 
 
@@ -125,12 +127,6 @@ Sample cluster packages are located in the **examples** folder and can be copied
 	demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
 	demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
 	demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
-
-	[docker_prometheus_server]
-	demo-swarm-m1
-
-	[docker_elk_server]
-	demo-swarm-m1
 
 	[vmware_vms]
 	demo-swarm-m1 numvcpus=2 memsize=2048 
@@ -147,11 +143,7 @@ Sample cluster packages are located in the **examples** folder and can be copied
 
 **fusion_net_type**: One of _nat_, _bridged_ or _custom_.
 
-__[docker_prometheus_server]__: When a server is placed in this group it will have **prometheus** and **grafana** instances installed.
-
-__docker_enable_metrics=true__: When this is set global instances of **cAdvisor** and **node-exporter** on all nodes in the cluster.
-
-__[docker_elk_server]__: When a server is placed in this group it will have **elasticsearch** and **kibana** instances installed. 
+__docker_prometheus_server=<host>__: The specified server will have **prometheus** and **grafana** instances installed.
 
 __docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
 
@@ -377,14 +369,11 @@ Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS and Photon
 
 When the following is added to a cluster package hosts file:
 
-	[docker_prometheus_server]
-	<ansible inventory hostname>
+docker_prometheus_server=<ansible inventory hostname>
 
 Eg.
 
-	[docker_prometheus_server]
-	swarm-m1
-
+	docker_prometheus_server=swarm-m1
 
 Prometheus and Grafana containers will be installed on the specified node.
 
@@ -558,7 +547,7 @@ A general overview of the highlights:
 
 #### Docker Versions
 
-__Docker CE:__ 17.0.9-ce (or later)
+__Docker CE:__ 17.12.0-ce (or later)
 centos-swarm
 photon-swarm
 atomic-swarm
@@ -570,15 +559,15 @@ rhel-ucp
 
 #### CentOS Based Clusters
 
-* CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __894MB__, and contains two thinly provisioned SCSI based VMDK disks: 1) 250GB dynamically sizing system block device, and 2) 250GB dynamically sizing docker __device mapper direct-lvm__ dedicated block device.
-* CentOS VMs have been configured with a production recommended __device mapper direct-lvm__ mode docker dedicated block device.
+* CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
+* CentOS base VM image is a fully functioning and ready worker node.
 * Default linux kernel is 3.10.x
 
 #### PhotonOS Based Clusters
 
 * PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __223MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
 * PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
-* PhotonOS VMs are automatically configured with the future state __overlay2__ driver as they have a 4.x kernel
+* PhotonOS VMs are automatically configured with __overlay2__ driver as they have a 4.x kernel
 
 #### All Clusters
 
