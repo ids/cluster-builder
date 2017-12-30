@@ -18,6 +18,6 @@ v17.12-beta1
 * Added the __cluster-passwd__ high level script for managing cluster admin/root user passwords and integrated this into the deployment process
 * Cleaned up the CE based Swarm Secure API implementation and migrated __dockerd__ settings to standardize on __daemon.json__ configuration
 * Changed the designation of target node for __prometheus__ from an ansible group definition of **[docker_prometheus_server]** to a simple variable of __docker_prometheus_server=servername__
-* Underlying metric support from Docker, cAdvisor and Node Exporter is now built into the OVA by default and is no longer optional. (Any need to upgrade or adjust can be considered a post-deployment activity)
+* Underlying metric support from __dockerd__, __cAdvisor__ and __Node Exporter__ has been built into the OVA and is no longer optional (docker_enable_metrics is now deprecated - any need to upgrade or adjust these components can be considered a post-deployment activity)
 * Added support for separate __Control__ and __Data__ interface swarm deployments where each node has 2 NICS on separate subnets, partitioned accordingly.
 * __FIXED__: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as __UP__ immediately after deployment.
