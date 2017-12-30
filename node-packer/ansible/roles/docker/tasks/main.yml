@@ -7,14 +7,8 @@
 
 - name: Install Docker CE
   yum: >
-    name=docker-ce
+    name=docker-ce-17.09.1.ce
     state=present
-
-- name: Start Docker
-  service:
-    name: docker
-    state: started
-    enabled: yes
 
 #- name: Delete all Docker volumes
 #  file:
@@ -31,11 +25,6 @@
 #    dest=/usr/lib/systemd/system/docker.service
 #    regexp="^(ExecStart=(.*){{ dockerd_cmd }}) (?!{{ dockerd_arg }})"
 #    replace="\1 {{ dockerd_arg }} "
-
-- name: Stop Docker
-  service:
-    name: docker
-    state: stopped
 
 - name: Create docker group
   group: >

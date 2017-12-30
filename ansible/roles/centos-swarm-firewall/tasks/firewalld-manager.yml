@@ -1,0 +1,25 @@
+- name: Remove Docker Worker Firewall rules
+  shell: firewall-cmd --zone=dmz --remove-service=swarm-worker --permanent
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Enable Docker Manager Firewall rules
+  shell: firewall-cmd --zone=dmz --add-service=swarm-manager --permanent
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Reload the Firewalld rules
+  shell: firewall-cmd --reload
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: List the active Firewalld rules
+  shell: firewall-cmd --list-all    
+  register: firewalld_rules
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- debug: msg="{{ firewalld_rules.stdout_lines }}"
+  when: "inventory_hostname in groups['docker_swarm_manager']"
+
+- name: Restart the docker daemon with the new firewall rules
+  service:
+    name: docker
+    state: restarted
+  when: "inventory_hostname in groups['docker_swarm_manager']"

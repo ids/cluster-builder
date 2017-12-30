@@ -1,6 +1,7 @@
 #!/bin/bash 
 
 OVA_TEMPLATE_PATH={{ ova_template_path }}
+START_TIME=$SECONDS
 
 # this here for experimental windows support
 if [ -f /mnt/vmware-tools/ovftool.exe ]; then
@@ -16,33 +17,44 @@ fi
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
 
-  ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
-        --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
-        --name="{{ hostvars[host].inventory_hostname }}" \
-        --diskMode=thin \
-        --powerOn \
-        --disableVerification \
-        --noSSLVerify \
-        --datastore="{{ hostvars[host].esxi_ds }}" \
-        --network="{{ hostvars[host].esxi_net }}" \
-        $OVA_TEMPLATE_PATH \
-        vi://{{ hostvars[host].vcenter_user }}:$1@{{ hostvars[host].vcenter_server }}/?ip={{ hostvars[host].esxi_host }}
+read -r -d '' OVFCMD << EOM
+ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+    --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
+    --name="{{ hostvars[host].inventory_hostname }}" \
+    --diskMode=thin \
+    --powerOn \
+    --disableVerification \
+    --noSSLVerify \
+    --datastore="{{ hostvars[host].esxi_ds }}" \
+    --network="{{ hostvars[host].esxi_net }}" \
+    $OVA_TEMPLATE_PATH \
+    vi://{{ hostvars[host].vcenter_user }}:$1@{{ hostvars[host].vcenter_server }}/?ip={{ hostvars[host].esxi_host }}
+EOM
   
   {% else %}
 
-  ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
-        --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
-        --name="{{ hostvars[host].inventory_hostname }}" \
-        --diskMode=thin \
-        --powerOn \
-        --disableVerification \
-        --noSSLVerify \
-        --datastore="{{ hostvars[host].esxi_ds }}" \
-        --network="{{ hostvars[host].esxi_net }}" \
-        $OVA_TEMPLATE_PATH \
-        vi://{{ hostvars[host].esxi_user }}:$1@{{ hostvars[host].esxi_host }} &
+read -r -d '' OVFCMD << EOM
+ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+    --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
+    --name="{{ hostvars[host].inventory_hostname }}" \
+    --diskMode=thin \
+    --powerOn \
+    --disableVerification \
+    --noSSLVerify \
+    --datastore="{{ hostvars[host].esxi_ds }}" \
+    --network="{{ hostvars[host].esxi_net }}" \
+    $OVA_TEMPLATE_PATH \
+    vi://{{ hostvars[host].esxi_user }}:$1@{{ hostvars[host].esxi_host }}
+EOM
         
   {% endif %}
+
+  {% if ovftool_parallel is defined %}
+    eval "${OVFCMD} &"
+  {% else %}
+    eval "${OVFCMD}"
+  {% endif %}
+
   if [ $? -ne 0 ]; then
     echo "FAIL: ovftool deployment failed!"
     exit 1
@@ -50,5 +62,12 @@ fi
         
 {% endfor %}
 
+{% if ovftool_parallel is defined %}
 wait
+{% endif %}
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+echo 
+echo "OVFTool Deployment in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo
 

@@ -13,8 +13,6 @@
     # You can set any interface, that is listened by docker engine.
     # e.g. docker_swarm_interface: "eth1"
     #docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
-    #docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
-
     #docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
     docker_swarm_port: 2377
@@ -25,7 +23,6 @@
   roles:
   - role: common
   - role: centos
-#  - role: centos-swarm-graphdriver
 #  - role: centos-hardening
   - role: centos-swarm-firewall
   - role: swarm

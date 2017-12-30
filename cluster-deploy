@@ -174,13 +174,21 @@ elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
   REMOTE_USER=admin
 fi
 
+
+TC=''
+NC=''
+if [ "$TERM" == "xterm-256color" ]; then
+  TC='\033[1;32m'
+  NC='\033[0m' # No Color
+fi 
+
 echo
 echo "***"
-echo " Cluster Name: ${CLUSTER_NAME}"
-echo " Cluster Package Folder: ${CLUSTER_PKG_FOLDER}"
-echo " Cluster Type: ${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}"
-echo " OVA Template: ${OVA_TEMPLATE_FILE}"
-echo " VMware Target: ${VMWARE_TARGET}"
+echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
+echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
+echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
+echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
+echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
 echo "***"
 echo 
 

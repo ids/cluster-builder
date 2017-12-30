@@ -27,6 +27,7 @@
    - nano
    - unzip
    - ipset
+   - nfs-utils
    - open-vm-tools
 
 - name: Make sure the RTC is not local

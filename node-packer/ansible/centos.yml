@@ -9,7 +9,6 @@
   roles:
   - role: ssh
   - role: centos
-  - role: centos-nfs
   - role: centos-hardening
   - role: centos-firewalld
   

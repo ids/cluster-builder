@@ -13,6 +13,7 @@
 
 - name: using the CN value
   debug: msg="{{ docker_swarm_mgmt_cn }}"
+  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: generate CA public key
   shell: openssl req -new -subj "/C=CA/ST=Alberta/L=Calgary/O=Dev/CN={{ docker_swarm_mgmt_cn }}" -x509 -days 365 -nodes -key ca-key.pem -sha256 -out ca.pem
@@ -96,12 +97,31 @@
     - "cert"   
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Copy the custom docker.service
-  template:
-    src: templates/docker-service.j2
-    dest: /etc/systemd/system/docker.service
-    mode: 0644
+- name: Configure Docker daemon
+  lineinfile:
+    dest: /etc/docker/daemon.json
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    insertafter: "{"
+  with_items:
+    - { regexp: '."hosts"', line: '  "hosts": ["tcp://0.0.0.0:2376", "unix:///var/run/docker.sock"],' }
+    - { regexp: '."tlsverify"', line: '  "tlsverify": true,' }
+    - { regexp: '."tlscacert"', line: '  "tlscacert": "/etc/certs/docker/ca.pem",' }
+    - { regexp: '."tlscert"', line: '  "tlscert": "/etc/certs/docker/server-cert.pem",' }
+    - { regexp: '."tlskey"', line: '  "tlskey": "/etc/certs/docker/server-key.pem",' }
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+#- name: Copy the custom docker.service
+#  template:
+#    src: templates/docker-service.j2
+#    dest: /usr/lib/systemd/system/docker.service
+#    mode: 0644
+#  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+
+#- name: Reload the systemd daemon
+#  shell: systemctl daemon-reload
+#  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
 - name: Restart the docker daemon
   service:
@@ -175,13 +195,34 @@
   when: "inventory_hostname in groups['docker_swarm_manager'] 
     and inventory_hostname != groups['docker_swarm_manager'][0]"
 
-- name: Copy the custom docker.service
-  template:
-    src: templates/docker-service.j2
-    dest: /etc/systemd/system/docker.service
-    mode: 0644
+- name: Configure Docker daemon
+  lineinfile:
+    dest: /etc/docker/daemon.json
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    insertafter: "{"
+  with_items:
+    - { regexp: '."hosts"', line: '  "hosts": ["tcp://0.0.0.0:2376", "unix:///var/run/docker.sock"],' }
+    - { regexp: '."tlsverify"', line: '  "tlsverify": true,' }
+    - { regexp: '."tlscacert"', line: '  "tlscacert": "/etc/certs/docker/ca.pem",' }
+    - { regexp: '."tlscert"', line: '  "tlscert": "/etc/certs/docker/server-cert.pem",' }
+    - { regexp: '."tlskey"', line: '  "tlskey": "/etc/certs/docker/server-key.pem",' }
   when: "inventory_hostname in groups['docker_swarm_manager'] 
     and inventory_hostname != groups['docker_swarm_manager'][0]"
+
+#- name: Copy the custom docker.service
+#  template:
+#    src: templates/docker-service.j2
+#    dest: /usr/lib/systemd/system/docker.service
+#    mode: 0644
+#  when: "inventory_hostname in groups['docker_swarm_manager'] 
+#    and inventory_hostname != groups['docker_swarm_manager'][0]"
+
+#- name: Reload the docker daemon
+#  shell: systemctl daemon-reload
+#  when: "inventory_hostname in groups['docker_swarm_manager'] 
+#    and inventory_hostname != groups['docker_swarm_manager'][0]"
 
 - name: Restart the docker daemon
   service:

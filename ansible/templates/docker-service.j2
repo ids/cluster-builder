@@ -8,10 +8,10 @@ Wants=network-online.target
 Type=notify
 ExecStart=/usr/bin/dockerd \
           --tlsverify \
-          --tlscacert=/etc/certs/docker/ca.pem \
-          --tlscert=/etc/certs/docker/server-cert.pem \
-          --tlskey=/etc/certs/docker/server-key.pem \
-          -H=0.0.0.0:2376 \
+          --tlscacert /etc/certs/docker/ca.pem \
+          --tlscert /etc/certs/docker/server-cert.pem \
+          --tlskey /etc/certs/docker/server-key.pem \
+          -H 0.0.0.0:2376 \
           -H unix:///var/run/docker.sock
 ExecReload=/bin/kill -s HUP $MAINPID
 LimitNOFILE=infinity
@@ -28,3 +28,4 @@ StartLimitInterval=60s
 
 [Install]
 WantedBy=multi-user.target
+
