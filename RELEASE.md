@@ -4,7 +4,7 @@ Release Notes
 v17.12-beta1
 ------------
 
-> __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to signifcant changes in the approach.
+> __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to signifcant changes in the ova profile.
 
 * Migrated to a __Packer centric__ node provisioning approach moving most of the ansible logic from post OVA provisioning into the packer OVA creation process.  This includes the monitoring agents and underlying plugin dependencies. This results in a __ready-to-go__ node OVA that can be deployed into service simply by:
   * Assigning a static IP
