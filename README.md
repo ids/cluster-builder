@@ -157,6 +157,10 @@ __ucp_admin_password__: The admin password for the UCP
 
 #### Advanced options:
 
+__ovftool_parallel=true__: When set on ESXI deployments it will cause the ovftool processes to run in parallel in the background, resulting in as much as 20% performance increase in some environments. 
+
+> Note that at the present time running ovftool in parallel will scramble the output to the console - but this won't affect the outcome.
+
 __docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
 
 __docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
