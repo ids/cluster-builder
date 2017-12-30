@@ -19,5 +19,5 @@ v17.12-beta1
 * Cleaned up the CE based Swarm Secure API implementation and migrated __dockerd__ settings to standardize on __daemon.json__ configuration
 * Changed the designation of target node for __prometheus__ from an ansible group definition of **[docker_prometheus_server]** to a simple variable of __docker_prometheus_server=servername__
 * Underlying metric support from Docker, cAdvisor and Node Exporter is now built into the OVA by default and is no longer optional. (Any need to upgrade or adjust can be considered a post-deployment activity)
-* Added support for separate Control and Data interface swarm deployments
+* Added support for separate __Control__ and __Data__ interface swarm deployments where each node has 2 NICS on separate subnets, partitioned accordingly.
 * FIXED: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as __UP__ immediately after deployment.
