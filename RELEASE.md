@@ -20,4 +20,4 @@ v17.12-beta1
 * Changed the designation of target node for __prometheus__ from an ansible group definition of **[docker_prometheus_server]** to a simple variable of __docker_prometheus_server=servername__
 * Underlying metric support from Docker, cAdvisor and Node Exporter is now built into the OVA by default and is no longer optional. (Any need to upgrade or adjust can be considered a post-deployment activity)
 * Added support for separate Control and Data interface swarm deployments
-* FIXED: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as up immediately after deployment.
+* FIXED: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as __UP__ immediately after deployment.
