@@ -15,16 +15,15 @@
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
     docker_swarm_port: 2377
     docker_tls_port: 2376
-    docker_enable_metrics: true
 
   roles:
   - role: common
   - role: photon
-  - role: photon-hardening
   - role: swarm
-  - role: photon-swarm
-  - role: photon-monitoring
-  - role: vmware-vdvs
+  - role: swarm-secure-api
+  - role: swarm-monitoring
+  - role: portainer
+#  - role: vmware-vdvs
   - role: nfs-shares
   
   tasks:

@@ -7,8 +7,8 @@
   become_user: root
   become_method: sudo
   roles:
-  - role: ssh
   - role: centos
+  - role: centos-ssh
   - role: centos-hardening
   - role: centos-firewalld
   

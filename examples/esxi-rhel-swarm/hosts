@@ -21,9 +21,6 @@ network_dns2=8.8.4.4
 network_dns3=192.168.1.10
 network_dn=uc.ucalgary.ca
 
-# docker_elk_target=elastic.idstudios.local:9200
-docker_enable_metrics=true
-
 [docker_swarm_manager]
 itswarm-m1 ansible_host=10.46.x.y
 

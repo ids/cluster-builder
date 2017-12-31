@@ -21,12 +21,11 @@
   roles:
   - role: common
   - role: centos
-#  - role: centos-hardening
+  - role: centos-swarm-firewall
   - role: ucp
   - role: swarm
-  - role: centos-swarm-monitoring
+  - role: swarm-monitoring
 #  - role: vmware-vdvs
-#  - role: centos-nfs
   - role: nfs-shares
     
   tasks:

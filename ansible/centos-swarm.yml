@@ -17,7 +17,6 @@
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
     docker_swarm_port: 2377
     docker_tls_port: 2376
-    docker_enable_metrics: true
     contiv_remote_user: admin
 
   roles:
@@ -27,7 +26,7 @@
   - role: swarm
   - role: swarm-secure-api
   - role: portainer
-  - role: centos-swarm-monitoring
+  - role: swarm-monitoring
   - role: nfs-shares
   
   tasks:  

@@ -21,9 +21,6 @@ network_dns2=8.8.4.4
 network_dns3=192.168.1.10
 network_dn=uc.ucalgary.ca
 
-# docker_elk_target=elastic.idstudios.local:9200
-docker_enable_metrics=true
-
 [docker_swarm_manager]
 itucp-m1 ansible_host=10.46.x.y
 
@@ -34,7 +31,6 @@ itucp-w1 ansible_host=10.46.x.y swarm_labels='["front-end"]'
 itucp-w4 ansible_host=10.46.x.y swarm_labels='["db-galera-node-1"]'
 #itucp-w5 ansible_host=10.46.x.y swarm_labels='["db-galera-node-1"]'
 #itucp-w6 ansible_host=10.46.x.y swarm_labels='["db-galera-node-1"]'
-
 
 [vmware_vms]
 itucp-m1 numvcpus=4 memsize=2048 esxi_host=10.46.z.a esxi_user=root esxi_ds=datastore_LUN01

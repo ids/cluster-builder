@@ -1,4 +1,0 @@
----
-- name: Configure the Host DB Folders
-  include: hostdb-folders.yml
-

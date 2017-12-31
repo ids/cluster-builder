@@ -178,7 +178,7 @@ fi
 TC=''
 NC=''
 if [ "$TERM" == "xterm-256color" ]; then
-  TC='\033[1;32m'
+  TC='\033[1;34m'
   NC='\033[0m' # No Color
 fi 
 

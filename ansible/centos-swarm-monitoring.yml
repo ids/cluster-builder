@@ -8,4 +8,4 @@
 
   roles:
   - role: common
-  - role: centos-swarm-monitoring 
+  - role: swarm-monitoring 

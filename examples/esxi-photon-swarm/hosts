@@ -14,9 +14,7 @@ network_dns2=8.8.8.8
 network_dns3=8.8.4.4
 network_dn=idstudios.local
 
-docker_enable_metrics=true
-[docker_prometheus_server]
-swarm2-m1
+docker_prometheus_server=swarm2-m1
 
 [docker_swarm_manager]
 swarm2-m1 ansible_host=192.168.1.210

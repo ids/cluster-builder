@@ -4,6 +4,3 @@
 
 - name: Install Prometheus, Grafana
   include: metrics.yml
-
-- name: Install Logging
-  include: logging.yml

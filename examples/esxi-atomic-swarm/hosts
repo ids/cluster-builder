@@ -15,9 +15,6 @@ network_dns3=8.8.4.4
 network_dn=idstudios.local
 use_fqdn_node_name=true
 
-# docker_elk_target=elastic.idstudios.local:9200
-docker_enable_metrics=true
-
 [docker_swarm_manager]
 swarm-m1 ansible_host=192.168.1.221
 
