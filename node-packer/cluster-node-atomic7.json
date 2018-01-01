@@ -3,8 +3,7 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "inline": ["atomic host upgrade"],
-      "pause_before": "30s"
+      "inline": ["atomic host upgrade"]
     },     
     {
       "type": "shell",
@@ -51,7 +50,19 @@
       "type": "ansible",
       "playbook_file": "ansible/atomic.yml",
       "extra_arguments": "-vvvvv"
-    }   
+    },   
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "expect_disconnect": true,
+      "inline": ["systemctl reboot"]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": ["docker info"],
+      "pause_before": "30s"
+    }
   ],
   
   "post-processors": [{
