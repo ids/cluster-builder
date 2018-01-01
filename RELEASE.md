@@ -22,3 +22,5 @@ v17.12-beta1
 * Added support for separate __Control__ and __Data__ interface swarm deployments where each node has 2 NICS on separate subnets, partitioned accordingly.
 * Cleaned up the base CentOS OVA and moved DC/OS specific items into post-ova ansible deployment 
 * __FIXED__: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as __UP__ immediately after deployment.
+* Updated the __PhotonOS Swarm__ variant to __Docker 17.12.0-ce__ and migrated to a __Packer centric__ approach.
+* Updated the Atomic swarm variant to the __latest (yet antiquated) Docker version Atomic supports__, where there __docker-latest__ is 1.13. **Sigh**.  What is the point?

@@ -8,4 +8,5 @@
   become_method: sudo
   roles:
   - role: atomic
+  - role: atomic-monitoring
   

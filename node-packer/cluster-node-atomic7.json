@@ -1,10 +1,17 @@
 {
   "provisioners": [
     {
-      "type": "file",
-      "source": "keys/authorized_keys",
-      "destination": "/tmp/authorized_keys"
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": ["atomic host upgrade"],
+      "pause_before": "30s"
     },     
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "expect_disconnect": true,
+      "inline": ["systemctl reboot"]
+    },
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
@@ -15,18 +22,24 @@
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "expect_disconnect": true,
-      "inline": ["reboot"]
+      "inline": ["systemctl reboot"]
     },
+    {
+      "type": "file",
+      "source": "keys/authorized_keys",
+      "destination": "/tmp/authorized_keys"
+    },     
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/atomic-setup.sh"
+      "script": "bin/atomic-setup.sh",
+      "pause_before": "30s"
     },
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "expect_disconnect": true,
-      "inline": ["reboot"]
+      "inline": ["systemctl reboot"]
     },
     {
       "type": "shell",

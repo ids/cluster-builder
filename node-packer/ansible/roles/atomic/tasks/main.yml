@@ -1,4 +1,30 @@
-- name: Configure the docker daemon.json 
-  template:
-    src: templates/docker-daemon-default.j2
-    dest: /etc/docker/daemon.json
+- name: Stop docker
+  shell: systemctl stop docker
+
+- name: Configure Docker daemon
+  lineinfile:
+    dest: /etc/sysconfig/docker
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regexp: '^#DOCKERBINARY=/usr/bin/docker-latest', line: 'DOCKERBINARY=/usr/bin/docker-latest' }
+    - { regexp: '^#DOCKERDBINARY=/usr/bin/dockerd-latest', line: 'DOCKERDBINARY=/usr/bin/dockerd-latest' }
+    - { regexp: '^#DOCKER_CONTAINERD_BINARY=/usr/bin/docker-containerd-latest', line: 'DOCKER_CONTAINERD_BINARY=/usr/bin/docker-containerd-latest' }
+    - { regexp: '^#DOCKER_CONTAINERD_SHIM_BINARY=/usr/bin/docker-containerd-shim-latest', line: 'DOCKER_CONTAINERD_SHIM_BINARY=/usr/bin/docker-containerd-shim-latest' }
+
+- name: Disable the antiquated docker
+  shell: systemctl disable docker
+
+- name: Configure the slightly less antiquated docker-latest
+  shell: systemctl enable docker-latest
+
+- name: Start ancient docker
+  shell: systemctl start docker-latest
+
+- name: Show the Atomic trip into the past for 1.13
+  shell: docker info
+  register: docker_info
+
+- debug: msg={{ docker_info.stdout_lines }}
+  

@@ -1,18 +1,62 @@
 ---
+- name: Stop cadvisor on all nodes 
+  shell: docker stop cadvisor
+  ignore_errors: true
+
+- name: Remove cadvisor on all nodes 
+  shell: docker rm cadvisor
+  ignore_errors: true
+
+- name: Stop node-exporter on all nodes 
+  shell: docker stop node-exporter
+  ignore_errors: true
+
+- name: Remove node-exporter on all nodes 
+  shell: docker rm node-exporter
+  ignore_errors: true
+
+- name: Install cadvisor on all nodes 
+  shell: 
+    cmd: | 
+      docker run \
+        --name=cadvisor \
+        --privileged=true \
+        --restart=always \
+        --volume=/cgroup:/cgroup:ro \
+        --volume=/:/rootfs:ro \
+        --volume=/var/run:/var/run:rw \
+        --volume=/sys:/sys:ro \
+        --volume=/var/lib/docker/:/var/lib/docker:ro \
+        --volume=/dev/disk/:/dev/disk:ro \
+        --publish=9101:8080 \
+        --detach \
+        google/cadvisor:latest    
+
+- name: Install node-exporter 
+  shell: 
+    cmd: | 
+      docker \
+        run  \
+          --name node-exporter \
+          --privileged=true \
+          --restart=always \
+          --volume=/proc:/host/proc:ro \
+          --volume=/sys:/host/sys:ro \
+          --volume=/:/rootfs:ro \
+          --volume=/etc/hostname:/etc/host_hostname:ro \
+          -e HOST_HOSTNAME=/etc/host_hostname \
+          --publish=9100:9100 \
+          --detach \
+          basi/node-exporter:latest \
+          --path.procfs /host/proc \
+          --path.sysfs /host/sys \
+          --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)" \
+          --collector.textfile.directory /etc/node-exporter/  
+          
 - name: Establish prometheus server settings
   set_fact: 
     docker_prometheus_server: "{{ groups['docker_prometheus_server'][0] }}"
   when: docker_prometheus_server is undefined and groups['docker_prometheus_server'] is defined
-
-- name: Ensure metrics are enabled in daemon.json
-  lineinfile:
-    dest: /etc/docker/daemon.json
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-    insertafter: "{"
-  with_items:
-    - { regexp: 'metrics-addr', line: '"metrics-addr" : "0.0.0.0:9323",' }
 
 - name: Create prometheus etc
   file:
@@ -57,41 +101,13 @@
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   run_once: true
 
-- name: Stop cadvisor on all nodes 
-  shell: docker stop cadvisor
-  ignore_errors: true
-
-- name: Remove cadvisor on all nodes 
-  shell: docker rm cadvisor
-  ignore_errors: true
-
-- name: Install cadvisor on all nodes 
-  shell: 
-    cmd: | 
-      docker run \
-        --privileged=true \
-        --restart=always \
-        --memory 536870912 \
-        --volume=/cgroup:/cgroup:ro \
-        --volume=/:/rootfs:ro \
-        --volume=/var/run:/var/run:rw \
-        --volume=/sys:/sys:ro \
-        --volume=/var/lib/docker/:/var/lib/docker:ro \
-        --volume=/dev/disk/:/dev/disk:ro \
-        --publish=9101:8080 \
-        --detach=true \
-        --name=cadvisor \
-        google/cadvisor:latest    
-
-- name: Create grafana host data volume
-  file:
-    path: /data/grafana
-    state: directory
-    mode: 0755
-  when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
-
 - name: Remove any running grafana server 
   shell: docker service rm monitor-grafana
+  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+  ignore_errors: true
+
+- name: Create the grafana data volume
+  shell: docker volume create grafana-data
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   ignore_errors: true
 
@@ -106,7 +122,7 @@
       --network bridge \
       --constraint "node.hostname == {{ docker_prometheus_server }}" \
       --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
-      --mount type=bind,source=/data/grafana,destination=/var/lib/grafana \
+      --mount source=grafana-data,destination=/var/lib/grafana \
       --publish 3000:3000/tcp \
       -e GF_SECURITY_ADMIN_PASSWORD=pass \
       --detach \
@@ -114,17 +130,3 @@
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   run_once: true
 
-
-#docker service create --replicas 1 --name monitor-prometheus \
-#      --limit-cpu 1 \
-#      --reserve-cpu 0.5 \
-#      --limit-memory 1073741824 \
-#      --reserve-memory 512m \
-#      --network bridge \
-#      --constraint "node.hostname == demo-swarm-m1" \
-#      --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
-#      --mount type=bind,source=/etc/prometheus/prometheus.yml,destination=/etc/prometheus/prometheus.yml \
-#      --mount source=prometheus-data,destination=/prometheus \
-#      --publish 9090:9090/tcp \
-#      --detach \
-#      prom/prometheus
