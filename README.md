@@ -571,12 +571,13 @@ rhel-ucp
 
 #### PhotonOS Based Clusters
 
-* PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __223MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
+* PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __862.4MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
 * PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
 * PhotonOS VMs are automatically configured with __overlay2__ driver as they have a 4.x kernel
 
 #### All Clusters
 
+* Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to swarms
 * The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
 * Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
