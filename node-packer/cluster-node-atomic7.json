@@ -8,12 +8,19 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/atomic-setup.sh"
+      "inline": ["rpm-ostree pkg-add epel-release"],
+      "pause_before": "30s"
     },
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "inline": ["rpm-ostree pkg-add open-vm-tools"]
+      "expect_disconnect": true,
+      "inline": ["reboot"]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "bin/atomic-setup.sh"
     },
     {
       "type": "shell",
@@ -26,9 +33,14 @@
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "inline": ["systemctl enable vmtoolsd"],
       "pause_before": "30s"
-    }
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/atomic.yml",
+      "extra_arguments": "-vvvvv"
+    }   
   ],
-
+  
   "post-processors": [{
       "type": "shell-local",
       "inline": [

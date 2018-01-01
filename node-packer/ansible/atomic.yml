@@ -1,0 +1,11 @@
+---
+# This playbook upgrades Atomic
+
+- hosts: all
+  gather_facts: no
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: atomic
+  

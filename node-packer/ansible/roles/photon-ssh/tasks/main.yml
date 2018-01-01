@@ -1,22 +1,4 @@
 ---
-# Configure SSH
-
-- name: Configure Admin User SSH
-  file:
-    path: /root/.ssh
-    state: directory
-    owner: root
-    group: root
-    mode: 0700
-
-- name: Install Admin public SSH key
-  copy:
-    src: "/tmp/authorized_keys"
-    dest: /root/.ssh/authorized_keys
-    owner: root
-    group: root
-    mode: 0600
-
 - name: Configure SSH daemon
   lineinfile:
     dest: /etc/ssh/sshd_config
@@ -34,5 +16,6 @@
     - { regexp: '^#MaxAuthTries 6', line: 'MaxAuthTries 2' }
     - { regexp: '^#TCPKeepAlive yes', line: 'TCPKeepAlive no' }
     - { regexp: '^X11Forwarding yes', line: 'X11Forwarding no' }
+    - { regexp: '^#PermitRootLogin', line: 'PermitRootLogin yes' }
     - { regexp: '^#AllowAgentForwarding yes', line: 'AllowAgentForwarding no' }
-    - { regexp: '^AllowUsers', line: 'AllowUsers admin' }
+    - { regexp: '^AllowUsers', line: 'AllowUsers root' }

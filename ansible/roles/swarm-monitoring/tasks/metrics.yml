@@ -25,6 +25,7 @@
   template:
     src: templates/prometheus.j2
     dest: /etc/prometheus/prometheus.yml
+    mode: 0644
   when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
 
 - name: Create prometheus host data volume
@@ -39,11 +40,10 @@
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   ignore_errors: true
 
-#- name: Create monitoring network...
-#  shell: docker network create --driver overlay --subnet 10.0.2.0/24 monitoring
-#  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
-#  ignore_errors: true
-#  run_once: true
+- name: Create the prometheus data volume
+  shell: docker volume create prometheus-data
+  when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
+  ignore_errors: true
 
 - name: Install prometheus 
   shell: 
@@ -59,6 +59,7 @@
       --mount type=bind,source=/etc/prometheus/prometheus.yml,destination=/etc/prometheus/prometheus.yml \
       --mount source=prometheus-data,destination=/prometheus \
       --publish 9090:9090/tcp \
+      --detach \
       prom/prometheus
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   run_once: true
@@ -115,7 +116,22 @@
       --mount type=bind,source=/data/grafana,destination=/var/lib/grafana \
       --publish 3000:3000/tcp \
       -e GF_SECURITY_ADMIN_PASSWORD=pass \
+      --detach \
       grafana/grafana:latest
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   run_once: true
 
+
+#docker service create --replicas 1 --name monitor-prometheus \
+#      --limit-cpu 1 \
+#      --reserve-cpu 0.5 \
+#      --limit-memory 1073741824 \
+#      --reserve-memory 512m \
+#      --network bridge \
+#      --constraint "node.hostname == demo-swarm-m1" \
+#      --mount type=bind,source=/etc/hosts,destination=/etc/hosts \
+#      --mount type=bind,source=/etc/prometheus/prometheus.yml,destination=/etc/prometheus/prometheus.yml \
+#      --mount source=prometheus-data,destination=/prometheus \
+#      --publish 9090:9090/tcp \
+#      --detach \
+#      prom/prometheus

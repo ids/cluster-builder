@@ -1,4 +1,6 @@
-cat > /etc/sysconfig/network-scripts/ifcfg-ens33 << EOF
+rm /etc/sysconfig/network-scripts/ifcfg-ens*
+
+cat > /etc/sysconfig/network-scripts/ifcfg-ens32 << EOF
 DEVICE="ens32"
 ONBOOT="yes"
 BOOTPROTO=static
@@ -9,6 +11,28 @@ DNS1={{ network_dns }}
 DNS2={{ network_dns2 }}
 DNS3={{ network_dns3 }}
 EOF
+
+{% if esxi_data_net is defined %}   
+
+cat > /etc/sysconfig/network-scripts/ifcfg-ens160 << EOF
+DEVICE="ens160"
+ONBOOT="yes"
+BOOTPROTO=static
+IPADDR={{ data_ip }}
+NETMASK={{ data_network_mask }}
+GATEWAY={{ data_network_gateway }}
+{% if data_network_dns is defined %}  
+DNS1={{ data_network_dns }}
+{% endif %}
+{% if data_network_dns2 is defined %}  
+DNS2={{ data_network_dns2 }}
+{% endif %}
+{% if data_network_dns3 is defined %}  
+DNS3={{ data_network_dns3 }}
+{% endif %}
+EOF
+
+{% endif %}
 
 cat > /etc/sysconfig/network << EOF
 HOSTNAME={{ inventory_hostname}}.{{ network_dn }}

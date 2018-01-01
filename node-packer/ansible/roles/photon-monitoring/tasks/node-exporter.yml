@@ -16,10 +16,13 @@
   template:
     src: templates/node-exporter-service-photon.j2
     dest: /etc/systemd/system/node-exporter.service
-    mode: 0744
+    mode: 0644
 
 - name: Reload systemd configuration
   shell: systemctl daemon-reload
+
+- name: Enable systemd configuration
+  shell: systemctl enable node-exporter
 
 - name: Start and enable the node-exporter service
   service:

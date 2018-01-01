@@ -16,6 +16,11 @@ if [ ! -f $INVENTORY_FILE ]; then
   exit 1
 fi
 
+REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE`
+if [ -z $REMOTE_USER ]; then 
+  REMOTE_USER=root
+fi 
+
 echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
 sudo -H pip install passlib
 
@@ -40,4 +45,4 @@ PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_
 TARGET_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
 
 echo "Changing cluster password for ${TARGET_USER}..."
-ansible-playbook -i $INVENTORY_FILE ansible/change-password.yml --extra-vars="target_user=${TARGET_USER} target_password_hash='${TARGET_PASSWORD_HASH}'"
+ansible-playbook -i $INVENTORY_FILE ansible/change-password.yml -u $REMOTE_USER --extra-vars="remote_user=${REMOTE_USER} target_user=${TARGET_USER} target_password_hash='${TARGET_PASSWORD_HASH}'"

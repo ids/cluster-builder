@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 DOCKER_VERSION=17.12.0-ce
 
-#echo "***"
-#echo "*** Setting up authorized keys..."
-#echo "***"
+echo "***"
+echo "*** Setting up authorized keys..."
+echo "***"
 
-#if [ ! -d /root/.ssh ]; then 
-#  mkdir /root/.ssh
-#  chmod 700 /root/.ssh
-#fi 
-#cp /tmp/authorized_keys /root/.ssh/authorized_keys
-#chmod 600 /root/.ssh/authorized_keys
+if [ ! -d /root/.ssh ]; then 
+  mkdir /root/.ssh
+  chmod 700 /root/.ssh
+fi 
+cp /tmp/authorized_keys /root/.ssh/authorized_keys
+chmod 600 /root/.ssh/authorized_keys
 
 echo "***"
 echo "*** Installing:"
@@ -61,7 +61,7 @@ systemctl start docker
 echo "*** Clearing the DHCP uuid used by Photon"
 echo -n > /etc/machine-id
 
-echo '*** Upgrading pip'
+#echo '*** Upgrading pip'
 pip install --upgrade pip
 
 # Avoid bug in default python cryptography library

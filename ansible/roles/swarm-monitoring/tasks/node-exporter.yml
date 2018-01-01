@@ -33,4 +33,3 @@
     name: node-exporter
     state: started
     enabled: yes  
-  when: node_exporter_exists.stat.exists != True
