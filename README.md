@@ -28,9 +28,9 @@ The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clus
 * CentOS 7 Docker EE 
 * CentOS 7 DC/OS 
 
-> [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS, apparently tuned to the VMware hypervisor.  Initially I was skeptical, but after working with it in comparison to [CoreOS](https://coreos.com/) and [Project Atomic](https://www.projectatomic.io/), I have really grown to like it.  Very clean and well thought - what you need, no clutter.  Polished like CoreOS. Atomic seems more focused on their specific approach to Kubernetes then on being a general purpose container OS. 
+> [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
 
-> [Project Atomic](https://www.projectatomic.io/) variant is deprecated.  Not worth the effort for such an outdated and restrictive platform.
+> [Project Atomic](https://www.projectatomic.io/) variant is now deprecated.  The __rpm-ostree__ model is too restrictive.
 
 ## Deployment Options
 There are currently two types of deployment:
@@ -42,13 +42,16 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
-There are at present 5 supported cluster types, or variants:
+There are at present 4 supported cluster types, or variants:
 
 - photon-swarm
 - centos-swarm
-- atomic-swarm
 - centos-ucp
 - centos-dcos
+
+and 
+
+- atomic-swarm (deprecated)
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
@@ -255,7 +258,7 @@ VMware Fusion deployment is geared toward building small clusters on a laptop fo
 
 * The VMware tools need to be in the PATH
 
-* The Swarm Node hostnames must be specific in the host machine /etc/hosts
+* The Swarm Node hostnames must be specified in the host machine /etc/hosts
 
 #### VMware Tools Path
 
@@ -315,7 +318,7 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 
 ## Cluster Builder Usage
 
-The __cluster-builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages with are kept in the __clusters__ folder.
+The __cluster-builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages which are kept in the __clusters__ folder.
 
 It is recommended that an organization establish a base folder git repository within the __clusters__ folder to store their cluster definition packages.  Anything kept in __clusters__ will be ignored by the parent cluster-builder git repository.
 
