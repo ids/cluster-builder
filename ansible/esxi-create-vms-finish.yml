@@ -122,6 +122,12 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
 
+    - name: Delete the adjusted vmx file
+      local_action:
+        module: shell
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "rm /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
+      ignore_errors: true
+
     - name: waiting for VMs to finish starting up
       pause:
         seconds: 300
