@@ -23,7 +23,7 @@ if [ "`uname -r | grep Microsoft | wc -l | xargs`" == "1" ]; then
   PACKER_CMD="/mnt/c/Windows/System32/cmd.exe /k \"packer build cluster-node-${IMAGE}.json && exit\""
 fi
 
-if [ "$2" != "" ]; then
+if [ "$IMAGE" == "rhel7" ]; then
   if [ "$3" == "" ]; then
     echo
     echo "Error: No license key found. Make sure rhel.lic is located in the clusters folder."
