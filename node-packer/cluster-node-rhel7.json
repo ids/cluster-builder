@@ -1,14 +1,19 @@
 {
+  "variables": 
+  {
+    "rhel_folder": "",
+    "rhel_lic": ""
+  },
   "provisioners": [
     {
     "type": "file",
-    "source": "bin/rhel7-setup.sh",
+    "source": "../clusters/{{user `rhel_folder`}}/rhel7-setup.sh",
     "destination": "/tmp/rhel7-setup.sh"
     },
     {
       "type": "shell",
       "execute_command": "sh '{{ .Path }}'",
-      "inline": ["sudo bash /tmp/rhel7-setup.sh 1-4fa7fd521719cc31b907219b8f8339ca"]
+      "inline": ["sudo bash /tmp/rhel7-setup.sh {{user `rhel_lic`}}"]
     },
     {
       "type": "shell",

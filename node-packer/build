@@ -23,6 +23,17 @@ if [ "`uname -r | grep Microsoft | wc -l | xargs`" == "1" ]; then
   PACKER_CMD="/mnt/c/Windows/System32/cmd.exe /k \"packer build cluster-node-${IMAGE}.json && exit\""
 fi
 
+if [ "$2" != "" ]; then
+  if [ "$3" == "" ]; then
+    echo
+    echo "Error: No license key found. Make sure rhel.lic is located in the clusters folder."
+    exit 1
+  fi
+  RHEL_LIC=$3 
+  RHEL_FOLDER=$2
+  PACKER_CMD="packer build -var rhel_folder=${RHEL_FOLDER} -var rhel_lic=${RHEL_LIC} cluster-node-${IMAGE}.json"
+fi
+
 if [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon" ] || [ "$IMAGE" == "atomic7" ]  || [ "$IMAGE" == "rhel7" ]; then
   echo
   echo 'Building VM image:' $IMAGE

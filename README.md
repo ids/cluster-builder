@@ -27,6 +27,8 @@ The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clus
 * CentOS 7 Docker CE
 * CentOS 7 Docker EE 
 * CentOS 7 DC/OS 
+* RedHat Enterprise 7 Docker CE
+* RedHat Enterprise 7 Docker EE
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
 
@@ -42,11 +44,13 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
-There are at present 4 supported cluster types, or variants:
+There are at present 6 supported cluster types, or variants:
 
 - photon-swarm
 - centos-swarm
+- rhel-swarm
 - centos-ucp
+- rhel-ucp
 - centos-dcos
 
 and 
@@ -94,6 +98,9 @@ VMs for provisioning.
 __Note for Docker EE__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __docker_subscription.lic__ file.
 
+__Note for Red Hat Deployments__
+The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
+
 ## Cluster Definition Packages
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
@@ -140,7 +147,7 @@ Sample cluster packages are located in the **examples** folder and can be copied
 	demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**: _photon-swarm_, _centos-dcos_, _centos-swarm_ or _atomic-swarm_.
+**cluster_type**: _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _atomic-swarm_, _rhel-swarm_, or _rhel-ucp_.
 
 **vmware_target**: _fusion_ or _esxi_.
 

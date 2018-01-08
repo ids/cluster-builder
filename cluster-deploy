@@ -162,12 +162,14 @@ elif [ "$CLUSTER_TYPE" == 'centos-ucp' ]; then
   OVA_BUILD_TYPE=centos7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
+  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
   CLUSTER_TYPE_NAME='RHEL Swarm'
-  OVA_BUILD_TYPE=centos7
+  OVA_BUILD_TYPE=rhel7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
   check_docker_license
+  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
   CLUSTER_TYPE_NAME='RHEL UCP'
   OVA_BUILD_TYPE=rhel7
@@ -190,7 +192,7 @@ echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
 echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
 echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
 echo "***"
-echo 
+echo
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
@@ -203,7 +205,7 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
   echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
   echo "Attempting to build: ${OVA_BUILD_TYPE}"
   cd node-packer
-  bash build $OVA_BUILD_TYPE
+  bash build $OVA_BUILD_TYPE $CLUSTER_PKG_FOLDER $RHEL_LIC 
   cd ..
 fi
 
