@@ -1,7 +1,19 @@
 
 ---
+  - name: Copy the RHEL License Script
+    copy:
+      src: ../clusters/{{ cluster_name }}/rhel7-setup.sh
+      dest: /tmp/rhel7-setup.sh
+      mode: 777
+
+  - name: Copy the RHEL License file
+    copy:
+      src: ../clusters/{{ cluster_name }}/rhel.lic
+      dest: /tmp/rhel.lic
+      mode: 777
+  
   - name: Register RHEL with Satellite.
-    shell: sudo bash rhel7-setup.sh {{ rhel_activation_key }}
+    shell: sudo bash rhel7-setup.sh $( cat rhel.lic )
     args:
       chdir: /tmp
 
