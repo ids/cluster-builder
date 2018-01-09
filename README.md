@@ -373,7 +373,7 @@ It is easiest to download the VIB to a shared datastore accessible to all of the
 
 Eg.
 
-	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.19.641f741-0.0.1.vib
+	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.20.15f5e1d-0.0.1.vib
 
 The plugin is automatically installed as part of the cluster-builder swarm provisioning process. However, this can also be manually done on cluster nodes with the following command:
 
