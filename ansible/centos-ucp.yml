@@ -16,7 +16,7 @@
     #docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
     docker_swarm_port: 2377
-    docker_tls_port: 2378
+    docker_tls_port: 443
 
   roles:
   - role: common

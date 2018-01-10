@@ -2,7 +2,12 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+{% if cluster_type == "centos-ucp" or cluster_type == "rhel-ucp" %}
+export DOCKER_CERT_PATH=$DIR/ucp-bundle-admin
+{% else %}
 export DOCKER_CERT_PATH=$DIR/api-certs
+{% endif %}
+
 export DOCKER_TLS_VERIFY=1
 export DOCKER_HOST={{ docker_swarm_mgmt_cn }}:{{ docker_tls_port }}
 
