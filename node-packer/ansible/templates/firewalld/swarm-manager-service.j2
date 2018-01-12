@@ -2,8 +2,8 @@
 <service>
   <short>swarm-manager</short>
   <description>Ports for the Docker Swarm manager.</description>
-  <!--  Port for the Docker Swarm manager. Used for backwards compatibility -->
-  <port protocol="tcp" port="2375"/>
+
+  <!--  Port for remote connections to Docker -->
   <port protocol="tcp" port="2376"/>
 
   <!--  Port for communication between swarm nodes -->
