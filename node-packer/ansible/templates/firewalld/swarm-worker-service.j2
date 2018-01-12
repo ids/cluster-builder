@@ -2,6 +2,10 @@
 <service>
   <short>swarm-worker</short>
   <description>Ports for the Docker Swarm Worker.</description>
+    
+  <!--  Port for remote connections to Docker -->
+  <port protocol="tcp" port="2376"/>
+  
   <!--  Port for communication between swarm nodes -->
   <port protocol="tcp" port="2377"/>
   <port protocol="tcp" port="2378"/>
