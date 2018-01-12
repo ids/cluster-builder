@@ -140,9 +140,9 @@ if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
   CLUSTER_TYPE_NAME='PhotonOS Swarm'
   REMOTE_USER=root
 elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-dcos-x86_64.ova
   CLUSTER_TYPE_NAME='DC/OS Cluster'
-  OVA_BUILD_TYPE=centos7
+  OVA_BUILD_TYPE=centos7-dcos
   SERVER_WAIT=360s
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'atomic-swarm' ]; then
