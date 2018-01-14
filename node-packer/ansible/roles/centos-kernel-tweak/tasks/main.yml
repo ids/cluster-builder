@@ -1,0 +1,20 @@
+- name: Remove warnings from CentOS install for ip4
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
+    line: 'net.bridge.bridge-nf-call-iptables = 1'
+  
+- name: Remove warnings from CentOS install for ip6
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.bridge.bridge-nf-call-ip6tables =\s'
+    line: 'net.bridge.bridge-nf-call-ip6tables = 1'
+
+- name: Remove warnings from CentOS install for ip4
+  shell: sysctl net.bridge.bridge-nf-call-iptables=1
+  
+- name: Attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
+  shell: sysctl -p /etc/sysctl.conf
+
