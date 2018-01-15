@@ -71,23 +71,23 @@
   - name: Turn swapp off for k8s installation 
     shell: swapoff -a
 
- - hosts: dcos_agents_private
-   remote_user: admin
-   become: true
-   gather_facts: false
-   become_method: sudo
-   any_errors_fatal: true
-   vars:
+- hosts: dcos_agents_private
+  remote_user: admin
+  become: true
+  gather_facts: false
+  become_method: sudo
+  any_errors_fatal: true
+  vars:
 
-   roles:
-   - role: nfs-shares
+  roles:
+  - role: nfs-shares
 
-   tasks:
-   - name: Ensure data location exists 
-     file:
-       path: /data
-       state: directory
-       mode: 0766      
+  tasks:
+  - name: Ensure data location exists 
+    file:
+      path: /data
+      state: directory
+      mode: 0766      
 
     
     
