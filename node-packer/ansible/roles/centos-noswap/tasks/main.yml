@@ -12,5 +12,5 @@
     path: "/etc/sysctl.conf"
     state: present
     regexp: '^vm.swappiness'
-    line: 'vm.swappiness=0'
+    line: 'vm.swappiness=10'
 

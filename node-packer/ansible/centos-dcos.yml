@@ -8,8 +8,7 @@
   become_method: sudo
   roles:
   - role: centos-dcos
-  - role: centos-ssh
+  - role: centos-dcos-ssh
   - role: dcos-node
   - role: debug
   - role: centos-kernel-tweak
-  - role: centos-noswap

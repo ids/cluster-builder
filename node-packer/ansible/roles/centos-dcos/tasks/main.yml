@@ -41,10 +41,10 @@
 
 - debug: msg="CentOS upgraded to {{ kernel_version.stdout }}"
 
-- name: Enable OverlayFS
-  copy: >
-    content=overlay
-    dest=/etc/modules-load.d/overlay.conf
+#- name: Enable OverlayFS
+#  copy: >
+#    content=overlay
+#    dest=/etc/modules-load.d/overlay.conf
 
 # kdump's default config will not work on machines with less than 2GB memory.
 # But machine memory is configurable at runtime.

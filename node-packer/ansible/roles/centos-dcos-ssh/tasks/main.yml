@@ -1,0 +1,28 @@
+---
+# Configure SSH
+
+- name: Configure Admin User SSH
+  file:
+    path: /home/admin/.ssh
+    state: directory
+    owner: admin
+    group: admin
+    mode: 0700
+
+- name: Install Admin public SSH key
+  copy:
+    src: "/tmp/authorized_keys"
+    dest: /home/admin/.ssh/authorized_keys
+    owner: admin
+    group: admin
+    mode: 0600
+
+- name: Configure SSH daemon
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regexp: '^#AllowAgentForwarding yes', line: 'AllowAgentForwarding yes' }
+    - { regexp: '^AllowUsers', line: 'AllowUsers admin' }
