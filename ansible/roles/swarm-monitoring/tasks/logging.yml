@@ -18,7 +18,7 @@
     state: present
     insertafter: '"log-driver": "gelf",'
   with_items:
-    - { regexp: 'log-opts', line: '"log-opts": {"gelf-address": "udp://127.0.0.1:12201","labels": "container_group" },' }
+    - { regexp: 'log-opts', line: '  "log-opts": { "gelf-address": "udp://127.0.0.1:12201", "labels": "container_group" },' }
 
 - name: Create elasticsearch host data volume
   file:
