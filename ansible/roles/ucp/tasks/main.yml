@@ -79,10 +79,10 @@
       --host-address {{ ansible_host }} 
   become: true
   register: ucp_start
-  when: "inventory_hostname in groups['docker_swarm_manager']"
+  when: "inventory_hostname in groups['docker_swarm_manager'][0]"
 
 - debug: msg="{{ ucp_start.stdout_lines }}"
-  when: "inventory_hostname in groups['docker_swarm_manager']"
+  when: "inventory_hostname in groups['docker_swarm_manager'][0]"
 
 - name: Remove the Docker EE License File
   file:
