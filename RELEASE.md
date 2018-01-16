@@ -21,7 +21,7 @@ v17.12-beta1
 * Underlying metric support from __dockerd__, __cAdvisor__ and __Node Exporter__ has been built into the OVA and is no longer optional (docker_enable_metrics is now deprecated - any need to upgrade or adjust these components can be considered a post-deployment activity - considering moving the entire monitoring system to an independent stack deployment)
 * Added support for separate __Control__ and __Data__ interface swarm deployments where each node has 2 NICS on separate subnets, partitioned accordingly.
 * Enabled ELK Logging via __logstash__ and __gelf__.  When the __docker_elk_target__ variable is set, logstash containers are distributed via service mode=global, and the __Docker daemon.json__ is configured for __gelf__ logging to the local logstash instance.
-* Added __"dns"__ entry to __Docker daemon.json__ based on the __data_network_dns__ and __network_dns__ respectively.  The first two DNS entries will be entered into the __Docker daemon.json__ to support DNS name resolution in containers.
+* Added __"dns"__ entry to __Docker daemon.json__ based on the data_network_dns and network_dns respectively.  The first two DNS entries will be entered into the __Docker daemon.json__ to support DNS name resolution in containers.  If a custom dns entry is desired for the Docker daemon.json , the "docker_daemon_dns_override" variable can be used.
 * Cleaned up the base CentOS OVA and moved DC/OS specific items into post-ova ansible deployment 
 * __FIXED__: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as __UP__ immediately after deployment.
 * Updated the __PhotonOS Swarm__ variant to __Docker 17.12.0-ce__ and migrated to a __Packer centric__ approach.
