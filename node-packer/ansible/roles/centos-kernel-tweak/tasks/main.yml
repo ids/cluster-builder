@@ -1,13 +1,3 @@
----
-- name: Set CentOS Hostname
-  include: hostname.yml
-
-- name: Configure Chronyd
-  include: chronyd.yml
-
-- name: Configure Base Docker options
-  include: docker-base.yml
-
 - name: Remove warnings from CentOS install for ip4
   lineinfile:
     path: "/etc/sysctl.conf"
@@ -27,3 +17,4 @@
   
 - name: Attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf
+

@@ -155,6 +155,14 @@ Sample cluster packages are located in the **examples** folder and can be copied
 
 **fusion_net_type**: One of _nat_, _bridged_ or _custom_.
 
+__network_dns__: DNS entry for the primary interface
+
+__network_dns2__: 2nd DNS entry for the primary interface
+
+__network_dns3__: 3rd DNS entry for the primary interface
+
+__network_dn__: Domain name for the primary interface subnet
+
 __docker_prometheus_server=<host>__: The specified server will have **prometheus** and **grafana** instances installed.
 
 __docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
@@ -167,6 +175,14 @@ __ucp_admin_user__: The admin user for the UCP
 
 __ucp_admin_password__: The admin password for the UCP
 
+#### ESXI options:
+
+__esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
+
+__esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
+
+__ovftool_parallel=true__: This setting will execute __ovftool__ deployments in parallel rather then one at a time.  This can increase ovftool deployment performance by as much as 150%.
+
 #### Advanced options:
 
 __ovftool_parallel=true__: When set on ESXI deployments it will cause the ovftool processes to run in parallel in the background, resulting in as much as 20% performance increase in some environments. 
@@ -177,13 +193,15 @@ __docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote 
 
 __docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
 
-__esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
-
-__esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
-
 __data_network_mask__: The network mask for the data network
 
 __data_network_gateway__: The gateway address for the data network
+
+__docker_daemon_dns_override__: (optional)  By default, cluster-builder will use the dns entries defined for the host interfaces (network_dns, network_dns2, etc).  If a different DNS configuration is desired for Docker, this value can be used to override the default behavior.  It must be supplied in the JSON string array form:
+
+		docker_daemon_dns_override='"192.168.1.1", "8.8.8.8"'
+
+> Note the single quotes wrapping the double quotes.
 
 > When deploying two interface nodes, the Data plane interface should be assigned the default gateway, and the Control/Mgmt plane interface should NOT be assigned a default gateway.
 

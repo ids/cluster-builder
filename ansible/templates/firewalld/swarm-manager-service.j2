@@ -3,7 +3,6 @@
   <short>swarm-manager</short>
   <description>Ports for the Docker Swarm manager.</description>
   <!--  Port for the Docker Swarm manager. Used for backwards compatibility -->
-  <port protocol="tcp" port="2375"/>
   <port protocol="tcp" port="2376"/>
 
   <!--  Port for communication between swarm nodes -->
@@ -58,5 +57,8 @@
 
   <!-- Docker Metrics Port -->
   <port protocol="tcp" port="9323"/>
+
+  <!-- Logstash Port -->
+  <port protocol="udp" port="12201"/>
 
 </service>

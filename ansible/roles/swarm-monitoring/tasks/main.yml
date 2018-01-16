@@ -5,5 +5,5 @@
 - name: Configure metrics and cAdvisor for all nodes
   include: metrics.yml
 
-#- name: Configure Logging
-#  include: logging.yml
+- name: Configure ELK Logging
+  include: logging.yml

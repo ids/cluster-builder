@@ -1,0 +1,16 @@
+- name: Clear swap from fstab for better k8s support
+  lineinfile:
+    path: "/etc/fstab"
+    state: absent
+    regexp: '^/dev/mapper/centos-swap swaps'
+
+- name: Turn of swap
+  shell: swapoff -a
+
+- name: Set to emergency swappiness
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^vm.swappiness'
+    line: 'vm.swappiness=10'
+
