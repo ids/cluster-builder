@@ -7,7 +7,7 @@
     state: present
     insertafter: '{'
   with_items:
-    - { regexp: 'log-driver', line: '"log-driver": "gelf",' }
+    - { regexp: 'log-driver', line: '  "log-driver": "gelf",' }
   when: "docker_elk_target is defined"
  
 - name: Setup logging to external ELK system
@@ -18,7 +18,7 @@
     state: present
     insertafter: '"log-driver": "gelf",'
   with_items:
-    - { regexp: 'log-opts', line: '"log-opts": {"gelf-address": "udp://127.0.0.1:12201","labels": "container_group" },' }
+    - { regexp: 'log-opts', line: '  "log-opts": { "gelf-address": "udp://127.0.0.1:12201", "labels": "container_group" },' }
 
 - name: Create elasticsearch host data volume
   file:
@@ -66,9 +66,10 @@
       --limit-memory 536870912 \
       --reserve-memory 268435456 \
       --network bridge \
-      --publish 8082:8082 \
       --publish 12201:12201/udp \
+      --publish 8082:8082 \
       --log-driver="json-file" \
+      --detach \
       logstash:latest \
       -e "input { gelf {} } output { elasticsearch { hosts => ['{{ docker_elk_target }}'] } }"
   when: "docker_elk_target is defined"
