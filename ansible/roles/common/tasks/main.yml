@@ -17,3 +17,47 @@
 
 - debug: var=cluster_pkg_folder
   run_once: true
+
+- name: Determine dns settings for docker daemon (override)
+  set_fact:
+    docker_daemon_dns: '{{ docker_daemon_dns_override }}'
+  when: docker_daemon_dns_override is defined 
+  run_once: true
+
+- name: Determine dns settings for docker daemon (data network w/ single)
+  set_fact:
+    docker_daemon_dns: '"{{ data_network_dns }}"'
+  when: docker_daemon_dns_override is undefined 
+    and data_network_dns is defined
+    and data_network_dns2 is undefined
+  run_once: true
+
+- name: Determine dns settings for docker daemon (data network w/ 2 entries)
+  set_fact:
+    docker_daemon_dns: '"{{ data_network_dns }}", "{{ data_network_dns2 }}"'
+  when: docker_daemon_dns_override is undefined 
+    and data_network_dns is defined
+    and data_network_dns2 is defined
+  run_once: true
+
+- name: Determine dns settings for docker daemon (main network w/ single)
+  set_fact:
+    docker_daemon_dns: '"{{ network_dns }}"'
+  when: docker_daemon_dns_override is undefined 
+    and data_network_dns is undefined
+    and network_dns is defined
+    and network_dns2 is undefined
+  run_once: true
+
+- name: Determine dns settings for docker daemon (main network w/ 2 entries)
+  set_fact:
+    docker_daemon_dns: '"{{ network_dns }}", "{{ network_dns2 }}"'
+  when: docker_daemon_dns_override is undefined 
+    and data_network_dns is undefined
+    and network_dns is defined
+    and network_dns2 is defined
+  run_once: true
+
+- name: Calculated dns settings for docker daemon
+  debug: var=docker_daemon_dns
+  run_once: true
