@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DOCKER_VERSION=17.12.0-ce
+DOCKER_VERSION=17.09.1-ce
 
 echo "***"
 echo "*** Setting up authorized keys..."

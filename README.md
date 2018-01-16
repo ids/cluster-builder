@@ -581,7 +581,7 @@ A general overview of the highlights:
 
 #### Docker Versions
 
-__Docker CE:__ 17.12.0-ce (or later)
+__Docker CE:__ 17.09.1-ce (or later)
 centos-swarm
 photon-swarm
 atomic-swarm

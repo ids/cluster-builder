@@ -6,13 +6,14 @@ v17.12-beta1
 
 > __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to signifcant changes in the ova profile.
 
+* ~~Updated the CentOS and Photon variants to __Docker 17.12.0-ce__, with explicit versioning.~~
+* Already downgraded back to __Docker 17.09.1-ce__, as this issue appeared almost immediately in the swarm: https://github.com/docker/libnetwork/issues/2045.  Likely a better policy to skip Docker's .0 releases.
 * Migrated to a __Packer centric__ node provisioning approach moving most of the ansible logic from post OVA provisioning into the packer OVA creation process.  This includes the monitoring agents and underlying plugin dependencies. This results in a __ready-to-go__ node OVA that can be deployed into service simply by:
   * Assigning a static IP
   * Assigning a hostname (and DNS entries)
   * Joining a Swarm
 * The __Packer centric__ approach favors a model where OVAs are versioned along with deployments for reliable recovery (TODO: future releases should build this into the model explicitly). It should also enable the creation of simple "add node to cluster" scripts for easily expanding existing cluster deployments.
 * Updated the CentOS variant to use __Overlay2__ (supported on 1708/7.4).  This simplifies the CentOS/RHEL images eliminating the need for a dedicated 2nd VMDK and the rather cumbersome __direct-lvm__ approach
-* Updated the CentOS variant to __Docker 17.12.0-ce__, with explicit versioning
 * Added __ovftool_parallel=true__ option to speed up ESXI ovftool deployments
 * Added __docker_swarm_mgmt_cn__ and __docker_swarm_mgmt_gw__ to allow external DNS names to be used in the advanced deployment model (where access is through a load balancer external to the cluster)
 * Added the __cluster-passwd__ high level script for managing cluster admin/root user passwords and integrated this into the deployment process
@@ -24,5 +25,4 @@ v17.12-beta1
 * Added __"dns"__ entry to __Docker daemon.json__ based on the data_network_dns and network_dns respectively.  The first two DNS entries will be entered into the __Docker daemon.json__ to support DNS name resolution in containers.  If a custom dns entry is desired for the Docker daemon.json , the "docker_daemon_dns_override" variable can be used.
 * Cleaned up the base CentOS OVA and moved DC/OS specific items into post-ova ansible deployment 
 * __FIXED__: issue with cAdvisor not being accessible to prometheus when prometheus is running on the node.  All targets now show as __UP__ immediately after deployment.
-* Updated the __PhotonOS Swarm__ variant to __Docker 17.12.0-ce__ and migrated to a __Packer centric__ approach.
 * __Atomic Swarm__ !Deprecated, what is the point?  I fought with rpm-ostree enough just trying to get it to stay on __their antiquated idea of docker-latest as 1.13__, and it kept reverting back to 1.12... and I think I've had enough.  __Docker 1.13__ in 2018 is of no use to anyone.
