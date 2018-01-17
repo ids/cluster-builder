@@ -67,7 +67,7 @@
     dest: /etc/dockeree_license.lic
     mode: 777
 
-- name: Start the UCP
+- name: Start the UCP 
   shell: 
     cmd: | 
       docker container run --rm -i --name ucp \
@@ -76,13 +76,18 @@
       --admin-username {{ ucp_admin_user }} \
       --admin-password {{ ucp_admin_password }} \
       --license `cat /etc/dockeree_license.lic` \
-      --host-address {{ ansible_host }} 
+      --host-address {{ ansible_host }} \
+      --san {{ inventory_hostname }} \
+      --san {{ docker_swarm_mgmt_cn }} \
+      --dns {{ network_dns }} \
+      --dns-search {{ network_dn }}
   become: true
   register: ucp_start
   when: "inventory_hostname in groups['docker_swarm_manager']"
 
 - debug: msg="{{ ucp_start.stdout_lines }}"
   when: "inventory_hostname in groups['docker_swarm_manager']"
+
 
 - name: Remove the Docker EE License File
   file:
