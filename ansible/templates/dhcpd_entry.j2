@@ -3,7 +3,7 @@ host {{ inventory_hostname }} {
     hardware ethernet {{ vm_mac.stdout }};
     fixed-address {{ ansible_host }};
     option host-name "{{ inventory_hostname }}";
-    {% if data_network_dns is defined %}  
+    {% if network_dns is defined %}  
     option domain-name-servers {{ network_dns }}, 8.8.8.8;
     {% endif %}
     {% if data_network_dns2 is defined %}  
