@@ -5,3 +5,9 @@
     state: directory
     mode: 0755
     
+- name: Ensure Kubernetes starts with swap tolerance
+  lineinfile:
+    path: /etc/environment
+    regexp: '^%KUBELET_SWAP_ARGS'
+    line: 'KUBELET_SWAP_ARGS="–fail-swap-on=false"'
+    create: yes
