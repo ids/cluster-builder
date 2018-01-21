@@ -1,0 +1,7 @@
+---
+- name: Set CentOS Hostname
+  include: hostname.yml
+
+- name: Configure Chronyd
+  include: chronyd.yml
+

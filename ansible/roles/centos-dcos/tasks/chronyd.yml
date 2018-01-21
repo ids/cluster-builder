@@ -1,0 +1,27 @@
+
+---
+- name: Configure the chrony time servers
+  become: true
+  template:
+    src: templates/chrony-conf.j2
+    dest: /etc/chrony.conf
+  run_once: true
+
+- name: Enable Chrony
+  shell: systemctl enable chronyd
+  become: true
+
+- name: Start Chrony
+  shell: systemctl start chronyd
+  become: true
+
+- name: Ensure network time sync is setup
+  shell: timedatectl set-ntp true
+  become: true
+
+- name: Verify Chrony Sources
+  shell: chronyc sources
+  register: chrony_out
+
+- debug: msg="{{ chrony_out.stdout_lines }}"
+
