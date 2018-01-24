@@ -4,7 +4,7 @@ Release Notes
 v18.04-beta1
 ------------
 
-> __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to signifcant changes in the ova profile.
+> __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to significant changes in the ova profile.
 
 * ~~Updated the CentOS and Photon variants to __Docker 17.12.0-ce__, with explicit versioning.~~
 * Already downgraded back to __Docker 17.09.1-ce__, as this issue appeared almost immediately in the swarm: https://github.com/docker/libnetwork/issues/2045.  Likely a better policy to skip Docker's .0 releases.
