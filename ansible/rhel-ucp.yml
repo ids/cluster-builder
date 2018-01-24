@@ -12,18 +12,29 @@
 
     # You can set any interface, that is listened by docker engine.
     # e.g. docker_swarm_interface: "eth1"
-    docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
-    docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
+    #docker_swarm_interface: "{{ ansible_default_ipv4['interface'] }}"
+    #docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
+    docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
     docker_swarm_port: 2377
-    docker_tls_port: 443
+    docker_tls_port: 2378
+
+  #roles:
+  #- role: common
+  #- role: rhel
+  #- role: rhel-hardening
+  #- role: ucp
+  #- role: swarm
+  #- role: vmware-vdvs
 
   roles:
   - role: common
   - role: rhel
-  - role: rhel-hardening
+  - role: centos-swarm-firewall
   - role: ucp
   - role: swarm
-  - role: vmware-vdvs
+  - role: swarm-monitoring
+#  - role: vmware-vdvs
+  - role: nfs-shares
     
   tasks:
   - name: Generate the wrapper docker-env script

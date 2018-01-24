@@ -42,6 +42,12 @@
       "inline": ["reboot"]
     },
     {
+      "type": "ansible-local",
+      "playbook_file": "ansible/docker.yml",
+      "playbook_dir": "ansible",
+      "extra_arguments": "-vvvvv"
+    },
+    {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "bin/zerodisk.sh"
