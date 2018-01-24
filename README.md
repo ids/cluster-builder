@@ -3,7 +3,7 @@ Cluster Builder
 
 [Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/) and [Docker Swarm](https://www.docker.com/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
 
-> Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)... the IaC way.
+> Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
 ![Cluster Builder Overview](docs/images/cluster-builder-overview.png)
 
