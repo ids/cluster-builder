@@ -1,7 +1,7 @@
 Release Notes
 =============
 
-v17.12-beta1
+v18.04-beta1
 ------------
 
 > __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to signifcant changes in the ova profile.
