@@ -369,6 +369,15 @@ To deploy a cluster use **cluster-deploy**:
 Eg.
 
     $ bash cluster-deploy demo-centos-swarm
+    
+## Patching a Cluster
+To update the nodes on a deployed cluster, use **cluster-update**:
+
+    $ bash cluster-deploy <inventory-package | cluster-name>
+
+Eg.
+
+    $ bash cluster-deploy esxi-rhel-swarm
 
 ## Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
