@@ -14,10 +14,21 @@
     name=*
     state=latest
 
-- name: Install Open VM Tools
+- name: Install packages required 
   yum: >
-    name=open-vm-tools
-    state=latest
+    name={{item}}
+    state=present
+  with_items:
+   - curl
+   - bash
+   - iputils # for ping
+   - tar
+   - xz
+   - nano
+   - unzip
+   - ipset
+   - nfs-utils
+   - open-vm-tools
 
 - name: Make sure the RTC is not local
   command: timedatectl set-local-rtc 0

@@ -2,13 +2,13 @@
 ---
   - name: Copy the RHEL License Script
     copy:
-      src: ../clusters/{{ cluster_name }}/rhel7-setup.sh
+      src: ../clusters/{{ cluster_pkg_folder }}/rhel7-setup.sh
       dest: /tmp/rhel7-setup.sh
       mode: 777
 
   - name: Copy the RHEL License file
     copy:
-      src: ../clusters/{{ cluster_name }}/rhel.lic
+      src: ../clusters/{{ cluster_pkg_folder }}/rhel.lic
       dest: /tmp/rhel.lic
       mode: 777
   
@@ -16,5 +16,4 @@
     shell: sudo bash rhel7-setup.sh $( cat rhel.lic )
     args:
       chdir: /tmp
-
 
