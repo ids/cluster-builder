@@ -14,14 +14,15 @@ Cluster Builder
 5. [Cluster Definition Packages](#cluster-definition-packages)
 6. [Cluster Builder Usage](#cluster-builder-usage)
 7. [Deploying a Cluster](#deploying-a-cluster)
-8. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-9. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
-10. [Prometheus Monitoring](#prometheus-monitoring)
-11. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-12. [Change Cluster Password](#change-cluster-password)
-13. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
-14. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-15. [Production Readiness](#production-readiness)
+8. [Patching a Cluster](#patching-a-cluster)
+9. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+10. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
+11. [Prometheus Monitoring](#prometheus-monitoring)
+12. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+13. [Change Cluster Password](#change-cluster-password)
+14. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
+15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+156. [Production Readiness](#production-readiness)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
