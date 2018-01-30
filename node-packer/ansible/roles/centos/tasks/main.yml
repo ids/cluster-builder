@@ -28,6 +28,7 @@
    - unzip
    - ipset
    - nfs-utils
+   - yum-plugin-versionlock
    - open-vm-tools
 
 - name: Make sure the RTC is not local

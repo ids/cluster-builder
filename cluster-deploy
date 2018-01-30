@@ -97,13 +97,16 @@ function fusion_deploy () {
     exit 1
   fi
 
-  echo "Change the initial ROOT password on VM Nodes..."
-  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+#
+#  Disabling this for local Fusion VM deploys
+#
+#  echo "Change the initial ROOT password on VM Nodes..."
+#  bash cluster-passwd $CLUSTER_PKG_FOLDER root
 
-  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
-    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
-    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
-  fi 
+#  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+#    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
+#    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+#  fi 
 
   bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
 

@@ -1,20 +1,27 @@
 ---
 - name: Yum add Docker CE repo
-  shell: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 - name: Yum update packages
-  shell: sudo yum makecache fast
+  shell: yum makecache fast
+
+- name: Install Version Lock
+  yum: >
+    name=yum-plugin-versionlock
+    state=present
 
 - name: Install Docker CE
   yum: >
-    name=docker-ce-17.12.0.ce
+    name=docker-ce-17.09.1.ce
     state=present
+
+- name: Version lock Docker
+  shell: yum versionlock docker-ce-*
 
 - name: Stop Docker
   service:
     name: docker
     state: stopped
-
 
 - name: Create docker group
   group: >
