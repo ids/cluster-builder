@@ -87,7 +87,7 @@
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
-        "/root/Documents/rhel-server-7.4-x86_64-dvd.iso",
+        "~/Documents/rhel-server-7.4-x86_64-dvd.iso",
         "iso/rhel-server-7.4-x86_64-dvd.iso"
       ],
       "iso_checksum_type": "sha256",
