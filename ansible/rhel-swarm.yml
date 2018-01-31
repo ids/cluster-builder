@@ -17,18 +17,17 @@
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
     docker_swarm_port: 2377
     docker_tls_port: 2376
+    contiv_remote_user: admin
 
   roles:
   - role: common
   - role: rhel
-  - role: centos-swarm-graphdriver
   - role: centos-swarm-firewall
-  - role: rhel-hardening
   - role: swarm
   - role: swarm-secure-api
-  - role: swarm-monitoring
   - role: portainer
-  - role: vmware-vdvs
+  - role: swarm-monitoring
+  - role: nfs-shares
   
   tasks:
   - name: Generate the wrapper docker-env script

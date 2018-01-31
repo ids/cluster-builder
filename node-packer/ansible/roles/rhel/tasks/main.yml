@@ -28,6 +28,7 @@
    - unzip
    - ipset
    - nfs-utils
+   - yum-plugin-versionlock
    - open-vm-tools
 
 - name: Make sure the RTC is not local
@@ -52,10 +53,10 @@
 
 - debug: msg="RHEL upgraded to {{ kernel_version.stdout }}"
 
-- name: Enable OverlayFS
-  copy: >
-    content=overlay
-    dest=/etc/modules-load.d/overlay.conf
+#- name: Enable OverlayFS
+#  copy: >
+#    content=overlay
+#    dest=/etc/modules-load.d/overlay.conf
 
 # kdump's default config will not work on machines with less than 2GB memory.
 # But machine memory is configurable at runtime.
@@ -68,8 +69,17 @@
     state: stopped
     enabled: no
 
-- name: Install Docker CE
-  include: docker.yml
+#- name: Install Docker CE
+#  include: docker.yml
+
+- name: Enable extras
+  shell: sudo yum-config-manager --enable extras
+
+- name: Yum install container-selinux
+  shell: sudo yum -y install http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.33-1.git86f33cd.el7.noarch.rpm
+
+- name: Yum add Docker CE repo
+  shell: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 
 
