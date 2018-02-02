@@ -15,7 +15,7 @@ Cluster Builder
 6. [Cluster Builder Usage](#cluster-builder-usage)
 7. [Deploying a Cluster](#deploying-a-cluster)
 8. [Patching a Cluster](#patching-a-cluster)
-9. [Adding a Node to a Cluster](#adding-node-to-a-cluster)
+9. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
 10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
 11. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
 12. [Prometheus Monitoring](#prometheus-monitoring)
