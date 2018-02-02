@@ -47,7 +47,7 @@
       - skip_ansible_lint # Suppressing the linter
 
   - name: Declare the manager node
-    shell: wn=$(hostname); mn=(${wn//-/ }); echo $mn-m3
+    shell: wn=$(hostname); mn=(${wn//-/ }); echo $mn-m1
     register: swarm_manager
 
   - name: Get the worker join-token.
