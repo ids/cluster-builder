@@ -23,15 +23,9 @@
   - role: common
   - role: rhel
   - role: centos-swarm-firewall
-  #- role: swarm
-  #- role: swarm-secure-api
-  #- role: portainer
-  #- role: swarm-monitoring
   - role: nfs-shares
   
   tasks:
-  ####NEW
-  #TASK [rhel : Add IP address of all hosts to all hosts]
 
   - name: Enable the Docker daemon as a service and start it.
     service:
@@ -77,6 +71,43 @@
     when: "docker_info.stdout.find('Swarm: active') == -1
       and docker_info.stdout.find('Swarm: pending') == -1
       and 'docker_swarm_manager' in group_names"
+
+  - name: Determine the node name when there is a network_dn
+    set_fact:
+      node_fqdn: "{{ inventory_hostname }}.{{ network_dn }}"
+    when: "use_fqdn_node_name is defined"
+
+  - name: Determine the node name when there is no network_dn
+    set_fact:
+      node_fqdn: "{{ inventory_hostname }}"
+    when: "use_fqdn_node_name is undefined"
+
+  - name: Get list of labels
+    command: >-
+          docker node inspect
+          -f {% raw %}'{{range $key, $value := .Spec.Labels}}{{printf "%s\n" $key}}{{end}}'{% endraw %}
+          {{ node_fqdn }}
+    register: docker_swarm_labels
+    changed_when: False
+    delegate_to: "{{ swarm_manager.stdout }}"
+    delegate_facts: True
+    tags:
+      - skip_ansible_lint
+      - swarm_labels
+
+  - debug:
+      msg: "Labels: {{ docker_swarm_labels.stdout_lines }}"
+
+  - name: Assign labels to swarm nodes | if any
+    command: docker node update --label-add {{ item }}=true {{ node_fqdn }}
+    changed_when: False
+    with_items:
+      - "{{ swarm_labels  | default([]) }}"
+    delegate_to: "{{ swarm_manager.stdout }}"
+    delegate_facts: True
+    tags:
+      - skip_ansible_lint
+      - swarm_labels
 
     ####OLD
   - name: Generate the wrapper docker-env script

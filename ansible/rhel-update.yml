@@ -36,7 +36,7 @@
       state: latest
     register: result
 
-  - debug: msg="{{ result }}"
+  - debug: msg="{{ result.stdout_lines }}"
 
   - name: Restart server
     shell: sleep 5 && logger "Reboot triggered by Ansible script" && shutdown -r now "Reboot triggered by Ansible script"
