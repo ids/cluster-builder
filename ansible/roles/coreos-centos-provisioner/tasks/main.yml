@@ -5,5 +5,8 @@
 - name: Configure PXE
   include: pxe.yml
 
+- name: Configure TFTP
+  include: tftp.yml
+
 - name: Configure DHCP
   include: dhcpd.yml

@@ -4,8 +4,8 @@
 #
 
 # option definitions common to all supported networks...
-option domain-name {{ network_dn }};
-option domain-name-servers {{ network_dns }}, {{ network_dns2 }};
+option domain-name "{{ network_dn }}";
+option domain-name-servers {{ network_dns }},{{ network_dns2 }};
 
 default-lease-time 600;
 max-lease-time 7200;
@@ -26,12 +26,12 @@ subnet {{ network }} netmask {{ network_mask }} {
   
   range {{ dhcpd_start_range }} {{ dhcpd_end_range }};
   
-  option domain-name-servers {{ network_dns }};{{ network_dns2 }};
+  option domain-name-servers {{ network_dns }},{{ network_dns2 }};
   option domain-name "{{ network_dn }}";
   option routers {{ network_gateway }};
 
-  option tftp-server-name {{ provisioner_server_dn }};
-	next-server {{ provisioner_server_dn }};
+  option tftp-server-name "{{ provisioner_server_dn }}";
+	next-server {{ ansible_host }};
 	filename "pxelinux.0";
 
   default-lease-time 600;
