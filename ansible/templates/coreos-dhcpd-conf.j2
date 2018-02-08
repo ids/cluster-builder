@@ -24,7 +24,7 @@ log-facility local7;
 # A slightly different configuration for an internal subnet.
 subnet {{ network }} netmask {{ network_mask }} {
   
-#  range {{ dhcpd_start_range }} {{ dhcpd_end_range }};
+  range {{ dhcpd_start_range }} {{ dhcpd_end_range }};
   
   option domain-name-servers {{ network_dns }} {{ network_dns2 }};
   option domain-name "{{ network_dn }}";

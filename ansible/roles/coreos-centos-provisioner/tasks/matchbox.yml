@@ -14,7 +14,7 @@
 
 - name: Fetch the matchbox certificates
   fetch:
-    src: /home/admin/matchbox-v0.7.0-linux-amd64/scripts/tls
+    src: /home/admin/matchbox-v0.7.0-linux-amd64/scripts/tls/{{ item }}
     dest: ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/
     flat: yes        
   with_items:

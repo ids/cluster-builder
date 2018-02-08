@@ -39,6 +39,7 @@
   lineinfile:
     path: "/etc/systemd/system/matchbox.service"
     state: present
+    insertafter: '^Environment='
     line: 'Environment="MATCHBOX_RPC_ADDRESS=0.0.0.0:8081"'
 
 - name: Download latest CoreOS release

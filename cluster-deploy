@@ -171,6 +171,7 @@ elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
   OVA_BUILD_TYPE=rhel7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'coreos-provisioner' ]; then
+  CLUSTER_NAME="n/a"
   OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-centos-provisioner-x86_64.ova
   CLUSTER_TYPE_NAME='CoreOS Provisioner'
   OVA_BUILD_TYPE=coreos-provisioner

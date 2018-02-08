@@ -1,3 +1,6 @@
+- name: Ensure Docker etc
+  shell: mkdir -p /etc/docker
+
 - name: Configure the default docker daemon.json 
   template:
     src: templates/docker_daemon_default.j2

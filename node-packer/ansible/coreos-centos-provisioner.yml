@@ -9,6 +9,6 @@
   roles:
   - role: centos
   - role: centos-ssh
-  - role: coreos-centos-provisoner
+  - role: coreos-centos-provisioner
 
   
