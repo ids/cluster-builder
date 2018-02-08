@@ -1,0 +1,7 @@
+---
+- name: Install Matchbox
+  include: matchbox.yml
+
+- name: Install PXE
+  include: pxe.yml
+

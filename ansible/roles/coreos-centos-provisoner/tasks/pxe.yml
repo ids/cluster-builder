@@ -1,0 +1,8 @@
+---
+- name: Chain PXE to iPXE for CoreOS
+  template:
+    src: templates/pxelinux-default.j2
+    dest: /var/lib/tftpboot/pxelinux.cfg/default
+    mode: 644
+
+

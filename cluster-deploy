@@ -64,7 +64,9 @@ function esxi_deploy () {
     bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
   fi 
 
-  bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+  if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster]; then
+    bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+  fi
 
   echo
   echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
@@ -97,18 +99,9 @@ function fusion_deploy () {
     exit 1
   fi
 
-#
-#  Disabling this for local Fusion VM deploys
-#
-#  echo "Change the initial ROOT password on VM Nodes..."
-#  bash cluster-passwd $CLUSTER_PKG_FOLDER root
-
-#  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
-#    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
-#    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
-#  fi 
-
-  bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+  if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
+    bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+  fi 
 
   echo
   echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME}!"
@@ -176,6 +169,12 @@ elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
   CLUSTER_TYPE_NAME='RHEL UCP'
   OVA_BUILD_TYPE=rhel7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'coreos-provisioner' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-centos-provisioner-x86_64.ova
+  CLUSTER_TYPE_NAME='CoreOS Provisioner'
+  OVA_BUILD_TYPE=coreos-provisioner
+  SERVER_WAIT=360s
   REMOTE_USER=admin
 fi
 

@@ -1,0 +1,20 @@
+---
+# This playbook deploys a CoreOS CentOS7 provisioner with PXE/iPXE and Matchbox services
+
+- hosts: all
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+  vars:
+
+  roles:
+  - role: common
+  - role: coreos-centos-provisioner
+
+  - name: Remove tmp cluster folder if exists
+    local_action:
+      module: shell
+      _raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"
+    become: false
+    when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    ignore_errors: true

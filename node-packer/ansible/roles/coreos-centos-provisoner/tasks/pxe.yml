@@ -1,0 +1,51 @@
+---
+- name: Disable firewalld
+  shell: systemctl disable firewalld && systemctl stop firewalld
+
+- name: Turn off SELinux
+  lineinfile:
+    path: "/etc/sysconfig/selinux"
+    state: present
+    regexp: 'SELINUX='
+    line: 'SELINUX=disabled'
+
+- name: Install packages required for PXE
+  yum: >
+    name={{item}}
+    state=present
+  with_items:
+   - xinetd
+   - syslinux
+   - tftp-server
+
+- name: Turn off disable on TFTP
+  lineinfile:
+    path: "/etc/xinetd.d/tftp"
+    state: present
+    regexp: 'disable ='
+    line: 'disable = no'
+
+- name: Setup PXE in TFTP boot folder
+  shell: cp pxelinux.0 menu.c32 memdisk mboot.c32 chain.c32 /var/lib/tftpboot/
+  args:
+    chdir: /usr/share/syslinux/
+
+- name: Create PXE default
+  shell: mkdir -p /var/lib/tftpboot/pxelinux.cfg/
+
+- name: Chain PXE to iPXE for CoreOS
+  template:
+    src: templates/pxelinux-default.j2
+    dest: /var/lib/tftpboot/pxelinux.cfg/default
+    mode: 644
+
+- name: Download ipxe kernel
+  shell: wget https://boot.netboot.xyz/ipxe/generic-ipxe.lkrn
+  args:
+    chdir: /var/lib/tftpboot
+
+- name: Setup ipxe kernel
+  shell: mv generic-ipxe.lkrn ipxe.lkrn
+  args:
+    chdir: /var/lib/tftpboot
+

@@ -1,0 +1,52 @@
+---
+- name: Install Wget
+  yum: >
+    name=wget
+    state=latest
+
+- name: Download Matchbox
+  shell: wget https://github.com/coreos/matchbox/releases/download/v0.7.0/matchbox-v0.7.0-linux-amd64.tar.gz
+  args:
+    chdir: /home/admin
+
+- name: Download Matchbox GPG
+  shell: wget https://github.com/coreos/matchbox/releases/download/v0.7.0/matchbox-v0.7.0-linux-amd64.tar.gz.asc
+  args:
+    chdir: /home/admin
+
+- name: Move to home
+  command: cd /home/admin
+
+- name: Extract
+  shell: tar xzvf matchbox-v0.7.0-linux-amd64.tar.gz
+  args:
+    chdir: /home/admin
+  
+- name: Move Matchbox binary
+  shell: cp matchbox /usr/local/bin
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
+
+- name: Setup Matchbox user account
+  shell: useradd -U matchbox && mkdir -p /var/lib/matchbox/assets && chown -R matchbox:matchbox /var/lib/matchbox
+
+- name: Setup Matchbox service
+  shell: cp contrib/systemd/matchbox-local.service /etc/systemd/system/matchbox.service
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
+
+- name: Enable the gRPC
+  lineinfile:
+    path: "/etc/systemd/system/matchbox.service"
+    state: present
+    line: 'Environment="MATCHBOX_RPC_ADDRESS=0.0.0.0:8081"'
+
+- name: Download latest CoreOS release
+  shell: ./scripts/get-coreos stable 1632.2.1 .  
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
+
+- name: Promote latest CoreOS release
+  shell: cp -r coreos /var/lib/matchbox/assets
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64

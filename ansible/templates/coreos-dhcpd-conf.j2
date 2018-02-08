@@ -1,0 +1,55 @@
+# dhcpd.conf
+#
+# Sample configuration file for ISC dhcpd
+#
+
+# option definitions common to all supported networks...
+option domain-name {{ network_dn }};
+option domain-name-servers {{ network_dns }}, {{ network_dns2 }};
+
+default-lease-time 600;
+max-lease-time 7200;
+
+# Use this to enble / disable dynamic dns updates globally.
+#ddns-update-style none;
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+log-facility local7;
+
+# A slightly different configuration for an internal subnet.
+subnet {{ network }} netmask {{ network_mask }} {
+  
+#  range {{ dhcpd_start_range }} {{ dhcpd_end_range }};
+  
+  option domain-name-servers {{ network_dns }} {{ network_dns2 }};
+  option domain-name "{{ network_dn }}";
+  option routers {{ network_gateway }};
+
+  option tftp-server-name {{ provisioner_server_dn }};
+	next-server {{ provisioner_server_dn }};
+	filename "pxelinux.0";
+
+  default-lease-time 600;
+  max-lease-time 7200;
+}
+
+# Fixed IP addresses can also be specified for hosts.   These addresses
+# should not also be listed as being available for dynamic assignment.
+# Hosts for which fixed IP addresses have been specified can boot using
+# BOOTP or DHCP.   Hosts for which no fixed address is specified can only
+# be booted with DHCP, unless there is an address range on the subnet
+# to which a BOOTP client is connected which has the dynamic-bootp flag
+# set.
+
+# host s_lan_1 {
+#  hardware ethernet 00:0c:29:bd:7f:ec;
+#  option dhcp-client-identifier "core-m1";
+#	 fixed-address 192.168.1.75;
+#	 option host-name "core-m1";
+# }
+

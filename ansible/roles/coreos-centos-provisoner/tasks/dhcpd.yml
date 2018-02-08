@@ -1,0 +1,19 @@
+---
+- name: Install DHCP server
+  yum: >
+    name={{item}}
+    state=present
+  with_items:
+   - dhcp
+
+- name: Install DHCPD Configuration
+  template:
+    src: templates/coreos-dhcpd-conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    mode: 644
+
+- name: Start and enable DHCPD daemon
+  service:
+    name: dhcp
+    state: started
+    enabled: yes  

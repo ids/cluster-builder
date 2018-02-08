@@ -39,6 +39,17 @@ if [ "$IMAGE" == "centos7-dcos" ] || [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == 
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'
   eval $PACKER_CMD
+elif [ "$IMAGE" == "coreos-node" ]; then
+  echo
+  echo 'Building CoreOS PXE Node:' $IMAGE
+  if [ ! -f coreos-node/core-disk.vmdk ]; then
+    vmware-vdiskmanager -c -t 0 -s 250GB -a buslogic coreos-pxe-node/core-disk.vmdk 
+  fi 
+  ovftool --overwrite coreos-pxe-node/coreos-pxe-node.vmx output_ovas/coreos-pxe-node.ova
+elif [ "$IMAGE" == "coreos-provisioner" ]; then
+  echo
+  echo 'Building CoreOS Provisioner'
+  packer build coreos-centos-provisioner.json
 else
   echo
   echo 'Error: Not a valid VM image type!'
