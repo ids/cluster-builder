@@ -26,7 +26,7 @@ subnet {{ network }} netmask {{ network_mask }} {
   
   range {{ dhcpd_start_range }} {{ dhcpd_end_range }};
   
-  option domain-name-servers {{ network_dns }} {{ network_dns2 }};
+  option domain-name-servers {{ network_dns }};{{ network_dns2 }};
   option domain-name "{{ network_dn }}";
   option routers {{ network_gateway }};
 

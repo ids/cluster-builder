@@ -28,7 +28,7 @@
 - name: Start and enable the matchbox daemon
   service:
     name: matchbox
-    state: started
+    state: restarted
     enabled: yes  
 
 - name: Show Matchbox service status

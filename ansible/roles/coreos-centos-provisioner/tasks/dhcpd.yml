@@ -14,6 +14,6 @@
 
 - name: Start and enable DHCPD daemon
   service:
-    name: dhcp
+    name: dhcpd
     state: started
     enabled: yes  
