@@ -11,9 +11,15 @@ There are two core aspects to deploying CoreOS:
 
 ## General Setup
 
+It isn't fully automated yet... only partially.
+
+It is designed to work with the free ESXi hypervisors and doesn't use any vSphere features.
+
+> But if you have vSphere, [this](https://coreos.com/tectonic/docs/latest/install/vmware/vmware-terraform.html) may prove to be a cleaner path to Tectonic.
+
 ### DNS 
 
-You will also need to create the following DNS entries:
+You will need to create the following DNS entries:
 
 * Provisioner: Eg. core-provisioner.idstudios.local
 
@@ -45,7 +51,7 @@ The folder will need to contain a __hosts__ file similar to the example, but wil
 
 Both can be obtained from Tectonic for their Free 10 node cluster.
 
-Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__.
+Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.
 
 #### Start SSH-AGENT
 
@@ -56,6 +62,52 @@ Before running __cluster-builder__:
   eval `ssh-agent` #if not running already
   ssh-add ~/.ssh/id_rsa
 
-Assuming this is also the key that is authorized on the nodes.
+> Assuming this is also the key that is authorized on the nodes.
+
+#### Do the Cluster Deployment
+
+Run the usual cluster-deploy command:
+
+  bash cluster-deploy ids/core-1
+
+This will deploy the VMs as per the __hosts__ file and provision them, then create a few artifacts to assist with the Tectonic install.
+
+In the __cluster package folder__:
+
+* terraform.tfvars (for the manual install that does not yet work)
+* manual-controllers.csv
+* manual-works.csv
+
+#### Launch the Tectonic Installer
+
+Right now the best way to install is with the Web based Tectonic Installer:
+
+  $TECTONIC_HOME/tectonic-installer/linux/installer
+
+This opens up a web browser... select __Bare Metal - GUI__.
+
+Use the CSV files to bulk upload the mac addresses for controllers and workers.
+
+All other required information should be found in the __cluster package folder__.
+
+#### Power on the Nodes
+
+When the GUI installer asks to __Power On the Nodes__, use:
+
+  bash cluster-control ids/core-1 start
+
+This should allow Terraform to finish provisioning the nodes.
+
+#### Access the Tectonic Cluster
+
+After the GUI install finishes, Make sure to download the assets and place them in the __cluster package folder__.
+
+You can then access the Tectonic Control Station at the ingress url specified in the hosts file.
+
+Eg.
+
+  https://core-ingress.idstudios.local
+
+
 
 
