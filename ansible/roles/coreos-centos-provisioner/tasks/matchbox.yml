@@ -19,8 +19,11 @@
     flat: yes        
   with_items:
     - ca.crt
+    - ca.key
     - server.crt
     - server.key 
+    - client.crt
+    - client.key 
 
 - name: Load Systemd Service
   shell: systemctl daemon-reload

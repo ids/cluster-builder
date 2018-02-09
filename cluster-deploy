@@ -13,6 +13,33 @@ function check_docker_license () {
   fi
 }
 
+function esxi_pxe_matchbox_deploy () {
+
+  echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+
+  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  if [ $? -ne 0 ]; then
+   echo "There is a problem with the ESXi init-pre script"
+   exit 1
+  fi
+
+  bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
+  if [ $? -ne 0 ]; then
+    echo "There was a problem deploying the VMs using ovftool"
+    exit 1
+  fi
+
+  echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
+  sleep $SERVER_WAIT
+
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  if [ $? -ne 0 ]; then
+    echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+    exit 1
+  fi
+
+}
+
 function esxi_deploy () {
   
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
@@ -64,7 +91,7 @@ function esxi_deploy () {
     bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
   fi 
 
-  if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster]; then
+  if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
     bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
   fi
 
@@ -177,6 +204,12 @@ elif [ "$CLUSTER_TYPE" == 'coreos-provisioner' ]; then
   OVA_BUILD_TYPE=coreos-provisioner
   SERVER_WAIT=360s
   REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'coreos-pxe' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-pxe-node.ova
+  CLUSTER_TYPE_NAME='CoreOS Tectonic'
+  OVA_BUILD_TYPE=coreos-pxe
+  SERVER_WAIT=360s
+  REMOTE_USER=admin
 fi
 
 
@@ -219,7 +252,11 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
 fi
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
-  esxi_deploy
+  if [ "$CLUSTER_TYPE" == "coreos-pxe" ]; then
+    esxi_pxe_matchbox_deploy
+  else 
+    esxi_deploy
+  fi
 elif [ "$VMWARE_TARGET" == "fusion" ]; then
   fusion_deploy
 fi

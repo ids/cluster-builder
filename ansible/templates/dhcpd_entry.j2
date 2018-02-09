@@ -6,7 +6,7 @@ host {{ inventory_hostname }} {
     {% if network_dns is defined %}  
     option domain-name-servers {{ network_dns }}, 8.8.8.8;
     {% endif %}
-    {% if data_network_dns2 is defined %}  
+    {% if network_dns2 is defined %}  
     option domain-name-servers {{ network_dns }}, {{ network_dns2 }};
     {% endif %}    
 }
