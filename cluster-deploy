@@ -49,6 +49,36 @@ function esxi_pxe_matchbox_deploy () {
       exit 1
     fi
 
+    terraform init $TECTONIC_HOME/platforms/metal
+    if [ $? -ne 0 ]; then
+      echo "FAIL: Unable to initialize Tectonic Terraform!"
+      exit 1
+    fi
+
+    terraform plan -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
+    if [ $? -ne 0 ]; then
+      echo "FAIL: Terraform Plan Failed!"
+      exit 1
+    fi
+
+    echo "**************************************************************************************"
+    echo "**************************************************************************************"
+    echo ""
+    echo " While the terraform is waiting to update the etcd secrets on the controller"
+    echo " Open a new tab and start power up the VMS..."
+    echo ""
+    echo " $ bash cluster-control ${CLUSTER_PKG_FOLDER} start"
+    echo ""
+    echo "**************************************************************************************"
+    echo "**************************************************************************************"
+
+    terraform destroy -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
+    terraform apply -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
+    if [ $? -ne 0 ]; then
+      echo "FAIL: Terraform Apply Failed!"
+      exit 1
+    fi
+
   else
    echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
    exit 1
