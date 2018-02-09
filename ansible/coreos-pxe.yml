@@ -168,6 +168,24 @@
     become: false
     run_once: true
 
+  - name: Generate the controllers.csv file
+    local_action:
+      module: template
+      src: templates/coreos-controllers-csv.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/manual-controllers.csv
+      mode: 0766
+    become: false
+    run_once: true
+
+  - name: Generate the workers.csv file
+    local_action:
+      module: template
+      src: templates/coreos-workers-csv.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/manual-workers.csv
+      mode: 0766
+    become: false
+    run_once: true
+
 - hosts: coreos_provisioner,coreos_workers,coreos_controllers
   remote_user: admin
   become: true
