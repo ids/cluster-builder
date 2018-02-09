@@ -254,13 +254,13 @@ elif [ "$CLUSTER_TYPE" == 'coreos-provisioner' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-centos-provisioner-x86_64.ova
   CLUSTER_TYPE_NAME='CoreOS Provisioner'
   OVA_BUILD_TYPE=coreos-provisioner
-  SERVER_WAIT=360s
+  SERVER_WAIT=90s
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'coreos-pxe' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-pxe-node.ova
   CLUSTER_TYPE_NAME='CoreOS Tectonic'
   OVA_BUILD_TYPE=coreos-pxe
-  SERVER_WAIT=360s
+  SERVER_WAIT=90s
   REMOTE_USER=admin
 fi
 
