@@ -93,9 +93,6 @@
 
     tectonic_service_cidr: "10.3.0.0/16"
 
-    tectonic_container_linux_channel: "stable"
-    tectonic_container_linux_version: "latest"
-
   tasks:
 
   - name: Load tectonic_matchbox_ca
