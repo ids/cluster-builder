@@ -59,8 +59,8 @@ Terraform uses ssh-agent when attempting to establish passwordless connections w
 
 Before running __cluster-builder__:
 
-  eval `ssh-agent` #if not running already
-  ssh-add ~/.ssh/id_rsa
+    eval `ssh-agent` 
+    ssh-add ~/.ssh/id_rsa
 
 > Assuming this is also the key that is authorized on the nodes.
 
@@ -68,7 +68,7 @@ Before running __cluster-builder__:
 
 Run the usual cluster-deploy command:
 
-  bash cluster-deploy ids/core-1
+    bash cluster-deploy ids/core-1
 
 This will deploy the VMs as per the __hosts__ file and provision them, then create a few artifacts to assist with the Tectonic install.
 
@@ -82,7 +82,7 @@ In the __cluster package folder__:
 
 Right now the best way to install is with the Web based Tectonic Installer:
 
-  $TECTONIC_HOME/tectonic-installer/linux/installer
+    $TECTONIC_HOME/tectonic-installer/linux/installer
 
 This opens up a web browser... select __Bare Metal - GUI__.
 
@@ -94,7 +94,7 @@ All other required information should be found in the __cluster package folder__
 
 When the GUI installer asks to __Power On the Nodes__, use:
 
-  bash cluster-control ids/core-1 start
+    bash cluster-control ids/core-1 start
 
 This should allow Terraform to finish provisioning the nodes.
 
@@ -106,7 +106,7 @@ You can then access the Tectonic Control Station at the ingress url specified in
 
 Eg.
 
-  https://core-ingress.idstudios.local
+    https://core-ingress.idstudios.local
 
 
 
