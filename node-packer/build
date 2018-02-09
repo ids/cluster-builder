@@ -39,7 +39,7 @@ if [ "$IMAGE" == "centos7-dcos" ] || [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == 
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'
   eval $PACKER_CMD
-elif [ "$IMAGE" == "coreos-node" ]; then
+elif [ "$IMAGE" == "coreos-pxe" ]; then
   echo
   echo 'Building CoreOS PXE Node:' $IMAGE
   if [ ! -f coreos-node/core-disk.vmdk ]; then

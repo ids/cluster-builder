@@ -15,27 +15,36 @@ function check_docker_license () {
 
 function esxi_pxe_matchbox_deploy () {
 
-  echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+  SERVER_WAIT=90s
 
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-  if [ $? -ne 0 ]; then
-   echo "There is a problem with the ESXi init-pre script"
+  if hash terraform >/dev/null; then
+
+    echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+
+    ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+    if [ $? -ne 0 ]; then
+    echo "There is a problem with the ESXi init-pre script"
+    exit 1
+    fi
+
+    bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
+    if [ $? -ne 0 ]; then
+      echo "There was a problem deploying the VMs using ovftool"
+      exit 1
+    fi
+
+    echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
+    sleep $SERVER_WAIT
+
+    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+    if [ $? -ne 0 ]; then
+      echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+      exit 1
+    fi
+
+  else
+   echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
    exit 1
-  fi
-
-  bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
-  if [ $? -ne 0 ]; then
-    echo "There was a problem deploying the VMs using ovftool"
-    exit 1
-  fi
-
-  echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
-  sleep $SERVER_WAIT
-
-  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-  if [ $? -ne 0 ]; then
-    echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
-    exit 1
   fi
 
 }

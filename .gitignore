@@ -3,4 +3,5 @@ ansible/*.retry
 clusters/**
 !clusters/README.md
 virtuals
+.terraform
 
