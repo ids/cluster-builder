@@ -78,9 +78,12 @@ function esxi_pxe_matchbox_deploy () {
     echo "**************************************************************************************"
     echo "**************************************************************************************"
     echo "run:"
-    echo ""
+    echo 
     echo "terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal"
     echo
+    echo "$TECTONIC_HOME/tectonic-installer/linux/installer"
+    echo
+    echo "** Only the GUI approach currently works, use the manual-.csv files to bulk load **"
 
   else
    echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
