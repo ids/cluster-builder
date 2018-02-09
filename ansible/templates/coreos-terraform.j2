@@ -16,9 +16,9 @@ tectonic_metal_controller_domains = [{% for host in groups['coreos_controllers']
 tectonic_metal_controller_macs = [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].vm_mac_addr }}"{% if not loop.last %},{% endif %}{% endfor %}]
 tectonic_metal_controller_names = [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].inventory_hostname }}"{% if not loop.last %},{% endif %}{% endfor %}]
 
-tectonic_metal_matchbox_ca = "{{ tectonic_matchbox_ca }}"
-tectonic_metal_matchbox_client_cert = "{{ tectonic_matchbox_client_cert }}"
-tectonic_metal_matchbox_client_key = "{{ tectonic_matchbox_client_key }}"
+tectonic_metal_matchbox_ca = "{{ tectonic_matchbox_ca | replace('\n', '') }}"
+tectonic_metal_matchbox_client_cert = "{{ tectonic_matchbox_client_cert | replace('\n', '') }}"
+tectonic_metal_matchbox_client_key = "{{ tectonic_matchbox_client_key | replace('\n', '') }}"
 
 tectonic_metal_matchbox_http_url = "{{ tectonic_matchbox_http_url }}"
 tectonic_metal_matchbox_rpc_endpoint = "{{ tectonic_matchbox_rpc_endpoint }}"
