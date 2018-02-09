@@ -1,3 +1,4 @@
+WORKERS,HOSTS
 {% for host in groups['coreos_workers'] %}
-{{ hostvars[host].vm_mac_addr.stdout }}, "{{ hostvars[host].inventory_hostname }}"
+{{ hostvars[host].vm_mac_addr.stdout }},{{ hostvars[host].inventory_hostname }}.{{ network_dn }}
 {% endfor %}
