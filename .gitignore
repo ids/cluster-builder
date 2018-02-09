@@ -4,4 +4,9 @@ clusters/**
 !clusters/README.md
 virtuals
 .terraform
+generated
+.terraform.tfstate.lock.info
+terraform.tfstate
+terraform.tfstate.backup
+
 

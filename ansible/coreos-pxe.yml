@@ -133,7 +133,7 @@
   - name: Load tectonic_matchbox_client_key
     local_action:
       module: shell
-      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.crt"
+      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.key"
     register: tectonic_matchbox_client_key_load
     become: false
     run_once: true

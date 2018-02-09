@@ -19,7 +19,14 @@ function esxi_pxe_matchbox_deploy () {
 
   if hash terraform >/dev/null; then
 
+    if [ -z $TECTONIC_HOME ]; then
+      echo "TECTONIC_HOME is not set! It must be set to the root of the tectonic-installer folder."
+      exit 1
+    fi
+
     echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+
+    read -s -p "Enter Tectonic Admin password: " TECTONIC_PASSWORD
 
     ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
     if [ $? -ne 0 ]; then
@@ -36,7 +43,7 @@ function esxi_pxe_matchbox_deploy () {
     echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
     sleep $SERVER_WAIT
 
-    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
     if [ $? -ne 0 ]; then
       echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
       exit 1

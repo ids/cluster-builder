@@ -1,42 +1,29 @@
-
-// see xtras/coreos for an descriptions and examples of fields
-
-tectonic_base_domain = "{{ network_dn }}"
-tectonic_cluster_cidr = "{{ k8s_cluster_cidr }}"
-tectonic_cluster_name = "{{ cluster_name }}"
-
-tectonic_container_linux_channel = "{{ tectonic_container_linux_channel }}"
-tectonic_container_linux_version = "{{ tectonic_container_linux_version }}"
-
-tectonic_license_path = "{{ cluster_pkg_folder }}/tectonic_license.txt"
-
-tectonic_metal_controller_domain = "{{ tectonic_controller_domain }}"
-
-tectonic_metal_controller_domains = [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].inventory_hostname }}.{{ network_dn }}"{% if not loop.last %},{% endif %}{% endfor %}]
-tectonic_metal_controller_macs = [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].vm_mac_addr.stdout }}"{% if not loop.last %},{% endif %}{% endfor %}]
-tectonic_metal_controller_names = [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].inventory_hostname }}"{% if not loop.last %},{% endif %}{% endfor %}]
-
-tectonic_metal_matchbox_ca = "{{ tectonic_matchbox_ca | replace('\n', '') }}"
-tectonic_metal_matchbox_client_cert = "{{ tectonic_matchbox_client_cert | replace('\n', '') }}"
-tectonic_metal_matchbox_client_key = "{{ tectonic_matchbox_client_key | replace('\n', '') }}"
-
-tectonic_metal_matchbox_http_url = "{{ tectonic_matchbox_http_url }}"
-tectonic_metal_matchbox_rpc_endpoint = "{{ tectonic_matchbox_rpc_endpoint }}"
-
-tectonic_metal_ingress_domain = "{{ tectonic_ingress_domain }}"
-
-tectonic_metal_worker_domains = [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].inventory_hostname }}.{{ network_dn }}"{% if not loop.last %},{% endif %}{% endfor %}]
-tectonic_metal_worker_macs = [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].vm_mac_addr.stdout }}"{% if not loop.last %},{% endif %}{% endfor %}]
-tectonic_metal_worker_names = [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].inventory_hostname }}"{% if not loop.last %},{% endif %}{% endfor %}]
-
-tectonic_pull_secret_path = "{{ cluster_pkg_folder}}/config.json"
-tectonic_service_cidr = "{{ tectonic_service_cidr }}"
-
-tectonic_ssh_authorized_key = "{{ tectonic_ssh_authorized_key }}"
-tectonic_tls_validity_period = "26280"
-tectonic_vanilla_k8s = false
-
-tectonic_etcd_count = "0"
-tectonic_master_count = "1"
-tectonic_worker_count = "9"
-
+{
+  "tectonic_admin_email": "{{ tectonic_admin_email }}",
+  "tectonic_admin_password": "{{ tectonic_admin_password }}",
+  "tectonic_base_domain": "unused",
+  "tectonic_cluster_cidr": "{{ k8s_cluster_cidr }}",
+  "tectonic_cluster_name": "{{ cluster_name }}",
+  "tectonic_container_linux_version": "{{ tectonic_container_linux_version }}",
+  "tectonic_dns_name": "",
+  "tectonic_license_path": "clusters/{{ cluster_pkg_folder }}/tectonic_license.txt",
+  "tectonic_metal_controller_domain": "{{ tectonic_controller_domain }}",
+  "tectonic_metal_controller_domains": [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].inventory_hostname }}.{{ network_dn }}"{% if not loop.last %},{% endif %}{% endfor %}],
+  "tectonic_metal_controller_macs": [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].vm_mac_addr.stdout }}"{% if not loop.last %},{% endif %}{% endfor %}],
+  "tectonic_metal_controller_names": [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].inventory_hostname }}"{% if not loop.last %},{% endif %}{% endfor %}],
+  "tectonic_metal_ingress_domain": "{{ tectonic_ingress_domain }}",
+  "tectonic_metal_matchbox_ca": "{{ tectonic_matchbox_ca | replace('\n', '\\n') }}",
+  "tectonic_metal_matchbox_client_cert": "{{ tectonic_matchbox_client_cert | replace('\n', '\\n') }}",
+  "tectonic_metal_matchbox_client_key": "{{ tectonic_matchbox_client_key | replace('\n', '\\n') }}",
+  "tectonic_metal_matchbox_http_url": "{{ tectonic_matchbox_http_url }}",
+  "tectonic_metal_matchbox_rpc_endpoint": "{{ tectonic_matchbox_rpc_endpoint }}",
+  "tectonic_metal_worker_domains": [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].inventory_hostname }}.{{ network_dn }}"{% if not loop.last %},{% endif %}{% endfor %}],
+  "tectonic_metal_worker_macs": [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].vm_mac_addr.stdout }}"{% if not loop.last %},{% endif %}{% endfor %}],
+  "tectonic_metal_worker_names": [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].inventory_hostname }}"{% if not loop.last %},{% endif %}{% endfor %}],
+  "tectonic_pull_secret_path": "clusters/{{ cluster_pkg_folder}}/config.json",
+  "tectonic_service_cidr": "10.3.0.0/16",
+  "tectonic_kube_apiserver_service_ip": "10.3.0.1",
+  "tectonic_kube_dns_service_ip": "10.3.0.10",
+  "tectonic_kube_etcd_service_ip": "10.3.0.15",  
+  "tectonic_ssh_authorized_key": "{{ tectonic_ssh_authorized_key }}"
+}
