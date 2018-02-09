@@ -72,6 +72,11 @@ function esxi_pxe_matchbox_deploy () {
     echo "**************************************************************************************"
     echo "**************************************************************************************"
 
+    ADMIN_EMAIL=`sed -n '/^tectonic_admin_email=/ {s///p;q;}' $INVENTORY_FILE`
+
+    export TF_VAR_tectonic_admin_email="${ADMIN_EMAIL}"
+    export TF_VAR_tectonic_admin_password="${TECTONIC_PASSWORD}"
+
     terraform destroy -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
     terraform apply -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
     if [ $? -ne 0 ]; then

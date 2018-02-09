@@ -9,17 +9,53 @@ There are two core aspects to deploying CoreOS:
 
 > More about all this later...
 
-TODO
-----
+## General Setup
 
-Cluster Deployment Workflow:
+### DNS 
 
-* Push out the empty OVA templates to the configured ESXi hosts, as per the cluster-builder hosts file
-* Boot up each VM long enough to get the MAC address, then shut down.
-* Use the gathered MACs + the 3 DNS entries + the fetched matchbox certs to construct a terraform config file.
+You will also need to create the following DNS entries:
 
-* Apply the configuration via Terraform and Matchbox through the provisioner
-* Startup all of the VMs - they should form a cluster.
-* Terraform should provision the controller, and then the cluster is ready.
+* Provisioner: Eg. core-provisioner.idstudios.local
 
-(last two steps are still unknown from cli)
+And per cluster:
+
+* Ingress: eg. core-ingress.idstudios.local
+* Control Plane: eg. core-admin.idstudios.local
+
+Also, make sure to create entries in the DNS for all of the CoreOS nodes listed in the hosts file.
+
+### Install the Provisioner
+
+See the __core-provisioner__ in the __examples__ folder.
+
+Only one provisioner is required, it can install many clusters.
+
+The __matchbox-certs__ generated during the install will be used for API authentication during cluster provisioning.
+
+### Install the CoreOS Tectonic Cluster
+
+#### Create the Cluster Package
+
+See the __core-1__ in the __examples__ folder.
+
+The folder will need to contain a __hosts__ file similar to the example, but will also require:
+
+* tectonic_license.txt
+* config.json
+
+Both can be obtained from Tectonic for their Free 10 node cluster.
+
+Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__.
+
+#### Start SSH-AGENT
+
+Terraform uses ssh-agent when attempting to establish passwordless connections with the node.
+
+Before running __cluster-builder__:
+
+  eval `ssh-agent` #if not running already
+  ssh-add ~/.ssh/id_rsa
+
+Assuming this is also the key that is authorized on the nodes.
+
+
