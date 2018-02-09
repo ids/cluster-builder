@@ -1,4 +1,3 @@
----
 # This playbook deploys a CoreOS Cluster via PXE/iPXE and Matchbox services
 ---
 - hosts: vmware_vms
@@ -33,6 +32,7 @@
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
+      ignore_errors: true
 
     - name: Adjust the memSize value on the ESXi VM
       local_action:
@@ -133,7 +133,7 @@
   - name: Load tectonic_matchbox_client_key
     local_action:
       module: shell
-      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.crt"
+      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.key"
     register: tectonic_matchbox_client_key_load
     become: false
     run_once: true
@@ -206,13 +206,22 @@
       state: stopped
     when: inventory_hostname in groups['coreos_provisioner']
 
+  - name: Remove the DHCP server with the static blocks
+    blockinfile:
+      dest: /etc/dhcp/dhcpd.conf
+      state: absent
+      marker: "# {mark} {{ cluster_name }} CLUSTER MANAGED BLOCK"
+      block: |
+        {{ coreos_dhcpd_static_block.stdout }}
+    when: inventory_hostname in groups['coreos_provisioner']
+
   - name: Update the DHCP server with the static blocks
     blockinfile:
       dest: /etc/dhcp/dhcpd.conf
       insertafter: "EOF"
-      marker: "<!-- {{ cluster_name }} CLUSTER MANAGED BLOCK -->"
+      marker: "# {mark} {{ cluster_name }} CLUSTER MANAGED BLOCK"
       block: |
-        {{ coreos_dhcpd_static_block.stdout_lines }}
+        {{ coreos_dhcpd_static_block.stdout }}
     when: inventory_hostname in groups['coreos_provisioner']
 
   - name: Start the DHCPD server
