@@ -17,16 +17,34 @@ It is designed to work with the free ESXi hypervisors and doesn't use any vSpher
 
 > But if you have vSphere, [this](https://coreos.com/tectonic/docs/latest/install/vmware/vmware-terraform.html) may prove to be a cleaner path to Tectonic.
 
+### Download the Tectonic Installer
+
+Follow this documentation to download the Tectonic Installer.  Experience shows the linux version is more stable.
+
+https://coreos.com/tectonic/docs/latest/install/bare-metal/metal-terraform.html
+
+Once the installer has been downloaded make sure it is in the PATH, and also make sure to set __TECTONIC_HOME__ to the location of the installer folder in your BASH profile.
+
+> __TECTONIC_HOME__ must be set for the cluster deployment to complete.
+
 ### DNS 
 
 You will need to create the following DNS entries:
 
-* Provisioner: Eg. core-provisioner.idstudios.local
+* __provisioner__: Eg. core-provisioner.idstudios.local
 
 And per cluster:
 
-* Ingress: eg. core-ingress.idstudios.local
-* Control Plane: eg. core-admin.idstudios.local
+* __ingress__: eg. core-ingress.idstudios.local
+* __tectonic control__: eg. core-admin.idstudios.local
+
+The __provisioner__ is assigned to the provisioner VM.
+
+__ingress__ should point to one or more worker nodes, ideally load balanced over all of them.
+
+__tectonic control__ should point to the controller node.  Also load balanced in a HA setup.
+
+> You will need to enter these URLs into the Graphical installer.
 
 Also, make sure to create entries in the DNS for all of the CoreOS nodes listed in the hosts file.
 
@@ -49,9 +67,11 @@ The folder will need to contain a __hosts__ file similar to the example, but wil
 * tectonic_license.txt
 * config.json
 
-Both can be obtained from Tectonic for their Free 10 node cluster.
+> Make sure to save your license into that file name.
 
-Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.
+Both can be obtained from Tectonic for their Free 10 node cluster. See [here](https://coreos.com/tectonic/docs/latest/install/bare-metal/metal-terraform.html) in the __Getting Started__ section.
+
+Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.  You will upload these files via the Graphical installer.
 
 #### Start SSH-AGENT
 
@@ -96,7 +116,9 @@ When the GUI installer asks to __Power On the Nodes__, use:
 
     bash cluster-control ids/core-1 start
 
-This should allow Terraform to finish provisioning the nodes.
+This should allow Terraform to finish provisioning the nodes.  It can take awhile... but if you watch the Terraform "Apply" log, you will see the progress as the nodes have CoreOS installed and come online.
+
+> It can take 30 minutes or more for a 10 node cluster.
 
 #### Access the Tectonic Cluster
 
@@ -107,6 +129,11 @@ You can then access the Tectonic Control Station at the ingress url specified in
 Eg.
 
     https://core-ingress.idstudios.local
+
+Once logged into the __Tectonic Control__ you can download a __.kubeconfig__ file that will allow you to easily setup your __kubectl__.
+
+Enjoy a nice polished k8s!
+
 
 
 

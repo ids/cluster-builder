@@ -39,6 +39,10 @@ The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clus
 
 > [Project Atomic](https://www.projectatomic.io/) variant is now deprecated.  The __rpm-ostree__ model is too restrictive.
 
+### Experimental Clusters
+
+Tectonic CoreOS is currently in the experimental stage.  For more information see the [CoreOS Readme](README_CoreOS.md).
+
 ## Deployment Options
 There are currently two types of deployment:
 
