@@ -8,7 +8,8 @@ tectonic_cluster_name = "{{ cluster_name }}"
 tectonic_container_linux_channel = "{{ tectonic_container_linux_channel }}"
 tectonic_container_linux_version = "{{ tectonic_container_linux_version }}"
 
-tectonic_license_path = "{{ cluster_pkg_folder }}/tectonic_license.txt"
+tectonic_license_path = "clusters/{{ cluster_pkg_folder }}/tectonic_license.txt"
+tectonic_pull_secret_path = "clusters/{{ cluster_pkg_folder}}/config.json"
 
 tectonic_metal_controller_domain = "{{ tectonic_controller_domain }}"
 
@@ -29,7 +30,6 @@ tectonic_metal_worker_domains = [{% for host in groups['coreos_workers'] %}"{{ h
 tectonic_metal_worker_macs = [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].vm_mac_addr }}"{% if not loop.last %},{% endif %}{% endfor %}]
 tectonic_metal_worker_names = [{% for host in groups['coreos_workers'] %}"{{ hostvars[host].inventory_hostname }}"{% if not loop.last %},{% endif %}{% endfor %}]
 
-tectonic_pull_secret_path = "{{ cluster_pkg_folder}}/config.json"
 tectonic_service_cidr = "{{ tectonic_service_cidr }}"
 
 tectonic_ssh_authorized_key = "{{ tectonic_ssh_authorized_key }}"
