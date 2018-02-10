@@ -3,26 +3,25 @@ cluster_type=coreos-provisioner
 
 remote_user=admin
 vmware_target=esxi
-ovftool_parallel=true
 
-esxi_net="CoreOS Network" 
-esxi_net_prefix=192.168.7
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
 
-network=192.168.7.0
+network=192.168.1.0
 network_mask=255.255.255.0
-network_gateway=192.168.7.1
+network_gateway=192.168.1.2
 network_dns=192.168.1.10
 network_dns2=192.168.1.1
 network_dns3=8.8.8.8
 network_dn=idstudios.local
 
-dhcpd_start_range=192.168.7.210
-dhcpd_end_range=192.168.7.220
+dhcpd_start_range=192.168.1.189
+dhcpd_end_range=192.168.1.199
 
 provisioner_server_dn=core-provisioner.idstudios.local
 
 [coreos_provisioner]
-core-provisioner ansible_host=192.168.7.10 
+core-provisioner ansible_host=192.168.1.40 
 
 [vmware_vms]
-core-provisioner  numvcpus=2 memsize=2048 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
+core-provisioner  numvcpus=4 memsize=4096 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd 
