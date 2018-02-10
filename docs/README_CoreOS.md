@@ -268,6 +268,8 @@ This stage is only midway through CoreOS provisioning...
 
 ![Waiting](images/coreos/coreos-ginstaller-step10-waiting.png)
 
+> Note above that Terraform is still waiting on nodes 1,5,7 & 9, but node #2 just completed, and the details show "ssh-agent" was the mode of authentication.
+
 When all the VMs have been provisioned by Terraform, the Tectonic Startup will begin...
 
 ![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting.png)
