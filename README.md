@@ -41,7 +41,7 @@ The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clus
 
 ### Experimental Clusters
 
-Tectonic CoreOS is currently in the experimental stage.  For more information see the [CoreOS Readme](README_CoreOS.md).
+Tectonic CoreOS is currently in the experimental stage.  For more information see the [CoreOS Readme](docs/README_CoreOS.md).
 
 ## Deployment Options
 There are currently two types of deployment:
@@ -82,7 +82,7 @@ and
 
 ### Windows
 
-There is now experimental Windows support for ESXi deployments. See the [Windows Readme](README_Windows.md).
+There is now experimental Windows support for ESXi deployments. See the [Windows Readme](docs/README_Windows.md).
 
 The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) is also an alternative.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
 
