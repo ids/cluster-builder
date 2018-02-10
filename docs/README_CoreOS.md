@@ -27,7 +27,7 @@ The GUI Installer does a good job of illustrating the process, so once you use i
 
 > If they try to contact Matchbox before their MAC addresses are registered in a cluster configuration, they will be rejected, and a message "Operating system not found" will appear after they contact matchbox.
 
-Once the cluster configuration has been submitted to matchbox, you can power on the VMs.
+Once the cluster configuration has been submitted to matchbox the VMs can be powered on.
 
 Using __cluster-builder__ and the __coreos-pxe__ variant for the bootstrap phase of installing a cluster does the following:
 
@@ -41,7 +41,7 @@ After __cluster-builder__ completes, the GUI installer is launched, and the conf
 
 ## General Setup
 
-It isn't fully automated yet... only partially.  But given that the entire stack is self updating and managed by the CoreOS team, soon to be RedHat, the need to re-deploy a cluster a significant number of times seems unlikely.  Once you get the layout right, it will likely have a long shelf life (unlike some whale based distros).
+It isn't fully automated yet... only partially.  But given that the entire stack is self updating and managed by the CoreOS team, soon to be RedHat, the need to re-deploy a cluster a significant number of times seems unlikely.  Once the layout is right, it will likely have a long shelf life (unlike some whale based distros).
 
 It is designed to work with the free ESXi hypervisors and doesn't use any vSphere features.
 
