@@ -103,7 +103,7 @@ The folder will need to contain a __hosts__ file similar to the example, but wil
 
 > Make sure to save your license into that file name: __tectonic_license.txt__.
 
-Both can be obtained from Tectonic for their Free 10 node cluster. See [here](https://coreos.com/tectonic/docs/latest/install/bare-metal/metal-terraform.html) in the __Getting Started__ section.
+Both can be obtained from Tectonic for their Free 10 node cluster. See [Getting Started](https://coreos.com/tectonic/docs/latest/account/).
 
 Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.  You will upload these files via the Graphical installer.
 
