@@ -39,6 +39,8 @@ Using __cluster-builder__ and the __coreos-pxe__ variant for the bootstrap phase
 
 After __cluster-builder__ completes, the GUI installer is launched, and the configuration can be entered with minimal effort... when the GUI completes... the Tectonic Cluster has been installed.
 
+> The provisioner could theoretically be used, as a VMware Virtual Machine, to provision actual bare metal servers (not VMs).  Sadly, however, without VMs __cluster-builder__ would not be able to do the grunt work for compiling MAC addresses and provisioning resources.  
+
 ## General Setup
 
 It isn't fully automated yet... only partially.  But given that the entire stack is self updating and managed by the CoreOS team, soon to be RedHat, the need to re-deploy a cluster a significant number of times seems unlikely.  Once the layout is right, it will likely have a long shelf life (unlike some whale based distros).
