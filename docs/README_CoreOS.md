@@ -225,7 +225,7 @@ Do the same thing for the workers.
 
 ### Select the ETCD Option (default)
 
-![etcd](images/coreos/coreos-ginstaller-step9-workers-complete.png)
+![etcd](images/coreos/coreos-ginstaller-step9-etcd.png)
 
 ### Enter SSH Public Key for Nodes
 
@@ -233,11 +233,11 @@ Do the same thing for the workers.
 
 ### Submit and Apply the Configuration to Matchbox.
 
-![Submit](images/coreos/coreos-ginstaller-step10-submit.png | width=400)
+![Submit](images/coreos/coreos-ginstaller-step10-submit.png)
 
-![Checking](images/coreos/coreos-ginstaller-step10-checking.png | width=400)
+![Checking](images/coreos/coreos-ginstaller-step10-checking.png)
 
-![Apply](images/coreos/coreos-ginstaller-step10-apply.png | width=400)
+![Apply](images/coreos/coreos-ginstaller-step10-apply.png)
 
 > You can see here that Transform is waiting for the machines to be provisioned by Matchbox (and CoreOS), so it continue to configure them and the cluster.
 
@@ -270,9 +270,9 @@ This stage is only midway through CoreOS provisioning...
 
 When all the VMs have been provisioned by Terraform, the Tectonic Startup will begin...
 
-![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting.png | width=400)
+![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting.png)
 
-![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting2.png | width=400)
+![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting2.png)
 
 
 ### Cluster Deployment Complete
