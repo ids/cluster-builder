@@ -233,11 +233,11 @@ Do the same thing for the workers.
 
 ### Submit and Apply the Configuration to Matchbox.
 
-![Submit](images/coreos/coreos-ginstaller-step10-submit.png)
+![Submit](images/coreos/coreos-ginstaller-step10-submit.png | width=400)
 
-![Checking](images/coreos/coreos-ginstaller-step10-checking.png)
+![Checking](images/coreos/coreos-ginstaller-step10-checking.png | width=400)
 
-![Apply](images/coreos/coreos-ginstaller-step10-apply.png)
+![Apply](images/coreos/coreos-ginstaller-step10-apply.png | width=400)
 
 > You can see here that Transform is waiting for the machines to be provisioned by Matchbox (and CoreOS), so it continue to configure them and the cluster.
 
@@ -253,26 +253,26 @@ Eg.
 
 > During this phase the VMs will go through several cycles of at least 2 reboots, please be patient here.
 
-![VM Boot Init](images/coreos/coreos-vm-pxi-boot-init.png)
+![VM Boot Init](images/coreos/coreos-vm-pxe-boot-init.png)
 
 
-![VM First Boot](images/coreos/coreos-vm-pxi-first-boot.png)
+![VM First Boot](images/coreos/coreos-vm-pxe-first-boot.png)
 
 This stage is only midway through CoreOS provisioning...
 
-![VM Mid Boot](images/coreos/coreos-vm-pxi-midboot.png)
+![VM Mid Boot](images/coreos/coreos-vm-pxe-midboot.png)
 
 > Note the full domain name is assigned.
 
 ### Terraform will Complete, Tectonic Starting
 
-![Waiting](images/coreos/coreos-ginstaller-step10-apply-waiting.png)
+![Waiting](images/coreos/coreos-ginstaller-step10-waiting.png)
 
 When all the VMs have been provisioned by Terraform, the Tectonic Startup will begin...
 
-![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting.png)
+![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting.png | width=400)
 
-![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting2.png)
+![Tectonic Starting](images/coreos/coreos-ginstaller-step11-starting2.png | width=400)
 
 
 ### Cluster Deployment Complete
