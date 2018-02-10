@@ -41,7 +41,7 @@ The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clus
 
 ### Experimental Clusters
 
-Tectonic CoreOS is currently in the experimental stage.  For more information see the [CoreOS Readme](docs/README_CoreOS.md).
+Tectonic CoreOS is currently in the early experimental stage (but already feels like a more stable platform then Docker).  For more information see the [CoreOS Readme](docs/README_CoreOS.md).
 
 ## Deployment Options
 There are currently two types of deployment:
@@ -53,30 +53,33 @@ The VMware Fusion deployment is intended for local development.
 
 VMware ESXi is for staging and production deployments.
 
-There are at present 6 supported cluster types, or variants:
+There are at present 7 supported cluster types, or variants:
 
-- photon-swarm
-- centos-swarm
-- rhel-swarm
-- centos-ucp
-- rhel-ucp
-- centos-dcos
-
-and 
-
-- atomic-swarm (deprecated)
+* photon-swarm
+* centos-swarm
+* rhel-swarm
+* centos-ucp
+* rhel-ucp
+* centos-dcos
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
+
+With two experimental builds in support of __Tectonic CoreOS__:
+
+* coreos-provisioner
+* coreos-pxe
+
+For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
 
 ## Required Software
 
 ### macOS / Linux
 
-- VMware Fusion Pro 8+ / Workstation Pro 12+
-- VMware ESXi 6.5+ (optional)
-- VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
-- Ansible 2.3+ `brew install/upgrade ansible`
-- Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+* VMware Fusion Pro 8+ / Workstation Pro 12+
+* VMware ESXi 6.5+ (optional)
+* VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
+* Ansible 2.3+ `brew install/upgrade ansible`
+* Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 
 > Note: For Docker EE edition you will need to provide a valid Docker EE download URL and license file.
 
