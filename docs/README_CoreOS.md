@@ -170,6 +170,9 @@ Once logged into the __Tectonic Control__ you can download a __.kubeconfig__ fil
 
 Enjoy a nice polished Kubernetes!  With __CoreOS__, chances are good you won't have to redeploy it again for a very long time.
 
+> Checkout the __xtras/coreos__ folder for an __open-vm-tools.yml__ daemonset that will provide VMware tools on all the nodes.
+
+
 Graphical Installer Walkthrough
 -------------------------------
 
