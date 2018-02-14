@@ -1,6 +1,6 @@
 .encoding = "UTF-8"
 config.version = "8"
-virtualHW.version = "13"
+virtualHW.version = "12"
 vmci0.present = "TRUE"
 floppy0.present = "FALSE"
 numvcpus = "2"

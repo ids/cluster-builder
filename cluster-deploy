@@ -49,22 +49,22 @@ function esxi_pxe_matchbox_deploy () {
       exit 1
     fi
 
-    terraform init $TECTONIC_HOME/platforms/metal
-    if [ $? -ne 0 ]; then
-      echo "FAIL: Unable to initialize Tectonic Terraform!"
-      exit 1
-    fi
+    #terraform init $TECTONIC_HOME/platforms/metal
+    #if [ $? -ne 0 ]; then
+    #  echo "FAIL: Unable to initialize Tectonic Terraform!"
+    #  exit 1
+    #fi
 
-    ADMIN_EMAIL=`sed -n '/^tectonic_admin_email=/ {s///p;q;}' $INVENTORY_FILE`
+    #ADMIN_EMAIL=`sed -n '/^tectonic_admin_email=/ {s///p;q;}' $INVENTORY_FILE`
 
-    export TF_VAR_tectonic_admin_email="${ADMIN_EMAIL}"
-    export TF_VAR_tectonic_admin_password="${TECTONIC_PASSWORD}"
+    #export TF_VAR_tectonic_admin_email="${ADMIN_EMAIL}"
+    #export TF_VAR_tectonic_admin_password="${TECTONIC_PASSWORD}"
 
-    terraform plan -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
-    if [ $? -ne 0 ]; then
-      echo "FAIL: Terraform Plan Failed!"
-      exit 1
-    fi
+    #terraform plan -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
+    #if [ $? -ne 0 ]; then
+    #  echo "FAIL: Terraform Plan Failed!"
+    #  exit 1
+    #fi
 
     #terraform destroy -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
     echo "**************************************************************************************"
@@ -83,6 +83,54 @@ function esxi_pxe_matchbox_deploy () {
     echo
     echo "but running the graphical installer does:"
     echo "$TECTONIC_HOME/tectonic-installer/linux/installer"
+    echo
+    echo "** Only the GUI approach currently works, use the manual-.csv files to bulk load **"
+
+  else
+   echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
+   exit 1
+  fi
+
+}
+
+function fusion_pxe_matchbox_deploy () {
+
+  SERVER_WAIT=90s
+
+  if hash terraform >/dev/null; then
+
+    if [ -z $TECTONIC_HOME ]; then
+      echo "TECTONIC_HOME is not set! It must be set to the root of the tectonic-installer folder."
+      exit 1
+    fi
+
+    echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
+    sudo date
+
+    echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+
+    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE-fusion.yml  --extra-vars="ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
+    if [ $? -ne 0 ]; then
+      echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+      exit 1
+    fi
+
+    echo "**************************************************************************************"
+    echo "**************************************************************************************"
+    echo ""
+    echo " After 'apply' while the terraform is waiting to update the etcd secrets on the controller"
+    echo " Open a new tab and start power up the VMS..."
+    echo ""
+    echo " $ bash cluster-control ${CLUSTER_PKG_FOLDER} start"
+    echo ""
+    echo "**************************************************************************************"
+    echo "**************************************************************************************"
+    echo ""
+    echo "this should work, but doesn't yet..."
+    echo "terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal"
+    echo
+    echo "but running the graphical installer does:"
+    echo "$TECTONIC_HOME/tectonic-installer/darwin/installer"
     echo
     echo "** Only the GUI approach currently works, use the manual-.csv files to bulk load **"
 
@@ -311,7 +359,11 @@ if [ "$VMWARE_TARGET" == "esxi" ]; then
     esxi_deploy
   fi
 elif [ "$VMWARE_TARGET" == "fusion" ]; then
-  fusion_deploy
+  if [ "$CLUSTER_TYPE" == "coreos-pxe" ]; then
+    fusion_pxe_matchbox_deploy
+  else 
+    fusion_deploy
+  fi
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))

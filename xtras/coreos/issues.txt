@@ -1,0 +1,1 @@
+"Storage health check failed: create auth request: Post https://10.3.0.1:443/apis/dex.coreos.com/v1/namespaces/tectonic-system/authrequests: dial tcp 10.3.0.1:443: getsockopt: connection refused" 

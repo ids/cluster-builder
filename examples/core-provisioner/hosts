@@ -19,6 +19,7 @@ dhcpd_start_range=192.168.1.189
 dhcpd_end_range=192.168.1.199
 
 provisioner_server_dn=core-provisioner.idstudios.local
+provisioner_server_ip=192.168.1.40
 
 [coreos_provisioner]
 core-provisioner ansible_host=192.168.1.40 

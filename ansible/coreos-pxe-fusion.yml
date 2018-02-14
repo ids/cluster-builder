@@ -1,0 +1,332 @@
+# This playbook deploys a CoreOS Cluster via PXE/iPXE and Matchbox services in Fusion
+---
+- hosts: vmware_vms
+  gather_facts: false
+
+  vars:
+    fusion_vm_folder: ../virtuals
+    ova_template_path: "../{{ ova_template }}"
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
+    vmware_dhcpd_base_path: '/Library/Preferences/VMware\ Fusion/'
+    vmware_dhcpd_cmd: vmnet-cli
+
+  tasks:    
+  - name: Ensure the target fusion_vm_folder exists
+    local_action:
+      module: file
+      path: "{{ fusion_vm_folder }}"
+      state: directory
+
+  - name: Stop the existing VMs (If they aren't running the errors will be ignored).
+    local_action:
+      module: shell
+      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx
+    ignore_errors: true
+
+  - name: Use ovftool to deploy cluster-node ova to Fusion VMX.
+    local_action:
+      module: shell
+      _raw_params: ovftool -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
+  
+  - name: Assign the VM CPU Count
+    local_action:
+      module: lineinfile
+      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      state: present
+      regexp: '^numvcpus =\s'
+      line: 'numvcpus = "{{ numvcpus }}"'
+    when: numvcpus is defined
+
+  - name: Assign the VM Memory
+    local_action:
+      module: lineinfile
+      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      state: present
+      regexp: '^memsize =\s'
+      line: 'memsize = "{{ memsize }}"'
+    when: memsize is defined
+
+  - name: Assign the Fusion Control/Data Network to Interface One
+    local_action:
+      module: lineinfile
+      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      state: present
+      regexp: '^ethernet0.vnet =\s'
+      line: 'ethernet0.vnet = "{{ fusion_net }}"'
+
+  - name: Assign the Fusion Control/Data Network to Interface One
+    local_action:
+      module: lineinfile
+      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      state: present
+      regexp: '^ethernet0.connectionType\s'
+      line: 'ethernet0.connectionType = "custom"'
+
+
+  - name: Remove 2nd interface when there is no data network
+    local_action:
+      module: lineinfile
+      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      state: absent
+      regexp: 'ethernet1'
+    when: fusion_data_net is undefined
+
+  - name: Start the VMs to get the generated MAC addresses
+    local_action:
+      module: shell
+      _raw_params: vmrun start {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+    become: false
+
+  - name: Waiting for VMs to generate MAC addresses
+    pause:
+      seconds: 30
+    
+  - name: Scan the VMX files for the Control/Data mac addresses
+    local_action:
+      module: shell
+      _raw_params: cat {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
+    register: vm_mac_addr
+  
+  - debug: msg="{{ vm_mac_addr.stdout }}"
+
+  - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
+    when: vm_mac_addr is not defined    
+
+  - name: Stop the VMs 
+    local_action:
+      module: shell
+      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+    become: false
+
+
+- hosts: coreos_controllers,coreos_workers
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+  gather_facts: false
+  vars:
+
+    tectonic_controller_domain: "{{ tectonic_controller_dn }}"
+
+    tectonic_matchbox_http_url: "http://{{ provisioner_server_dn }}:8080"
+    tectonic_matchbox_rpc_endpoint: "{{ provisioner_server_dn }}:8081"
+
+    tectonic_ingress_domain: "{{ tectonic_ingress_dn }}"
+
+    tectonic_service_cidr: "10.3.0.0/16"
+
+  tasks:
+
+  - name: Load tectonic_matchbox_ca
+    local_action:
+      module: shell
+      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/ca.crt"
+    register: tectonic_matchbox_ca_load
+    become: false
+    run_once: true
+
+  - debug: msg="{{ tectonic_matchbox_ca_load.stdout }}" 
+    run_once: true
+
+  - name: Set tectonic_matchbox_ca
+    set_fact:
+      tectonic_matchbox_ca: "{{ tectonic_matchbox_ca_load.stdout }}"
+    run_once: true
+
+  - name: Load tectonic_matchbox_client_cert
+    local_action:
+      module: shell
+      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.crt"
+    register: tectonic_matchbox_client_cert_load
+    become: false
+    run_once: true
+
+  - debug: msg="{{ tectonic_matchbox_client_cert_load.stdout }}" 
+    run_once: true
+
+  - name: Set tectonic_matchbox_client_cert
+    set_fact:
+      tectonic_matchbox_client_cert: "{{ tectonic_matchbox_client_cert_load.stdout }}"
+    run_once: true
+
+  - name: Load tectonic_matchbox_client_key
+    local_action:
+      module: shell
+      _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.key"
+    register: tectonic_matchbox_client_key_load
+    become: false
+    run_once: true
+
+  - debug: msg="{{ tectonic_matchbox_client_key_load.stdout }}" 
+    run_once: true
+
+  - name: Set tectonic_matchbox_client_key
+    set_fact:
+      tectonic_matchbox_client_key: "{{ tectonic_matchbox_client_key_load.stdout }}"
+    run_once: true
+
+  - name: Load ssh key
+    local_action:
+      module: shell
+      _raw_params: "cat ../node-packer/keys/authorized_keys"
+    register: tectonic_ssh_key_load
+    become: false
+    run_once: true
+
+  - debug: msg="{{  tectonic_ssh_key_load.stdout }}" 
+    run_once: true
+
+  - name: Set tectonic_ssh_authorized_key
+    set_fact:
+      tectonic_ssh_authorized_key: "{{  tectonic_ssh_key_load.stdout }}"
+    run_once: true
+
+  - name: Generate the terraform.vars file
+    local_action:
+      module: template
+      src: templates/coreos-terraform-alt.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/terraform.tfvars
+      mode: 0766
+    become: false
+    run_once: true
+
+  - name: Generate the controllers.csv file
+    local_action:
+      module: template
+      src: templates/coreos-masters-csv.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/manual-masters.csv
+      mode: 0766
+    become: false
+    run_once: true
+
+  - name: Generate the workers.csv file
+    local_action:
+      module: template
+      src: templates/coreos-workers-csv.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/manual-workers.csv
+      mode: 0766
+    become: false
+    run_once: true
+
+- hosts: coreos_provisioner,coreos_workers,coreos_controllers
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+  gather_facts: false
+  vars:
+    tmp_folder: ../tmp/
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
+    vmware_dhcpd_base_path: '/Library/Preferences/VMware\ Fusion/'
+    vmware_dhcpd_cmd: vmnet-cli
+
+  tasks:
+    
+  - name: Process the DHCP template file
+    local_action:
+      module: template
+      src: templates/coreos-fusion-dhcpd-static-block.j2
+      dest: ../tmp/coreos-dhcpd-block.txt
+    become: false
+    when: inventory_hostname in groups['coreos_provisioner']
+    run_once: true
+
+  - name: Load dhcpd block
+    local_action:
+      module: shell
+      _raw_params: "cat {{ tmp_folder }}/coreos-dhcpd-block.txt"
+    register: coreos_dhcpd_static_block
+    become: false
+    run_once: true
+
+  - debug: msg="{{ coreos_dhcpd_static_block.stdout_lines }}" 
+    run_once: true
+
+  - name: Stop the VM Network
+    local_action:
+      module: shell
+      _raw_params: '{{ vmware_dhcpd_cmd }} --stop'
+    delegate_to: 127.0.0.1
+    become: true
+    run_once: true
+
+  - name: Backup current Control/Data DHCP
+    local_action:
+      module: shell
+      _raw_params: cp {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-backup.conf
+    delegate_to: 127.0.0.1
+    become: true
+    run_once: true
+
+  - name: Remove any Control/Data block for the current cluster
+    local_action:
+      module: shell
+      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+    delegate_to: 127.0.0.1
+    become: true
+    run_once: true
+  
+  - name: Concatenate the DHCP entries header
+    local_action:
+      module: shell
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >>  {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+    run_once: true
+    
+  - name: Add current DHCP Control/Data block for cluster
+    local_action:
+      module: shell
+      _raw_params: cat {{ tmp_folder }}/coreos-dhcpd-block.txt >> {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+    delegate_to: 127.0.0.1
+    become: true
+    run_once: true
+
+  - name: Concatenate the DHCP entries footer
+    local_action:
+      module: shell
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >>  {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+    run_once: true
+
+  - name: Replace current Control/Data DHCP
+    local_action:
+      module: shell
+      _raw_params: cp {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf
+    delegate_to: 127.0.0.1
+    become: true
+    run_once: true
+
+  - name: Start the VM Network
+    local_action:
+      module: shell
+      _raw_params: '{{ vmware_dhcpd_cmd }} --start'
+    delegate_to: 127.0.0.1
+    become: true
+    run_once: true
+
+#  - name: Stop the DHCPD 
+#    service:
+#      name: dhcpd
+#      state: stopped
+#    when: inventory_hostname in groups['coreos_provisioner']
+      
+#  - name: Update the DHCP server with the static blocks
+#    blockinfile:
+#      dest: "/etc/dhcp/dhcpd.conf"
+#      insertafter: "EOF"
+#      marker: "# {mark} {{ cluster_name }} CLUSTER MANAGED BLOCK"
+#      block: |
+#        {{ coreos_dhcpd_static_block.stdout }}
+#    run_once: true
+#    when: inventory_hostname in groups['coreos_provisioner']
+    
+#  - name: Start the DHCPD 
+#    service:
+#      name: dhcpd
+#      state: started
+#    when: inventory_hostname in groups['coreos_provisioner']
+        
+  - name: Clean up tmp dhcpd block
+    local_action:
+      module: shell
+      _raw_params: "rm {{ tmp_folder }}/coreos-dhcpd-block.txt"
+    become: false
+    run_once: true
+        

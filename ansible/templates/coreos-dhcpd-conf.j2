@@ -7,8 +7,9 @@
 option domain-name "{{ network_dn }}";
 option domain-name-servers {{ network_dns }},{{ network_dns2 }};
 
-default-lease-time 600;
-max-lease-time 7200;
+default-lease-time 7776000;
+max-lease-time 10368000;
+deny unknown-clients;
 
 # Use this to enble / disable dynamic dns updates globally.
 #ddns-update-style none;
@@ -23,9 +24,7 @@ log-facility local7;
 
 # A slightly different configuration for an internal subnet.
 subnet {{ network }} netmask {{ network_mask }} {
-  
-  range {{ dhcpd_start_range }} {{ dhcpd_end_range }};
-  
+    
   option domain-name-servers {{ network_dns }},{{ network_dns2 }};
   option domain-name "{{ network_dn }}";
   option routers {{ network_gateway }};
@@ -34,8 +33,9 @@ subnet {{ network }} netmask {{ network_mask }} {
 	next-server {{ ansible_host }};
 	filename "pxelinux.0";
 
-  default-lease-time 600;
-  max-lease-time 7200;
+  default-lease-time 7776000;
+  max-lease-time 10368000;
+  deny unknown-clients;
 }
 
 # Fixed IP addresses can also be specified for hosts.   These addresses

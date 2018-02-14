@@ -1,0 +1,4 @@
+MASTER_MAC,HOST
+{% for host in groups['coreos_controllers'] %}
+{{ hostvars[host].vm_mac_addr.stdout }},{{ hostvars[host].inventory_hostname  | replace(network_dn + '.',"") }}.{{ network_dn }}
+{% endfor %}

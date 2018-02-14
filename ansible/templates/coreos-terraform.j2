@@ -6,7 +6,7 @@
   "tectonic_cluster_name": "{{ cluster_name }}",
   "tectonic_container_linux_version": "{{ tectonic_container_linux_version }}",
   "tectonic_dns_name": "",
-  "tectonic_license_path": "clusters/{{ cluster_pkg_folder }}/tectonic_license.txt",
+  "tectonic_license_path": "clusters/{{ cluster_pkg_folder }}/tectonic-license.txt",
   "tectonic_metal_controller_domain": "{{ tectonic_controller_domain }}",
   "tectonic_metal_controller_domains": [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].inventory_hostname }}.{{ network_dn }}"{% if not loop.last %},{% endif %}{% endfor %}],
   "tectonic_metal_controller_macs": [{% for host in groups['coreos_controllers'] %}"{{ hostvars[host].vm_mac_addr.stdout }}"{% if not loop.last %},{% endif %}{% endfor %}],

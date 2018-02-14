@@ -1,0 +1,43 @@
+[all:vars]
+cluster_type=coreos-pxe
+cluster_name=core-demo
+remote_user=admin
+
+vmware_target=fusion
+fusion_vm_folder="../virtuals"
+
+fusion_net="vmnet2"
+fusion_net_type="custom"
+
+network_mask=255.255.255.0
+network_gateway=192.168.100.1
+network_dns=192.168.100.2
+network_dns2=8.8.8.8
+network_dns3=8.8.4.4
+network_dn=idstudios.io
+
+k8s_cluster_cidr="10.42.0.0/16"
+tectonic_container_linux_version=1632.2.1
+
+tectonic_admin_email="sean@intelligent-design.ca"
+tectonic_controller_dn="demo-core-admin.idstudios.io"
+tectonic_ingress_dn="demo-core-ingress.idstudios.io"
+
+provisioner_server_dn=demo-core-provisioner.idstudios.io
+
+[coreos_provisioner]
+demo-core-provisioner.idstudios.io ansible_host=192.168.100.40
+
+[coreos_controllers]
+demo-core-c1.idstudios.io ansible_host=192.168.100.41
+
+[coreos_workers]
+demo-core-w1.idstudios.io ansible_host=192.168.100.51
+demo-core-w2.idstudios.io ansible_host=192.168.100.52
+demo-core-w3.idstudios.io ansible_host=192.168.100.53
+
+[vmware_vms]
+demo-core-c1.idstudios.io   numvcpus=4 memsize=3072 
+demo-core-w1.idstudios.io   numvcpus=4 memsize=2048 
+demo-core-w2.idstudios.io   numvcpus=4 memsize=2048 
+demo-core-w3.idstudios.io   numvcpus=4 memsize=2048 
