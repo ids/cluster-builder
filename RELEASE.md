@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+v18.04-beta2
+------------
+
+* Added __cluster-update__ functionality for applying rolling updates to __CentOS7__ and __RHEL__ __Docker Swarm__ cluster nodes (in support of regular patching).
+* Pinned Docker engine version on __CentOS7__ and __RHEL__ CE to __Docker 17.09.1-ce__.
+* __Experimental__ support for __Tectonic CoreOS__ with [documentation](docs/README_CoreOS.md)
+
 v18.04-beta1
 ------------
 

@@ -13,87 +13,7 @@ function check_docker_license () {
   fi
 }
 
-function esxi_pxe_matchbox_deploy () {
-
-  SERVER_WAIT=90s
-
-  if hash terraform >/dev/null; then
-
-    if [ -z $TECTONIC_HOME ]; then
-      echo "TECTONIC_HOME is not set! It must be set to the root of the tectonic-installer folder."
-      exit 1
-    fi
-
-    echo "Building cluster: ${CLUSTER_TYPE_NAME}"
-
-    # read -s -p "Enter Tectonic Admin password: " TECTONIC_PASSWORD
-
-    ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-    if [ $? -ne 0 ]; then
-    echo "There is a problem with the ESXi init-pre script"
-    exit 1
-    fi
-
-    bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
-    if [ $? -ne 0 ]; then
-      echo "There was a problem deploying the VMs using ovftool"
-      exit 1
-    fi
-
-    echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
-    sleep $SERVER_WAIT
-
-    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
-    if [ $? -ne 0 ]; then
-      echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
-      exit 1
-    fi
-
-    #terraform init $TECTONIC_HOME/platforms/metal
-    #if [ $? -ne 0 ]; then
-    #  echo "FAIL: Unable to initialize Tectonic Terraform!"
-    #  exit 1
-    #fi
-
-    #ADMIN_EMAIL=`sed -n '/^tectonic_admin_email=/ {s///p;q;}' $INVENTORY_FILE`
-
-    #export TF_VAR_tectonic_admin_email="${ADMIN_EMAIL}"
-    #export TF_VAR_tectonic_admin_password="${TECTONIC_PASSWORD}"
-
-    #terraform plan -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
-    #if [ $? -ne 0 ]; then
-    #  echo "FAIL: Terraform Plan Failed!"
-    #  exit 1
-    #fi
-
-    #terraform destroy -var-file=clusters/$CLUSTER_PKG_FOLDER/terraform.tfvars $TECTONIC_HOME/platforms/metal
-    echo "**************************************************************************************"
-    echo "**************************************************************************************"
-    echo ""
-    echo " After 'apply' while the terraform is waiting to update the etcd secrets on the controller"
-    echo " Open a new tab and start power up the VMS..."
-    echo ""
-    echo " $ bash cluster-control ${CLUSTER_PKG_FOLDER} start"
-    echo ""
-    echo "**************************************************************************************"
-    echo "**************************************************************************************"
-    echo ""
-    echo "this should work, but doesn't yet..."
-    echo "terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal"
-    echo
-    echo "but running the graphical installer does:"
-    echo "$TECTONIC_HOME/tectonic-installer/linux/installer"
-    echo
-    echo "** Only the GUI approach currently works, use the manual-.csv files to bulk load **"
-
-  else
-   echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
-   exit 1
-  fi
-
-}
-
-function fusion_pxe_matchbox_deploy () {
+function pxe_matchbox_deploy () {
 
   SERVER_WAIT=90s
 
@@ -107,32 +27,71 @@ function fusion_pxe_matchbox_deploy () {
     echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
     sudo date
 
+    read -s -p "Enter Tectonic Admin password: " TECTONIC_PASSWORD
+
     echo "Building cluster: ${CLUSTER_TYPE_NAME}"
 
-    ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE-fusion.yml  --extra-vars="ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
+    if [ "$VMWARE_TARGET" == "esxi" ]; then
+      ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+      if [ $? -ne 0 ]; then
+      echo "There is a problem with the ESXi init-pre script"
+      exit 1
+      fi
+
+      bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
+      if [ $? -ne 0 ]; then
+        echo "There was a problem deploying the VMs using ovftool"
+        exit 1
+      fi
+
+      echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
+      sleep $SERVER_WAIT
+
+      ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
+      if [ $? -ne 0 ]; then
+        echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+        exit 1
+      fi      
+    else 
+      ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE-fusion.yml  --extra-vars="ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
+      if [ $? -ne 0 ]; then
+        echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+        exit 1
+      fi
+    fi
+
+    terraform init ${TECTONIC_HOME}/platforms/metal
     if [ $? -ne 0 ]; then
-      echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+      echo "FAIL: Unable to initialize Tectonic Terraform!"
       exit 1
     fi
+    
+    terraform plan -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal
 
     echo "**************************************************************************************"
     echo "**************************************************************************************"
-    echo ""
     echo " After 'apply' while the terraform is waiting to update the etcd secrets on the controller"
-    echo " Open a new tab and start power up the VMS..."
-    echo ""
+    echo " Open a new tab and start power up the VMS... but only after you see the following begin"
+    echo 
+    echo " data.archive_file.assets: Refreshing state..."
+    echo " null_resource.etcd_secrets: Still creating... (10s elapsed)"
+    echo
     echo " $ bash cluster-control ${CLUSTER_PKG_FOLDER} start"
-    echo ""
+    echo 
+    echo " (or start the VMs manually, it doesn't matter, terraform will wait)"
+    echo
+    echo " To restart the terraform:"
+    echo " $ terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal"
     echo "**************************************************************************************"
     echo "**************************************************************************************"
-    echo ""
-    echo "this should work, but doesn't yet..."
-    echo "terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal"
-    echo
-    echo "but running the graphical installer does:"
-    echo "$TECTONIC_HOME/tectonic-installer/darwin/installer"
-    echo
-    echo "** Only the GUI approach currently works, use the manual-.csv files to bulk load **"
+    echo 
+    read -p "Press [Enter] to apply the plan, or [Ctrl-C] to cancel..."
+    if [ $? -ne 0 ]; then
+      echo "FAIL: ${CLUSTER_TYPE_NAME} creation cancelled!"
+      exit 1
+    fi    
+
+    terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal
 
   else
    echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
@@ -352,16 +311,12 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
   exit 1
 fi
 
-if [ "$VMWARE_TARGET" == "esxi" ]; then
-  if [ "$CLUSTER_TYPE" == "coreos-pxe" ]; then
-    esxi_pxe_matchbox_deploy
-  else 
+if [ "$CLUSTER_TYPE" == "coreos-pxe" ]; then
+  pxe_matchbox_deploy
+else
+  if [ "$VMWARE_TARGET" == "esxi" ]; then
     esxi_deploy
-  fi
-elif [ "$VMWARE_TARGET" == "fusion" ]; then
-  if [ "$CLUSTER_TYPE" == "coreos-pxe" ]; then
-    fusion_pxe_matchbox_deploy
-  else 
+  elif [ "$VMWARE_TARGET" == "fusion" ]; then
     fusion_deploy
   fi
 fi

@@ -184,7 +184,7 @@
   - name: Generate the terraform.vars file
     local_action:
       module: template
-      src: templates/coreos-terraform-alt.j2
+      src: templates/coreos-terraform.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/terraform.tfvars
       mode: 0766
     become: false
