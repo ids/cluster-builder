@@ -42,10 +42,11 @@ Using __cluster-builder__ and the __coreos-pxe__ variant for the bootstrap phase
 * Deploys a thin, netboot VM ova with a 250GB thinly provisioned VMDK to the nodes as per cluster-builder configuration for vCPU, Memory and Network and ESXi location.
 * Starts the VMs long enough to get their assigned MAC addresses, then stops them.
 * Updates the Provisioner VM DHCP server with static entries for the MAC addresses to assign the permanent IPs.
-* Builds a Terraform template file (work in progress)
+* Builds a Terraform configuration file
 * Creates two CSV bulk upload files for the GUI Installer for all master/controller and worker nodes and MAC address mappings.
+* Applies the Terraform configuration to Matchbox (if the user doesn't cancel out to use the Graphical Installer approach).
 
-After __cluster-builder__ completes, the resulting Terraform configuration is applied. When this is complete the Tectonic Cluster has been installed - but is not yet finished.
+When __cluster-builder__ completes and the resulting Terraform configuration has been applied successfully the Tectonic Cluster has been installed - __but is not yet finished__.  Usually within 10 minutes the __Tectonic Console__ will be available at the __ingress url__.
 
 ## General Setup
 
@@ -75,7 +76,7 @@ The VMware install process is nearly identical to the ESXi documented below exce
 
 ### Download the Tectonic Installer
 
-Follow [this](https://coreos.com/tectonic/docs/latest/install/bare-metal/metal-terraform.html) documentation to download the Tectonic Installer. 
+Follow [this](https://coreos.com/tectonic/docs/latest/install/bare-metal/metal-terraform.html) documentation to download the Tectonic Installer.
  
 Once the installer has been downloaded make sure it is in the PATH, and also make sure to set __TECTONIC_HOME__ to the location of the installer folder in your BASH profile.
 
