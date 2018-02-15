@@ -162,6 +162,8 @@ In the __cluster package folder__:
 
 The Terraform __apply__ will happen automatically as part of the deployment if you don't continue with the default.
 
+> __Note__: The iSCSI units required to support Kubernetes iSCSI persistant volume direct Pod access are only installed with the unattended Terraform installation.
+
 If you cancel before the __apply__, you can proceed with the Graphical web based Tectonic Installer:
 
     $TECTONIC_HOME/tectonic-installer/linux/installer
