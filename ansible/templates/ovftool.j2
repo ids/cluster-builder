@@ -18,7 +18,7 @@ fi
   {% if hostvars[host].vcenter_server is defined  %}
 
 read -r -d '' OVFCMD << EOM
-ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
     --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
     --name="{{ hostvars[host].inventory_hostname }}" \
     --diskMode=thin \
@@ -34,7 +34,7 @@ EOM
   {% else %}
 
 read -r -d '' OVFCMD << EOM
-ovftool --overwrite --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
     --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
     --name="{{ hostvars[host].inventory_hostname }}" \
     --diskMode=thin \

@@ -1,0 +1,277 @@
+#!/bin/bash
+INVENTORY_FILE=$1
+SERVER_WAIT=90s
+REMOTE_USER=root
+
+function check_docker_license () {
+  if [ ! -f clusters/$CLUSTER_PKG_FOLDER/docker_subscription.lic ]; then 
+    echo "** Missing Docker EE License File **"
+    echo
+    echo "To build a Docker Enterprise Edition cluster you need to have a docker_subscription.lic file located in your ${CLUSTER_PKG_FOLDER} cluster package."
+    echo
+    exit 1
+  fi
+}
+
+function esxi_deploy () {
+  
+  ansible-playbook -i $INVENTORY_FILE.mod ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  if [ $? -ne 0 ]; then
+   echo "There is a problem with the ESXi init-pre script"
+   exit 1
+  fi
+
+  bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
+  if [ $? -ne 0 ]; then
+    echo "There was a problem deploying the VMs using ovftool"
+    exit 1
+  fi
+
+  echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up and get their temporary DHCP addresses..."
+  sleep $SERVER_WAIT
+
+  echo "Finishing up ESXi VM Configuration..."
+  ansible-playbook -i $INVENTORY_FILE.mod ansible/esxi-create-vms-finish.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  
+  echo "Assigning VM static IPs"
+  bash $TEMP_SCRIPT_PATH/esxi-set-statics
+
+  echo "Waiting for the VMs to come up with their permanent IPs..."
+  ansible-playbook -i $INVENTORY_FILE.mod ansible/wait-for-vms.yml
+  if [ $? -ne 0 ]; then
+    echo "FAIL: All the VMs were not responsive at their permanent IPs within the timeout period."
+    exit 1
+  fi
+
+  rm $TEMP_SCRIPT_PATH/*_static.sh
+  rm $TEMP_SCRIPT_PATH/esxi-create-vms
+  rm $TEMP_SCRIPT_PATH/esxi-set-statics
+  
+  ansible all -i $INVENTORY_FILE.mod -m ping -u $REMOTE_USER
+
+
+  ###Add new host/ip to all swarm nodes
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE-hostnames.yml
+
+  echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+  ansible-playbook -i $INVENTORY_FILE.mod ansible/$CLUSTER_TYPE-add.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  
+  if [ $? -ne 0 ]; then
+    echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+    exit 1
+  fi
+
+  echo "Change the initial ROOT password on VM Nodes..."
+  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
+    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+  fi 
+
+  bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+
+  echo
+  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+}
+
+function fusion_deploy () {
+
+  PLATFORM=`uname -ra`
+  DHCPD_BASE_DIR=/etc/vmware
+  DHCPD_CMD=/etc/init.d/vmware
+  if [[ $PLATFORM == *"Darwin"* ]]; then 
+    DHCPD_BASE_DIR='/Library/Preferences/VMware\ Fusion/'
+    DHCPD_CMD='/Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli'
+  fi 
+
+  echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
+  sudo date
+
+  echo "Creating the Fusion VMs and configuring the network for static IP assignment..."
+  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} vmware_dhcpd_base_path='${DHCPD_BASE_DIR}' vmware_dhcpd_cmd='${DHCPD_CMD}' cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
+  
+  if [ $? -ne 0 ]; then
+    echo "There was a problem creating the VMs"
+    exit 1
+  fi
+  
+  echo "Configuring the ${CLUSTER_TYPE_NAME} Cluster..."
+
+  ansible-playbook -i $INVENTORY_FILE.orig ansible/$CLUSTER_TYPE-add.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE-hostnames.yml
+  if [ $? -ne 0 ]; then
+    echo "FAIL: Fusion ${CLUSTER_TYPE_NAME} creation failed!"
+    exit 1
+  fi
+
+  echo "Change the initial ROOT password on VM Nodes..."
+  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
+    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+  fi 
+
+  bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+
+  echo
+  echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME}!"
+
+}
+
+function host_add ()
+{
+  vmware_vms=false
+  doc_swm_wkr=false
+  doc_swm_mgr=false
+  doc_prm_srv=false
+
+  if [ -f $INVENTORY_FILE.mod ]; then
+    rm $INVENTORY_FILE.mod
+  fi
+  while read line || [ -n "$line" ]; do
+    if [ "$vmware_vms" = true ] || [ "$doc_swm_wkr" = true ] || [ "$doc_swm_mgr" = true ] || [ "$doc_prm_srv" = true ]; then
+      vm=(${line// / })
+      ping -c 1 -w 2 "$vm" &>/dev/null
+      if [ $? -ne 0 ]; then 
+        echo $line >> $INVENTORY_FILE.mod
+      fi
+    else
+      echo $line >> $INVENTORY_FILE.mod
+    fi
+    if [ "$line" = "[docker_prometheus_server]" ]; then
+      doc_prm_srv=true
+    fi
+    if [ "$line" = "[docker_swarm_manager]" ]; then
+      vmware_vms=true
+    fi
+    if [ "$line" = "[docker_swarm_worker]" ]; then
+      doc_swm_wkr=true
+    fi
+    if [ "$line" = "[vmware_vms]" ]; then
+      vmware_vms=true
+    fi
+  done < $INVENTORY_FILE
+}
+
+if [ -z INVENTORY_FILE ]; then
+  read -s "Enter the target cluster folder: " INVENTORY_FILE
+fi
+
+INVENTORY_FILE=./clusters/$INVENTORY_FILE/hosts
+
+if [ ! -f $INVENTORY_FILE ]; then
+  echo
+  echo "Unable to find inventory file @: ${INVENTORY_FILE}"
+  exit 1
+fi
+
+CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
+VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
+CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
+REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE`
+
+CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
+CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
+#CLUSTER_PKG_FOLDER=tmp/
+
+TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
+
+if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon-x86_64.ova
+  OVA_BUILD_TYPE=photon
+  CLUSTER_TYPE_NAME='PhotonOS Swarm'
+  REMOTE_USER=root
+elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-dcos-x86_64.ova
+  CLUSTER_TYPE_NAME='DC/OS Cluster'
+  OVA_BUILD_TYPE=centos7-dcos
+  SERVER_WAIT=360s
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'atomic-swarm' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-atomic7-x86_64.ova
+  CLUSTER_TYPE_NAME='Atomic Swarm'
+  OVA_BUILD_TYPE=atomic7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'centos-swarm' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
+  CLUSTER_TYPE_NAME='CentOS Swarm'
+  OVA_BUILD_TYPE=centos7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'centos-ucp' ]; then
+  check_docker_license
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
+  CLUSTER_TYPE_NAME='CentOS UCP'
+  OVA_BUILD_TYPE=centos7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
+  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
+  CLUSTER_TYPE_NAME='RHEL Swarm'
+  OVA_BUILD_TYPE=rhel7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
+  check_docker_license
+  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
+  CLUSTER_TYPE_NAME='RHEL UCP'
+  OVA_BUILD_TYPE=rhel7
+  REMOTE_USER=admin
+fi
+
+
+TC=''
+NC=''
+if [ "$TERM" == "xterm-256color" ]; then
+  TC='\033[1;34m'
+  NC='\033[0m' # No Color
+fi 
+
+echo
+echo "***"
+echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
+echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
+echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
+echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
+echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
+echo -e " Temp script path: ${TEMP_SCRIPT_PATH}"
+echo "***"
+echo
+
+###CREATE A MODIFIED HOSTS FILE 
+host_add
+
+if [ "$VMWARE_TARGET" == "esxi" ]; then
+  read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
+fi
+
+START_TIME=$SECONDS
+
+if [ ! -f $OVA_TEMPLATE_FILE ]; then
+  echo
+  echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
+  echo "Attempting to build: ${OVA_BUILD_TYPE}"
+  cd node-packer
+  bash build $OVA_BUILD_TYPE $CLUSTER_PKG_FOLDER $RHEL_LIC 
+  cd ..
+fi
+
+if [ ! -f $OVA_TEMPLATE_FILE ]; then
+  echo
+  echo "Unable to build template ova: ${OVA_BUILD_TYPE}"
+  exit 1
+fi
+
+if [ "$VMWARE_TARGET" == "esxi" ]; then
+  esxi_deploy
+elif [ "$VMWARE_TARGET" == "fusion" ]; then
+  fusion_deploy
+fi
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo
+
+
+  

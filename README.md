@@ -15,14 +15,15 @@ Cluster Builder
 6. [Cluster Builder Usage](#cluster-builder-usage)
 7. [Deploying a Cluster](#deploying-a-cluster)
 8. [Patching a Cluster](#patching-a-cluster)
-9. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-10. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
-11. [Prometheus Monitoring](#prometheus-monitoring)
-12. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-13. [Change Cluster Password](#change-cluster-password)
-14. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
-15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-156. [Production Readiness](#production-readiness)
+9. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
+10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+11. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
+12. [Prometheus Monitoring](#prometheus-monitoring)
+13. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+14. [Change Cluster Password](#change-cluster-password)
+16. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
+16. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+17. [Production Readiness](#production-readiness)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
@@ -386,6 +387,16 @@ To update the nodes on a deployed cluster, use **cluster-update**:
 Eg.
 
     $ bash cluster-deploy esxi-rhel-swarm
+
+## Adding a Node to a Cluster
+To add a new node to an existing cluster, update the original hosts file with the new node.
+Then use **cluster-add**:
+
+    $ bash cluster-add <inventory-package | cluster-name>
+
+Eg.
+
+    $ bash cluster-add esxi-rhel-swarm
 
 ## Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
