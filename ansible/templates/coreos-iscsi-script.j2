@@ -1,0 +1,10 @@
+{% for host in groups['coreos_workers'] %}
+
+ssh -o StrictHostKeyChecking=no {{ tectonic_coreos_user }}@{{ hostvars[host].inventory_hostname  | replace('.' + network_dn, "" ) }}.{{ network_dn }} "sudo systemctl enable iscsid && sudo systemctl start iscsid" 
+scp coreos-kublet-service {{ tectonic_coreos_user }}@{{ hostvars[host].inventory_hostname  | replace('.' + network_dn, "" ) }}.{{ network_dn }}:/tmp/coreos-kublet-service
+ssh -o StrictHostKeyChecking=no {{ tectonic_coreos_user }}@{{ hostvars[host].inventory_hostname  | replace('.' + network_dn,"") }}.{{ network_dn }} "sudo cp /tmp/coreos-kublet-service /etc/systemd/system/kubelet.service"
+ssh -o StrictHostKeyChecking=no {{ tectonic_coreos_user }}@{{ hostvars[host].inventory_hostname  | replace('.' + network_dn,"") }}.{{ network_dn }} "sudo systemctl daemon-reload"
+ssh -o StrictHostKeyChecking=no {{ tectonic_coreos_user }}@{{ hostvars[host].inventory_hostname  | replace('.' + network_dn,"") }}.{{ network_dn }} "sudo systemctl restart kubelet"
+
+{% endfor %}
+

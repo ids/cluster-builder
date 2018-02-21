@@ -163,7 +163,7 @@ In the __cluster package folder__:
 
 The Terraform __apply__ will happen automatically as part of the deployment if you don't cancel at the prompt.
 
-> __Note__: The iSCSI units required to support Kubernetes iSCSI persistant volume direct Pod access are only installed with the unattended Terraform installation.
+> __Note__: The iSCSI units required to support Kubernetes iSCSI persistent volume direct Pod access are only installed with the unattended Terraform installation.
 
 If you cancel before the __apply__, you can proceed with the Graphical web based Tectonic Installer:
 
@@ -208,6 +208,27 @@ Once logged into the __Tectonic Control__ you can download a __.kubeconfig__ fil
 Enjoy a nice polished Kubernetes!  With __CoreOS__, chances are good you won't have to redeploy it again for a very long time.
 
 > Checkout the __xtras/coreos__ folder for an __open-vm-tools.yml__ daemonset that will provide VMware tools on all the nodes.
+
+## iSCSI Persistent Volume Setup
+
+At the present time the installation process does not configure the cluster for iSCSI Persistent volumes out-of-the-box, however the nodes are already provisioned for iSCSI support.
+
+Each node must have adjustments made to the Kubelet.service unit file, and requires the __iscsid__ to be enabled and started.  Unfortunately __Ansible__ is no good to us here as it requires __python__ on the server, which we don't do on __CoreOS__.
+
+__Ansible__ is used to generate a simple __bash shell script__ with the necessary commands to configure all the nodes.  This can be done with the following ansible play:
+
+    $ ansible-playbooy -i clusters/ids/demo-core/hosts ansible/coreos-iscsi.yml
+
+This will produce two files in the __cluster package folder__:
+
+* coreos-kubelet-service
+* coreos-iscsi.sh
+
+From within the __cluster package folder__:
+
+    $ bash coreos-iscsi.sh
+
+The __coreos-kubelet-service__ will be copied into __/etc/systemd/system__ and the Kubelet service will be restarted.  The __iscsid__ will also be started.
 
 
 Appendix A: Graphical Installer Walkthrough
