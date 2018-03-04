@@ -35,6 +35,9 @@ EOM
 
 read -r -d '' OVFCMD << EOM
 ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+    {% if overwrite_existing_vms is defined  -%}
+      --overwrite \
+    {% endif %}
     --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
     --name="{{ hostvars[host].inventory_hostname }}" \
     --diskMode=thin \

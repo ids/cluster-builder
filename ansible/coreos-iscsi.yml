@@ -23,6 +23,16 @@
       dest: ../clusters/{{ cluster_pkg_folder }}/coreos-kublet-service
       mode: 0766
     become: false
+    when: tectonic_networking != "canal"
+
+  - name: Generate custom iSCSI/Canal Kublet service def
+    local_action:
+      module: template
+      src: templates/coreos-kubelet-service-iscsi-canal.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/coreos-kublet-service
+      mode: 0766
+    become: false
+    when: tectonic_networking == "canal"
 
   - name: Generate the iSCSI script
     local_action:

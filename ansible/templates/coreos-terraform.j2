@@ -4,7 +4,6 @@
   "tectonic_base_domain": "unused",
   "tectonic_cluster_cidr": "{{ k8s_cluster_cidr }}",
   "tectonic_cluster_name": "{{ cluster_name }}",
-  "tectonic_container_linux_version": "{{ tectonic_container_linux_version }}",
   "tectonic_dns_name": "",
   "tectonic_kube_apiserver_service_ip": "10.3.0.1",
   "tectonic_kube_dns_service_ip": "10.3.0.10",
@@ -26,5 +25,9 @@
   "tectonic_pull_secret_path": "clusters/{{ cluster_pkg_folder}}/config.json",
   "tectonic_service_cidr": "10.3.0.0/16",
   "tectonic_ssh_authorized_key": "{{ tectonic_ssh_authorized_key }}"
-  "tectonic_iscsi_enabled": true
+  "tectonic_iscsi_enabled": "true",
+  "tectonic_networking": "{{ tectonic_networking }}",
+  "tectonic_enable_calico_network_policy": "true",
+  "tectonic_container_linux_channel": "{{ tectonic_container_linux_channel }}",
+  "tectonic_container_linux_version" : "latest"
 }

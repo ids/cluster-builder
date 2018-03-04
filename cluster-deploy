@@ -15,7 +15,7 @@ function check_docker_license () {
 
 function pxe_matchbox_deploy () {
 
-  SERVER_WAIT=90s
+  SERVER_WAIT=30s
 
   if hash terraform >/dev/null; then
 
@@ -60,6 +60,9 @@ function pxe_matchbox_deploy () {
       fi
     fi
 
+    rm -rf .terraform
+    rm -rf terraform.tf*
+    rm -rf generated
     terraform init ${TECTONIC_HOME}/platforms/metal
     if [ $? -ne 0 ]; then
       echo "FAIL: Unable to initialize Tectonic Terraform!"

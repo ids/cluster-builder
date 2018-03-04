@@ -90,7 +90,7 @@
     tectonic_matchbox_rpc_endpoint: "{{ provisioner_server_dn }}:8081"
 
     tectonic_ingress_domain: "{{ tectonic_ingress_dn }}"
-
+    tectonic_container_linux_channel: "stable"
     tectonic_service_cidr: "10.3.0.0/16"
 
   tasks:
@@ -171,8 +171,8 @@
   - name: Generate the controllers.csv file
     local_action:
       module: template
-      src: templates/coreos-controllers-csv.j2
-      dest: ../clusters/{{ cluster_pkg_folder }}/manual-controllers.csv
+      src: templates/coreos-masters-csv.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/manual-masters.csv
       mode: 0766
     become: false
     run_once: true

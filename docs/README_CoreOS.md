@@ -82,6 +82,16 @@ Once the installer has been downloaded make sure it is in the PATH, and also mak
 
 > __TECTONIC_HOME__ must be set for the cluster deployment to complete.
 
+> __Note__ for __iSCSI__ and __Network Policy__ (integrated Canal CNI plugin) you will need to ~hack~ manually adjust the default value for __tectonic_iscsi_enabled__ and __tectonic_networking__ in the core terraform files (for some reason they are not being picked up from the generated terraform config).  The bug for __tectonic_networking__ is known and fixed in master, but the fix hasn't been pulled into the 1.8.7 branch at this time. They have a branch strategy that is hard to follow as master still points to 1.8.4, yet it has fixes not in 1.8.7.
+
+1. Download the [1.8.7-tectonic.2](https://github.com/coreos/tectonic-installer/releases) release tarball and unzip in your workspace, then cd into the directory.
+2. Follow the build instructions in the README.
+3. Follow the instructions to unzip the tarball created, and point __TECTONIC_HOME__ to this folder.
+4. In the __platform/metal__ folder locate __config.tf__ file and change __tectonic_iscsi_enabled__ default to __true__, and __tectonic_networking__ to __canal__.
+5. This will enable iSCSI in the target cluster, as well as install with __tectonic_networking__ set to "canal" for integrated __Network Policy__.
+
+> Hopefully this hack isn't needed for long.  As of March 4, 2018 this provides the latest stable version of Tectonic CoreOS w/ integrated Canal.
+
 ### DNS 
 
 You will need to create the following DNS entries:
@@ -211,7 +221,7 @@ Enjoy a nice polished Kubernetes!  With __CoreOS__, chances are good you won't h
 
 ## iSCSI Persistent Volume Setup
 
-At the present time the installation process does not configure the cluster for iSCSI Persistent volumes out-of-the-box, however the nodes are already provisioned for iSCSI support.
+At the present time the installation process does not configure the cluster for iSCSI Persistent volumes out-of-the-box, there is a bug in the mainstream version that doesn't acknowledge __tectonic_iscsi_enabled__, however the nodes are already provisioned for iSCSI support.  If you didn't grab the __tectonic-installer__ from github and build it from source, it is probably broken.
 
 Each node must have adjustments made to the Kubelet.service unit file, and requires the __iscsid__ to be enabled and started.  Unfortunately __Ansible__ is no good to us here as it requires __python__ on the server, which we don't do on __CoreOS__.
 
