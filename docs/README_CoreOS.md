@@ -65,7 +65,9 @@ You will need to procure a license and pull secret.
 #### VMware Fusion Notes
 
 * You might need to run `sudo touch "/Library/Preferences/VMware Fusion/promiscAuthorized"` to prevent interactive prompting during the PXE install process.  However, launching the VMs manually anyway is good way to monitor the install process.
-* Vmware Fusion 8.x doesn't work well on High Sierra, but neither does version 10.x.  NAT is frequently broken for private networks (which is what we use in cluster-builder).  If CoreOS is not installing on the nodes in a timely manner, or they are stuck in a PXE install loop, it is likely that the nodes can't NAT out to the internet.  This can be diagnosed by logging into the provisioner and attmepting to ping and resolve a public domain name.  If it doesn't work in one VM, it is likely broken for the network... and you will have to stop all the VMs and restart Fusion.  This is a 100% a VMware Fusion issue.
+* Vmware Fusion 8.x doesn't work well on High Sierra, but neither does version 10.x.  NAT is frequently broken for private networks (which is what we use in cluster-builder).  If CoreOS is not installing on the nodes in a timely manner, or they are stuck in a PXE install loop, it is likely that the nodes can't NAT out to the internet.  This can be diagnosed by logging into the provisioner and attmepting to ping and resolve a public domain name.  If it doesn't work in one VM, it is likely broken for the network... and you will have to stop all the VMs and restart Fusion.  __This is a 100% a VMware Fusion issue__.
+
+> If your VMs stop getting DHCP addresses all of a sudden, it is likely the Fusion bug, try restarting VMware Fusion completely, it is likely the issue.
 
 The VMware install process is nearly identical to the ESXi documented below except for the following modifications:
 
@@ -84,13 +86,13 @@ Once the installer has been downloaded make sure it is in the PATH, and also mak
 
 > __Note__ for __iSCSI__ and __Network Policy__ (integrated Canal CNI plugin) you will need to ~hack~ manually adjust the default value for __tectonic_iscsi_enabled__ and __tectonic_networking__ in the core terraform files (for some reason they are not being picked up from the generated terraform config).  The bug for __tectonic_networking__ is known and fixed in master, but the fix hasn't been pulled into the 1.8.7 branch at this time. They have a branch strategy that is hard to follow as master still points to 1.8.4, yet it has fixes not in 1.8.7.
 
-1. Download the [1.8.7-tectonic.2](https://github.com/coreos/tectonic-installer/releases) release tarball and unzip in your workspace, then cd into the directory.
-2. Follow the build instructions in the README.
-3. Follow the instructions to unzip the tarball created, and point __TECTONIC_HOME__ to this folder.
-4. In the __platform/metal__ folder locate __config.tf__ file and change __tectonic_iscsi_enabled__ default to __true__, and __tectonic_networking__ to __canal__.
+1. Download the [1.8.7-tectonic.2](https://github.com/coreos/tectonic-installer/releases) release tarball and unzip in your workspace, then cd into the directory. Set __TECTONIC_HOME__ to this folder,
+2. In the `platforms/metal/config.tf` file locate the entry for __tectonic_networking__ and change the default from "flannel" to "canal".
+3. In the `platforms/metal/matchers.tf` file locate the entry for __tectonic_iscsi_enabled__ where it says `iscsi_enabled      = "${var.tectonic_iscsi_enabled ? true : false}"` and change it so it is always true: `iscsi_enabled      = "${var.tectonic_iscsi_enabled ? true : true}"` (however you like).
+4. Now run the installation process through __cluster-builder__ with the __TECTONIC_HOME__ set to this tectonic install folder with the modifications.
 5. This will enable iSCSI in the target cluster, as well as install with __tectonic_networking__ set to "canal" for integrated __Network Policy__.
 
-> Hopefully this hack isn't needed for long.  As of March 4, 2018 this provides the latest stable version of Tectonic CoreOS w/ integrated Canal.
+> Hopefully this hack isn't needed for long.  As of March 4, 2018 this provides the latest stable version of Tectonic CoreOS w/ integrated Canal and iSCSI enabled out of the box (you don't need to run the post install script reference below).
 
 ### DNS 
 
@@ -199,7 +201,7 @@ This should allow Terraform to finish provisioning the nodes.  It can take awhil
 
 __Note__: When the unattended Terraform __apply__ completes successfully, the cluster is not yet fully installed.  In the background all of the __Tectonic__ specific services will install and this can take 10 or more minutes after the script completes.  
 
-> I like to ssh into the controller/master node and run `top` to watch the installation process, and when things quiet down, hit the ingress url... and it brings up the Tectonic Console.
+> I like to ssh into the controller/master node and run `top` and/or `docker ps` to watch the installation process, and when things quiet down, hit the ingress url... and it brings up the Tectonic Console.
 
 #### Access the Tectonic Cluster
 
