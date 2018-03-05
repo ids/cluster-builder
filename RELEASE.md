@@ -6,7 +6,9 @@ v18.04-beta2
 
 * Added __cluster-update__ functionality for applying rolling updates to __CentOS7__ and __RHEL__ __Docker Swarm__ cluster nodes (in support of regular patching).
 * Pinned Docker engine version on __CentOS7__ and __RHEL__ CE to __Docker 17.09.1-ce__.
-* __Experimental__ support for __Tectonic CoreOS__ with [documentation](docs/README_CoreOS.md)
+* Added support for __Tectonic CoreOS__ with [documentation](docs/README_CoreOS.md)
+
+> Tectonic is a late addition but moving into the top spot quickly - it has the polish and stability of DC/OS, with the momentum of Kubernetes.  If you have a Docker Swarm headache (as I do), this is the cure.
 
 v18.04-beta1
 ------------

@@ -26,7 +26,7 @@ Cluster Builder
 17. [Production Readiness](#production-readiness)
 
 ## Supported Clusters
-The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clusters for several platforms:
+The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
 
 * PhotonOS Docker CE
 * CentOS 7 Atomic Docker CE (deprecated)
@@ -35,14 +35,11 @@ The **cluster-builder** currently supports building __Swarm__ and __DC/OS__ clus
 * CentOS 7 DC/OS 
 * RedHat Enterprise 7 Docker CE
 * RedHat Enterprise 7 Docker EE
+* CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
 
 > [Project Atomic](https://www.projectatomic.io/) variant is now deprecated.  The __rpm-ostree__ model is too restrictive.
-
-### Experimental Clusters
-
-Tectonic CoreOS is currently in the early experimental stage (but already feels like a more stable platform then Docker).  For more information see the [CoreOS Readme](docs/README_CoreOS.md).
 
 ## Deployment Options
 There are currently two types of deployment:
@@ -65,7 +62,7 @@ There are at present 7 supported cluster types, or variants:
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
-With two experimental builds in support of __Tectonic CoreOS__:
+With two special builds in support of __Tectonic CoreOS__:
 
 * coreos-provisioner
 * coreos-pxe
