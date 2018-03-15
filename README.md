@@ -9,7 +9,7 @@ Cluster Builder
 
 __cluster-builder__ enables the automated creation of container orchestration clusters for VMware environments.  Using freely available tools and only an annotated Ansible inventory file, __cluster-builder__ allows you to configure and deploy into ESXi (and Fusion) fleets of virtual machine cluster nodes; as completely configured and ready to use CaaS systems.
 
-__cluster-builder__ follows an immutable infrastructure philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
+__cluster-builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
 
 __cluster-builder__ was designed to handle ~all~ most of the complexity associated with on-prem deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Tectonic CoreOS](https://coreos.com) container orchestration clusters.
 
