@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cluster-toolbox-diskbench
+spec:
+  template:
+    spec:
+      volumes:
+      - name: iscsi-benchmark-volume
+        iscsi:
+          targetPortal: 192.168.1.108:3260
+          iqn: iqn.1997-05.com.amazon:mysql.main
+          fsType: ext4
+          lun: 0
+          readOnly: false   
+    
+      containers:
+      - name: cluster-toolbox-diskbench
+        image: idstudios/cluster-toolbox:latest
+        args: ["disk-bench"]
+        volumeMounts:
+          - name: iscsi-benchmark-volume
+            mountPath: "/target"        
+      restartPolicy: Never
+  backoffLimit: 4

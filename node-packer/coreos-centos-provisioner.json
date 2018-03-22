@@ -70,7 +70,8 @@
       "format": "ova",
       "vmx_data": {
         "memsize": "1536",
-        "numvcpus": "2"
+        "numvcpus": "2",
+        "ethernet0.connectionType": "nat"
       },
       "vmx_data_post": {
         "ethernet0.connectionType": "bridged"
