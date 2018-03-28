@@ -321,6 +321,13 @@ __Docker EE:__ 2.2.3 (ucp)
 centos-ucp
 rhel-ucp
 
+__DC/OS__: 1.11 (or latest)
+centos-dcos
+
+__Tectonic CoreOS__: v1.8.9 (or latest)
+coreos-provisioner
+coreos-pxe
+
 ### CentOS Based Clusters
 
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
@@ -336,10 +343,10 @@ rhel-ucp
 ### All Clusters
 
 * Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to swarms
-* The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
+* The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all Swarm based cluster-builder VMs.
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
 * Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
-* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring, although Docker EE comes with some built in visualizations for CPU and memory reducing the urgency of more advanced metrics analysis.
+* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring for Docker Swarm.  Tectonic CoreOS has built in Prometheus/Grafana integrations for Kubernetes that are quite a bit more advanced then the Swarm implementation.
 * Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
 
 > Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
