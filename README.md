@@ -16,7 +16,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
 3. [Required Software](#required-software)
-4. [Preparation](#preparation)
+4. [General Preparation](#general-preparation)
 5. [Cluster Definition Packages](#cluster-definition-packages)
 6. [Cluster Builder Usage](#cluster-builder-usage)
 7. [Deploying a Cluster](#deploying-a-cluster)
@@ -27,9 +27,8 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 12. [Prometheus Monitoring](#prometheus-monitoring)
 13. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 14. [Change Cluster Password](#change-cluster-password)
-16. [Separate Management and Data Interfaces](#separate-management-and-data-interfaces)
-16. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-17. [Production Readiness](#production-readiness)
+15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+16. [Production Readiness](#production-readiness)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
@@ -37,8 +36,8 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __
 * PhotonOS Docker CE
 * CentOS 7 Atomic Docker CE (deprecated)
 * CentOS 7 Docker CE
-* CentOS 7 Docker EE 
-* CentOS 7 DC/OS 
+* CentOS 7 Docker EE
+* CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
 * RedHat Enterprise 7 Docker EE
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
@@ -50,7 +49,7 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __
 ## Deployment Options
 There are currently two types of deployment:
 
-* VMware Fusion 
+* VMware Fusion
 * VMware ESXi (vSphere)
 
 The VMware Fusion deployment is intended for local development.
@@ -102,9 +101,9 @@ It can even be built remotely directly on an ESXi server, which is the intended 
 
 For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
-## Preparation
+## General Preparation and Deployment Guides
 
-* Ensure that the host names specified in the inventory file also resolve (exist in /etc/hosts or DNS)
+* For all cluster types ensure that the host names specified in the inventory file also resolve.  For ESXi deployments these should resolve via DNS.  For Fusion deployments you can use __/etc/hosts__ on the host, but DNS resolution still works best.
 
 * It is necessary that the **id_rsa.pub** value of the **cluster-builder** operator account be set in the **node-packer/keys/authorized_keys**. This is required as the scripts use passwordless SSH to access the 
 VMs for provisioning.
@@ -117,245 +116,31 @@ The cluster definition package (folder) you create in the __clusters__ folder wi
 __Note for Red Hat Deployments__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
 
+See the [Fusion Deployment Guide](docs/fusion-deployment-guide.md) for details on deploying on VMware Fusion.
+
+See the [ESXi Deployment Guide](docs/esxi-deployment-guide.md) for details on deploying to ESXi hypervisor(s).
+
 ## Cluster Definition Packages
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
 
 Eg. In the **examples** folder there is:
 
-		demo-atomic-swarm
+		demo-centos-swarm
 			|_ hosts
 
 Sample cluster packages are located in the **examples** folder and can be copied into the **clusters** folder.
 
-### Fusion Sample: demo-photon-swarm hosts file
-
-	[all:vars]
-	cluster_type=photon-swarm
-	cluster_name=demo-photon-swarm
-
-	vmware_target=fusion
-	fusion_net="vmnet2"
-	fusion_net_type="custom"
-	fusion_vm_folder="../virtuals"
-
-	network_mask=255.255.255.0
-	network_gateway=192.168.100.1
-	network_dns=192.168.100.1
-	network_dns2=8.8.8.8
-	network_dns3=8.8.4.4
-	network_dn=idstudios.vmware
-
-	docker_prometheus_server=demo-swarm-m1
-
-	[docker_swarm_manager]
-	demo-swarm-m1 ansible_host=192.168.100.90 
-
-	[docker_swarm_worker]
-	demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
-	demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
-	demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
-
-	[vmware_vms]
-	demo-swarm-m1 numvcpus=2 memsize=2048 
-	demo-swarm-w1 numvcpus=2 memsize=3072 
-	demo-swarm-w2 numvcpus=2 memsize=3072 
-	demo-swarm-w3 numvcpus=2 memsize=3072 
-
-
-**cluster_type**: _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _atomic-swarm_, _rhel-swarm_, or _rhel-ucp_.
-
-**vmware_target**: _fusion_ or _esxi_.
-
-**fusion_net**: The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
-
-**fusion_net_type**: One of _nat_, _bridged_ or _custom_.
-
-__network_dns__: DNS entry for the primary interface
-
-__network_dns2__: 2nd DNS entry for the primary interface
-
-__network_dns3__: 3rd DNS entry for the primary interface
-
-__network_dn__: Domain name for the primary interface subnet
-
-__docker_prometheus_server=<host>__: The specified server will have **prometheus** and **grafana** instances installed.
-
-__docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
-
-For deploying Docker EE UCP, there are also additional fields required:
-
-__ucp_download_url__: The Docker EE Engine Download Url
-
-__ucp_admin_user__: The admin user for the UCP
-
-__ucp_admin_password__: The admin password for the UCP
-
-#### ESXI options:
-
-__esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
-
-__esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
-
-__ovftool_parallel=true__: This setting will execute __ovftool__ deployments in parallel rather then one at a time.  This can increase ovftool deployment performance by as much as 150%.
-
-#### Advanced options:
-
-__ovftool_parallel=true__: When set on ESXI deployments it will cause the ovftool processes to run in parallel in the background, resulting in as much as 20% performance increase in some environments. 
-
-> Note that at the present time running ovftool in parallel will scramble the output to the console - but this won't affect the outcome.
-
-__docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
-
-__docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
-
-__data_network_mask__: The network mask for the data network
-
-__data_network_gateway__: The gateway address for the data network
-
-__docker_daemon_dns_override__: (optional)  By default, cluster-builder will use the dns entries defined for the host interfaces (network_dns, network_dns2, etc).  If a different DNS configuration is desired for Docker, this value can be used to override the default behavior.  It must be supplied in the JSON string array form:
-
-		docker_daemon_dns_override='"192.168.1.1", "8.8.8.8"'
-
-> Note the single quotes wrapping the double quotes.
-
-> When deploying two interface nodes, the Data plane interface should be assigned the default gateway, and the Control/Mgmt plane interface should NOT be assigned a default gateway.
-
-__data_network_dns__: DNS entry for the data plane interface
-
-__data_network_dns2__: 2nd DNS entry for the data plane interface
-
-__data_network_dns3__: 3rd DNS entry for the data plane interface
-
-__data_network_dn__: Domain name for the data interface subnet
-
-
-### ESXi Sample: esxi-centos-dcos hosts file
-
-	[all:vars]
-	cluster_type=centos-dcos
-	cluster_name=esxi-centos-dcos
-
-	dcos_boot_server=192.168.1.160
-	dcos_boot_server_port=9580
-
-	vmware_target=esxi
-	esxi_net="VM Network" 
-	esxi_net_prefix=192.168.1
-
-	network_mask=255.255.255.0
-	network_gateway=192.168.1.1
-	network_dns=192.168.1.10
-	network_dns2=192.168.1.1
-	network_dns3=8.8.8.8
-	network_dn=idstudios.local
-
-	[dcos_boot]
-	dcos-c2-boot ansible_host=192.168.1.160 
-
-	[dcos_masters]
-	dcos-c2-m1 ansible_host=192.168.1.171 
-	dcos-c2-m2 ansible_host=192.168.1.172 
-	dcos-c2-m3 ansible_host=192.168.1.173 
-
-	[dcos_agents_private]
-	dcos-c2-a1 ansible_host=192.168.1.181 
-	dcos-c2-a2 ansible_host=192.168.1.182 
-	dcos-c2-a3 ansible_host=192.168.1.183 
-
-	[dcos_agents_public]
-	dcos-c2-p1 ansible_host=192.168.1.191 
-
-	[vmware_vms]
-	dcos-c2-boot  numvcpus=2 memsize=1024 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
-	dcos-c2-m1    numvcpus=2 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
-	dcos-c2-m2    numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-	dcos-c2-m3    numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-a1    numvcpus=2 memsize=4096 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-	dcos-c2-a2    numvcpus=2 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-p1    numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-
-	[vmware_db_vms]
-	dcos-c2-a3    numvcpus=2 memsize=5120 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
-
-	[vmware_vms:children]
-	vmware_db_vms
-
-VMs are provisioned based on the **[vmware_vms]** group attributes.
-
-**exsi_host** is the target host where the VM will be deployed. **esxi-user** and **esxi-ds** are fairly straightforward.
-
-### VMware Fusion Deployment
-VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.
-
-> **Note:** DC/OS requires at least 16GB of ram on the target machine.
-
----
-### Fusion Preparation
-
-* The examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created before attempting to deploy the fusion demos.
-
-* The VMware Fusion application should be running.
-
-* The VMware tools need to be in the PATH
-
-* The Swarm Node hostnames must be specified in the host machine /etc/hosts
-
-#### VMware Tools Path
-
-Ensure the VMware CLI tools are setup in the BASH PATH:
-
-Eg.
-
-		export VM_TOOLS="/Library/Application Support/VMware Fusion"
-		export PATH=$PATH:/usr/local/bin:/usr/bin:~/bin:$VM_TOOLS
-
-		if [ -d "/Applications/VMware Fusion.app/Contents/Library" ]; then
-		export PATH=$PATH:"/Applications/VMware Fusion.app/Contents/Library"
-		fi
-
-		if [ -d "/Applications/VMware OVF Tool/" ]; then
-		export PATH=$PATH:"/Applications/VMware OVF Tool/"
-		fi
-
-#### Host /etc/hosts
-
-The hostnames of the target VM nodes used in the cluster definition package:
-
-		192.168.100.90  demo-swarm-m1 atomic-swarm-m1 drupal.idstudios.vmware
-		192.168.100.91	demo-swarm-w1 atomic-swarm-w1
-		192.168.100.92	demo-swarm-w2 atomic-swarm-w2
-		192.168.100.93	demo-swarm-w3 atomic-swarm-w3
-
----
-
-> The script requires an active local sudo session as the VMware network controls require sudo, but this is difficult to prompt for with ansible.  If you don't have one, the script will prompt you for your local SUDO machine password.
-
-The ansible scripts will adjust your local VMware network dhcpd.conf file based on the MAC addresses assigned during creation of the VMs, and the static IPs will be assigned by VMware via MAC address.
-
-Once the VMs have been created, assigned their correct addresses, and are running, cluster provisioning process will begin.
-
-## VMware ESXi Deployment
-ESXi deployment assumes that you have SSH enabled, and that your operator **id_rsa.pub** has been registered in the ESXi server's authorized_keys.
-
-> **Note**: ESXi deployment uses static IP addresses auto-assigned during the deployment process.
-
-Once deployed to ESXI, the VMs are started to generate their MAC addresses and fetch temporary DHCP IP addresses.  These are then used to create some BASH scripts that will configure the VMs with static IPs, as per the inventory file.
-
-At this stage all of the VMs have been deployed and **should be running**.  They should also have their correct static IPs.
-
----
-### ESXi Preparation
-
-* All of the ESXi hosts must be setup for root access with passwordless SSH.  The **authorized_keys** for the root account on each ESXi host must contain the public key for the account executing the script.  This should be the same public key used in the creation of the ova template images.
-
-* The example esxi cluster inventory files are based on a bridged network of 192.168.1.0.  If this doesn't match your ESXi environment, you will need to create your own inventory file based on the example.
-
----
-
-> You will be prompted for the ESXi root password as it is required for the ovftool - which does not appear to work with passwordless SSH.
-
-> TODO: Future enhancements would switch to using PowerCLI or the vSphere API for remote control.
+#### VMware Fusion Examples
+[DC/OS in VMware Fusion](examples/demo-centos-dcos/hosts)
+[Docker CE in VMware Fusion](examples/demo-centos-swarm/hosts)
+[Tectonic CoreOS in VMware Fusion Provisioner](examples/demo-core-provisioner/hosts) and [PXE nodes](examples/demo-core/hosts).
+
+
+#### VMware ESXi Examples
+[DC/OS on ESXi](examples/esxi-centos-dcos/hosts)
+[Docker CE on ESXi](examples/esxi-centos-swarm/hosts)
+[Tectonic CoreOS in VMware Fusion Provisioner](examples/core-provisioner/hosts) and [PXE nodes](examples/core-1/hosts).
 
 ## Cluster Builder Usage
 
@@ -413,7 +198,7 @@ Eg.
     $ bash cluster-control demo-atomic-swarm suspend
 
 
-## VMware ESX Volume Driver Plugin
+## VMware ESXi Volume Driver Plugin
 
 In order to make use of the VMware Volume Driver Plugin (vDVS) for persistent data volume management the VIB must be installed on all of the ESX servers used for the cluster.
 
@@ -506,82 +291,11 @@ Eg.
 
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
 
-## Separate Management and Data Interfaces
-
-As of Docker Engine 17.06 is now possible to specify separate interfaces for the Management and Control traffic and the Swarm/Container Data traffic.
-
-> See https://docs.docker.com/engine/swarm/networking
-
-__cluster-builder__ now supports this via some additional directives in the cluster package inventory hosts file.
-
-> __Note__: Currently only supported on CentOS variants.
-
-### Separate Interface Preparation
-
-If you haven't already done so, you will need to rebuild the __CentOS OVA__ so it contains the required two interfaces.
-
-> This has been recently added to the centos7 packer build and only needs to be done once.
-
-__Note__ that this separation does require additional network configuration external to the clusters.  The data plane will need access to a default gateway within the designated data plane subnet.
-
-#### ESXI
-
-Ensure there are two networks on the ESX hosts that all hosts can access.  This will likely mean the creation of two dedicated VLANs (or port groups).
-
-The inventory hosts file __esxi_data_net__ should match the name of the ESX VLAN port group.
-
-Inventory hosts file additions:
-
-Eg.
-
-	esxi_data_net="Data Network" 
-	esxi_data_net_prefix=192.168.2
-
-#### Fusion
-
-Ensure a __vmnet3__ private custom network has been created.
-
-Eg.
-
-Inventory hosts file additions:
-
-	fusion_data_net="vmnet3"
-	fusion_data_net_type="custom"
-
-#### Both ESXI/Fusion
-
-Specify the settings for the 2nd dedicated data network inferface, also in the hosts file:
-
-	data_network_mask=255.255.255.0
-	data_network_gateway=192.168.2.1
-	data_network_dns=8.8.8.8
-	data_network_dns2=8.4.4.4
-	data_network_dn=idstudios.data.local
-
-> Make sure the settings match your target network
-
-__Note__ the prefix "data_" in front of the settings.  The original settings that do not contain the "data_" prefix are used as the __Control and Management Plane Interface__.
-
-Also make sure to assign the data plane interface IP address as **data_ip** for each VM node in the swarm:
-
-	[docker_swarm_manager]
-	swarm-m1 ansible_host=192.168.1.221 data_ip=192.168.2.221 
-
-	[docker_swarm_worker]
-	swarm-w1 ansible_host=192.168.1.231 data_ip=192.168.2.231 swarm_labels='["front-end"]'
-	swarm-w2 ansible_host=192.168.1.232 data_ip=192.168.2.232 swarm_labels='["front-end"]'
-	swarm-w3 ansible_host=192.168.1.233 data_ip=192.168.2.233 swarm_labels='["front-end"]'
-	swarm-w4 ansible_host=192.168.1.234 data_ip=192.168.2.234 swarm_labels='["db-galera-node-1"]'
-	swarm-w5 ansible_host=192.168.1.235 data_ip=192.168.2.235 swarm_labels='["db-galera-node-2"]'
-	swarm-w6 ansible_host=192.168.1.236 data_ip=192.168.2.236 swarm_labels='["db-galera-node-3"]'
-
-__Note__ the **data_ip** variable containing the ip address assignment for the data plane network.
-
 ## Advanced Swarm Deployment
 
 The advanced swarm deployment configuration represents the current candidate production deployment model.  It involves the following key aspects:
 
-* Separate interfaces for Control and Data plane underlay networks (each VM node in the swarm has two nics on two different subnets)
+* [Separate interfaces for Control and Data plane](dcos/swarm-seperate-interfaces.md) underlay networks (each VM node in the swarm has two nics on two different subnets)
 * Cluster VM nodes are fully contained within a private VLAN
 * All cluster access is controlled via a Firewall/gateway
 * All management services are load balanced over 3 or more manager nodes
