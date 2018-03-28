@@ -26,7 +26,7 @@ Inventory hosts file additions:
 
 Eg.
 
-	esxi_data_net="Data Network" 
+	esxi_data_net="Data Network"
 	esxi_data_net_prefix=192.168.2
 
 #### Fusion
