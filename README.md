@@ -28,7 +28,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 13. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 14. [Change Cluster Password](#change-cluster-password)
 15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-16. [Production Readiness](#production-readiness)
+16. [System Profile](#system-profile)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
@@ -303,32 +303,11 @@ The advanced swarm deployment configuration represents the current candidate pro
 
 For detailed step-by-step configuration instructions see the [Advanced Swarm Deployment Guide](docs/advanced_swarm.md)
 
-## Production Readiness
-
-Currently in a pre-production state, but rapidly approaching production readiness with the CentOS variant of Docker CE and EE.
-
-### Security
-
-Currently two automated security audits of the  __cluster-builder CentOS Docker EE/CE__ clusters have been conducted:
-
-> November 1st, 2017
-
-#### Lynis
-
-[Lynis](https://cisofy.com/lynis/) security scanning has been conducted on the current CentOS node.  Relevant suggestions were implemented as part of an [ansible hardening script](ansible/roles/centos-hardening/tasks/hardening.yml).
-
-The report output is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-lynis.md).
-
-#### CIS Docker Benchmark
-
-The [CIS Docker Benchmark](https://docs.docker.com/compliance/cis/) has been applied to the curent CentOS node.  Warnings and subsequent mitigations were applied and/or documented at the top of the report, which is available [here](https://raw.githubusercontent.com/ids/cluster-builder/master/xtras/security-reports/centos-docker-cis.md).
-
-
-### System Profile
+## System Profile
 
 A general overview of the highlights:
 
-#### Docker Versions
+### Docker Versions
 
 __Docker CE:__ 17.09.1-ce (or later)
 centos-swarm
@@ -340,19 +319,19 @@ __Docker EE:__ 2.2.3 (ucp)
 centos-ucp
 rhel-ucp
 
-#### CentOS Based Clusters
+### CentOS Based Clusters
 
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
 * CentOS base VM image is a fully functioning and ready worker node.
 * Default linux kernel is 3.10.x
 
-#### PhotonOS Based Clusters
+### PhotonOS Based Clusters
 
 * PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __862.4MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
 * PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
 * PhotonOS VMs are automatically configured with __overlay2__ driver as they have a 4.x kernel
 
-#### All Clusters
+### All Clusters
 
 * Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to swarms
 * The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all cluster-builder VMs.
