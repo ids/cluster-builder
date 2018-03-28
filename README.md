@@ -116,9 +116,9 @@ The cluster definition package (folder) you create in the __clusters__ folder wi
 __Note for Red Hat Deployments__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
 
-See the [Fusion Deployment Guide](docs/fusion-deployment-guide.md) for details on deploying on VMware Fusion.
+See the [Fusion Deployment Guide](docs/fusion_deployment_guide.md) for details on deploying on VMware Fusion.
 
-See the [ESXi Deployment Guide](docs/esxi-deployment-guide.md) for details on deploying to ESXi hypervisor(s).
+See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details on deploying to ESXi hypervisor(s).
 
 ## Cluster Definition Packages
 
@@ -297,7 +297,7 @@ It is intended to be run on a regular basis as per the standard operating proced
 
 The advanced swarm deployment configuration represents the current candidate production deployment model.  It involves the following key aspects:
 
-* [Separate interfaces for Control and Data plane](dcos/swarm-seperate-interfaces.md) underlay networks (each VM node in the swarm has two nics on two different subnets)
+* [Separate interfaces for Control and Data plane](dcos/swarm_seperate_interfaces.md) underlay networks (each VM node in the swarm has two nics on two different subnets)
 * Cluster VM nodes are fully contained within a private VLAN
 * All cluster access is controlled via a Firewall/gateway
 * All management services are load balanced over 3 or more manager nodes
