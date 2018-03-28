@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+v18.04-beta3
+------------
+
+* Added additional documentation for iSCSI configuration for __Tectonic CoreOS__.
+* Cleaned up READMEs and documentation.
+
+
 v18.04-beta2
 ------------
 
