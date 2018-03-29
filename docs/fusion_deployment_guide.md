@@ -1,4 +1,4 @@
-## VMware Fusion Deployment Guide
+## Cluster Builder - VMware Fusion Deployment Guide
 
 VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.
 

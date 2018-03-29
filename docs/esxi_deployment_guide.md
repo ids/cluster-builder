@@ -1,4 +1,4 @@
-## ESXi Deployment Guide
+## Cluster Builder - ESXi Deployment Guide
 
 ESXi deployment assumes that you have SSH enabled, and that your operator **id_rsa.pub** has been registered in the ESXi server's authorized_keys.
 
@@ -23,54 +23,54 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 
 ### ESXi DC/OS Sample: esxi-centos-dcos hosts file
 
-	[all:vars]
-	cluster_type=centos-dcos
-	cluster_name=esxi-centos-dcos
+		[all:vars]
+		cluster_type=centos-dcos
+		cluster_name=esxi-centos-dcos
 
-	dcos_boot_server=192.168.1.160
-	dcos_boot_server_port=9580
+		dcos_boot_server=192.168.1.160
+		dcos_boot_server_port=9580
 
-	vmware_target=esxi
-	esxi_net="VM Network" 
-	esxi_net_prefix=192.168.1
+		vmware_target=esxi
+		esxi_net="VM Network" 
+		esxi_net_prefix=192.168.1
 
-	network_mask=255.255.255.0
-	network_gateway=192.168.1.1
-	network_dns=192.168.1.10
-	network_dns2=192.168.1.1
-	network_dns3=8.8.8.8
-	network_dn=idstudios.local
+		network_mask=255.255.255.0
+		network_gateway=192.168.1.1
+		network_dns=192.168.1.10
+		network_dns2=192.168.1.1
+		network_dns3=8.8.8.8
+		network_dn=idstudios.local
 
-	[dcos_boot]
-	dcos-c2-boot ansible_host=192.168.1.160 
+		[dcos_boot]
+		dcos-c2-boot ansible_host=192.168.1.160 
 
-	[dcos_masters]
-	dcos-c2-m1 ansible_host=192.168.1.171 
-	dcos-c2-m2 ansible_host=192.168.1.172 
-	dcos-c2-m3 ansible_host=192.168.1.173 
+		[dcos_masters]
+		dcos-c2-m1 ansible_host=192.168.1.171 
+		dcos-c2-m2 ansible_host=192.168.1.172 
+		dcos-c2-m3 ansible_host=192.168.1.173 
 
-	[dcos_agents_private]
-	dcos-c2-a1 ansible_host=192.168.1.181 
-	dcos-c2-a2 ansible_host=192.168.1.182 
-	dcos-c2-a3 ansible_host=192.168.1.183 
+		[dcos_agents_private]
+		dcos-c2-a1 ansible_host=192.168.1.181 
+		dcos-c2-a2 ansible_host=192.168.1.182 
+		dcos-c2-a3 ansible_host=192.168.1.183 
 
-	[dcos_agents_public]
-	dcos-c2-p1 ansible_host=192.168.1.191 
+		[dcos_agents_public]
+		dcos-c2-p1 ansible_host=192.168.1.191 
 
-	[vmware_vms]
-	dcos-c2-boot  numvcpus=2 memsize=1024 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
-	dcos-c2-m1    numvcpus=2 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
-	dcos-c2-m2    numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-	dcos-c2-m3    numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-a1    numvcpus=2 memsize=4096 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
-	dcos-c2-a2    numvcpus=2 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
-	dcos-c2-p1    numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+		[vmware_vms]
+		dcos-c2-boot  numvcpus=2 memsize=1024 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
+		dcos-c2-m1    numvcpus=2 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
+		dcos-c2-m2    numvcpus=2 memsize=3072 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+		dcos-c2-m3    numvcpus=2 memsize=3072 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+		dcos-c2-a1    numvcpus=2 memsize=4096 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+		dcos-c2-a2    numvcpus=2 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+		dcos-c2-p1    numvcpus=2 memsize=2048 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
 
-	[vmware_db_vms]
-	dcos-c2-a3    numvcpus=2 memsize=5120 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
+		[vmware_db_vms]
+		dcos-c2-a3    numvcpus=2 memsize=5120 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5
 
-	[vmware_vms:children]
-	vmware_db_vms
+		[vmware_vms:children]
+		vmware_db_vms
 
 VMs are provisioned based on the **[vmware_vms]** group attributes.
 
