@@ -297,7 +297,7 @@ It is intended to be run on a regular basis as per the standard operating proced
 
 The advanced swarm deployment configuration represents the current candidate production deployment model.  It involves the following key aspects:
 
-* [Separate interfaces for Control and Data plane](dcos/swarm_seperate_interfaces.md) underlay networks (each VM node in the swarm has two nics on two different subnets)
+* [Separate interfaces for Control and Data plane](docs/swarm_seperate_interfaces.md) underlay networks (each VM node in the swarm has two nics on two different subnets)
 * Cluster VM nodes are fully contained within a private VLAN
 * All cluster access is controlled via a Firewall/gateway
 * All management services are load balanced over 3 or more manager nodes
