@@ -49,42 +49,39 @@ The ansible scripts will adjust your local VMware network dhcpd.conf file based 
 
 Once the VMs have been created, assigned their correct addresses, and are running, cluster provisioning process will begin.
 
-### Ansible Fusion Configuration
-
 ### Fusion Sample: demo-photon-swarm hosts file
 
-    [all:vars]
-    cluster_type=photon-swarm
-    cluster_name=demo-photon-swarm
+  [all:vars]
+  cluster_type=photon-swarm
+  cluster_name=demo-photon-swarm
 
-    vmware_target=fusion
-    fusion_net="vmnet2"
-    fusion_net_type="custom"
-    fusion_vm_folder="../virtuals"
+  vmware_target=fusion
+  fusion_net="vmnet2"
+  fusion_net_type="custom"
+  fusion_vm_folder="../virtuals"
 
-    network_mask=255.255.255.0
-    network_gateway=192.168.100.1
-    network_dns=192.168.100.1
-    network_dns2=8.8.8.8
-    network_dns3=8.8.4.4
-    network_dn=idstudios.vmware
+  network_mask=255.255.255.0
+  network_gateway=192.168.100.1
+  network_dns=192.168.100.1
+  network_dns2=8.8.8.8
+  network_dns3=8.8.4.4
+  network_dn=idstudios.vmware
 
-    docker_prometheus_server=demo-swarm-m1
+  docker_prometheus_server=demo-swarm-m1
 
-    [docker_swarm_manager]
-    demo-swarm-m1 ansible_host=192.168.100.90 
+  [docker_swarm_manager]
+  demo-swarm-m1 ansible_host=192.168.100.90 
 
-    [docker_swarm_worker]
-    demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
-    demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
-    demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
+  [docker_swarm_worker]
+  demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
+  demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
+  demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
 
-    [vmware_vms]
-    demo-swarm-m1 numvcpus=2 memsize=2048 
-    demo-swarm-w1 numvcpus=2 memsize=3072 
-    demo-swarm-w2 numvcpus=2 memsize=3072 
-    demo-swarm-w3 numvcpus=2 memsize=3072 
-
+  [vmware_vms]
+  demo-swarm-m1 numvcpus=2 memsize=2048 
+  demo-swarm-w1 numvcpus=2 memsize=3072 
+  demo-swarm-w2 numvcpus=2 memsize=3072 
+  demo-swarm-w3 numvcpus=2 memsize=3072 
 
 **cluster_type**: one of _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _atomic-swarm_, _rhel-swarm_, or _rhel-ucp_.
 
