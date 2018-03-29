@@ -1,5 +1,5 @@
-Tectonic CoreOS
-===============
+Cluster Builder - Tectonic CoreOS
+=================================
 
 Bare Metal PXE/iPXE Install for VMware ESXi/vSphere (Beta)
 -----------------------------------------------------------
