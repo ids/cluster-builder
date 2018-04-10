@@ -43,12 +43,12 @@
     line: 'Environment="MATCHBOX_RPC_ADDRESS=0.0.0.0:8081"'
 
 - name: Download latest CoreOS release
-  shell: ./scripts/get-coreos stable 1632.3.0 .  
+  shell: ./scripts/get-coreos stable 1688.5.3 .  
   args:
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
 
 - name: Download latest CoreOS release
-  shell: ./scripts/get-coreos alpha 1702.1.0 .  
+  shell: ./scripts/get-coreos alpha 1729.0.0 .  
   args:
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
 

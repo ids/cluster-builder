@@ -53,3 +53,26 @@
   register: matchbox_grpc_resp
 
 - debug: msg="{{ matchbox_grpc_resp.stdout_lines }}"
+
+- name: Download user specified CoreOS stable release
+  shell: ./scripts/get-coreos stable {{ coreos_stable_version }} .  
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
+  when: coreos_stable_version is defined
+
+- name: Download user specified CoreOS beta release
+  shell: ./scripts/get-coreos stable {{ coreos_beta_version }} .  
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
+  when: coreos_beta_version is defined
+
+- name: Download user specified CoreOS alpha release
+  shell: ./scripts/get-coreos stable {{ coreos_alpha_version }} .  
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
+  when: coreos_alpha_version is defined
+
+- name: Promote fetched CoreOS releases
+  shell: cp -r coreos/* /var/lib/matchbox/assets/coreos/*
+  args:
+    chdir: /home/admin/matchbox-v0.7.0-linux-amd64
