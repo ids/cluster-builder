@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+v18.04-beta4
+------------
+
+* Added wrappers for optional DNS entries in nic configuration
+* Updated and validated __Tectonic CoreOS__ install for __1.8.9-tectonic.1__.
+* More README and documentation cleanup.
+
 v18.04-beta3
 ------------
 
