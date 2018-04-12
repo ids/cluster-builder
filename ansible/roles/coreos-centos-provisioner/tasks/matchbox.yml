@@ -61,18 +61,18 @@
   when: coreos_stable_version is defined
 
 - name: Download user specified CoreOS beta release
-  shell: ./scripts/get-coreos stable {{ coreos_beta_version }} .  
+  shell: ./scripts/get-coreos beta {{ coreos_beta_version }} .  
   args:
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
   when: coreos_beta_version is defined
 
 - name: Download user specified CoreOS alpha release
-  shell: ./scripts/get-coreos stable {{ coreos_alpha_version }} .  
+  shell: ./scripts/get-coreos alpha {{ coreos_alpha_version }} .  
   args:
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
   when: coreos_alpha_version is defined
 
 - name: Promote fetched CoreOS releases
-  shell: cp -r coreos/* /var/lib/matchbox/assets/coreos/*
+  shell: cp -r coreos /var/lib/matchbox/assets
   args:
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
