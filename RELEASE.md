@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+v18.04-rc1
+------------
+
+* Fixed default volume layout for CentOS/RHEL.  Customized allocation so that **/var** now has a dedicated 180GB volume, **/** is allocated 40GB, **/boot** 1GB and **/tmp** 10GB.  **Note** that Nodes remain thinly provisioned.
+* Ensured that **/etc/hosts** on the nodes can be correctly populated with FQDN host names.
+
 v18.04-beta4
 ------------
 
