@@ -144,7 +144,7 @@
 
 - name: Determine the node name when there is a network_dn
   set_fact:
-    node_fqdn: "{{ inventory_hostname }}.{{ network_dn }}"
+    node_fqdn: "{{ node_hostname }}.{{ network_dn }}"
   when: "use_fqdn_node_name is defined"
 
 - name: Determine the node name when there is no network_dn

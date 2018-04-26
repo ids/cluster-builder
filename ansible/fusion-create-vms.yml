@@ -9,6 +9,9 @@
     vmware_dhcpd_base_path: '/Library/Preferences/VMware\ Fusion/'
     vmware_dhcpd_cmd: vmnet-cli
 
+  roles:
+    - role: common
+
   tasks:    
   - name: Ensure the target fusion_vm_folder exists
     local_action:

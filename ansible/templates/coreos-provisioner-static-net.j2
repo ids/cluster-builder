@@ -19,7 +19,7 @@ DNS3={{ network_dns3 }}
 EOF
 
 cat > /etc/sysconfig/network << EOF
-HOSTNAME={{ inventory_hostname}}.{{ network_dn }}
+HOSTNAME={{ node_hostname }}.{{ network_dn }}
 SEARCH={{ network_dn }}
 {% if data_network_dn is defined %}  
 SEARCH={{ data_network_dn }}

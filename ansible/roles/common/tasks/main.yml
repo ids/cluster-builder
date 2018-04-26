@@ -61,3 +61,12 @@
 - name: Calculated dns settings for docker daemon
   debug: var=docker_daemon_dns
   run_once: true
+
+- name: Determine FQDN Node Name
+  set_fact:
+    node_hostname: "{{ inventory_hostname | replace('.' + network_dn, '') }}"
+  run_once: true
+
+- name: Calculated simple node host name
+  debug: var=node_hostname
+  run_once: true

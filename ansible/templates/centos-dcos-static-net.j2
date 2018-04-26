@@ -18,7 +18,7 @@ DNS3={{ network_dns3 }}
 EOF
 
 cat > /etc/sysconfig/network << EOF
-HOSTNAME={{ inventory_hostname}}.{{ network_dn }}
+HOSTNAME={{ node_hostname }}.{{ network_dn }}
 {% if network_dns is defined %}  
 DNS1={{ network_dns }}
 {% endif %}
