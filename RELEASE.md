@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+v18.10-beta1
+------------
+
+* Updated CentOS7 to 7.5 (1804). 
+
 v18.04
 ------
 
