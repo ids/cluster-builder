@@ -1,8 +1,8 @@
 Release Notes
 =============
 
-v18.04-rc1
-------------
+v18.04
+------
 
 * Fixed default volume layout for CentOS/RHEL.  Customized allocation so that **/var** now has a dedicated 180GB volume, **/** is allocated 40GB, **/boot** 1GB and **/tmp** 10GB.  **Note** that Nodes remain thinly provisioned.
 * Increase system wide file descriptor limit via `fs.file-max = 100000` and adjusted __/etc/security/limits.conf__ to raise service level limits to 65536.
