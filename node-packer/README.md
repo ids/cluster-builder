@@ -11,9 +11,7 @@ Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 2.0** for use i
 
 [PhotonOS ISO Download](http://dl.bintray.com/vmware/photon/2.0/GA/iso/photon-2.0-304b817.iso)
 
-[CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1708.iso)
-
-[Atomic7 ISO Download](http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7.1708-Installer.iso)
+[CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso)
 
 ## Usage
 > Make sure to create **keys/authorized_keys** before you run build.  This is installed in the **root** account of the vm.  Provisioning scripts that use this image are based on passwordless ssh.
