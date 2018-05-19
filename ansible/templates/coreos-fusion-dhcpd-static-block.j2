@@ -1,7 +1,7 @@
 
 {% for host in groups['coreos_controllers'] %}
 host {{ hostvars[host].inventory_hostname }} {
-    hardware ethernet {{ hostvars[host].vm_mac_addr.stdout }};
+    hardware ethernet {{ hostvars[host].vm_mac_addr }};
     fixed-address {{ hostvars[host].ansible_host }};
     option host-name "{{ hostvars[host].inventory_hostname }}";
     {% if network_dns2 is defined %}  
@@ -17,7 +17,7 @@ host {{ hostvars[host].inventory_hostname }} {
 
 {% for host in groups['coreos_workers'] %}
 host {{ hostvars[host].inventory_hostname }} {
-    hardware ethernet {{ hostvars[host].vm_mac_addr.stdout }};
+    hardware ethernet {{ hostvars[host].vm_mac_addr }};
     fixed-address {{ hostvars[host].ansible_host }};
     option host-name "{{ hostvars[host].inventory_hostname }}";
     {% if network_dns2 is defined %}  

@@ -92,6 +92,10 @@
   - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
     when: vm_mac_addr is not defined    
 
+  - name: Set MAC Fact
+    set_fact:
+      vm_mac_addr: "{{ vm_mac_addr.stdout }}"
+
   - name: Stop the VMs 
     local_action:
       module: shell
