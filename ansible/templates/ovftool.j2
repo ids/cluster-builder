@@ -25,6 +25,7 @@ ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
     --powerOn \
     --disableVerification \
     --noSSLVerify \
+    --allowExtraConfig \
     --datastore="{{ hostvars[host].esxi_ds }}" \
     --network="{{ hostvars[host].esxi_net }}" \
     $OVA_TEMPLATE_PATH \
@@ -43,6 +44,7 @@ ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
     --diskMode=thin \
     --powerOn \
     --disableVerification \
+    --allowExtraConfig \
     --noSSLVerify \
     --datastore="{{ hostvars[host].esxi_ds }}" \
     --network="{{ hostvars[host].esxi_net }}" \

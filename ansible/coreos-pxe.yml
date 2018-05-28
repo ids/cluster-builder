@@ -50,6 +50,18 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: numvcpus is defined
 
+    - name: Enable disk.EnableUUID the ESXi VM
+      local_action:
+        module: shell
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "echo 'disk.EnableUUID = \"TRUE\"' >>  /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
+      when: memsize is defined
+
+    - name: Copy the adjusted vmx into place
+      local_action:
+        module: shell
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
+      when: memsize is defined
+
     - name: Adjust the numvcpus value on the ESXi VM
       local_action:
         module: shell
@@ -153,6 +165,7 @@
       module: shell
       _raw_params: "cat ../node-packer/keys/authorized_keys"
     register: tectonic_ssh_key_load
+    when: tectonic_ssh_authorized_key is undefined
     become: false
     run_once: true
 
@@ -163,6 +176,7 @@
     set_fact:
       tectonic_ssh_authorized_key: "{{  tectonic_ssh_key_load.stdout }}"
     run_once: true
+    when: tectonic_ssh_authorized_key is undefined
 
   - name: Generate the terraform.vars file
     local_action:

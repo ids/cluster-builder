@@ -1,0 +1,8 @@
+- hosts: coreos
+  become: true
+  any_errors_fatal: true
+  gather_facts: true
+  tasks:
+
+  - name: Validate Ansible Configuration
+    ping:

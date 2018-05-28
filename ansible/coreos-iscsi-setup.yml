@@ -1,0 +1,32 @@
+- hosts: coreos_workers
+  become: true
+  any_errors_fatal: true
+  gather_facts: false
+
+  roles:
+    - common
+
+  tasks:
+
+  - name: Enable and Start the iSCSId.
+    shell: systemctl enable iscsid && systemctl start iscsid
+
+  - name: Add iSCSI configuration to kubelet.service file
+    lineinfile:
+      dest: /etc/systemd/system/kubelet.service
+      regexp: "{{ item.regx }}"
+      line: "{{ item.line }}"
+      state: present
+      insertafter: 'Environment="RKT_RUN_ARGS='
+    with_items:
+      - { regx: "--volume iscsiadm,kind=host", line: '  --volume iscsiadm,kind=host,source=/usr/sbin/iscsiadm --mount volume=iscsiadm,target=/usr/sbin/iscsiadm \' }
+
+  - name: Daemon Reload.
+    shell: systemctl daemon-reload
+
+  - name: Restart the Kubelets.
+    shell: systemctl restart kubelet
+
+  - name: Enable and Start the iSCSId.
+    shell: systemctl enable rpcbind && systemctl start rpcbind
+
