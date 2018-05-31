@@ -5,6 +5,16 @@ Wants=rpc-statd.service
 EnvironmentFile=/etc/kubernetes/kubelet.env
 Environment="RKT_RUN_ARGS=--volume iscsiadm,kind=host,source=/usr/sbin/iscsiadm \
   --mount volume=iscsiadm,target=/usr/sbin/iscsiadm \
+  --volume mkfsxfs,kind=host,source=/sbin/mkfs.xfs \
+  --mount volume=mkfsxfs,target=/sbin/mkfs.xfs \
+  --volume mkfsext4,kind=host,source=/sbin/mkfs.ext4 \
+  --mount volume=mkfsext4,target=/sbin/mkfs.ext4 \
+  --volume mkfsfat,kind=host,source=/sbin/mkfs.fat \
+  --mount volume=mkfsfat,target=/sbin/mkfs.fat \
+  --volume etc-scsi,kind=host,source=/etc/iscsi/ \
+  --mount volume=etc-scsi,target=/etc/iscsi \
+  --volume iscsid,kind=host,source=/usr/sbin/iscsid \
+  --mount volume=iscsid,target=/usr/sbin/iscsid \
   --uuid-file-save=/var/cache/kubelet-pod.uuid \
   --volume=resolv,kind=host,source=/etc/resolv.conf \
   --mount volume=resolv,target=/etc/resolv.conf \

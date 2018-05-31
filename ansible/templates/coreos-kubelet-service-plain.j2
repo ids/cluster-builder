@@ -3,9 +3,7 @@ Description=Kubelet via Hyperkube ACI
 
 [Service]
 EnvironmentFile=/etc/kubernetes/kubelet.env
-Environment="RKT_RUN_ARGS=--volume iscsiadm,kind=host,source=/usr/sbin/iscsiadm \
-  --mount volume=iscsiadm,target=/usr/sbin/iscsiadm \
-  --uuid-file-save=/var/cache/kubelet-pod.uuid \
+Environment="RKT_RUN_ARGS=--uuid-file-save=/var/cache/kubelet-pod.uuid \
   --volume=resolv,kind=host,source=/etc/resolv.conf \
   --mount volume=resolv,target=/etc/resolv.conf \
   --volume var-lib-cni,kind=host,source=/var/lib/cni \
@@ -32,6 +30,8 @@ ExecStart=/usr/lib/coreos/kubelet-wrapper \
   --pod-manifest-path=/etc/kubernetes/manifests \
   --allow-privileged \
   --node-labels=node-role.kubernetes.io/node \
+   \
+   \
   --minimum-container-ttl-duration=6m0s \
   --cluster-dns=10.3.0.10 \
   --cluster-domain=cluster.local \

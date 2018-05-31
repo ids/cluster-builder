@@ -8,13 +8,10 @@
 
   tasks:
 
-  - name: Create /etc/vsphere.
-    file: path=/etc/vsphere state=directory
-
   - name: Generate vSphere Storage provider configuration
     template:
       src: templates/vsphere-conf.j2
-      dest: /etc/vsphere/vsphere.conf
+      dest: /etc/kubernetes/vsphere.conf
       mode: 0766
 
   - name: Generate vSphere Storage provider configuration
@@ -32,7 +29,7 @@
       line: "{{ item.line }}"
       state: present
     with_items:
-      - { regx: " --cloud-provider=", line: '--cloud-provider=vsphere --cloud-config=/etc/vsphere \' }
+      - { regx: " --cloud-provider=", line: '--cloud-provider=vsphere --cloud-config=/etc/kubernetes/vsphere.conf \' }
 
   - name: Extract the kube-apiserver manifest and add cloud provider configuration
     local_action:
@@ -121,7 +118,7 @@
     become: false
     run_once: true
     with_items:
-      - { regx: "%--cloud-config=", line: "        - --cloud-config=/etc/vsphere" }
+      - { regx: "%--cloud-config=", line: "        - --cloud-config=/etc/kubernetes/vsphere.conf" }
 
   - name: Apply modified kube-apiserver manifest.
     local_action:

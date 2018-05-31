@@ -3,7 +3,7 @@ cat > /etc/systemd/network/10-eth0-static-en.network << EOF
 Name=eth0*
 
 [Network]
-Address={{ ansible_host }}/24
+Address={{ hostvars[inventory_hostname]['ansible_host'] }}/24
 Gateway={{ network_gateway }}
 DNS={{ network_dns }}
 DNS2={{ network_dns2 }}
@@ -19,7 +19,7 @@ cat > /etc/systemd/network/10-eth0-static-en.network << EOF
 Name=eth1*
 
 [Network]
-Address={{ ansible_host }}/24
+Address={{ hostvars[inventory_hostname]['ansible_host'] }}/24
 Gateway={{ network_gateway }}
 {% if data_network_dns is defined %}  
 DNS={{ data_network_dns }}

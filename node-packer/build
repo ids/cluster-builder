@@ -50,6 +50,10 @@ elif [ "$IMAGE" == "coreos-provisioner" ]; then
   echo
   echo 'Building CoreOS Provisioner'
   packer build coreos-centos-provisioner.json
+elif [ "$IMAGE" == "targetd-server" ]; then
+  echo
+  echo 'Building Targetd iSCSI Storage Server Provisioner'
+  packer build targetd-server-appliance.json
 else
   echo
   echo 'Error: Not a valid VM image type!'

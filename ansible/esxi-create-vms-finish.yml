@@ -74,7 +74,7 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: numvcpus is defined
 
-      - name: Adjust the numvcpus value on the ESXi VM
+    - name: Adjust the numvcpus value on the ESXi VM
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/numvcpus/s/.*/numvcpus\ =\ \"{{ numvcpus }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"

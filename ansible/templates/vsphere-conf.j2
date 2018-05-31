@@ -6,6 +6,10 @@ password = "{{ vsphere_storage_password }}"
 port = "443" #Optional
 insecure-flag = "1" #set to 1 if the vCenter uses a self-signed cert
 datacenters = "{{ vsphere_storage_datacenter }}"
+server = "{{ vsphere_storage_vcenter }}"
+datacenter = "{{ vsphere_storage_datacenter }}"
+working-dir = "{{ vsphere_storage_folder }}"
+default-datastore = "{{ vsphere_storage_datastore }}" #Datastore to use for provisioning volumes using storage classes/dynamic provisioning
         
 [Workspace]
 # Specify properties which will be used for various vSphere Cloud Provider functionality.
@@ -13,7 +17,7 @@ datacenters = "{{ vsphere_storage_datacenter }}"
         server = "{{ vsphere_storage_vcenter }}"
         datacenter = "{{ vsphere_storage_datacenter }}"
         default-datastore = "{{ vsphere_storage_datastore }}" #Datastore to use for provisioning volumes using storage classes/dynamic provisioning
-
+        folder = "{{ vsphere_storage_folder }}"
 [Disk]
         scsicontrollertype = pvscsi
 

@@ -17,7 +17,7 @@
     },     
     {
       "type": "ansible-local",
-      "playbook_file": "ansible/coreos-centos-provisioner.yml",
+      "playbook_file": "ansible/targetd-server.yml",
       "playbook_dir": "ansible",
       "extra_arguments": "-vvvvv"
     },
@@ -34,12 +34,25 @@
     }
   ],
 
-  "post-processors": [
-    {
-      "type": "shell-local",
-      "inline": [
-          "ovftool --overwrite output_coreos_centos_provisioner_vmx/coreos-centos-provisioner-x86_64.vmx output_ovas/coreos-centos-provisioner-x86_64.ova"
-      ]
+  "post-processors": [{
+    "type": "shell-local",
+    "inline": [
+      "vmware-vdiskmanager -c -t 0 -s 1000GB -a scsi output_targetd_server_vmx/pv-disk.vmdk"
+    ]
+  },
+  {
+    "type": "shell-local",
+    "inline": ["echo 'scsi0:1.present = \"TRUE\"' >> output_targetd_server_vmx/targetd-server-x86_64.vmx "]
+  },
+  {
+    "type": "shell-local",
+    "inline": ["echo 'scsi0:1.fileName = \"pv-disk.vmdk\"' >> output_targetd_server_vmx/targetd-server-x86_64.vmx "]
+  },
+  {
+    "type": "shell-local",
+    "inline": [
+        "ovftool --overwrite output_targetd_server_vmx/targetd-server-x86_64.vmx output_ovas/targetd-server-x86_64.ova"
+    ]
   }],
  
   "builders": [
@@ -64,9 +77,9 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "echo 'TempPass2017'|sudo -S /sbin/halt -h -p",
-      "output_directory": "output_coreos_centos_provisioner_vmx",
+      "output_directory": "output_targetd_server_vmx",
       "vmx_template_path": "cluster-node-template.vmx",
-      "vm_name": "coreos-centos-provisioner-x86_64",
+      "vm_name": "targetd-server-x86_64",
       "format": "ova",
       "vmx_data": {
         "memsize": "1536",

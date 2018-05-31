@@ -2,7 +2,7 @@ cat > /etc/sysconfig/network-scripts/ifcfg-ens32 << EOF
 DEVICE="ens32"
 ONBOOT="yes"
 BOOTPROTO=static
-IPADDR={{ ansible_host }}
+IPADDR={{ hostvars[inventory_hostname]['ansible_host'] }}
 NETMASK={{ network_mask }}
 GATEWAY={{ network_gateway }}
 {% if network_dns is defined %}  

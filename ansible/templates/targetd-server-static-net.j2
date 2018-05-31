@@ -7,14 +7,14 @@ BOOTPROTO=static
 IPADDR={{ hostvars[inventory_hostname]['ansible_host'] }}
 NETMASK={{ network_mask }}
 GATEWAY={{ network_gateway }}
-{% if network_dns is defined %}  
-DNS1={{ network_dns }}
+{% if data_network_dns is defined %}  
+DNS1={{ data_network_dns }}
 {% endif %}
-{% if network_dns2 is defined %}  
-DNS2={{ network_dns }}
+{% if data_network_dns2 is defined %}  
+DNS2={{ data_network_dns2 }}
 {% endif %}
-{% if network_dns3 is defined %}  
-DNS3={{ network_dns3 }}
+{% if data_network_dns3 is defined %}  
+DNS3={{ data_network_dns3 }}
 {% endif %}
 EOF
 
@@ -40,18 +40,29 @@ EOF
 
 {% endif %}
 
-
 cat > /etc/sysconfig/network << EOF
 HOSTNAME={{ node_hostname }}.{{ network_dn }}
-SEARCH={{ network_dn }}
-{% if data_network_dn is defined %}  
-SEARCH={{ data_network_dn }}
+{% if data_network_dns is defined %}  
+DNS1={{ data_network_dns }}
 {% endif %}
+{% if data_network_dns2 is defined %}  
+DNS2={{ data_network_dns2 }}
+{% endif %}
+{% if data_network_dns3 is defined %}  
+DNS3={{ data_network_dns3 }}
+{% endif %}
+SEARCH={{ network_dn }}
 EOF
 
 cat > /etc/resolv.conf << EOF
+{% if data_network_dns is defined %}  
 nameserver {{ network_dns }}
+{% endif %}
+{% if data_network_dns2 is defined %}  
 nameserver {{ network_dns2 }}
+{% endif %}
+{% if data_network_dns3 is defined %}  
 nameserver {{ network_dns3 }}
+{% endif %}
 EOF
 

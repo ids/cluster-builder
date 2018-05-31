@@ -273,6 +273,12 @@ elif [ "$CLUSTER_TYPE" == 'coreos-pxe' ]; then
   OVA_BUILD_TYPE=coreos-pxe
   SERVER_WAIT=90s
   REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'targetd-server' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/targetd-server-x86_64.ova
+  CLUSTER_TYPE_NAME='Targetd iSCSI Server'
+  OVA_BUILD_TYPE=targetd-server
+  SERVER_WAIT=90s
+  REMOTE_USER=admin
 fi
 
 
