@@ -23,12 +23,13 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 8. [Patching a Cluster](#patching-a-cluster)
 9. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
 10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-11. [VMware ESX Volume Driver Plugin](#vmware-esx-volume-driver-plugin)
-12. [Prometheus Monitoring](#prometheus-monitoring)
-13. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-14. [Change Cluster Password](#change-cluster-password)
-15. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-16. [System Profile](#system-profile)
+11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+12. [CoreOS iSCSI Provisioner and Targetd Storage Appliance](#coreos-iscsi-provisioner-and-targetd-storage-appliance)
+13. [Prometheus Monitoring](#prometheus-monitoring)
+14. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+15. [Change Cluster Password](#change-cluster-password)
+16. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+17. [System Profile](#system-profile)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
@@ -200,7 +201,7 @@ Eg.
     $ bash cluster-control demo-atomic-swarm suspend
 
 
-## VMware ESXi Volume Driver Plugin
+## VMware Docker Storage Volume Driver Plugin
 
 In order to make use of the VMware Volume Driver Plugin (vDVS) for persistent data volume management the VIB must be installed on all of the ESX servers used for the cluster.
 
@@ -218,6 +219,14 @@ Eg.
 The plugin is automatically installed as part of the cluster-builder swarm provisioning process. However, this can also be manually done on cluster nodes with the following command:
 
 	docker plugin install --grant-all-permissions --alias vsphere vmware/docker-volume-vsphere:latest
+
+## CoreOS iSCSI Provisioner and Targetd Storage Appliance
+
+As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
+
+The __cluster-builder__ CoreOS deployment is paired with a __Targetd Server Appliance__ VM that can provide dyanmically provisioned __PVCs__ to Kubernetes deployments using the __open-iscsi__ platform.
+
+For details see the [CoreOS iSCSI Storage Guide](docs/coreos-iscsi-storage.md)
 
 ## Prometheus Monitoring
 
