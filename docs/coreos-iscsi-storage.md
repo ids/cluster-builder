@@ -157,40 +157,40 @@ Will show the running iscsi-provisioner.  Check the logs and you should see some
 
 The iSCSI provisioner is now ready to deploy iSCSI PVC volumes:
 
-    kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      name: iscsi-test-volume
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "iscsi-targetd-vg-targetd"
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
+        kind: PersistentVolumeClaim
+        apiVersion: v1
+        metadata:
+            name: iscsi-test-volume
+            annotations:
+            volume.beta.kubernetes.io/storage-class: "iscsi-targetd-vg-targetd"
+        spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+            requests:
+                storage: 1Gi
 
 And you can run a test POD on the volume:
 
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    test: iscsi-pvc-pod
-  name: iscsi-pv-pod1
-spec:
-  containers:
-  - name: iscsi-pv-busybox
-    image: busybox
-    command: ["sleep", "60000"]
-    volumeMounts:
-    - name: iscsi-vol1
-      mountPath: /var/lib/busybox
-      readOnly: false
-  volumes:
-  - name: iscsi-vol1
-    persistentVolumeClaim:
-      claimName: iscsi-test-volume
+        apiVersion: v1
+        kind: Pod
+        metadata:
+        labels:
+            test: iscsi-pvc-pod
+        name: iscsi-pv-pod1
+        spec:
+        containers:
+        - name: iscsi-pv-busybox
+            image: busybox
+            command: ["sleep", "60000"]
+            volumeMounts:
+            - name: iscsi-vol1
+            mountPath: /var/lib/busybox
+            readOnly: false
+        volumes:
+        - name: iscsi-vol1
+            persistentVolumeClaim:
+            claimName: iscsi-test-volume
 
 Once your pod is running and you see the the PVCs are bound, your CoreOS cluster is ready to use dynamic iSCSI PVC provisioning and static iSCSI PVC storage.
 
