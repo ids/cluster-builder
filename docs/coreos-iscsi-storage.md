@@ -172,7 +172,7 @@ The iSCSI provisioner is now ready to deploy iSCSI PVC volumes:
 
 And you can run a benchmark test job on the Targetd iSCSI volumes:
 
-        kubectl apply -f coreos-iscsi-benchmark.yml
+        kubectl apply -f coreos-iscsi-bench.yml
 
 > For better performance consider using Thickly provisioned VMware VMDK volumes.
 
@@ -223,3 +223,5 @@ Create a new storage class that uses the `vg-targetd-thick` pool (it is easiest 
         ---
 
 And then reference that class when creating PVCs.
+
+The __Targetd Storage Appliance__ has been tuned for ESXi Disk I/O as per [the following article](https://kb.vmware.com/s/article/2011861), as have all CentOS/RHEL VMs.  It makes a remarkable difference.
