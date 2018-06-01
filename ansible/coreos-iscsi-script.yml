@@ -23,6 +23,7 @@
       dest: ../clusters/{{ cluster_pkg_folder }}/coreos-kublet-service
       mode: 0766
     become: false
+    run_once: true
     when: tectonic_networking != "canal"
 
   - name: Generate custom iSCSI/Canal Kublet service def
@@ -32,6 +33,7 @@
       dest: ../clusters/{{ cluster_pkg_folder }}/coreos-kublet-service
       mode: 0766
     become: false
+    run_once: true
     when: tectonic_networking == "canal"
 
   - name: Generate the iSCSI script
@@ -40,6 +42,7 @@
       src: templates/coreos-iscsi-script.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/coreos-iscsi.sh
       mode: 0766
+    run_once: true
     become: false
 
   - name: Ensure the iscs-manifests folder exists in the cluster package
@@ -47,6 +50,7 @@
       module: shell
       _raw_params: mkdir -p ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests
     become: false
+    run_once: true
     when: targetd_server is defined 
 
   - name: Read VM Node Initiator value for storage class 
@@ -66,6 +70,17 @@
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi.yml
       mode: 0766
     become: false
+    run_once: true
+    when: targetd_server is defined 
+
+  - name: Generate the iSCSI Benchmark manifest
+    local_action:
+      module: template
+      src: templates/coreos-iscsi-bench.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi-bench.yml
+      mode: 0766
+    become: false
+    run_once: true
     when: targetd_server is defined 
 
   - name: Generate the iSCSI provisioner secret script
@@ -75,4 +90,5 @@
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi-secret.sh
       mode: 0766
     become: false    
+    run_once: true
     when: targetd_server is defined     

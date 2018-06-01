@@ -96,6 +96,16 @@
     become: false
     when: targetd_server is defined 
 
+  - name: Generate the iSCSI Benchmark manifest
+    local_action:
+      module: template
+      src: templates/coreos-iscsi-bench.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi-bench.yml
+      mode: 0766
+    become: false
+    run_once: true
+    when: targetd_server is defined 
+
   - name: Generate the iSCSI provisioner secret script
     local_action:
       module: template
