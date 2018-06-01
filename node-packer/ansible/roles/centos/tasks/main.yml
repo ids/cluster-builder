@@ -68,3 +68,12 @@
     name: kdump
     state: stopped
     enabled: no
+
+- name: Add elevator=noop to boot to improve I/O performance on VMware ESXi
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: "{{ item.regx }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regx: "GRUB_CMDLINE_LINUX=", line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=system/root rd.lvm.lv=system/swap rhgb quiet elevator=noop"' }
