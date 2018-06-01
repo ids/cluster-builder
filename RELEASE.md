@@ -1,10 +1,13 @@
 Release Notes
 =============
 
-v18.10-beta1
-------------
+v18.04.01
+---------
 
 * Updated CentOS7 to 7.5 (1804).
+* Initial implementation of __Ansible__ based CoreOS __iSCSI__ configuration playbook.
+* Initial implementation of __Targetd Storage Appliance__ VM with dynamic iSCSI provisioning and an integrated __iscsi-provisioner__ implementation.
+* Fixes in support of Ansible 2.5.
 
 v18.04
 ------
