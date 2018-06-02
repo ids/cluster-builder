@@ -221,11 +221,43 @@ Enjoy a nice polished Kubernetes!  With __CoreOS__, chances are good you won't h
 
 > Checkout the __xtras/coreos__ folder for an __open-vm-tools.yml__ daemonset that will provide VMware tools on all the nodes.
 
+## Prepare CoreOS VMs for Ansible Management
+
+In order to manage our CoreOS VMs with Ansible we will install __pypy__ using an Ansible module.
+
+First we need to fetch the module:
+
+    ansible-galaxy install defunctzombie.coreos-bootstrap
+
+Then we need to add the following section to our __CoreOS Cluster hosts file__:
+
+    [coreos]
+    core-01
+    (list of all hosts...)
+
+    [coreos:vars]
+    ansible_ssh_user=core
+    ansible_python_interpreter="PATH=/home/core/bin:$PATH python"
+
+And then execute a wrapper script to use the module against our CoreOS cluster to install __pypy__:
+
+    ansible-playbook -i clusters/ids/core ansible/coreos-ansible.yml
+
+After this completes successfully we can use __Ansible__ to manage our __CoreOS cluster nodes__.
+
+## Tune the CoreOS Kernel Parameters for Virtualization
+
+The following Ansible playbook should be run immediately after installing CoreOS and configuring Ansible:
+
+    ansible-playbook -i clusters/ids/core ansible/coreos-init.yml
+
+This will ensure each CoreOS VM is set to `elevator=director` to optimize the Disk I/O.
+
 ## iSCSI Persistent Volume Setup
 
 At the present time the installation process does not configure the cluster for iSCSI Persistent volumes out-of-the-box, there is a bug in the mainstream version that doesn't acknowledge __tectonic_iscsi_enabled__, however the nodes are already provisioned for iSCSI support.  If you didn't grab the __tectonic-installer__ from github and build it from source, it is probably broken.
 
-Each node must have adjustments made to the Kubelet.service unit file, and requires the __iscsid__ to be enabled and started.  Unfortunately __Ansible__ is no good to us here as it requires __python__ on the server, which we don't do on __CoreOS__.
+> There is a new mechanism for setting up iSCSI, see the [CoreOS iSCSI Storage Guide](coreos-iscsi-storage.md)
 
 __Ansible__ is used to generate a simple __bash shell script__ with the necessary commands to configure all the nodes.  This can be done with the following ansible play:
 
@@ -241,7 +273,6 @@ From within the __cluster package folder__:
     $ bash coreos-iscsi.sh
 
 The __coreos-kubelet-service__ will be copied into __/etc/systemd/system__ and the Kubelet service will be restarted.  The __iscsid__ will also be started.
-
 
 Appendix A: Graphical Installer Walkthrough
 -------------------------------------------

@@ -99,7 +99,15 @@ These same settings will be used to create the corresponding __ISCSI provisioner
 
 Once the CoreOS cluster has been deployed via the [PXE method](README_CoreOS.md) we need to prep CoreOS for ansible management.  This makes use of an __ansible-galaxy__ [module](https://coreos.com/blog/managing-coreos-with-ansible.html) to bootstrap CoreOS with a lightweight version of __python__ to enable ansible modules.
 
-First we need to add the following section to our __CoreOS Cluster hosts file__:
+## Prepare CoreOS VMs for Ansible Management
+
+In order to manage our CoreOS VMs with Ansible we will install __pypy__ using an Ansible module.
+
+First we need to fetch the module:
+
+    ansible-galaxy install defunctzombie.coreos-bootstrap
+
+Then we need to add the following section to our __CoreOS Cluster hosts file__:
 
     [coreos]
     core-01
@@ -108,10 +116,6 @@ First we need to add the following section to our __CoreOS Cluster hosts file__:
     [coreos:vars]
     ansible_ssh_user=core
     ansible_python_interpreter="PATH=/home/core/bin:$PATH python"
-
-This will direct Ansible to use the correct python.  Then we need to fetch the module:
-
-    ansible-galaxy install defunctzombie.coreos-bootstrap
 
 And then execute a wrapper script to use the module against our CoreOS cluster to install __pypy__:
 
