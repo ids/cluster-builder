@@ -5,8 +5,11 @@
     line: "{{ item.line }}"
     state: present
   with_items:
-    - { regx: "set linux_append=", line: 'set linux_append="$linux_append coreos.config.url=oem:///coreos-install.json elevator=noop"' }
+    - { regx: "set linux_append=", line: 'set linux_append="$linux_append coreos.config.url=oem:///coreos-install.json elevator=director"' }
 
 - name: Restart the CoreOS VMs with new Boot Options
-  shell: reboot
+  shell: sleep 5 && reboot
+  async: 1
+  poll: 0
+  ignore_errors: true
   become: true
