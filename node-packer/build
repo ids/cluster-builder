@@ -34,7 +34,7 @@ if [ "$IMAGE" == "rhel7" ]; then
   PACKER_CMD="packer build -var rhel_folder=${RHEL_FOLDER} -var rhel_lic=${RHEL_LIC} cluster-node-${IMAGE}.json"
 fi
 
-if [ "$IMAGE" == "centos7-dcos" ] || [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon" ] || [ "$IMAGE" == "atomic7" ]  || [ "$IMAGE" == "rhel7" ]; then
+if [ "$IMAGE" == "centos7-dcos" ] || [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "photon" ] || [ "$IMAGE" == "rhel7" ]; then
   echo
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'
@@ -57,5 +57,5 @@ elif [ "$IMAGE" == "targetd-server" ]; then
 else
   echo
   echo 'Error: Not a valid VM image type!'
-  echo 'usage: build [centos7 (default) or photon]'
+  echo 'usage: build [centos7 (default), centos7-dcos, rhel7, photon, coreos-provisioner, coreos-pxe, targetd-server]'
 fi

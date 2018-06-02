@@ -7,7 +7,7 @@ Packer builds VMware cluster nodes in **CentOS 7** & **Photon OS 2.0** for use i
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614)  in $PATH
   - Ansible 2.3+ (brew install/upgrade ansible)
 
-> Note: To save time you may want to seed the __iso__ folder with the respective iso files used in the creation of CentOS, Photon or Atomic based VMs.  Simply download them and place them in the __iso__ folder. Packer will download them on demand if they don't exist already in the folder.
+> Note: To save time you may want to seed the __iso__ folder with the respective iso files used in the creation of CentOS, Photon or RHEL based VMs.  Simply download them and place them in the __iso__ folder. Packer will download them on demand if they don't exist already in the folder.
 
 [PhotonOS ISO Download](http://dl.bintray.com/vmware/photon/2.0/GA/iso/photon-2.0-304b817.iso)
 

@@ -36,10 +36,10 @@ Eg.
 
 The hostnames of the target VM nodes used in the cluster definition package:
 
-		192.168.100.90  demo-swarm-m1 atomic-swarm-m1 drupal.idstudios.vmware
-		192.168.100.91	demo-swarm-w1 atomic-swarm-w1
-		192.168.100.92	demo-swarm-w2 atomic-swarm-w2
-		192.168.100.93	demo-swarm-w3 atomic-swarm-w3
+		192.168.100.90  demo-swarm-m1  drupal.idstudios.vmware
+		192.168.100.91	demo-swarm-w1
+		192.168.100.92	demo-swarm-w2
+		192.168.100.93	demo-swarm-w3
 
 ---
 
@@ -86,7 +86,7 @@ Once the VMs have been created, assigned their correct addresses, and are runnin
     demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**: one of _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _atomic-swarm_, _rhel-swarm_, or _rhel-ucp_.
+**cluster_type**: one of _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _rhel-swarm_, or _rhel-ucp_.
 
 **vmware_target**: _fusion_ 
 

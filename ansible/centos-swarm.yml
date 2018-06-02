@@ -27,6 +27,7 @@
   - role: swarm-secure-api
   - role: portainer
   - role: swarm-monitoring
+  - role: vmware-vdvs
   - role: nfs-shares
   
   tasks:  

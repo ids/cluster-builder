@@ -8,7 +8,5 @@
   become_method: sudo
   roles:
   - role: docker
-  - role: docker-monitoring
-  - role: vmware-vdvs
   
   

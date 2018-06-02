@@ -1,6 +1,0 @@
----
-- name: Set Atomic Hostname
-  include: hostname.yml
-
-- name: Configure Chronyd
-  include: chronyd.yml

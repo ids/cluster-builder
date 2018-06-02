@@ -1,6 +1,0 @@
----
-- name: Configure node-exporter for all nodes
-  include: node-exporter.yml
-
-- name: Configure cAdvisor for all nodes
-  include: cadvisor.yml

@@ -1,5 +1,0 @@
----
-- name: Configure Metrics OPTIONS for daemon
-  copy:
-    content: OPTIONS="--experimental --metrics-addr 0.0.0.0:9323 -H unix:///var/run/docker.sock"
-    dest: /etc/sysconfig/docker

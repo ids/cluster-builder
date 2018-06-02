@@ -35,7 +35,6 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
 
 * PhotonOS Docker CE
-* CentOS 7 Atomic Docker CE (deprecated)
 * CentOS 7 Docker CE
 * CentOS 7 Docker EE
 * CentOS 7 DC/OS
@@ -44,8 +43,6 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
-
-> [Project Atomic](https://www.projectatomic.io/) variant is now deprecated.  The __rpm-ostree__ model is too restrictive.
 
 ## Deployment Options
 There are currently two types of deployment:
@@ -198,7 +195,7 @@ Use **cluster-control**:
 
 Eg.
 
-    $ bash cluster-control demo-atomic-swarm suspend
+    $ bash cluster-control demo-centos-swarm suspend
 
 
 ## VMware Docker Storage Volume Driver Plugin
@@ -323,7 +320,6 @@ A general overview of the highlights:
 __Docker CE:__ 17.09.1-ce (or later)
 centos-swarm
 photon-swarm
-atomic-swarm
 rhel-swarm
 
 __Docker EE:__ 2.2.3 (ucp)

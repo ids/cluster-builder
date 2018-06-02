@@ -23,10 +23,12 @@
   - role: common
   - role: rhel
   - role: centos-swarm-firewall
+  - role: docker-monitoring
   - role: swarm
   - role: swarm-secure-api
   - role: portainer
   - role: swarm-monitoring
+  - role: vmware-vdvs
   - role: nfs-shares
   
   tasks:
