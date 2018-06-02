@@ -43,7 +43,7 @@
 
 - name: Configure the docker daemon.json 
   template:
-    src: templates/docker-daemon-dcos-default.j2
+    src: templates/docker-daemon-default.j2
     dest: /etc/docker/daemon.json
 
 - name: Start Docker
