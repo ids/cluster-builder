@@ -1,0 +1,12 @@
+- name: Update the CoreOS grub.cfg with custom boot options
+  lineinfile:
+    dest: /usr/share/oem/grub.cfg
+    regexp: "{{ item.regx }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regx: "set linux_append=", line: 'set linux_append="$linux_append coreos.config.url=oem:///coreos-install.json elevator=noop"' }
+
+- name: Restart the CoreOS VMs with new Boot Options
+  shell: reboot
+  become: true

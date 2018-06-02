@@ -1,0 +1,8 @@
+- hosts: coreos_controllers,coreos_workers
+  become: true
+  any_errors_fatal: true
+  gather_facts: false
+
+  roles:
+    - common
+    - coreos-grub

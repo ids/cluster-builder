@@ -27,13 +27,10 @@ spec:
       - name: cluster-toolbox
         image: idstudios/cluster-toolbox:latest
         args: ["disk-bench"]
+        imagePullPolicy: Always
         volumeMounts:
-          - name: benchmark-volume
+          - name: iscsi-benchmark-target-volume
             mountPath: "/target"
-      volumes:
-      - name: benchmark-volume
-        persistentVolumeClaim:
-          claimName: iscsi-benchmark-target-volume-claim
 
       restartPolicy: Never
   backoffLimit: 4
