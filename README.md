@@ -221,7 +221,7 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
 
-The __cluster-builder__ CoreOS deployment is paired with a __Targetd Server Appliance__ VM that can provide dyanmically provisioned __PVCs__ to Kubernetes deployments using the __open-iscsi__ platform.
+The __cluster-builder__ CoreOS deployment is paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ to Kubernetes deployments using the __open-iscsi__ platform.
 
 For details see the [CoreOS iSCSI Storage Guide](docs/coreos-iscsi-storage.md)
 
