@@ -144,6 +144,8 @@ Both can be obtained from Tectonic for their Free 10 node cluster. See [Getting 
 
 Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.  You will upload these files via the Graphical installer.
 
+> The Terraform variable __tectonic_vanilla_k8s__ is set to __false__ by default, which installs the full version of __Tectonic CoreOS__.  To install a barebones free version of _CoreOS Kubernetes_, set this to __true__ in the hosts file. 
+
 #### Start SSH-AGENT
 
 Terraform uses ssh-agent when attempting to establish passwordless connections with the node.

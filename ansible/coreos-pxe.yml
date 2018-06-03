@@ -128,7 +128,13 @@
       tectonic_matchbox_ca: "{{ tectonic_matchbox_ca_load.stdout }}"
     run_once: true
 
-  - name: Load tectonic_matchbox_client_cert
+  - name: Set vanilla k8s default to false (Full Tectonic Install)
+    set_fact:
+      tectonic_vanilla_k8s: false
+    run_once: true
+    when: tectonic_vanilla_k8s is undefined
+
+    - name: Load tectonic_matchbox_client_cert
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.crt"

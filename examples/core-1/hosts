@@ -22,6 +22,8 @@ tectonic_admin_email="sean@intelligent-design.ca"
 tectonic_controller_dn="core-admin.idstudios.local"
 tectonic_ingress_dn="core-ingress.idstudios.local"
 
+tectonic_vanilla_k8s=false
+
 provisioner_server_dn=core-provisioner.idstudios.local
 
 [coreos_provisioner]

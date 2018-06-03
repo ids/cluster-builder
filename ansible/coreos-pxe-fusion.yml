@@ -132,6 +132,12 @@
   - debug: msg="{{ tectonic_matchbox_ca_load.stdout }}" 
     run_once: true
 
+  - name: Set vanilla k8s default to false (Full Tectonic Install)
+    set_fact:
+      tectonic_vanilla_k8s: false
+    run_once: true
+    when: tectonic_vanilla_k8s is undefined
+
   - name: Set tectonic_matchbox_ca
     set_fact:
       tectonic_matchbox_ca: "{{ tectonic_matchbox_ca_load.stdout }}"
