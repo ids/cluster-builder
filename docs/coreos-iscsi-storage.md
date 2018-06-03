@@ -80,25 +80,6 @@ Once the __hosts__ file has been prepared, deployment uses the familiar __cluste
 
 Which should result in a deployed __Targetd Server Appliance__ with __1 TB__ of thinly provisioned LVM storage to be allocated dynamically as K8s __PVCs__ are requested.
 
-## The iSCSI Provisioner and CoreOS iSCSI Configuration
-
-Out of the box Tectonic CoreOS does not ship with iSCSI support fully enabled.  Enabling iSCSI is a relatively simple matter of mapping the correct utilities into the __kubelet__ service container.  An ansible playbook has been created to take care of this task.
-
-Before beginning the CoreOS iSCSI configuration make sure to copy the __targetd__ configuration into the CoreOS cluster package hosts file:
-
-    targetd_server=192.168.1.205
-    targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
-    targetd_server_volume_group=vg-targetd
-    targetd_server_provisioner_name=iscsi-targetd
-    targetd_server_account_credentials=targetd-account
-    targetd_server_account_username=admin
-    targetd_server_account_password=ciao
-    targetd_server_namespace=default
-
-These same settings will be used to create the corresponding __ISCSI provisioner manifests__ that will bind the provisioner to the __Targetd Storage Appliance__.
-
-Once the CoreOS cluster has been deployed via the [PXE method](README_CoreOS.md) we need to prep CoreOS for ansible management.  This makes use of an __ansible-galaxy__ [module](https://coreos.com/blog/managing-coreos-with-ansible.html) to bootstrap CoreOS with a lightweight version of __python__ to enable ansible modules.
-
 ## Prepare CoreOS VMs for Ansible Management
 
 In order to manage our CoreOS VMs with Ansible we will install __pypy__ using an Ansible module.
@@ -122,6 +103,25 @@ And then execute a wrapper script to use the module against our CoreOS cluster t
     ansible-playbook -i clusters/ids/core ansible/coreos-ansible.yml
 
 After this completes successfully we can use __Ansible__ to manage our __CoreOS cluster nodes__.
+
+## The iSCSI Provisioner and CoreOS iSCSI Configuration
+
+Out of the box Tectonic CoreOS does not ship with iSCSI support fully enabled.  Enabling iSCSI is a relatively simple matter of mapping the correct utilities into the __kubelet__ service container.  An ansible playbook has been created to take care of this task.
+
+Before beginning the CoreOS iSCSI configuration make sure to copy the __targetd__ configuration into the CoreOS cluster package hosts file:
+
+    targetd_server=192.168.1.205
+    targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
+    targetd_server_volume_group=vg-targetd
+    targetd_server_provisioner_name=iscsi-targetd
+    targetd_server_account_credentials=targetd-account
+    targetd_server_account_username=admin
+    targetd_server_account_password=ciao
+    targetd_server_namespace=default
+
+These same settings will be used to create the corresponding __ISCSI provisioner manifests__ that will bind the provisioner to the __Targetd Storage Appliance__.
+
+Once the CoreOS cluster has been deployed via the [PXE method](README_CoreOS.md) we need to prep CoreOS for ansible management.  This makes use of an __ansible-galaxy__ [module](https://coreos.com/blog/managing-coreos-with-ansible.html) to bootstrap CoreOS with a lightweight version of __python__ to enable ansible modules.
 
 With the __Targetd Storage Appliance configuration__ values in our __CoreOS Cluster configuration file__ we can run the __cluster-builder__ ansible script to configure CoreOS for iSCSI direct:
 
