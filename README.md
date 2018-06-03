@@ -331,7 +331,7 @@ rhel-ucp
 __DC/OS__: 1.11 (or latest)
 centos-dcos
 
-__Tectonic CoreOS__: v1.8.9 (or latest)
+__Tectonic CoreOS__: v1.9.6 (or latest)
 coreos-provisioner
 coreos-pxe
 
