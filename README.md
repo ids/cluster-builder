@@ -167,7 +167,7 @@ To deploy a cluster use **cluster-deploy**:
 
 Eg.
 
-    $ bash cluster-deploy demo-centos-swarm
+    $ bash cluster-deploy eg/demo-centos-swarm
     
 ## Patching a Cluster
 To update the nodes on a deployed cluster, use **cluster-update**:
@@ -176,7 +176,7 @@ To update the nodes on a deployed cluster, use **cluster-update**:
 
 Eg.
 
-    $ bash cluster-deploy esxi-rhel-swarm
+    $ bash cluster-deploy eg/esxi-rhel-swarm
 
 ## Adding a Node to a Cluster
 To add a new node to an existing cluster, update the original hosts file with the new node.
