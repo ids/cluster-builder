@@ -1,7 +1,10 @@
 tmp
 ansible/*.retry
-clusters/**
+!clusters/
+clusters/*
 !clusters/README.md
+!clusters/eg/
+
 virtuals
 .terraform
 generated

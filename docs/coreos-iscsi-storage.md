@@ -24,7 +24,7 @@ __cluster-builder__ supports the automated deployment of dedicated CoreOS Cluste
 
 The default configuration of the appliance is a __1 TB thinly provisioned LVM volume on VMDK__.  This can be resized as needed but represents a solid initial storage footprint for a pre-production environment.
 
-The [Targetd Host Configuration File](../examples/targetd-server/hosts) illustrates the settings required for deploying a targetd storage appliance (it should look familiar):
+The [Targetd Host Configuration File](../clusters/eg/targetd-server/hosts) illustrates the settings required for deploying a targetd storage appliance (it should look familiar):
 
     [all:vars]
     cluster_type=targetd-server

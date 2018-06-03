@@ -74,7 +74,7 @@ The VMware install process is nearly identical to the ESXi documented below exce
 * The DHCP server on the provisioner isn't assigned the static IPs for the nodes.  It works best to use the VMware built in DHCP, so we bundle the __tftpserver__ and __nextserver__ into the static reservations that are added to __vmnet2/dhcpd.conf__ file.  The DHCP server on the provisioner is still enabled to support the PXE booting.
 * Resolvable DNS names are required.  For portability I use my AWS Route 53 domain to create the records for the Fusion cluster... that way no matter where my laptop is, the nodes will resolve.  Putting these names into the __/etc/hosts__ file on the host doesn't work.
 
-> See the [demo-core-privisioner](../examples/demo-core-provisioner/hosts) and [demo-core](../examples/demo-core/hosts) examples for CoreOS VMware Fusion deployment.
+> See the [demo-core-privisioner](../clusters/eg/demo-core-provisioner/hosts) and [demo-core](../clusters/eg/demo-core/hosts) examples for CoreOS VMware Fusion deployment.
 
 ### Download the Tectonic Installer
 
@@ -121,7 +121,7 @@ Also, make sure to create entries in the DNS for all of the CoreOS nodes listed 
 
 ### Install the Provisioner
 
-See the __core-provisioner__ in the __examples__ folder.
+See the __core-provisioner__ in the __clusters/eg__ examples folder.
 
 Only one provisioner is required, it can install many clusters.
 
@@ -131,7 +131,7 @@ The __matchbox-certs__ generated during the install will be used for API authent
 
 #### Create the Cluster Package
 
-See the __core-1__ in the __examples__ folder.
+See the __core-1__ in the __clusters/eg__ examples folder.
 
 The folder will need to contain a __hosts__ file similar to the example, but will also require:
 

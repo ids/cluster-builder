@@ -148,7 +148,7 @@ For my company __Intelligent Design Studios__ I created the __ids__ folder for a
     clusters
       |_ids
 
-This is initialized as a private git repository, which is stored in a secure on-prem gitlab instance.  Within the __ids__ folder, the cluster packages are kept (as per those in examples).
+This is initialized as a private git repository, which is stored in a secure on-prem gitlab instance.  Within the __ids__ folder, the cluster packages are kept (as per those in the __eg__ examples folder).
 
     clusters
       |_ids
@@ -175,7 +175,7 @@ Updates and enhancements made to the __cluster-builder__ toolkit are abstracted 
 
 ## Advanced Cluster Configuration Package
 
-See the example package [esxi-centos-swarm-advanced](../examples/esxi-centos-swarm-advanced/hosts) __hosts__ file for the example configuration for the layout illustrated in the overview.
+See the example package [esxi-centos-swarm-advanced](../clusters/eg/esxi-centos-swarm-advanced/hosts) __hosts__ file for the example configuration for the layout illustrated in the overview.
 
 ## Configure Remote API for Load Balancing
 
