@@ -224,10 +224,9 @@ With a corresponding PV of (`kubectl get pv`):
 pvc-f09f473d-6809-11e8-97f1-000c298174b4   3Gi        RWO            Delete           Bound     default/iscsi-benchmark-target-volume-claim   iscsi-targetd-vg-targetd             1m
 ```
 
-Note the name of the volume: __pvc-f09f473d-6809-11e8-97f1-000c298174b4__.  We see it has been allocated 3Gi of capacity, and using `targetcli ls` on the __Targetd Storage Appliance__, we see it has been allocated (2nd from the top):
+Note the name of the volume: __pvc-f09f473d-6809-11e8-97f1-000c298174b4__.  We see it has been allocated 3Gi, and using `targetcli ls` on the __Targetd Storage Appliance__, we can verify it has in fact been allocated (2nd from the top):
 
 ![Targetd pvc volume allocated](images/targetd-volume-allocated.png)
-
 
 Going back to the __benchmark job__ we launched, we can check the job (`kubectl get jobs`) and view the logs:
 
