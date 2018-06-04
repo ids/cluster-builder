@@ -184,6 +184,154 @@ Once your pod is running and you see the the PVCs are bound, your CoreOS cluster
 
 Enjoy :)
 
+## Viewing the Targetd PVC Volumes
+
+On the __Targetd Storage Appliance__ you can view the allocated volumes using the `targetcli ls` command (as root).
+
+![Targetd targetcli ls example](images/targetcli-ls-example.png)
+
+In the example screenshot we can see four `pvc-` volumes allocated in the `vg-targetd` volume group.  These map directly to  provisioned Kubernetes persistent volumes (PV) and persistent volume claims (PVC):
+
+```
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS    CLAIM                                     STORAGECLASS               REASON    AGE
+core-drupal-files-volume                   10Gi       RWX            Retain           Bound     web/core-drupal-files-volume-claim                                             2d
+ghost-files-volume                         5Gi        RWO            Retain           Bound     idstudios/ghost-files-volume-claim                                             2d
+mysql-main-iscsi-volume                    10Gi       RWO            Retain           Bound     idstudios/mysql-main-iscsi-volume-claim                                        2d
+pvc-f67ca813-65de-11e8-bcca-000c298174b4   3Gi        RWO            Delete           Bound     web/core-galera-seed-volume-claim         iscsi-targetd-vg-targetd             2d
+pvc-f67f1d81-65de-11e8-bcca-000c298174b4   3Gi        RWO            Delete           Bound     web/core-galera-node1-volume-claim        iscsi-targetd-vg-targetd             2d
+pvc-f681c73f-65de-11e8-bcca-000c298174b4   3Gi        RWO            Delete           Bound     web/core-galera-node2-volume-claim        iscsi-targetd-vg-targetd             2d
+pvc-f6842a73-65de-11e8-bcca-000c298174b4   3Gi        RWO            Delete           Bound     web/core-galera-node3-volume-claim        iscsi-targetd-vg-targetd             2d
+```
+
+If we launch our benchmarking utility job, we will see an `iscsi-benchmark-volume-claim` created with a corresponding PV, which will map to a dynamically allocated `pvc-` volume we can verify with `targetcli ls`.
+
+        kubectl apply -f coreos-iscsi-bench.yml
+
+And
+
+        kubectl get pvc
+
+Will show a PVC of:
+
+```
+NAME                                  STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS               AGE
+iscsi-benchmark-target-volume-claim   Bound     pvc-f09f473d-6809-11e8-97f1-000c298174b4   3Gi        RWO            iscsi-targetd-vg-targetd   5s
+```
+
+With a corresponding PV of (`kubectl get pv`):
+
+```
+pvc-f09f473d-6809-11e8-97f1-000c298174b4   3Gi        RWO            Delete           Bound     default/iscsi-benchmark-target-volume-claim   iscsi-targetd-vg-targetd             1m
+```
+
+Note the name of the volume: __pvc-f09f473d-6809-11e8-97f1-000c298174b4__.  We see it has been allocated 3Gi of capacity, and using `targetcli ls` on the __Targetd Storage Appliance__, we see it has been allocated (2nd from the top):
+
+![Targetd pvc volume allocated](images/targetd-volume-allocated.png)
+
+
+Going back to the __benchmark job__ we launched, we can check the job (`kubectl get jobs`) and view the logs:
+
+```
+IDStudios Cluster Toolbox
+-------------------------
+mode: disk-bench
+
+Performing dd performance test on target volume /target...
+-----
+WRITE (1st pass bs=1G count=1):
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB) copied, 4.75949 s, 226 MB/s
+WRITE (2nd pass):
+1+0 records in
+1+0 records out
+1073741824 bytes (1.1 GB) copied, 4.98027 s, 216 MB/s
+WRITE (1st pass bs=1M count=1024):
+1024+0 records in
+1024+0 records out
+1073741824 bytes (1.1 GB) copied, 14.2731 s, 75.2 MB/s
+WRITE (1st pass bs=1k count=10240):
+10240+0 records in
+10240+0 records out
+10485760 bytes (10 MB) copied, 89.5945 s, 117 kB/s
+READ (1st pass bs=1M):
+10+0 records in
+10+0 records out
+10485760 bytes (10 MB) copied, 0.00142444 s, 7.4 GB/s
+READ (2nd pass bs=1M):
+10+0 records in
+10+0 records out
+10485760 bytes (10 MB) copied, 0.00136206 s, 7.7 GB/s
+sysctl: setting key "vm.drop_caches": Read-only file system
+READ (no cache bs=1M):
+10+0 records in
+10+0 records out
+10485760 bytes (10 MB) copied, 0.00126906 s, 8.3 GB/s
+LATENCY (seconds / 1000 = latency in ms):
+1000+0 records in
+1000+0 records out
+512000 bytes (512 kB) copied, 0.00142748 s, 359 MB/s
+By using 1000 writes, the time in seconds is the latency for a single write in milliseconds.
+-----
+
+...
+
+Run status group 0 (all jobs):
+   READ: bw=19.3MiB/s (20.2MB/s), 4339KiB/s-9747KiB/s (4443kB/s-9981kB/s), io=528MiB (554MB), run=3749-27388msec
+  WRITE: bw=9415KiB/s (9641kB/s), 4401KiB/s-8857KiB/s (4507kB/s-9070kB/s), io=272MiB (285MB), run=3749-29596msec
+
+Disk stats (read/write):
+  sdf: ios=135139/64471, merge=0/971, ticks=53341/936230, in_queue=989559, util=99.71%
+fio: file hash not empty on exit
+-----
+
+IOPing -R /target (disk seek rate (iops, avg))
+
+--- /target (ext4 /dev/sdf) ioping statistics ---
+10.1 k requests completed in 3.0 s, 3.4 k iops, 13.3 MiB/s
+min/avg/max/mdev = 237 us / 293 us / 8.7 ms / 192 us
+-----
+
+IOPing -RL /target (disk sequential speed (MiB/s))
+
+--- /target (ext4 /dev/sdf) ioping statistics ---
+2.7 k requests completed in 3.0 s, 929 iops, 232.3 MiB/s
+min/avg/max/mdev = 820 us / 1.1 ms / 9.4 ms / 464 us
+-----
+
+IOPing for 10 count...
+4.0 KiB from /target (ext4 /dev/sdf): request=1 time=8.3 ms
+4.0 KiB from /target (ext4 /dev/sdf): request=2 time=1.1 s
+4.0 KiB from /target (ext4 /dev/sdf): request=3 time=1.5 ms
+4.0 KiB from /target (ext4 /dev/sdf): request=4 time=505 us
+4.0 KiB from /target (ext4 /dev/sdf): request=5 time=501 us
+4.0 KiB from /target (ext4 /dev/sdf): request=6 time=2.6 ms
+4.0 KiB from /target (ext4 /dev/sdf): request=7 time=940 us
+4.0 KiB from /target (ext4 /dev/sdf): request=8 time=2.6 ms
+4.0 KiB from /target (ext4 /dev/sdf): request=9 time=2.0 ms
+4.0 KiB from /target (ext4 /dev/sdf): request=10 time=1.5 ms
+
+--- /target (ext4 /dev/sdf) ioping statistics ---
+10 requests completed in 10.1 s, 8 iops, 35.7 KiB/s
+min/avg/max/mdev = 501 us / 112.2 ms / 1.1 s / 329.7 ms
+-----
+
+
+Benchmark complete... sleeping 300s (kill me anytime).
+```
+
+> Thos are great numbers for an iSCSI volume hosted over 1GbE, showing near 2x improvement with the recent disk scheduler optimization of `elevator=director`.
+
+Now we will do as suggested, and kill (remove) our benchmark job:
+
+        kubectl delete -f coreos-iscsi-bench.yml
+
+This will also remove the 3Gi PVC volume used for the test, which we can verify with `targetcli ls`:
+
+![Targetd pvc volume reclaimed](images/targetd-volume-reclaimed.png)
+
+And we see that the volume __pvc-f09f473d-6809-11e8-97f1-000c298174b4__ has been removed and the disk space has been reclaimed by LVM.
+
 ## Extending the Targetd Storage Appliance
 
 You can extend the __Targetd Storage Appliance__ by adding another virtual hard disk to the VM, and then provisioning it manually:
@@ -191,7 +339,7 @@ You can extend the __Targetd Storage Appliance__ by adding another virtual hard 
         sudo pvcreate /dev/sd_
         sudo vgcreate vg-targetd-thick /dev/sd_
 
-Where `sd_` is the newly added volume.
+Where `sd_` is the newly added volume.  Targetd supports hosting multiple physical disks as block pools.
 
 Edit the `/etc/target/target.yaml` file to support the additional block volume:
 

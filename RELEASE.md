@@ -12,7 +12,7 @@ v18.04.01
 * Initial implementation of __Targetd Storage Appliance__ VM with dynamic iSCSI provisioning and an integrated __iscsi-provisioner__ __Tectonic CoreOS__ configuration.
 * Fixes in support of Ansible 2.5.
 * Implemented recommendations for `elevator=deadline` in all CentOS7/RHEL and CoreOS VMs as per the [Redhat documentation](https://access.redhat.com/solutions/5427).  Kickstart files for RHEL based VMs and the `coreos-init.yml` ansible playbook for optimizing CoreOS post PXE deployment after the `coreos-ansible.yml` install playbook.
-* Tested with __VMware Fusio Pro 10 for Mac__.
+* Tested with __VMware Fusion Pro 10 for Mac__.
 * Tested with __VMware Workstation Pro 14 for Linux__ on the cluster control station appliance.
 * Updated and validated __Tectonic CoreOS__ install for __1.9.6-tectonic.1__.
 * Validated installation of __DC/OS 1.11__, still no changes required to cluster-builder after 4 version upgrades.
