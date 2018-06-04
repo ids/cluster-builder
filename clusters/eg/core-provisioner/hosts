@@ -25,4 +25,4 @@ provisioner_server_ip=192.168.1.40
 core-provisioner ansible_host=192.168.1.40 
 
 [vmware_vms]
-core-provisioner  numvcpus=4 memsize=4096 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd 
+core-provisioner  numvcpus=4 memsize=4096 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd 

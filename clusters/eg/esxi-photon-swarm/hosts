@@ -28,10 +28,10 @@ swarm2-w5 ansible_host=192.168.1.215 swarm_labels='["db-galera-node-2"]'
 swarm2-w6 ansible_host=192.168.1.216 swarm_labels='["db-galera-node-3"]'
 
 [vmware_vms]
-swarm2-m1 numvcpus=4 memsize=2048 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
-swarm2-w1 numvcpus=4 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
-swarm2-w2 numvcpus=4 memsize=3072 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
-swarm2-w3 numvcpus=4 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
-swarm2-w4 numvcpus=4 memsize=3072 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
-swarm2-w5 numvcpus=4 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
-swarm2-w6 numvcpus=4 memsize=3072 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
+swarm2-m1 numvcpus=4 memsize=2048 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+swarm2-w1 numvcpus=4 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+swarm2-w2 numvcpus=4 memsize=3072 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+swarm2-w3 numvcpus=4 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+swarm2-w4 numvcpus=4 memsize=3072 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+swarm2-w5 numvcpus=4 memsize=3072 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+swarm2-w6 numvcpus=4 memsize=3072 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd

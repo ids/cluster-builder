@@ -56,7 +56,7 @@ The [Targetd Host Configuration File](../clusters/eg/targetd-server/hosts) illus
     storage-server ansible_host=192.168.1.205 esxi_host=esxi-6 esxi_user=root
 
     [vmware_vms]
-    storage-server numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
+    storage-server numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
 
 __targetd_server__= The ip address of the targetd server (as per the anisble_host value)
 

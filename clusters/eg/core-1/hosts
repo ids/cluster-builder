@@ -44,14 +44,14 @@ core-w8 ansible_host=192.168.1.58
 core-w9 ansible_host=192.168.1.59
 
 [vmware_vms]
-core-c1   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2 
+core-c1   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2 
 
 core-w1   numvcpus=4 memsize=4096 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1 
 core-w2   numvcpus=4 memsize=4096 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2 
 core-w3   numvcpus=4 memsize=4096 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3 
 core-w4   numvcpus=4 memsize=4096 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4 
-core-w5   numvcpus=4 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd 
-core-w6   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2 
-core-w7   numvcpus=8 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd 
-core-w8   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2 
-core-w9   numvcpus=8 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd 
+core-w5   numvcpus=4 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd 
+core-w6   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2 
+core-w7   numvcpus=8 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd 
+core-w8   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2 
+core-w9   numvcpus=8 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd 

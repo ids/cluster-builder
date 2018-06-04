@@ -43,11 +43,11 @@ swarm-w5 ansible_host=192.168.3.235 data_ip=192.168.2.235 swarm_labels='["db-gal
 swarm-w6 ansible_host=192.168.3.236 data_ip=192.168.2.236 swarm_labels='["db-galera-node-3"]'
 
 [vmware_vms]
-swarm-m1 numvcpus=4 memsize=4048 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
-swarm-w1 numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
-swarm-w2 numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
-swarm-w3 numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
-swarm-w4 numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
-swarm-w5 numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore-ssd
-swarm-w6 numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore-m2
+swarm-m1 numvcpus=4 memsize=4048 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+swarm-w1 numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+swarm-w2 numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+swarm-w3 numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+swarm-w4 numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+swarm-w5 numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+swarm-w6 numvcpus=4 memsize=6144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
 

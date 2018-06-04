@@ -84,9 +84,9 @@ Once the installer has been downloaded make sure it is in the PATH, and also mak
 
 > __TECTONIC_HOME__ must be set for the cluster deployment to complete.
 
-> __Note__ for __iSCSI__ and __Network Policy__ (integrated Canal CNI plugin) you will need to ~hack~ manually adjust the default value for __tectonic_iscsi_enabled__ and __tectonic_networking__ in the core terraform files (for some reason they are not being picked up from the generated terraform config).  The bug for __tectonic_networking__ is known and fixed in master, but the fix hasn't been pulled into the 1.8.7 branch at this time. They have a branch strategy that is hard to follow as master still points to 1.8.4, yet it has fixes not in 1.8.7.
+> __Note__ for __iSCSI__ and __Network Policy__ (integrated Canal CNI plugin) you will need to ~hack~ manually adjust the default value for __tectonic_iscsi_enabled__ and __tectonic_networking__ in the core terraform files (for some reason they are not being picked up from the generated terraform config).  The bug for __tectonic_networking__ is known and fixed in master, but the complete fix hasn't been pulled into the 1.9.6 branch at this time. 
 
-1. Download the [1.8.9-tectonic.1](https://github.com/coreos/tectonic-installer/releases) release tarball and unzip in your workspace, then cd into the directory. Set __TECTONIC_HOME__ to this folder,
+1. Download the [1.9.6-tectonic.1](https://github.com/coreos/tectonic-installer/releases) release tarball and unzip in your workspace, then cd into the directory. Set __TECTONIC_HOME__ to this folder,
 2. In the `platforms/metal/config.tf` file locate the entry for __tectonic_networking__ and change the default from "flannel" to "canal".
 3. In the `platforms/metal/matchers.tf` file locate the entry for __tectonic_iscsi_enabled__ where it says `iscsi_enabled      = "${var.tectonic_iscsi_enabled ? true : false}"` and change it so it is always true: `iscsi_enabled      = "${var.tectonic_iscsi_enabled ? true : true}"` (however you like).
 4. Now run the installation process through __cluster-builder__ with the __TECTONIC_HOME__ set to this tectonic install folder with the modifications.
