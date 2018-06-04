@@ -20,14 +20,14 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 5. [Cluster Definition Packages](#cluster-definition-packages)
 6. [Cluster Builder Usage](#cluster-builder-usage)
 7. [Deploying a Cluster](#deploying-a-cluster)
-8. [Patching a Cluster](#patching-a-cluster)
-9. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
-10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-12. [CoreOS iSCSI Provisioner and Targetd Storage Appliance](#coreos-iscsi-provisioner-and-targetd-storage-appliance)
-13. [Prometheus Monitoring](#prometheus-monitoring)
+8. [Change Cluster Password](#change-cluster-password)
+9. [Patching a Cluster](#patching-a-cluster)
+10. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
+11. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+12. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+13. [CoreOS iSCSI Provisioner and Targetd Storage Appliance](#coreos-iscsi-provisioner-and-targetd-storage-appliance)
 14. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-15. [Change Cluster Password](#change-cluster-password)
+15. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
 16. [Advanced Swarm Deployment](#advanced-swarm-deployment)
 17. [System Profile](#system-profile)
 
@@ -168,7 +168,26 @@ To deploy a cluster use **cluster-deploy**:
 Eg.
 
     $ bash cluster-deploy eg/demo-centos-swarm
-    
+
+## Change Cluster Password
+Change password is now integrated into the cluster deployment process.
+
+For __CentOS__ deployments, both the __root__ and __admin__ passwords are prompted for change at the end of the cluster deployment.
+
+For __PhotonOS__ deployments, only the __root__ will prompt.
+
+> A bit of an annoyance, but it is integrated to ensure that clusters are never deployed into production with default root passwords.  TODO: Enhance to support headless deployments.
+
+This functionality is also available as as top level script:
+
+	bash cluster-passwd <cluster package> [user to change]
+
+Eg.
+
+	bash cluster-passwd esxi-centos-swarm admin
+
+It is intended to be run on a regular basis as per the standard operating procedures for password change management.
+
 ## Patching a Cluster
 To update the nodes on a deployed cluster, use **cluster-update**:
 
@@ -227,26 +246,6 @@ The __cluster-builder__ CoreOS deployment is paired with a __Targetd Server Appl
 
 For details see the [CoreOS iSCSI Storage Guide](docs/coreos-iscsi-storage.md)
 
-## Prometheus Monitoring
-
-Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS and PhotonOS Swarms, with metrics enabled by default.
-
-When the following is added to a cluster package hosts file:
-
-docker_prometheus_server=<ansible inventory hostname>
-
-Eg.
-
-	docker_prometheus_server=swarm-m1
-
-Prometheus and Grafana containers will be installed on the specified node.
-
-Promethus can then be reached at: http://<cluster node>:9090
-
-Grafana at: http://<cluster node>:3000
-
-> TODO: These need to be TLS secured and made production ready
-
 ## Host Mounted NFS Storage
 
 Place the following file in the cluster definition package folder:
@@ -282,24 +281,25 @@ or
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
-## Change Cluster Password
-Change password is now integrated into the cluster deployment process.
+## Swarm Prometheus Monitoring
 
-For __CentOS__ deployments, both the __root__ and __admin__ passwords are prompted for change at the end of the cluster deployment.
+Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS and PhotonOS Swarms, with metrics enabled by default.
 
-For __PhotonOS__ deployments, only the __root__ will prompt.
+When the following is added to a cluster package hosts file:
 
-> A bit of an annoyance, but it is integrated to ensure that clusters are never deployed into production with default root passwords.  TODO: Enhance to support headless deployments.
-
-This functionality is also available as as top level script:
-
-	bash cluster-passwd <cluster package> [user to change]
+docker_prometheus_server=<ansible inventory hostname>
 
 Eg.
 
-	bash cluster-passwd esxi-centos-swarm admin
+	docker_prometheus_server=swarm-m1
 
-It is intended to be run on a regular basis as per the standard operating procedures for password change management.
+Prometheus and Grafana containers will be installed on the specified node.
+
+Promethus can then be reached at: http://<cluster node>:9090
+
+Grafana at: http://<cluster node>:3000
+
+> TODO: These need to be TLS secured and made production ready
 
 ## Advanced Swarm Deployment
 
