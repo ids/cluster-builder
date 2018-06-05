@@ -50,17 +50,17 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: numvcpus is defined
 
-    - name: Enable disk.EnableUUID the ESXi VM
-      local_action:
-        module: shell
-        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "echo 'disk.EnableUUID = \"TRUE\"' >>  /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
-      when: memsize is defined
+#    - name: Enable disk.EnableUUID the ESXi VM
+#      local_action:
+#        module: shell
+#        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "echo 'disk.EnableUUID = \"TRUE\"' >>  /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
+#      when: memsize is defined
 
-    - name: Copy the adjusted vmx into place
-      local_action:
-        module: shell
-        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
-      when: memsize is defined
+#    - name: Copy the adjusted vmx into place
+#      local_action:
+#        module: shell
+#        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
+#      when: memsize is defined
 
     - name: Adjust the numvcpus value on the ESXi VM
       local_action:
@@ -109,6 +109,7 @@
     tectonic_container_linux_channel: "stable"
     tectonic_service_cidr: "10.3.0.0/16"
     tectonic_coreos_user: core
+    tectonic_k8s_cluster_cidr: "10.42.0.0/16"
 
   tasks:
 
@@ -127,6 +128,12 @@
     set_fact:
       tectonic_matchbox_ca: "{{ tectonic_matchbox_ca_load.stdout }}"
     run_once: true
+
+  - name: Set k8s_cluster_cidr
+    set_fact:
+      k8s_cluster_cidr: "{{ tectonic_k8s_cluster_cidr }}"
+    run_once: true
+    when: k8s_cluster_cidr is undefined
 
   - name: Set vanilla k8s default to false (Full Tectonic Install)
     set_fact:
