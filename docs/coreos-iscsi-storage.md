@@ -176,7 +176,11 @@ The iSCSI provisioner is now ready to deploy iSCSI PVC volumes:
 
 And you can run a benchmark test job on the Targetd iSCSI volumes:
 
-        kubectl apply -f coreos-iscsi-bench.yml
+        kubectl apply -f coreos-iscsi-bench-pvc.yml
+        (wait 10 secs)
+        kubectl get pvc
+        kubectl get pv
+        kubectl apply -f coreos-iscsi-bench-job.yml
 
 > For better performance consider using Thickly provisioned VMware VMDK volumes.
 
