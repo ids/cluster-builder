@@ -7,7 +7,7 @@ v18.04.01
 > An _OVA rebuild_ is recommended with this release due to performance optimizations introduced in the Packer phase kickstart files.
 
 * Updated CentOS7 to 7.5 (1804).
-* Added `cores-ansible.yml` wrapper script for bootstrapping CoreOS with `PyPy` to enable __Ansible__ management of CoreOS nodes.
+* Added `coreos-ansible.yml` wrapper script for bootstrapping CoreOS with `PyPy` to enable __Ansible__ management of CoreOS nodes.
 * Initial implementation of __Ansible__ based CoreOS __iSCSI__ configuration playbook.
 * Initial implementation of __Targetd Storage Appliance__ VM with dynamic iSCSI provisioning and an integrated __iscsi-provisioner__ __Tectonic CoreOS__ configuration.
 * Fixes in support of Ansible 2.5.

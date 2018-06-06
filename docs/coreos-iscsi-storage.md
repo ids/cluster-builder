@@ -346,7 +346,7 @@ Where `sd_` is the newly added volume.  Targetd supports hosting multiple physic
 
 Edit the `/etc/target/target.yaml` file to support the additional block volume:
 
-password: ciao
+        password: ciao
 
         # defaults below; uncomment and edit
         # if using a thin pool, use <volume group name>/<thin pool name>

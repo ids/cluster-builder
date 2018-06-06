@@ -259,22 +259,7 @@ This will ensure each CoreOS VM is set to `elevator=director` to optimize the Di
 
 At the present time the installation process does not configure the cluster for iSCSI Persistent volumes out-of-the-box, there is a bug in the mainstream version that doesn't acknowledge __tectonic_iscsi_enabled__, however the nodes are already provisioned for iSCSI support.  If you didn't grab the __tectonic-installer__ from github and build it from source, it is probably broken.
 
-> There is a new mechanism for setting up iSCSI, see the [CoreOS iSCSI Storage Guide](coreos-iscsi-storage.md)
-
-__Ansible__ is used to generate a simple __bash shell script__ with the necessary commands to configure all the nodes.  This can be done with the following ansible play:
-
-    $ ansible-playbooy -i clusters/ids/demo-core/hosts ansible/coreos-iscsi.yml
-
-This will produce two files in the __cluster package folder__:
-
-* coreos-kubelet-service
-* coreos-iscsi.sh
-
-From within the __cluster package folder__:
-
-    $ bash coreos-iscsi.sh
-
-The __coreos-kubelet-service__ will be copied into __/etc/systemd/system__ and the Kubelet service will be restarted.  The __iscsid__ will also be started.
+See the [CoreOS iSCSI Storage Guide](coreos-iscsi-storage.md)
 
 Appendix A: Graphical Installer Walkthrough
 -------------------------------------------
