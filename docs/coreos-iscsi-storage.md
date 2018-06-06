@@ -5,12 +5,12 @@ The following diagram illustrates the approach to __persistent volume storage__ 
 
 ![CoreOS iSCSI Storage Strategy](images/coreos-iscsi-storage.png)
 
-The diagram illustrates two types of storage:
+The diagram illustrates two types of persistent volume storage:
 
-1. Dynamic (for pre-production)
-2. Static (for production)
+1. __Dynamic__ (for pre-production)
+2. __Static__ (for production)
 
-__Dynamically__ provisioned volumes are accomplished using the [iscsi-provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/iscsi/targetd) developed by the folks at CoreOS.  In a pre-production environment the agility of dynamic provisioning is helpful in support of dynamic feature branch QA deployments.  Since it is pre-production, we are less concerned with __High Availability__ and so a single __Targetd Storage Appliance__ can fit the need.
+__Dynamically__ provisioned volumes are accomplished using the [iscsi-provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/iscsi/targetd).  In a pre-production environment the agility of dynamic provisioning is helpful in support of dynamic feature branch QA deployments.  Since it is pre-production, we are less concerned with __High Availability__ and so a single __Targetd Storage Appliance__ can fit the need.
 
 __Statically__ provisioned volumes are pre-allocated iSCSI LUNs on an external production grade storage appliance.  In production, data must be cared for and managed for __High Availability__ and __Disaster Recovery__.  In this case, technology like the __Amazon Storage Gateway__ or direct Compellant allocated iSCSI LUNs are the best strategy.
 
