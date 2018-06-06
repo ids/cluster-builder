@@ -49,10 +49,12 @@ elif [ "$IMAGE" == "coreos-pxe" ]; then
 elif [ "$IMAGE" == "coreos-provisioner" ]; then
   echo
   echo 'Building CoreOS Provisioner'
+  rm -rf 'output_'$IMAGE'_vmx'
   packer build coreos-centos-provisioner.json
 elif [ "$IMAGE" == "targetd-server" ]; then
   echo
-  echo 'Building Targetd iSCSI Storage Server Provisioner'
+  echo 'Building Targetd iSCSI Storage Appliance'
+  rm -rf 'output_'$IMAGE'_vmx'
   packer build targetd-server-appliance.json
 else
   echo
