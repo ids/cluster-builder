@@ -11,33 +11,36 @@ fusion_net_type="custom"
 
 network_mask=255.255.255.0
 network_gateway=192.168.100.1
-network_dns=192.168.100.2
+network_dns=192.168.100.1
 network_dns2=8.8.8.8
 network_dns3=8.8.4.4
-network_dn=idstudios.io
+network_dn=demo.idstudios.io
 
 k8s_cluster_cidr="10.42.0.0/16"
-tectonic_container_linux_version=1632.2.1
+
+tectonic_container_linux_channel="stable"
+tectonic_networking="canal"
+tectonic_iscsi_enabled="true"
 
 tectonic_admin_email="sean@intelligent-design.ca"
-tectonic_controller_dn="demo-core-admin.idstudios.io"
-tectonic_ingress_dn="demo-core-ingress.idstudios.io"
+tectonic_controller_dn="core-admin.demo.idstudios.io"
+tectonic_ingress_dn="core-ingress.demo.idstudios.io"
 
-provisioner_server_dn=demo-core-provisioner.idstudios.io
+provisioner_server_dn=core-provisioner.demo.idstudios.io
 
 [coreos_provisioner]
-demo-core-provisioner.idstudios.io ansible_host=192.168.100.40
+core-provisioner.demo.idstudios.io ansible_host=192.168.100.40
 
 [coreos_controllers]
-demo-core-c1.idstudios.io ansible_host=192.168.100.41
+core-c1.demo.idstudios.io ansible_host=192.168.100.41
 
 [coreos_workers]
-demo-core-w1.idstudios.io ansible_host=192.168.100.51
-demo-core-w2.idstudios.io ansible_host=192.168.100.52
-demo-core-w3.idstudios.io ansible_host=192.168.100.53
+core-w1.demo.idstudios.io ansible_host=192.168.100.51
+core-w2.demo.idstudios.io ansible_host=192.168.100.52
+core-w3.demo.idstudios.io ansible_host=192.168.100.53
 
 [vmware_vms]
-demo-core-c1.idstudios.io   numvcpus=4 memsize=3072 
-demo-core-w1.idstudios.io   numvcpus=4 memsize=2048 
-demo-core-w2.idstudios.io   numvcpus=4 memsize=2048 
-demo-core-w3.idstudios.io   numvcpus=4 memsize=2048 
+core-c1.demo.idstudios.io   numvcpus=4 memsize=1536 
+core-w1.demo.idstudios.io   numvcpus=4 memsize=2048 
+core-w2.demo.idstudios.io   numvcpus=4 memsize=2048 
+core-w3.demo.idstudios.io   numvcpus=4 memsize=2048 

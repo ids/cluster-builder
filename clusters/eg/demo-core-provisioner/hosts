@@ -15,13 +15,13 @@ network_gateway=192.168.100.1
 network_dns=192.168.100.2
 network_dns2=8.8.8.8
 network_dns3=8.8.4.4
-network_dn=idstudios.io
+network_dn=demo.idstudios.io
 
-provisioner_server_dn=demo-core-provisioner.idstudios.io
+provisioner_server_dn=core-provisioner.demo.idstudios.io
 provisioner_server_ip=192.168.100.40
 
 [coreos_provisioner]
-demo-core-provisioner.idstudios.io ansible_host=192.168.100.40 
+core-provisioner.demo.idstudios.io ansible_host=192.168.100.40 
 
 [vmware_vms]
-demo-core-provisioner.idstudios.io  numvcpus=4 memsize=1024 
+core-provisioner.demo.idstudios.io  numvcpus=4 memsize=1024 
