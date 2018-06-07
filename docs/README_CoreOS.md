@@ -96,34 +96,47 @@ Once the installer has been downloaded make sure it is in the PATH, and also mak
 
 ### DNS 
 
+> If you continue to use the DNS names in the example hosts files, you will not need to create DNS entries unless you expand the cluster configuration.
+
 You will need to create the following DNS entries:
 
-* __provisioner__: Eg. core-provisioner.idstudios.local 
+First, one entry for the provisioner:
+
+* __provisioner__: Eg. core-provisioner.demo.idstudios.io 
 
 > This is the all-in-one PXE appliance that is also a matchbox server.  It is entered for the "matchbox urls" in the Graphical installer to enable http/gRPC communication with Matchbox .
 
 And then per cluster:
 
-* __ingress__: eg. core-ingress.idstudios.local
-* __tectonic control__: eg. core-admin.idstudios.local
+* __ingress__: eg. core-ingress.demo.idstudios.io
+* __tectonic control__: eg. core-admin.demo.idstudios.io
 
 The __provisioner__ is the domain name assigned to the provisioner VM (as illustrated in the examples)
 
 __ingress__ should point to one or more worker nodes in a cluster, ideally load balanced over all of them.
 
-__tectonic control__ should point to the controller node(s).  Also load balanced in a HA setup.
+__tectonic control__ should point to the controller (or master) node(s).  Also load balanced in a HA setup.
 
 > You will need to enter these URLs into the Graphical installer.
 
 Also, make sure to create entries in the DNS for all of the CoreOS nodes listed in the hosts file.
 
-> the __ingress__ DNS entry should be a round robin DNS entry to all of the worker nodes, while the __tectonic control__ DNS entry should be a round robin DNS entry to all of the controller/master nodes.
+Eg.
+
+core-c1.demo.idstudios.io
+core-w1.demo.idstudios.io
+core-w3.demo.idstudios.io
+etc.
+
+> the __ingress__ DNS entry should be a round robin DNS entry to all of the worker nodes, while the __tectonic control__ DNS entry should be a round robin DNS entry to all of the controller/master nodes.  Of course this could also be accomplished with a front-end load balancer such as pfSense or F5.
 
 ### Install the Provisioner
 
 See the __core-provisioner__ in the __clusters/eg__ examples folder.
 
-Only one provisioner is required, it can install many clusters.
+> Or __demo-core-provisioner__ for the local Fusion version.
+
+Only __one__ provisioner is required, it can install many clusters.
 
 The __matchbox-certs__ generated during the install will be used for API authentication during cluster provisioning.  Copy them into any __coreos-pxe__ cluster definition packages you create.
 
@@ -131,7 +144,9 @@ The __matchbox-certs__ generated during the install will be used for API authent
 
 #### Create the Cluster Package
 
-See the __core-1__ in the __clusters/eg__ examples folder.
+See the __core__ in the __clusters/eg__ examples folder.
+
+> Or __demo-core__ for the local Fusion version.
 
 The folder will need to contain a __hosts__ file similar to the example, but will also require:
 
@@ -144,11 +159,11 @@ Both can be obtained from Tectonic for their Free 10 node cluster. See [Getting 
 
 Also make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.  You will upload these files via the Graphical installer.
 
-> The Terraform variable __tectonic_vanilla_k8s__ is set to __false__ by default, which installs the full version of __Tectonic CoreOS__.  To install a barebones free version of _CoreOS Kubernetes_, set this to __true__ in the hosts file. 
+> The Terraform variable __tectonic_vanilla_k8s__ is set to __false__ by default, which installs the full version of __Tectonic CoreOS__.  To install a barebones free version of _CoreOS Kubernetes_, set this to __true__ in the hosts file, however this is not guaranteed to work by the folks at CoreOS, and in many versions and platforms, does not.
 
 #### Start SSH-AGENT
 
-Terraform uses ssh-agent when attempting to establish passwordless connections with the node.
+Terraform uses `ssh-agent` when attempting to establish passwordless connections with the node.
 
 Before running __cluster-builder__:
 
@@ -163,7 +178,7 @@ _(Assuming this is also the key that is authorized on the nodes.)_
 
 Run the familiar __cluster-deploy__ command:
 
-    bash cluster-deploy ids/core-1
+    bash cluster-deploy ids/core
 
 This will deploy the VMs as per the __hosts__ file and provision them, then create a few artifacts to assist with the Tectonic install.
 
@@ -193,7 +208,7 @@ All other required information should be found in the __cluster-builder__ cluste
 
 When the Terraform __apply__ begins the "Refreshing state..." wait message described in the console output, or the GUI installer asks to __Power On the Nodes__, use the following in another terminal tab:
 
-    bash cluster-control ids/core-1 start
+    bash cluster-control ids/core start
 
 This should allow Terraform to finish provisioning the nodes.  It can take awhile... but if you watch the Terraform "Apply" log, you will see the progress as the nodes have CoreOS installed and come online.
 
@@ -341,7 +356,7 @@ Do the same thing for the workers.
 
 Eg.
 
-    bash cluster-control ids/core-1 start
+    bash cluster-control ids/core start
 
 
 > During this phase the VMs will go through several cycles of at least 2 reboots, please be patient here.
