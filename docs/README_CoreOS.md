@@ -123,10 +123,10 @@ Also, make sure to create entries in the DNS for all of the CoreOS nodes listed 
 
 Eg.
 
-core-c1.demo.idstudios.io
-core-w1.demo.idstudios.io
-core-w3.demo.idstudios.io
-etc.
+    core-c1.demo.idstudios.io
+    core-w1.demo.idstudios.io
+    core-w3.demo.idstudios.io
+    etc.
 
 > the __ingress__ DNS entry should be a round robin DNS entry to all of the worker nodes, while the __tectonic control__ DNS entry should be a round robin DNS entry to all of the controller/master nodes.  Of course this could also be accomplished with a front-end load balancer such as pfSense or F5.
 
