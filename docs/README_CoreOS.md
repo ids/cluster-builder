@@ -195,7 +195,7 @@ In the __cluster package folder__:
 
 #### Launch the Tectonic Installer
 
-The Terraform __apply__ will happen automatically as part of the deployment if you don't cancel at the prompt.
+The Terraform __apply__ will happen automatically as part of the deployment if you don't cancel at the prompt.  If you continue with the default installation process you can continue to powering on the nodes.
 
 > __Note__: The iSCSI units required to support Kubernetes iSCSI persistent volume direct Pod access are only installed with the unattended Terraform installation.
 
