@@ -304,6 +304,6 @@
       module: shell
       _raw_params: vmrun start {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
 
-  - name: waiting 120 secs for servers to start up and fetch their permanent ip addresses
+  - name: waiting 180 secs for servers to start up and fetch their permanent ip addresses
     local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=120 timeout=240
     become: false

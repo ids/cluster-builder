@@ -48,7 +48,7 @@
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
 
 - name: Download latest CoreOS release
-  shell: ./scripts/get-coreos stable 1745.4.0 .  
+  shell: ./scripts/get-coreos stable 1745.5.0 .  
   args:
     chdir: /home/admin/matchbox-v0.7.0-linux-amd64
 
