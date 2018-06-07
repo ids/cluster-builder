@@ -16,7 +16,7 @@ network_dns3=8.8.8.8
 network_dn=idstudios.local
 
 k8s_cluster_cidr="10.42.0.0/16"
-tectonic_container_linux_version=1632.2.1
+coreos_linux_version=1632.2.1
 
 tectonic_admin_email="sean@intelligent-design.ca"
 tectonic_controller_dn="core-admin.idstudios.local"

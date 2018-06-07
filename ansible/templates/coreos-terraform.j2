@@ -28,7 +28,7 @@
   "tectonic_iscsi_enabled": true,
   "tectonic_networking": "{{ tectonic_networking }}",
   "tectonic_enable_calico_network_policy": "true",
-  "tectonic_container_linux_channel": "{{ tectonic_container_linux_channel }}",
-  "tectonic_container_linux_version" : "latest",
+  "tectonic_container_linux_channel": "{{ coreos_linux_channel }}",
+  "tectonic_container_linux_version" : "{{ coreos_linux_version }}",
   "tectonic_vanilla_k8s" : {{ tectonic_vanilla_k8s }}
 }

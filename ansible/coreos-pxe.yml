@@ -1,13 +1,38 @@
 # This playbook deploys a CoreOS Cluster via PXE/iPXE and Matchbox services
 ---
-- hosts: vmware_vms
+- hosts: all
   gather_facts: false
+  tasks:
+  - name: Set coreos_linux_version
+    set_fact:
+      coreos_linux_version: "1745.5.0"
+    run_once: true
+    when: coreos_linux_version is undefined
+
+  - name: Set coreos_linux_channel
+    set_fact:
+      coreos_linux_channel: "stable"
+    run_once: true
+    when: coreos_linux_channel is undefined
+
+- hosts: coreos_provisioner
+  gather_facts: true
+  become_user: admin
+  remote_user: admin
+  become: true
   vars:
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
     deployment_scale: "{{ deployment_scale | default(50) }}"
 
   roles:
     - role: common
+    - role: coreos-update-matchbox
+
+- hosts: vmware_vms
+  gather_facts: false
+  vars:
+    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
+    deployment_scale: "{{ deployment_scale | default(50) }}"
   
   tasks:  
 
