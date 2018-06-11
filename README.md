@@ -28,7 +28,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 11. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
 12. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
 13. [CoreOS iSCSI Provisioner and Targetd Storage Appliance](#coreos-iscsi-provisioner-and-targetd-storage-appliance)
-14. [Kubernetes CI/CD Service Accounts](#kubernetes-ci/cd-service-accounts)
+14. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
 17. [Advanced Swarm Deployment](#advanced-swarm-deployment)
@@ -284,7 +284,7 @@ or
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
-## Kubernetes CI/CD Service Accounts
+## Kubernetes CI Job Service Accounts
 
 Kubernetes RBAC and service accounts offer a popular model for granting controlled access to CI/CD processes.  It involves creating a `ClusterRole` with the necessary object/verb permission ACLs, and then associating it via `ClusterRoleBinding` to a Kubernetes __service account__, authenticated via an __access token__, stored as a `Secret`.
 
