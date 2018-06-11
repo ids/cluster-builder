@@ -11,7 +11,7 @@ There are two core aspects to deploying bare metal __CoreOS__ (no pun):
 * __The CoreOS Tectonic Cluster__, deployed as VMs set for PXE booting, with their assigned MAC addressess extracted from ESXi and used to auto-generate a terraform configuration that can then be applied, via Matchbox and __The CoreOS Provisioner__, to deploy a Tectonic Kubernetes cluster.  The provisioner DHCP server is auto-updated with the static IP assignments via MAC association.  CoreOS cluster node boot up and configuration is automatically handled by Terraform and Matchbox.
 
 
-![Cluster Builder CoreOS Installation Overview](docs/images/coreos-install-overview.png)
+![Cluster Builder CoreOS Installation Overview](images/coreos-install-overview.png)
 
 
 In __cluster-builder__ the provisioner has been designed as an all in one appliance that implements most of the core requirements for the bare metal install (found [here](https://coreos.com/tectonic/docs/latest/install/bare-metal/index.html) and in more detail listed [here](https://coreos.com/tectonic/docs/latest/install/bare-metal/metal-terraform.html)).
