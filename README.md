@@ -28,10 +28,11 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 11. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
 12. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
 13. [CoreOS iSCSI Provisioner and Targetd Storage Appliance](#coreos-iscsi-provisioner-and-targetd-storage-appliance)
-14. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-15. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
-16. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-17. [System Profile](#system-profile)
+14. [Kubernetes CI/CD Service Accounts](#kubernetes-ci/cd-service-accounts)
+15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
+17. [Advanced Swarm Deployment](#advanced-swarm-deployment)
+18. [System Profile](#system-profile)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
@@ -282,6 +283,115 @@ or
 	ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
+
+## Kubernetes CI/CD Service Accounts
+
+Kubernetes RBAC and service accounts offer a popular model for granting controlled access to CI/CD processes.  It involves creating a `ClusterRole` with the necessary object/verb permission ACLs, and then associating it via `ClusterRoleBinding` to a Kubernetes __service account__, authenticated via an __access token__, stored as a `Secret`.
+
+### Step 1 - Create the Service Account
+
+		kubectl create serviceaccount ci-runner
+
+### Step 2 - Get the Service Account Secret Tokens & Build Kube Config
+
+		kubectl get secrets
+		kubectl describe secret ci-runner-<hash>
+
+This will show two tokens, the CA and the user token.  Use them to construct a kube-config for your cluster using the __ci-runner__ service account.
+
+Eg.
+
+```
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tL<blah>
+    server: https://pks-k8s-01.onprem.idstudios.io:8443
+  name: k8s-01-runner
+contexts:
+- context:
+    cluster: k8s-01-runner
+    user: ci-runner
+  name: k8s-01-runner
+current-context: k8s-01-runner
+kind: Config
+preferences: {}
+users:
+- name: ci-runner
+  user:
+    token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImNpLXJ1bm5lci10b2tlbi05N3dycCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjaS1ydW5uZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI3ZTY4OTMyYS00M2FjLTExZTgtYjM1Zi0wMDUwNTY4YTVkNjciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpjaS1ydW5uZXIifQ.c6nkA8PK1-NJ2ObOwHpaARpDLddPlAgzHcyEh0xM1F88UbpTBh3DdkA_xc0dtJUOeTOn4CrUYgBOPgbFfurweSix53G4wOeOnYnxJrA7PtPJjXUn54peGse_LFp6UCaufPEPcCvVgc2UcRL4DSLPZWwziGhxhm4p-qsTbl_r9SQhvAC_CKYyrYX00q_vcZQS-cdqvo1e34YVIb7W7neWCmzEitKwslMz0IkFYkgJbrQU2RvkmVDEhzBTm0qf6DthzvnEzRXTkMPBvuIAZd6AMCKffzF-XKRWkkV9HTRc2Muu0rZEWkSsPqd_hEMxfrPCOhu2l8n9AVAZ4GrkWOC2_w
+```
+
+Save this as `ci-runner-kube-config`.
+
+### Step 3 - Switch to Service Account Context and Verify No Access to Namespace
+
+		export KUBECONFIG=ci-runner-kube-config kubectl config use-context k8s-01-runner
+		export KUBECONFIG=ci-runner-kube-config kubectl get pods
+
+You will see a message indicating that the ci-runner service account does not have access.
+
+### Step 4 - Create ClusterRole and ClusterRoleBinding to Grant Access to Namespace
+
+		apiVersion: rbac.authorization.k8s.io/v1
+		kind: ClusterRole
+		metadata:
+			name: ci-runner-role
+		rules:
+		- apiGroups: [""]
+			resources: ["pods"]
+			verbs: ["get", "list", "watch"]  
+		---
+		apiVersion: rbac.authorization.k8s.io/v1
+		kind: RoleBinding
+		metadata:
+			name: ci-runner-role-binding
+			namespace: default
+		roleRef:
+			apiGroup: rbac.authorization.k8s.io
+			kind: ClusterRole
+			name: ci-runner-role
+		subjects:
+		- kind: ServiceAccount
+			name: ci-runner
+			namespace: default  
+
+In this example __ci-runner__ has access to __get__,__list__ and __watch__ pods in the default namespace.
+
+For a __CI/CD__ deployment your ACLs may look more like the following:
+
+		apiVersion: rbac.authorization.k8s.io/v1
+		kind: ClusterRole
+		metadata:
+			name: ci-runner-role
+		rules:
+			- apiGroups: [""]
+				resources: ["*"]
+				verbs: ["*"]
+
+Which grants full access to the service account namespace (in this case _default_).
+
+### Step 5 - Base64 the Service Account kube-config into a Gitlab CI/CD Secret
+
+		cat ci-runner-kube-config | base64 | pbcopy
+
+And paste it in the secrets stored in __Gitlab Project > Settings > CI/CD > Secret Variables__.
+
+Then use the codeified kube-config to access the target Kubernetes cluster in Gitlab CI/CD:
+
+		deploy:
+			stage: deploy
+			image: lwolf/helm-kubectl-docker:v152_213
+			before_script:
+				- mkdir -p /etc/deploy
+				- echo ${kube_config} | base64 -d > ${KUBECONFIG}
+				- kubectl config use-context k8s-01
+			script:
+				- kubectl get pods -n kube-system
+				- kubectl do some deployment stuff here
+			only:
+			- master
+
 
 ## Swarm Prometheus Monitoring
 
