@@ -165,8 +165,7 @@ Both can be obtained from Tectonic for their Free 10 node cluster. See [Getting 
 
 > I forget this step so often I had to give it a header.
 
-Make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.  You will upload these files via the Graphical installer.
-
+Make sure to copy the __matchbox-certs__ folder that was created during the deployment of the __core-provisioner__ into the cluster package folder.  (You will also need to upload these files via the Graphical installer method).
 
 > The Terraform variable __tectonic_vanilla_k8s__ is set to __false__ by default, which installs the full version of __Tectonic CoreOS__.  To install a barebones free version of _CoreOS Kubernetes_, set this to __true__ in the hosts file, however this is not guaranteed to work by the folks at CoreOS, and in many versions and platforms, does not.
 
