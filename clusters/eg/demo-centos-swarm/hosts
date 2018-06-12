@@ -1,10 +1,6 @@
 [all:vars]
-cluster_type=centos-ucp
-cluster_name=demo-centos-ucp
-
-ucp_download_url=https://storebits.docker.com/ee/centos/sub-64babdad-637c-469e-8e42-0c13d6b629fa
-ucp_admin_user=admin
-ucp_admin_password=Fender2000
+cluster_type=centos-swarm
+cluster_name=demo-centos-swarm
 
 vmware_target=fusion
 fusion_net="vmnet2"
