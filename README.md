@@ -136,16 +136,16 @@ Sample cluster packages are located in the **examples** folder and can be copied
 
 #### VMware Fusion Examples
 
-* [DC/OS in VMware Fusion](examples/demo-centos-dcos/hosts)
-* [Docker CE in VMware Fusion](examples/demo-centos-swarm/hosts)
-* [Tectonic CoreOS in VMware Fusion - Provisioner](examples/demo-core-provisioner/hosts) and [Clusters](examples/demo-core/hosts).
+* [DC/OS in VMware Fusion](clusters/eg/demo-centos-dcos/hosts)
+* [Docker CE in VMware Fusion](clusters/eg/demo-centos-swarm/hosts)
+* [Tectonic CoreOS in VMware Fusion - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
 
 
 #### VMware ESXi Examples
 
-* [DC/OS on ESXi](examples/esxi-centos-dcos/hosts)
-* [Docker CE on ESXi](examples/esxi-centos-swarm/hosts)
-* [Tectonic CoreOS on ESXi - Provisioner](examples/core-provisioner/hosts) and [Clusters](examples/core-1/hosts).
+* [DC/OS on ESXi](clusters/eg/esxi-centos-dcos/hosts)
+* [Docker CE on ESXi](clusters/eg/esxi-centos-swarm/hosts)
+* [Tectonic CoreOS on ESXi - Provisioner](clusters/eg/core-provisioner/hosts) and [Clusters](clusters/eg/core/hosts).
 
 ## Cluster Builder Usage
 
