@@ -127,12 +127,12 @@ See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details on de
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
 
-Eg. In the **examples** folder there is:
+Eg. In the **clusters/eg** folder there is:
 
 		demo-centos-swarm
 			|_ hosts
 
-Sample cluster packages are located in the **examples** folder and can be copied into the **clusters** folder.
+Sample cluster packages are located in the **clusters/eg** folder and can be copied into the **clusters** folder.
 
 #### VMware Fusion Examples
 
