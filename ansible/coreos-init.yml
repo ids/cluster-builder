@@ -6,7 +6,7 @@
 - hosts: coreos_controllers,coreos_workers
   become: true
   any_errors_fatal: true
-  gather_facts: false
+  gather_facts: true
 
   roles:
     - common
@@ -19,6 +19,11 @@
   
   tasks:
 
+    - name: Check that the static.network exists
+      stat:
+        path: /etc/systemd/network/static.network
+      register: stat_result
+
     - name: Assign network_cidr as default /24 when undefined
       set_fact:
         network_cidr: "24"
@@ -29,14 +34,25 @@
         src: templates/coreos-static-net.j2
         dest: /etc/systemd/network/static.network
         mode: 0655
+      when: stat_result.stat.exists == False 
 
     - name: Restart with static IP assignment
       service:
         name: systemd-networkd
         state: restarted
         enabled: yes
+      when: stat_result.stat.exists == False 
 
-    - name: waiting 180 secs for servers to start up and fetch their permanent ip addresses
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=180 timeout=600
+    - name: waiting 1 min for servers to start up and fetch their permanent ip addresses
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=60 timeout=600
       become: false
-      when: checkgrub.rc == 0
+      when: stat_result.stat.exists == False 
+
+- hosts: coreos_workers
+  become: true
+  any_errors_fatal: true
+  gather_facts: true
+
+  roles:
+    - coreos-iscsi
+    - coreos-iscsi-provisioner
