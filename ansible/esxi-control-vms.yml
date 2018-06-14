@@ -6,7 +6,7 @@
   - name: Scan the VMS for the VM ID
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep {{ inventory_hostname }} | cut -d" " -f1
+      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep " {{ inventory_hostname }} " | cut -d" " -f1
     register: vm_id
   
   - debug: msg="{{ vm_id.stdout }}"

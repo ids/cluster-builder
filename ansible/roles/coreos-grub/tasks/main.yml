@@ -1,3 +1,10 @@
+- name: Check whether grub.cfg contains "elevator=director"
+  command: grep -Fxq "elevator=director" /usr/share/oem/grub.cfg
+  register: checkgrub
+  check_mode: no
+  ignore_errors: yes
+  changed_when: no
+
 - name: Update the CoreOS grub.cfg with custom boot options
   lineinfile:
     dest: /usr/share/oem/grub.cfg
@@ -6,10 +13,10 @@
     state: present
   with_items:
     - { regx: "set linux_append=", line: 'set linux_append="$linux_append coreos.config.url=oem:///coreos-install.json elevator=director"' }
+  when: checkgrub.rc == 0
 
-- name: Restart the CoreOS VMs with new Boot Options
-  shell: sleep 5 && reboot
-  async: 1
-  poll: 0
-  ignore_errors: true
-  become: true
+- name: waiting 180 secs for servers to start up and fetch their permanent ip addresses
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=180 timeout=600
+  become: false
+  when: checkgrub.rc == 0
+

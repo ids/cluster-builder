@@ -264,19 +264,12 @@ Then we need to add the following section to our __CoreOS Cluster hosts file__:
     ansible_ssh_user=core
     ansible_python_interpreter="PATH=/home/core/bin:$PATH python"
 
-And then execute a wrapper script to use the module against our CoreOS cluster to install __pypy__:
 
-    ansible-playbook -i clusters/ids/core ansible/coreos-ansible.yml
-
-After this completes successfully we can use __Ansible__ to manage our __CoreOS cluster nodes__.
-
-## Tune the CoreOS Kernel Parameters for Virtualization
-
-The following Ansible playbook should be run immediately after installing CoreOS and configuring Ansible:
+Then run the following Ansible playbook:
 
     ansible-playbook -i clusters/ids/core ansible/coreos-init.yml
 
-This will ensure each CoreOS VM is set to `elevator=director` to optimize the Disk I/O.
+This will ensure each CoreOS VM is set to `elevator=director` to optimize the Disk I/O.  It will also install __Ansible__ on all of the nodes as per the `defunctzombie.coreos-bootstrap` module.  And finally it will assign the IP address to the node as static so that the provisioner DHCP service is no longer required.
 
 ## iSCSI Persistent Volume Setup
 

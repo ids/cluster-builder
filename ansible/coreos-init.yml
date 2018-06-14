@@ -1,3 +1,8 @@
+- hosts: coreos
+  gather_facts: False
+  roles:
+    - defunctzombie.coreos-bootstrap
+
 - hosts: coreos_controllers,coreos_workers
   become: true
   any_errors_fatal: true
@@ -6,3 +11,32 @@
   roles:
     - common
     - coreos-grub
+
+- hosts: coreos_controllers,coreos_workers
+  become: true
+  any_errors_fatal: true
+  gather_facts: true
+  
+  tasks:
+
+    - name: Assign network_cidr as default /24 when undefined
+      set_fact:
+        network_cidr: "24"
+      when: network_cidr is undefined 
+
+    - name: Generate static networkd unit file
+      template:
+        src: templates/coreos-static-net.j2
+        dest: /etc/systemd/network/static.network
+        mode: 0655
+
+    - name: Restart with static IP assignment
+      service:
+        name: systemd-networkd
+        state: restarted
+        enabled: yes
+
+    - name: waiting 180 secs for servers to start up and fetch their permanent ip addresses
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=180 timeout=600
+      become: false
+      when: checkgrub.rc == 0

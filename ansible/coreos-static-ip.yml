@@ -1,0 +1,23 @@
+
+- hosts: coreos_controllers,coreos_workers
+  become: true
+  any_errors_fatal: true
+  gather_facts: false
+
+  roles:
+    - common
+    - coreos-grub
+
+  tasks:
+
+    - name: Generate static networkd unit file
+      template:
+        src: templates/coreos-static-net.j2
+        dest: /etc/systemd/network/static.network
+        mode: 0755
+
+    - name: Restart with static IP assignment
+      service:
+        name: systemd-networkd
+        state: restarted
+        enabled: yes
