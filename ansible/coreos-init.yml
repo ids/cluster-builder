@@ -70,9 +70,11 @@
       become: false
       run_once: true
       register: iscsi_secret_cmd
+      when: targetd_server is defined 
     
     - debug: msg="{{ iscsi_secret_cmd.stdout_lines }}"
       run_once: true
+      when: targetd_server is defined 
 
     - name: Apply the iscsi-provisioner storage class and provisioner manifests
       local_action:
@@ -81,9 +83,11 @@
       become: false
       run_once: true
       register: iscsi_prov_cmd
+      when: targetd_server is defined 
 
     - debug: msg="{{ iscsi_prov_cmd.stdout_lines }}"
       run_once: true
+      when: targetd_server is defined 
 
     - name: Verify the storage class 
       local_action:
@@ -92,9 +96,11 @@
       become: false
       run_once: true
       register: iscsi_scv_cmd
+      when: targetd_server is defined 
 
     - debug: msg="{{ iscsi_scv_cmd.stdout_lines }}"
       run_once: true
+      when: targetd_server is defined 
 
     - name: Verify the iscsi-provisioner pod
       local_action:
@@ -103,9 +109,11 @@
       become: false
       run_once: true
       register: iscsi_podv_cmd
+      when: targetd_server is defined 
 
     - debug: msg="{{ iscsi_podv_cmd.stdout_lines }}"
       run_once: true
+      when: targetd_server is defined 
 
     - name: Apply the open-vm-tools
       local_action:
