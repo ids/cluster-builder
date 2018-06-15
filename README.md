@@ -86,6 +86,7 @@ For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible 2.3+ `brew install/upgrade ansible`
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+* __kubectl__ 1.9+ (CoreOS Only - `brew install/upgrade kubernetes-cli`)
 
 > Note: For Docker EE edition you will need to provide a valid Docker EE download URL and license file.
 
