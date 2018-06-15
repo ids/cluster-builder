@@ -1,0 +1,18 @@
+- hosts: coreos_controllers
+  gather_facts: False
+  roles:
+    - defunctzombie.coreos-bootstrap
+  
+  tasks:
+      - name: Wait for Tectonic Console to show up in the list of docker containers
+        shell: docker ps | grep "tectonic-console"
+        register: task_result
+        until: task_result.rc == 0
+        check_mode: no
+        retries: 100
+        delay: 30
+        ignore_errors: yes
+
+      - name: Waiting for 1m for Tectonic services to settle in
+        pause:
+          seconds: 60

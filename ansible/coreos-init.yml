@@ -43,8 +43,8 @@
         enabled: yes
       when: stat_result.stat.exists == False 
 
-    - name: waiting 1 min for servers to start up and fetch their permanent ip addresses
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=60 timeout=600
+    - name: Verify servers are at their permanent ip addresses
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=5 timeout=600
       become: false
       when: stat_result.stat.exists == False 
 

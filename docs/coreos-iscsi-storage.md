@@ -82,7 +82,7 @@ Which should result in a deployed __Targetd Server Appliance__ with __1 TB__ of 
 
 ## Prepare CoreOS VMs for Ansible Management
 
-> __Note__ that Ansible configuration has been bundled into the `coreos-init.yml` playbook.  If you have already executed `coreos-init.yml` you can skip this step.
+> __Note__ that Ansible configuration has been bundled into the deployment process and should happen automatically.  It can be manually re-applied via `coreos-init.yml` at any point, but should already be configured.
 
 In order to manage our CoreOS VMs with Ansible we will install __pypy__ using an Ansible module.
 
@@ -92,9 +92,9 @@ First we need to fetch the module:
 
 Then we need to add the following section to our __CoreOS Cluster hosts file__:
 
-    [coreos]
-    core-01
-    (list of all hosts...)
+    [coreos:children]
+    coreos_controllers
+    coreos_workers
 
     [coreos:vars]
     ansible_ssh_user=core
@@ -123,7 +123,7 @@ Before beginning the CoreOS iSCSI configuration make sure to copy the __targetd_
 
 These same settings will be used to create the corresponding __ISCSI provisioner manifests__ that will bind the provisioner to the __Targetd Storage Appliance__.
 
-> __Note__ that the following has been bundled into the `coreos-init.yml` playbook.  If you have already executed `coreos-init.yml` you can skip setting up Ansible and/or running `coreos-iscsi-script.yml`.  However if you have made changes to the configuration, you can re-run the playbooks at any time.
+> __Note__ that the iSCSI configuration has been bundled into the deployment process and should happen automatically.  It can be manually re-applied via `coreos-init.yml` at any point, but should already be configured.  You can also re-run the playbooks below at any point to regenerate the artifacts.
 
 Once the CoreOS cluster has been deployed via the [PXE method](README_CoreOS.md) we need to prep CoreOS for ansible management.  This makes use of an __ansible-galaxy__ [module](https://coreos.com/blog/managing-coreos-with-ansible.html) to bootstrap CoreOS with a lightweight version of __python__ to enable ansible modules.
 

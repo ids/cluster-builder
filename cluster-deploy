@@ -31,6 +31,17 @@ function pxe_matchbox_deploy () {
 
     echo "Building cluster: ${CLUSTER_TYPE_NAME}"
 
+    if ps -p $SSH_AGENT_PID > /dev/null
+    then
+      echo "ssh-agent is already running"
+      # Do something knowing the pid exists, i.e. the process with $PID is running
+    else
+      echo "Start ssh-agent for Terraform"
+      eval `ssh-agent -s`
+    fi
+    echo "Add id_rsa credentials for Terraform ssh-agent"
+    ssh-add ~/.ssh/id_rsa
+
     if [ "$VMWARE_TARGET" == "esxi" ]; then
       ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
       if [ $? -ne 0 ]; then
@@ -96,6 +107,12 @@ function pxe_matchbox_deploy () {
 
     terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal
 
+    ansible-playbook -i $INVENTORY_FILE ansible/coreos-ready-check.yml
+
+    ansible-playbook -i $INVENTORY_FILE ansible/coreos-init.yml
+
+    echo
+    echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
   else
    echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
    exit 1

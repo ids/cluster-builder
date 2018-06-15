@@ -55,3 +55,11 @@ core-w6   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datast
 core-w7   numvcpus=8 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd 
 core-w8   numvcpus=8 memsize=8192 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2 
 core-w9   numvcpus=8 memsize=8192 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd 
+
+[coreos:children]
+coreos_controllers
+coreos_workers
+
+[coreos:vars]
+ansible_ssh_user=core
+ansible_python_interpreter=/home/core/bin/python

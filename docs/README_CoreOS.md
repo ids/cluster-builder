@@ -173,6 +173,8 @@ Make sure to copy the __matchbox-certs__ folder that was created during the depl
 
 Terraform uses `ssh-agent` when attempting to establish passwordless connections with the node.
 
+> __Note__ that `ssh-agent` initialization has been built into the deployment process and should happen automatically. If your keypair is not __~/.ssh/id_rsa__, you may need to perform these steps manually.
+
 Before running __cluster-builder__:
 
     eval `ssh-agent` 
@@ -224,7 +226,7 @@ This should allow Terraform to finish provisioning the nodes.  It can take awhil
 
 > It can take 30 minutes or more for a 10 node cluster.
 
-__Note__: When the unattended Terraform __apply__ completes successfully, the cluster is not yet fully installed.  In the background all of the __Tectonic__ specific services will install and this can take 10 or more minutes after the script completes.  
+__Note__: When the unattended Terraform __apply__ completes successfully, the cluster is not yet fully installed.  In the background all of the __Tectonic__ specific services will install and this can take 10 or more minutes after the script completes.  The deployment process will wait until it sees the `tectonic-console` containers up and running before it continues with final provisioning.
 
 > I like to ssh into the controller/master node and run `top` and/or `docker ps` to watch the installation process, and when things quiet down, hit the ingress url... and it brings up the Tectonic Console.
 
@@ -248,22 +250,23 @@ Enjoy a nice polished Kubernetes!  With __CoreOS__, chances are good you won't h
 
 ## Prepare CoreOS VMs for Ansible Management
 
+> __Note__ that Ansible configuration has been bundled into the deployment process and should happen automatically.  It can be manually re-applied via `coreos-init.yml` at any point, but should already be configured.
+
 In order to manage our CoreOS VMs with Ansible we will install __pypy__ using an Ansible module.
 
 First we need to fetch the module:
 
     ansible-galaxy install defunctzombie.coreos-bootstrap
 
-Then we need to add the following section to our __CoreOS Cluster hosts file__:
+Then we need to ensure the following section exists in our __CoreOS Cluster hosts file__:
 
-    [coreos]
-    core-01
-    (list of all hosts...)
+    [coreos:children]
+    coreos_controllers
+    coreos_workers
 
     [coreos:vars]
     ansible_ssh_user=core
-    ansible_python_interpreter="PATH=/home/core/bin:$PATH python"
-
+    ansible_python_interpreter=/home/core/bin/python
 
 Then run the following Ansible playbook:
 

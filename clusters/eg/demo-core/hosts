@@ -44,3 +44,11 @@ core-c1.demo.idstudios.io   numvcpus=4 memsize=1536
 core-w1.demo.idstudios.io   numvcpus=4 memsize=2048 
 core-w2.demo.idstudios.io   numvcpus=4 memsize=2048 
 core-w3.demo.idstudios.io   numvcpus=4 memsize=2048 
+
+[coreos:children]
+coreos_controllers
+coreos_workers
+
+[coreos:vars]
+ansible_ssh_user=core
+ansible_python_interpreter=/home/core/bin/python
