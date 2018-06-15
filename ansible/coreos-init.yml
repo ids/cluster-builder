@@ -106,3 +106,14 @@
 
     - debug: msg="{{ iscsi_podv_cmd.stdout_lines }}"
       run_once: true
+
+    - name: Apply the open-vm-tools
+      local_action:
+        module: shell
+        _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../xtras/coreos/open-vm-tools.yml"
+      become: false
+      run_once: true
+      register: vm_tools_cmd
+
+    - debug: msg="{{ vm_tools_cmd.stdout_lines }}"
+      run_once: true
