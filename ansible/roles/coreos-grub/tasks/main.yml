@@ -18,7 +18,7 @@
     - { regx: "set linux_append=", line: 'set linux_append="$linux_append coreos.config.url=oem:///coreos-install.json elevator=director"' }
   when: checkgrub.rc != 0
 
-- name: waiting 1 min for servers to start up and fetch their permanent ip addresses
+- name: waiting 1 min for servers to start up with the elevator scheduler
   local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=60 timeout=600
   become: false
   when: checkgrub.rc != 0

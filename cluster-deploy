@@ -24,6 +24,7 @@ function pxe_matchbox_deploy () {
       exit 1
     fi
 
+    echo
     echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
     sudo date
 
@@ -107,12 +108,21 @@ function pxe_matchbox_deploy () {
 
     terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal
 
+    echo "Copying generated assets into ${CLUSTER_PKG_FOLDER}/assets..."
+    mkdir -p clusters/${CLUSTER_PKG_FOLDER}/assets 
+    cp -r ./generated/* clusters/${CLUSTER_PKG_FOLDER}/assets/
+
     ansible-playbook -i $INVENTORY_FILE ansible/coreos-ready-check.yml
 
+    echo "Initializing CoreOS nodes to specific configuration state..."
     ansible-playbook -i $INVENTORY_FILE ansible/coreos-init.yml
-
-    echo
-    echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+    if [ $? -ne 0 ]; then
+      echo "FAIL: Unable to initialize Tectonic CoreOS cluster!"
+      exit 1
+    else
+      echo
+      echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+    fi
   else
    echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
    exit 1

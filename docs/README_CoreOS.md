@@ -232,9 +232,9 @@ __Note__: When the unattended Terraform __apply__ completes successfully, the cl
 
 #### Access the Tectonic Cluster
 
-After the Terraform __apply__, save the assets in the __generated__ folder to the __cluster package folder__ for safe keeping.
+After the Terraform __apply__, the assets in the __generated__ folder are copied to to the __cluster package folder__ for safe keeping, and stored in the __assets__ folder.
 
-Or, after the GUI install finishes, Make sure to __Download the Assets__, extract them and place them in the __cluster package folder__ for safe keeping.
+> Or, if the GUI install was used, make sure to __Download the Assets__, extract them and place them in the __cluster package folder__ for safe keeping.
 
 You can then access the Tectonic Control Station at the ingress url specified in the hosts file.
 
@@ -242,7 +242,9 @@ Eg.
 
     https://core-ingress.idstudios.local
 
-Once logged into the __Tectonic Control__ you can download a __.kubeconfig__ file that will allow you to easily setup your __kubectl__ on your workstation.
+You can find a working __kubeconfig__ file in your cluster package folder at __assets/auth/kubeconfig__.  Use this to access your Kubernetes from the CLI:
+
+    kubectl --kubeconfig assets/auth/kubeconfig get nodes
 
 Enjoy a nice polished Kubernetes!  With __CoreOS__, chances are good you won't have to redeploy it again for a very long time.
 

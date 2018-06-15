@@ -53,6 +53,56 @@
   any_errors_fatal: true
   gather_facts: true
 
+  vars:
+
+    kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/assets/auth/kubeconfig"
+
   roles:
     - coreos-iscsi
     - coreos-iscsi-provisioner
+
+  tasks:
+
+    - name: Install the iscsi-provisioner secret into the {{ cluster_name }} CoreOS cluster.
+      local_action:
+        module: shell
+        _raw_params: "kubectl --kubeconfig {{ kube_config_file }} create secret generic {{ targetd_server_account_credentials }} --from-literal=username={{ targetd_server_account_username }} --from-literal=password={{ targetd_server_account_password }} -n {{ targetd_server_namespace }}"
+      become: false
+      run_once: true
+      register: iscsi_secret_cmd
+    
+    - debug: msg="{{ iscsi_secret_cmd.stdout_lines }}"
+      run_once: true
+
+    - name: Apply the iscsi-provisioner storage class and provisioner manifests
+      local_action:
+        module: shell
+        _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi.yml -n {{ targetd_server_namespace }}"
+      become: false
+      run_once: true
+      register: iscsi_prov_cmd
+
+    - debug: msg="{{ iscsi_prov_cmd.stdout_lines }}"
+      run_once: true
+
+    - name: Verify the storage class 
+      local_action:
+        module: shell
+        _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get sc -n {{ targetd_server_namespace }}"
+      become: false
+      run_once: true
+      register: iscsi_scv_cmd
+
+    - debug: msg="{{ iscsi_scv_cmd.stdout_lines }}"
+      run_once: true
+
+    - name: Verify the iscsi-provisioner pod
+      local_action:
+        module: shell
+        _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get pods -n {{ targetd_server_namespace }}"
+      become: false
+      run_once: true
+      register: iscsi_podv_cmd
+
+    - debug: msg="{{ iscsi_podv_cmd.stdout_lines }}"
+      run_once: true
