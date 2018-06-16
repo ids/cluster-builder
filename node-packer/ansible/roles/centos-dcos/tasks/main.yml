@@ -57,12 +57,12 @@
     state: stopped
     enabled: no
 
-- name: Add elevator=director to boot to improve I/O performance on VMware ESXi
+- name: Add elevator=deadline to boot to improve I/O performance on VMware ESXi
   lineinfile:
     dest: /etc/default/grub
     regexp: "{{ item.regx }}"
     line: "{{ item.line }}"
     state: present
   with_items:
-    - { regx: "GRUB_CMDLINE_LINUX=", line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=system/root rd.lvm.lv=system/swap rhgb quiet elevator=director"' }
+    - { regx: "GRUB_CMDLINE_LINUX=", line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=system/root rd.lvm.lv=system/swap rhgb quiet elevator=deadline"' }
 

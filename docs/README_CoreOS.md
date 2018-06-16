@@ -274,7 +274,7 @@ Then run the following Ansible playbook:
 
     ansible-playbook -i clusters/ids/core ansible/coreos-init.yml
 
-This will ensure each CoreOS VM is set to `elevator=director` to optimize the Disk I/O.  It will also install __Ansible__ on all of the nodes as per the `defunctzombie.coreos-bootstrap` module.  And finally it will assign the IP address to the node as static so that the provisioner DHCP service is no longer required.
+This will ensure each CoreOS VM is set to `elevator=deadline` to optimize the Disk I/O.  It will also install __Ansible__ on all of the nodes as per the `defunctzombie.coreos-bootstrap` module.  And finally it will assign the IP address to the node as static so that the provisioner DHCP service is no longer required.
 
 ## iSCSI Persistent Volume Setup
 

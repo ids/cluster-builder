@@ -327,7 +327,7 @@ min/avg/max/mdev = 501 us / 112.2 ms / 1.1 s / 329.7 ms
 Benchmark complete... sleeping 300s (kill me anytime).
 ```
 
-> Thos are great numbers for an iSCSI volume hosted over 1GbE, showing near 2x improvement with the recent disk scheduler optimization of `elevator=director`.
+> Thos are great numbers for an iSCSI volume hosted over 1GbE, showing near 2x improvement with the recent disk scheduler optimization of `elevator=deadline`.
 
 Now we will do as suggested, and kill (remove) our benchmark job:
 
