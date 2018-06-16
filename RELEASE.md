@@ -1,15 +1,6 @@
 Release Notes
 =============
 
-v18.04.02
----------
-
-* Fully automated the CoreOS PXE deployment process, including the `coreos-init.yml` and __iscsi-provisioner__ deployment.
-* Included __static ip assignment__ into the post deployment `coreos-init.yml` configuration to remove dependency on the __coreos provisioner__ for runtime operation of the clusters.  It is now only needed temporarily during new cluster deployment.
-* The `coreos-init.yml` script has been tuned so it can be properly re-applied, in support of node additions, recovery, etc.
-* Fixed a bug in the grep logic for VM ID derrivation that caused conflicts with subset names.
-* Included the ability to trigger __coreos provisioner__ Matchbox CoreOS version image downloads by specifying `coreos_linux_version` and `coreos_linux_channel` in the Ansible hosts file.
-
 v18.04.01
 ---------
 
@@ -25,6 +16,11 @@ v18.04.01
 * Tested with __VMware Workstation Pro 14 for Linux__ on the cluster control station appliance.
 * Updated and validated __Tectonic CoreOS__ install for __1.9.6-tectonic.1__.
 * Validated installation of __DC/OS 1.11__, still no changes required to cluster-builder after 4 version upgrades.
+* Fully automated the CoreOS PXE deployment process, including the `coreos-init.yml` and __iscsi-provisioner__ deployment.
+* Included __static ip assignment__ into the post deployment `coreos-init.yml` configuration to remove dependency on the __coreos provisioner__ for runtime operation of the clusters.  It is now only needed temporarily during new cluster deployment.
+* The `coreos-init.yml` script has been tuned so it can be properly re-applied, in support of node additions, recovery, etc.
+* Fixed a bug in the grep logic for VM ID derrivation that caused conflicts with subset names.
+* Included the ability to trigger __coreos provisioner__ Matchbox CoreOS version image downloads by specifying `coreos_linux_version` and `coreos_linux_channel` in the Ansible hosts file.
 
 v18.04
 ------
