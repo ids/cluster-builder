@@ -21,7 +21,7 @@
 
   roles:
   - role: common
-  - role: centos
+  - role: centos-swarm
   - role: centos-swarm-firewall
   - role: swarm
   - role: swarm-secure-api

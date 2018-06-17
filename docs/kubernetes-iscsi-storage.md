@@ -1,9 +1,9 @@
-CoreOS iSCSI Dynamic Storage and the Targetd Storage Appliance
-==============================================================
+Kubernetes iSCSI Dynamic Storage and the Targetd Storage Appliance
+==================================================================
 
-The following diagram illustrates the approach to __persistent volume storage__ on CoreOS Kubernetes using iSCSI direct:
+The following diagram illustrates the approach to __persistent volume storage__ on  Kubernetes using iSCSI direct:
 
-![CoreOS iSCSI Storage Strategy](images/coreos-iscsi-storage.png)
+![Kubernetes iSCSI Storage Strategy](images/coreos-iscsi-storage.png)
 
 The diagram illustrates two types of persistent volume storage:
 
@@ -18,9 +18,9 @@ By combining these two approaches we achieve a lightweight, minimalist and robus
 
 ## The Targetd Storage Appliance
 
-__cluster-builder__ supports the automated deployment of dedicated CoreOS Cluster Targetd storage appliances.  As depicted in the diagram above, these can be paired with CoreOS Clusters to provide controlled dynamic storage.
+__cluster-builder__ supports the automated deployment of dedicated Kubernetes Cluster Targetd storage appliances.  As depicted in the diagram above, these can be paired with Kubernetes Clusters to provide controlled dynamic storage.
 
-> The __Targetd Storage Appliance__ supports up to 255 persistent volumes per server instance.  If this is insufficient, multiple provisioners can be deployed with multiple targetd storage appliance backends in the same CoreOS cluster.
+> The __Targetd Storage Appliance__ supports up to 255 persistent volumes per server instance.  If this is insufficient, multiple provisioners can be deployed with multiple targetd storage appliance backends in the same Kubernetes cluster.
 
 The default configuration of the appliance is a __1 TB thinly provisioned LVM volume on VMDK__.  This can be resized as needed but represents a solid initial storage footprint for a pre-production environment.
 
@@ -79,32 +79,6 @@ Once the __hosts__ file has been prepared, deployment uses the familiar __cluste
     bash cluster-deploy <targetd package folder>
 
 Which should result in a deployed __Targetd Server Appliance__ with __1 TB__ of thinly provisioned LVM storage to be allocated dynamically as K8s __PVCs__ are requested.
-
-## Prepare CoreOS VMs for Ansible Management
-
-> __Note__ that Ansible configuration has been bundled into the deployment process and should happen automatically.  It can be manually re-applied via `coreos-init.yml` at any point, but should already be configured.
-
-In order to manage our CoreOS VMs with Ansible we will install __pypy__ using an Ansible module.
-
-First we need to fetch the module:
-
-    ansible-galaxy install defunctzombie.coreos-bootstrap
-
-Then we need to add the following section to our __CoreOS Cluster hosts file__:
-
-    [coreos:children]
-    coreos_controllers
-    coreos_workers
-
-    [coreos:vars]
-    ansible_ssh_user=core
-    ansible_python_interpreter="PATH=/home/core/bin:$PATH python"
-
-And then execute a wrapper script to use the module against our CoreOS cluster to install __pypy__:
-
-    ansible-playbook -i clusters/ids/core ansible/coreos-ansible.yml
-
-After this completes successfully we can use __Ansible__ to manage our __CoreOS cluster nodes__.
 
 ## The iSCSI Provisioner and CoreOS iSCSI Configuration
 

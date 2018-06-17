@@ -1,0 +1,217 @@
+- name: Install Etcd
+  shell: yum install -y etcd
+
+- name: Configure the etcd servers
+  become: true
+  template:
+    src: templates/k8s-etcd-conf.j2
+    dest: /etc/etcd/etcd.conf
+
+- name: Start etcd 
+  service:
+    name: etcd
+    state: started
+    enabled: yes
+  become: true
+
+- name: Install Kubernetes
+  yum: > 
+    pkg={{item}} 
+    state=present
+  with_items:
+    - kubectl
+    - kubeadm
+    - kubelet
+
+#- name: Download Kubectl 
+#  shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#  args:
+#    chdir: /tmp
+
+#- name: Mark Kubectl executable 
+#  shell: chmod +x ./kubectl
+#  args:
+#    chdir: /tmp
+
+#- name: Move to kubectl to /usr/local/bin 
+#  shell: mv ./kubectl /usr/local/bin/kubectl
+#  args:
+#    chdir: /tmp
+
+- name: Start kubelet 
+  service:
+    name: kubelet
+    state: started
+    enabled: yes
+  become: true
+
+- name: Set k8s_cluster_token default
+  set_fact:
+    k8s_cluster_token: "9aeb42.99b7540a5833866a"
+  run_once: true
+  when: k8s_cluster_token is undefined
+
+- name: Generate the kubeadm yaml configuration
+  template:
+    src: templates/k8s-kube-adm.j2
+    dest: /root/kube-adm.yml
+
+- name: Initialize cluster
+  shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
+  args:
+    chdir: /root
+  ignore_errors: true
+
+- name: Initialize cluster
+  shell: "cat /tmp/kube-status"
+  register: kubeadm_out
+
+- name: Kubeadm Output
+  debug: msg="{{ kubeadm_out.stdout_lines }}"
+
+- name: Get Join Command
+  shell: "cat /tmp/kube-status | sed -n '/discovery-token-ca-cert-hash/,$p' "
+  register: kubeadm_join_cmd
+
+- name: Kubeadm JOIN Command
+  debug: msg="{{ kubeadm_join_cmd.stdout }}"
+
+- name: Export Join Command to /root/join_cmd
+  shell: "echo '{{ kubeadm_join_cmd.stdout }}' > /root/join_cmd "
+
+- name: Setup Kubectl configuration
+  shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
+
+- name: Fetch the join_cmd
+  fetch:
+    src: /root/join_cmd
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+  become: true   
+
+- name: Fetch the kube-adm.yml
+  fetch:
+    src: /root/kube-adm.yml
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+  become: true   
+
+- name: Fetch the Kube config
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
+    flat: yes     
+  become: true   
+
+- name: Setup PKI directory
+  shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
+
+- name: Fetch the PKI certs
+  fetch:
+    src: /etc/kubernetes/pki/{{ item }}
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
+  become: true   
+  with_items:
+    - apiserver.crt  
+    - apiserver-kubelet-client.crt  
+    - ca.crt  
+    - front-proxy-ca.crt  
+    - front-proxy-client.crt  
+    - sa.key
+    - apiserver.key  
+    - apiserver-kubelet-client.key  
+    - ca.key  
+    - front-proxy-ca.key  
+    - front-proxy-client.key  
+    - sa.pub
+
+- name: Setup Kubectl configuration
+  shell: kubectl get nodes
+  register: nodes_out
+
+- debug: msg="{{ nodes_out.stdout_lines }}"
+
+- name: Install Canal RBAC
+  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
+  register: rbac_out
+
+- debug: msg="{{ rbac_out.stdout_lines }}"
+
+- name: Install Canal
+  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+  register: canal_out
+
+- debug: msg="{{ canal_out.stdout_lines }}"
+
+- name: Install Flannel CNI
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  register: flannel_out
+
+- debug: msg="{{ flannel_out.stdout_lines }}"
+
+- name: Copy Dashboard UI files
+  copy:
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/dashboard"
+    dest: /root/
+
+- name: Install Grafana
+  shell: kubectl apply -f /root/dashboard/grafana.yml
+  register: graf_out
+
+- debug: msg="{{ graf_out.stdout_lines }}"
+
+- name: Install Heapster RBAC
+  shell: kubectl apply -f /root/dashboard/heapster-rbac.yml
+  register: heap_out
+
+- debug: msg="{{ heap_out.stdout_lines }}"
+
+- name: Install InfluxDB
+  shell: kubectl apply -f /root/dashboard/influxdb.yml
+  register: influx_out
+
+- debug: msg="{{ influx_out.stdout_lines }}"
+
+- name: Install Kubernetes Dashboard
+  shell: kubectl apply -f /root/dashboard/kubernetes-dashboard.yml
+  register: dash_out
+
+- debug: msg="{{ dash_out.stdout_lines }}"
+
+- name: Generate the master account
+  template:
+    src: templates/k8s-master-account.j2
+    dest: /root/kube-master.yml
+
+- name: Install master account
+  shell: kubectl apply -f /root/kube-master.yml
+  register: acct_out
+
+- debug: msg="{{ acct_out.stdout_lines }}"
+
+- name: Generate the Web UI token
+  shell: kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}') > /root/web-ui-token
+
+- name: Fetch the Web UI token
+  fetch:
+    src: /root/web-ui-token
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+  become: true   
+
+- name: Get Master Node status
+  shell: kubectl get nodes
+  register: master_node_out
+
+- debug: msg="{{ master_node_out.stdout_lines }}"
+
+- name: Copy Traefik manifest
+  copy:
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/traefik-nodeport.yml"
+    dest: /root/
+
+- name: Install Grafana
+  shell: kubectl apply -f /root/traefik-nodeport.yml
+  register: traefik_out
+
+- debug: msg="{{ traefik_out.stdout_lines }}"

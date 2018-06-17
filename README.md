@@ -27,7 +27,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 10. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
 11. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
 12. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-13. [CoreOS iSCSI Provisioner and Targetd Storage Appliance](#coreos-iscsi-provisioner-and-targetd-storage-appliance)
+13. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](#kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
 14. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
@@ -44,6 +44,7 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __
 * RedHat Enterprise 7 Docker CE
 * RedHat Enterprise 7 Docker EE
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
+* CentOS 7 Kubernetes (Stock Kubeadm)
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
 
@@ -59,23 +60,40 @@ VMware ESXi is for staging and production deployments.
 
 > __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
 
-There are at present 7 supported cluster types, or variants:
+### Docker Swarm Cluster Types
 
 * photon-swarm
 * centos-swarm
 * rhel-swarm
 * centos-ucp
 * rhel-ucp
+
+### DC/OS Cluster Types
+
 * centos-dcos
 
-> Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
+### Kubernetes Cluster Types
 
-With two special builds in support of __Tectonic CoreOS__:
+There are two special builds in support of __Tectonic CoreOS__:
 
 * coreos-provisioner
 * coreos-pxe
 
 For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
+
+There is also an experimental CentOS 7 `kubeadm` stock Kubernetes w/ Canal:
+
+* centos-k8s
+
+### Extras
+
+__cluster-builder__ can also deploy a special __Targetd Storage Appliance__ to supply persistent volume storage to Kubernetes clusters.
+
+* targetd-server
+
+For more information on Targetd [see the CoreOS Storage Readme](docs/kubernetes-iscsi-storage.md)
+
+> Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
 ## Required Software
 
@@ -242,13 +260,13 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 	docker plugin install --grant-all-permissions --alias vsphere vmware/docker-volume-vsphere:latest
 
-## CoreOS iSCSI Provisioner and Targetd Storage Appliance
+## Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
 
 The __cluster-builder__ CoreOS deployment is paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ to Kubernetes deployments using the __open-iscsi__ platform.
 
-For details see the [CoreOS iSCSI Storage Guide](docs/coreos-iscsi-storage.md)
+For details see the [Kubernetes iSCSI Storage Guide](docs/kubernetes-iscsi-storage.md)
 
 ## Host Mounted NFS Storage
 

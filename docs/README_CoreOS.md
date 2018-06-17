@@ -280,7 +280,7 @@ This will ensure each CoreOS VM is set to `elevator=deadline` to optimize the Di
 
 At the present time the installation process does not configure the cluster for iSCSI Persistent volumes out-of-the-box, there is a bug in the mainstream version that doesn't acknowledge __tectonic_iscsi_enabled__, however the nodes are already provisioned for iSCSI support.  If you didn't grab the __tectonic-installer__ from github and build it from source, it is probably broken.
 
-See the [CoreOS iSCSI Storage Guide](coreos-iscsi-storage.md)
+See the [Kubernetes iSCSI Storage Guide](kubernetes-iscsi-storage.md)
 
 Appendix A: Graphical Installer Walkthrough
 -------------------------------------------

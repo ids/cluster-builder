@@ -23,8 +23,8 @@
   - name: Generate the iSCSI provisioner, roles and storage class manifest
     local_action:
       module: template
-      src: templates/coreos-iscsi-manifests.j2
-      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi.yml
+      src: templates/k8s-iscsi-manifests.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi.yml
       mode: 0766
     become: false
     when: targetd_server is defined 
@@ -32,8 +32,8 @@
   - name: Generate the iSCSI Benchmark manifest
     local_action:
       module: template
-      src: templates/coreos-iscsi-bench-pvc-yml.j2
-      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi-bench-pvc.yml
+      src: templates/k8s-iscsi-bench-pvc-yml.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-bench-pvc.yml
       mode: 0766
     become: false
     run_once: true
@@ -42,8 +42,8 @@
   - name: Generate the iSCSI Benchmark manifest
     local_action:
       module: template
-      src: templates/coreos-iscsi-bench-job-yml.j2
-      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi-bench-job.yml
+      src: templates/k8s-iscsi-bench-job-yml.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-bench-job.yml
       mode: 0766
     become: false
     run_once: true
@@ -52,8 +52,8 @@
   - name: Generate the iSCSI provisioner secret script
     local_action:
       module: template
-      src: templates/coreos-iscsi-secret.j2
-      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi-secret.sh
+      src: templates/k8s-iscsi-secret.j2
+      dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-secret.sh
       mode: 0766
     become: false    
     when: targetd_server is defined 

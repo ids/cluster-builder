@@ -1,0 +1,13 @@
+---
+# This playbook creates a centos7 Kubernetes
+- hosts: all
+  remote_user: admin
+  become: true
+  any_errors_fatal: true
+  vars:
+
+  roles:
+  - role: common
+  - role: centos
+  - role: kubernetes
+  - role: iscsi-provisioner

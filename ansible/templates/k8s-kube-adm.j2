@@ -1,0 +1,20 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+etcd:
+  endpoints:
+{% for host in groups['k8s_masters'] %}
+    - "http://{{ hostvars[host].ansible_host }}:2379"
+{% endfor %}
+
+apiServerCertSANs:
+{% for host in groups['k8s_masters'] %}
+  - "{{ hostvars[host].ansible_host }}"
+{% endfor %}
+  - "127.0.0.1"
+  - "{{ k8s_admin_url }}"
+token: "{{ k8s_cluster_token }}"
+tokenTTL: "0s"
+api:
+  advertiseAddress: "{{ k8s_advertise_addr }}"
+networking:
+  podSubnet: 10.244.0.0/16

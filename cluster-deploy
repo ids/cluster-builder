@@ -269,6 +269,11 @@ elif [ "$CLUSTER_TYPE" == 'centos-ucp' ]; then
   CLUSTER_TYPE_NAME='CentOS UCP'
   OVA_BUILD_TYPE=centos7
   REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'centos-k8s' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
+  CLUSTER_TYPE_NAME='CentOS Kubernetes'
+  OVA_BUILD_TYPE=centos7
+  REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
   RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
