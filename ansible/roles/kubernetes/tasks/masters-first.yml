@@ -131,6 +131,12 @@
 
 - debug: msg="{{ nodes_out.stdout_lines }}"
 
+#- name: Install Calico CNI
+#  shell: kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
+#  register: calico_out
+
+#- debug: msg="{{ calico_out.stdout_lines }}"
+
 - name: Install Canal RBAC
   shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
   register: rbac_out

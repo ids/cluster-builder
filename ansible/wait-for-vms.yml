@@ -2,6 +2,6 @@
 - hosts: vmware_vms
   gather_facts: false
   tasks:  
-    - name: Waiting 240 secs for VMs to come online
-      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=240 timeout=600
+    - name: Waiting for VMs to come online
+      local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=60 timeout=600
       become: false

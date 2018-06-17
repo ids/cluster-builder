@@ -91,7 +91,7 @@ __cluster-builder__ can also deploy a special __Targetd Storage Appliance__ to s
 
 * targetd-server
 
-For more information on Targetd [see the CoreOS Storage Readme](docs/kubernetes-iscsi-storage.md)
+For more information on Targetd [see the Kubernetes Storage Readme](docs/kubernetes-iscsi-storage.md)
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
