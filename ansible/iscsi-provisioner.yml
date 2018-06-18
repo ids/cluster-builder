@@ -1,0 +1,10 @@
+- hosts: k8s_workers
+  become: true
+  any_errors_fatal: true
+  gather_facts: false
+  vars:
+
+  roles:
+    - common
+    - iscsi-provisioner
+
