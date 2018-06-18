@@ -83,7 +83,7 @@ There are two special builds in support of __Tectonic CoreOS__:
 
 For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
 
-There is also two experimental custom built Kubernetes variants:
+There are also two experimental custom built Kubernetes variants:
 
 * centos-k8s
 * fedora-k8s
