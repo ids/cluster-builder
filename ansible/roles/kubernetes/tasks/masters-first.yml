@@ -1,5 +1,10 @@
 - name: Install Etcd
   shell: yum install -y etcd
+  when: cluster_type != "fedora-k8s"
+
+- name: Install Etcd
+  shell: dnf install -y etcd
+  when: cluster_type == "fedora-k8s"
 
 - name: Configure the etcd servers
   become: true
@@ -22,6 +27,17 @@
     - kubectl
     - kubeadm
     - kubelet
+  when: cluster_type != "fedora-k8s"
+
+- name: Install Kubernetes
+  dnf: > 
+    pkg={{item}} 
+    state=present
+  with_items:
+    - kubectl
+    - kubeadm
+    - kubelet
+  when: cluster_type == "fedora-k8s"
 
 #- name: Download Kubectl 
 #  shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl

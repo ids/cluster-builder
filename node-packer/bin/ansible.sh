@@ -7,7 +7,7 @@ set -o pipefail
 # Instructions from https://flatpacklinux.com/2016/05/27/install-ansible-2-1-on-rhelcentos-7-with-pip/
 
 echo '>>> Updating'
-sudo yum makecache fast
+#sudo yum makecache fast
 
 echo '>>> Installing yum-utils'
 yum install -y yum-utils

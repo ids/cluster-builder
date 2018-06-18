@@ -2,15 +2,24 @@
   yum:
     name: docker-ce
     state: absent
+  when: cluster_type != "fedora-k8s"
 
 - name: Remove daemon.json
   shell: rm /etc/docker/daemon.json
   ignore_errors: true
+  when: cluster_type != "fedora-k8s"
 
 - name: install base docker
   yum:
     name: docker
     state: present
+  when: cluster_type != "fedora-k8s"
+
+- name: install base docker
+  dnf:
+    name: docker
+    state: present
+  when: cluster_type == "fedora-k8s"
 
 - name: Start docker 
   service:
@@ -59,6 +68,15 @@
     state=present
   with_items:
     - iscsi-initiator-utils
+  when: cluster_type != "fedora-k8s"
+
+- name: Install iSCSI utils
+  dnf: > 
+    pkg={{item}} 
+    state=present
+  with_items:
+    - iscsi-initiator-utils
+  when: cluster_type == "fedora-k8s"
 
 - name: Configure the Kubernetes Repo
   become: true
@@ -75,6 +93,7 @@
 
 - name: Kubernetes Repo config
   shell: setenforce 0
+  when: cluster_type != "fedora-k8s"
 
 - name: Configure the First Kubernetes Master
   include: masters-first.yml

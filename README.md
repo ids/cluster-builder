@@ -60,6 +60,8 @@ VMware ESXi is for staging and production deployments.
 
 > __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
 
+> Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
+
 ### Docker Swarm Cluster Types
 
 * photon-swarm
@@ -81,9 +83,20 @@ There are two special builds in support of __Tectonic CoreOS__:
 
 For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
 
-There is also an experimental CentOS 7 `kubeadm` stock Kubernetes w/ Canal:
+There is also two experimental custom built Kubernetes variants:
 
 * centos-k8s
+* fedora-k8s
+
+__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.10__ clusters that implement:
+
+* Canal/Flannel CNI Networking with Network Policy support
+* Traefik for Ingress
+* iSCSI Provisioner and Targetd integration for PVC storage
+
+The __CentOS7 K8s__ cluster has been load tested and performs as well as CoreOS and with similar stability.
+
+The __Fedora K8s__ cluster is considered experimental, but has the latest 4.x kernel and most up to date binaries.
 
 ### Extras
 
@@ -92,8 +105,6 @@ __cluster-builder__ can also deploy a special __Targetd Storage Appliance__ to s
 * targetd-server
 
 For more information on Targetd [see the Kubernetes Storage Readme](docs/kubernetes-iscsi-storage.md)
-
-> Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
 ## Required Software
 

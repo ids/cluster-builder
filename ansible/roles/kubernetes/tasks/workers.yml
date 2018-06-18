@@ -7,6 +7,11 @@
 
 - name: Install and accept GPG
   shell: yum install -y kubectl
+  when: cluster_type != "fedora-k8s"
+
+- name: Install and accept GPG
+  shell: dnf install -y kubectl
+  when: cluster_type == "fedora-k8s"
 
 - name: Install Kubernetes
   yum: > 
@@ -15,6 +20,16 @@
   with_items:
     - kubelet
     - kubeadm
+  when: cluster_type != "fedora-k8s"
+
+- name: Install Kubernetes
+  dnf: > 
+    pkg={{item}} 
+    state=present
+  with_items:
+    - kubelet
+    - kubeadm
+  when: cluster_type == "fedora-k8s"
 
 - name: Start kubelet 
   service:
