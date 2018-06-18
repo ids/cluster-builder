@@ -5,6 +5,8 @@ clusters/*
 !clusters/README.md
 !clusters/eg/
 
+docs/images/*.bak 
+
 virtuals
 .terraform
 generated
