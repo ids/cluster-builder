@@ -106,6 +106,8 @@ __cluster-builder__ can also deploy a special __Targetd Storage Appliance__ to s
 
 For more information on Targetd [see the Kubernetes Storage Readme](docs/kubernetes-iscsi-storage.md)
 
+> __Note__ it is best to deploy the __Targetd Storage Appliance__ prior to installing the Kubernetes cluster as the cluster deployment process will deploy and configure an __iscsi-provisioner__ deployment configured for the Targetd server when it already exists - and when the cluster _hosts_ file contains the necessary configuration information for the Targetd.
+
 ## Required Software
 
 ### macOS / Linux
