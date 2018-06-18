@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+v18.04.02
+---------
+
+* Included custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__, using `kubeadm`, and implementing Canal CNI for network policy and the iSCSI provisioner for persistent storage.
+
 v18.04.01
 ---------
 
