@@ -1,16 +1,12 @@
 Release Notes
 =============
 
-v18.04.02
----------
-
-* Included custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__, using `kubeadm`, and implementing Canal CNI for network policy and the iSCSI provisioner for persistent storage.
-
-v18.04.01
----------
+v18.06
+------
 
 > An _OVA rebuild_ is recommended with this release due to performance optimizations introduced in the Packer phase kickstart files.
 
+* Included custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__, using `kubeadm`, and implementing Canal CNI for network policy and the iSCSI provisioner for persistent storage.
 * Updated CentOS7 to 7.5 (1804).
 * Added `coreos-ansible.yml` wrapper script for bootstrapping CoreOS with `PyPy` to enable __Ansible__ management of CoreOS nodes.
 * Initial implementation of __Ansible__ based CoreOS __iSCSI__ configuration playbook.
