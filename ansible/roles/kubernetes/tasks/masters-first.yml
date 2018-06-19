@@ -1,43 +1,4 @@
-- name: Install Etcd
-  shell: yum install -y etcd
-  when: cluster_type != "fedora-k8s"
 
-- name: Install Etcd
-  shell: dnf install -y etcd
-  when: cluster_type == "fedora-k8s"
-
-- name: Configure the etcd servers
-  become: true
-  template:
-    src: templates/k8s-etcd-conf.j2
-    dest: /etc/etcd/etcd.conf
-
-- name: Start etcd 
-  service:
-    name: etcd
-    state: started
-    enabled: yes
-  become: true
-
-- name: Install Kubernetes
-  yum: > 
-    pkg={{item}} 
-    state=present
-  with_items:
-    - kubectl
-    - kubeadm
-    - kubelet
-  when: cluster_type != "fedora-k8s"
-
-- name: Install Kubernetes
-  dnf: > 
-    pkg={{item}} 
-    state=present
-  with_items:
-    - kubectl
-    - kubeadm
-    - kubelet
-  when: cluster_type == "fedora-k8s"
 
 #- name: Download Kubectl 
 #  shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -78,7 +39,7 @@
     chdir: /root
   ignore_errors: true
 
-- name: Initialize cluster
+- name: Register cluster status
   shell: "cat /tmp/kube-status"
   register: kubeadm_out
 
@@ -126,6 +87,7 @@
   fetch:
     src: /etc/kubernetes/pki/{{ item }}
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
+    flat: yes
   become: true   
   with_items:
     - apiserver.crt  

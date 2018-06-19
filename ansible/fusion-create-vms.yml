@@ -13,6 +13,12 @@
     - role: common
 
   tasks:    
+  - name: Set server_static_ip_wait_seconds if undefined
+    set_fact:
+      server_static_ip_wait_seconds: 30
+    run_once: true
+    when: server_static_ip_wait_seconds is undefined
+
   - name: Ensure the target fusion_vm_folder exists
     local_action:
       module: file
@@ -304,6 +310,6 @@
       module: shell
       _raw_params: vmrun start {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
 
-  - name: waiting for servers to start up and fetch their permanent ip addresses
-    local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=20 timeout=600
+  - name: waiting {{ server_static_ip_wait_seconds }} seconds for servers to start up and fetch their permanent ip addresses
+    local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay={{ server_static_ip_wait_seconds }} timeout=600
     become: false

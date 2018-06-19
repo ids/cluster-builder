@@ -1,29 +1,3 @@
-- name: Install and accept GPG
-  shell: yum install -y kubectl
-  when: cluster_type != "fedora-k8s"
-
-- name: Install and accept GPG
-  shell: dnf install -y kubectl
-  when: cluster_type == "fedora-k8s"
-
-- name: Install Kubernetes
-  yum: > 
-    pkg={{item}} 
-    state=present
-  with_items:
-    - kubeadm
-    - kubelet
-  when: cluster_type != "fedora-k8s"
-
-- name: Install Kubernetes
-  dnf: > 
-    pkg={{item}} 
-    state=present
-  with_items:
-    - kubeadm
-    - kubelet
-  when: cluster_type == "fedora-k8s"
-
 - name: Ensure pki folder exists
   shell: mkdir -p /etc/kubernetes/pki/
 
@@ -31,14 +5,9 @@
   copy:
     dest: /etc/kubernetes/pki/{{ item }}
     src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
-    flat: yes     
+    mode: 600
   become: true   
   with_items:
-    - apiserver.crt  
-    - apiserver-kubelet-client.crt  
-    - ca.crt  
-    - front-proxy-ca.crt  
-    - front-proxy-client.crt  
     - sa.key
     - apiserver.key  
     - apiserver-kubelet-client.key  
@@ -47,11 +16,23 @@
     - front-proxy-client.key  
     - sa.pub
 
+- name: Copy the PKI certs
+  copy:
+    dest: /etc/kubernetes/pki/{{ item }}
+    src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
+    mode: 644
+  become: true   
+  with_items:
+    - apiserver.crt  
+    - apiserver-kubelet-client.crt  
+    - ca.crt  
+    - front-proxy-ca.crt  
+    - front-proxy-client.crt  
+
 - name: Copy the kube-adm.yml
   copy:
     dest: /root/kube-adm.yml
     src: ../clusters/{{ cluster_pkg_folder }}/kube-adm.yml
-    flat: no     
   become: true   
 
 - name: Start kubelet 

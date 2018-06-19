@@ -36,9 +36,8 @@ At this stage all of the VMs have been deployed and **should be running**.  They
 
 		network_mask=255.255.255.0
 		network_gateway=192.168.1.1
-		network_dns=192.168.1.10
-		network_dns2=192.168.1.1
-		network_dns3=8.8.8.8
+		network_dns=8.8.8.8
+		network_dns2=8.8.4.4
 		network_dn=idstudios.local
 
 		[dcos_boot]

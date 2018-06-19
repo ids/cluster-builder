@@ -95,6 +95,10 @@
   shell: setenforce 0
   when: cluster_type != "fedora-k8s"
 
+- name: Initialize the Masters Etcd cluster
+  include: masters-init.yml
+  when: "'k8s_masters' in group_names"
+
 - name: Configure the First Kubernetes Master
   include: masters-first.yml
   when: "'k8s_masters' in group_names
