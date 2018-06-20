@@ -22,6 +22,7 @@ v18.06
 * The `coreos-init.yml` script has been tuned so it can be properly re-applied, in support of node additions, recovery, etc.
 * Fixed a bug in the grep logic for VM ID derrivation that caused conflicts with subset names.
 * Included the ability to trigger __coreos provisioner__ Matchbox CoreOS version image downloads by specifying `coreos_linux_version` and `coreos_linux_channel` in the Ansible hosts file.
+* Integrated the __MariaDB Galera/Drupal7 Load Testing Stack__ into the core __cluster-builder__ codebase to enable regular load testing and performance validation of deployed clusters.
 
 v18.04
 ------
