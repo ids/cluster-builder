@@ -1,7 +1,7 @@
 Cluster Builder
 ===============
 
-[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Tectonic CoreOS](https://coreos.com) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
+[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/), [Tectonic CoreOS](https://coreos.com) and [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
@@ -36,7 +36,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 19. [System Profile](#system-profile)
 
 ## Supported Clusters
-The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
+The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and __Stock CentOS7 and Fedora Kubernetes__ clusters for several platforms:
 
 * PhotonOS Docker CE
 * CentOS 7 Docker CE
@@ -486,6 +486,11 @@ centos-dcos
 __Tectonic CoreOS__: v1.9.6 (or latest)
 coreos-provisioner
 coreos-pxe
+
+__Stock Kubernetes__: v1.10.4 (or latest)
+coreos-k8s
+fedora-k8s
+
 
 ### CentOS Based Clusters
 
