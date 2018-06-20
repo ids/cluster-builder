@@ -1,9 +1,0 @@
-curl -L -O https://github.com/contiv/install/releases/download/1.0.3/contiv-1.0.3.tgz
-tar oxf contiv-1.0.3.tgz .
-
-scp -r tmp/contiv-1.1.7 admin@demo-swarm-m1:/tmp/
-
-scp tmp/contiv-1.1.7/contiv-cfg.yml admin@demo-swarm-m1:/tmp/contiv-1.0.3/
-scp ~/.ssh/id_rsa admin@demo-swarm-m1:/tmp/contiv-1.0.3/secretstuff
-
-./install/ansible/install_swarm.sh -f contiv-cfg.yml -e secretstuff -u admin -p

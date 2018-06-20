@@ -1,0 +1,235 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-seed-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-seed-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+    targetPortal: {{ galera_cluster_seed_iscsi_targetportal }}
+    iqn: {{ galera_cluster_seed_iscsi_iqn }}
+    lun: {{ galera_cluster_seed_iscsi_lun }}
+    fsType: ext4
+    readOnly: false    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-seed-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-seed-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-node1-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-node1-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+    targetPortal: {{ galera_cluster_node1_iscsi_targetportal }}
+    iqn: {{ galera_cluster_node1_iscsi_iqn }}
+    lun: {{ galera_cluster_node1_iscsi_lun }}
+    fsType: ext4
+    readOnly: false    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node1-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-node1-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-node2-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-node2-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+    targetPortal: {{ galera_cluster_node2_iscsi_targetportal }}
+    iqn: {{ galera_cluster_node2_iscsi_iqn }}
+    lun: {{ galera_cluster_node2_iscsi_lun }}
+    fsType: ext4
+    readOnly: false    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node2-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-node2-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-node3-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-node3-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+    targetPortal: {{ galera_cluster_node3_iscsi_targetportal }}
+    iqn: {{ galera_cluster_node3_iscsi_iqn }}
+    lun: {{ galera_cluster_node3_iscsi_lun }}
+    fsType: ext4
+    readOnly: false    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node3-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-node3-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-node4-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-node4-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+    targetPortal: {{ galera_cluster_node4_iscsi_targetportal }}
+    iqn: {{ galera_cluster_node4_iscsi_iqn }}
+    lun: {{ galera_cluster_node4_iscsi_lun }}
+    fsType: ext4
+    readOnly: false    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node4-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-node4-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-node5-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-node5-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+    targetPortal: {{ galera_cluster_node5_iscsi_targetportal }}
+    iqn: {{ galera_cluster_node5_iscsi_iqn }}
+    lun: {{ galera_cluster_node5_iscsi_lun }}
+    fsType: ext4
+    readOnly: false    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node5-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-node5-volume
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-backup-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-backup-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_backup_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: "{{ galera_cluster_backup_nfs_server }}"
+    path: "{{ galera_cluster_backup_path }}"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-backup-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_backup_volume_size }}
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-backup-volume
+---

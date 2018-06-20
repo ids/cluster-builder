@@ -33,6 +33,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
 17. [Advanced Swarm Deployment](#advanced-swarm-deployment)
 18. [System Profile](#system-profile)
+19. [Load Testing Sample Stack](#load-testing-sample-stack)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__  and __Tectonic CoreOS__ clusters for several platforms:
@@ -501,3 +502,11 @@ coreos-pxe
 * Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
 
 > Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
+
+## Kubernetes Load Testing Sample Stack
+
+A sample application stack has been included with cluster-builder that can be used to perform basic performance and load testing on deployed Kubernetes clusters.
+
+It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster__ paired with a __Drupal 7__ web front-end, which accesses the database through a dedicated __HA Proxy__ load balancer.
+
+For guidance on generating the manifests for your __cluster-builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).

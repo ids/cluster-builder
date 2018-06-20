@@ -1,0 +1,40 @@
+execution:
+- concurrency: 30
+  ramp-up: 5s
+  hold-for: 10m
+  iterations: 750
+  throughput: 30
+  scenario: moderate_load
+  
+modules:
+  jmeter:
+    properties:  
+      http.connection.stalecheck$Boolean: "true"
+      httpclient4.retrycount: 1
+  
+scenarios:
+  moderate_load:
+    retrieve-resources: true
+    requests:
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/43
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/42
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/34
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/39
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/32
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/28
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/24
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/20
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/19
+      - http://{{ drupal_domain }}:{{ drupal_service_port }}/?q=node/12
+
+reporting:
+- module: console
+- module: final-stats
+- module: blazemeter
+
+settings:
+  check-interval: 10s
+  default-executor: jmeter
+
+provisioning: local

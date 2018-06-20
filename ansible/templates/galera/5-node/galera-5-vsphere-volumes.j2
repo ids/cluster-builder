@@ -1,0 +1,116 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-seed-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ galera_vsphere_storage_class }}
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "{{ galera_vsphere_storage_class }}"
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node1-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ galera_vsphere_storage_class }}
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "{{ galera_vsphere_storage_class }}"
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node2-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ galera_vsphere_storage_class }}
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "{{ galera_vsphere_storage_class }}"
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node3-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ galera_vsphere_storage_class }}
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "{{ galera_vsphere_storage_class }}"
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node4-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ galera_vsphere_storage_class }}
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "{{ galera_vsphere_storage_class }}"
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-node5-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ galera_vsphere_storage_class }}
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "{{ galera_vsphere_storage_class }}"
+  resources:
+    requests:
+      storage: {{ galera_cluster_volume_size }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ galera_cluster_name }}-galera-backup-volume
+  namespace: {{ galera_cluster_namespace }}
+  labels:
+    volume: {{ galera_cluster_name }}-galera-backup-volume
+spec:
+  capacity:
+    storage: {{ galera_cluster_backup_volume_size }}
+  accessModes:
+    - ReadWriteMany
+  mountOptions:
+    - vers=3,nolock
+  nfs:
+    server: "{{ galera_cluster_backup_nfs_server }}"
+    path: "{{ galera_cluster_backup_path }}"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-backup-volume-claim
+  namespace: {{ galera_cluster_namespace }}
+spec:
+  resources:
+    requests:
+      storage: {{ galera_cluster_backup_volume_size }}
+  accessModes:
+    - ReadWriteMany
+  selector:
+    matchLabels:
+      volume: {{ galera_cluster_name }}-galera-backup-volume

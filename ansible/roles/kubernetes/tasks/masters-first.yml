@@ -80,6 +80,10 @@
     flat: yes     
   become: true   
 
+- name: Clean PKI directory
+  shell: "rm -rf {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
+  ignore_errors: true 
+
 - name: Setup PKI directory
   shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
 
