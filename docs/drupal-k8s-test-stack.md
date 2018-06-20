@@ -268,17 +268,17 @@ Will close off external access.
 
 The __Kubernetes__ verion of __mariadb-galera-docker__ enables the integration of an automated backup and restore agent.
 
-![MariaDB Galera Docker Automated Backup](docs/images/galera-backup.png)
+![MariaDB Galera Docker Automated Backup](images/galera-backup.png)
 
 Each Galera instance will bundle a __mariadb-galera-backup__ agent with the last node in the cluster.  It is co-located in the POD with the database engine, and performs periodic backups to a configured NFS share (made available as a persistent volume).
 
 The backup agent will perform periodic compressed backups at a configured interval.  These backups can then be __restored__ into Staging / QA environments:
 
-![MariaDB Galera Docker Backup to QA](docs/images/galera-qa.png)
+![MariaDB Galera Docker Backup to QA](images/galera-qa.png)
 
 In support of the final stage of a QA process, or as part of a __Disaster Recovery__ strategy:
 
-![MariaDB Galera Docker Backup to Cloud](docs/images/galera-dr.png)
+![MariaDB Galera Docker Backup to Cloud](images/galera-dr.png)
 
 Leveraging real-time replicated __Cloud Storage__ backups and a __Hybrid Cloud__ infrastructure, production environments dependent on __mariadb-galera-docker__ can be recreated on demand with backups current to the __defined incremental interval__ before failure.
 
