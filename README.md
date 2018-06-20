@@ -29,7 +29,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 12. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
 13. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](#kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
 14. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-15. [Kubernetes Load Testing Sample Stack](#load-testing-sample-stack)
+15. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
 16. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 17. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
 18. [Advanced Swarm Deployment](#advanced-swarm-deployment)
