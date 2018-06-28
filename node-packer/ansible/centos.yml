@@ -12,5 +12,4 @@
   - role: centos-ssh
   - role: centos-hardening
   - role: centos-firewalld
-  - role: centos-kernel-tweak
   
