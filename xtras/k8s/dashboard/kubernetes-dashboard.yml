@@ -165,3 +165,5 @@ spec:
       targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard
+  sessionAffinity: None
+  type: NodePort

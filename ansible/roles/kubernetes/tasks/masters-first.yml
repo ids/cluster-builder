@@ -126,7 +126,7 @@
 - debug: msg="{{ rbac_out.stdout_lines }}"
 
 - name: Install Canal
-  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+  shell: kubectl apply --validate=false -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
   register: canal_out
 
 - debug: msg="{{ canal_out.stdout_lines }}"
