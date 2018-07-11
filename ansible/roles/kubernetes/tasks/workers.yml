@@ -5,15 +5,15 @@
     mode: 0766   
   become: true   
 
-- name: Install and accept GPG
+- name: Install and accept GPG (CentOS)
   shell: yum install -y kubectl
   when: cluster_type != "fedora-k8s"
 
-- name: Install and accept GPG
+- name: Install and accept GPG (Fedora)
   shell: dnf install -y kubectl
   when: cluster_type == "fedora-k8s"
 
-- name: Install Kubernetes
+- name: Install Kubernetes on worker nodes (CentOS)
   yum: > 
     pkg={{item}} 
     state=present
@@ -22,7 +22,7 @@
     - kubeadm
   when: cluster_type != "fedora-k8s"
 
-- name: Install Kubernetes
+- name: Install Kubernetes on worker nodes (Fedora)
   dnf: > 
     pkg={{item}} 
     state=present
@@ -31,14 +31,14 @@
     - kubeadm
   when: cluster_type == "fedora-k8s"
 
-- name: Start kubelet 
+- name: Start kubelet on worker nodes
   service:
     name: kubelet
     state: started
     enabled: yes
   become: true
 
-- name: Join Worker to Cluser
+- name: Join Worker to Cluster
   shell: "/root/join_cmd"
   register: worker_join
 

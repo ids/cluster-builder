@@ -1,27 +1,27 @@
-- name: remove the docker-ce
+- name: remove the updated docker-ce
   yum:
     name: docker-ce
     state: absent
   when: cluster_type != "fedora-k8s"
 
-- name: Remove daemon.json
+- name: Remove any existing daemon.json
   shell: rm /etc/docker/daemon.json
   ignore_errors: true
   when: cluster_type != "fedora-k8s"
 
-- name: install base docker
+- name: install base distro docker for CentOS
   yum:
     name: docker
     state: present
   when: cluster_type != "fedora-k8s"
 
-- name: install base docker
+- name: install base distro docker for Fedora
   dnf:
     name: docker
     state: present
   when: cluster_type == "fedora-k8s"
 
-- name: Start docker 
+- name: Start docker daemon
   service:
     name: docker
     state: started
@@ -62,7 +62,7 @@
     state: absent
     regexp: '^/dev/mapper/system-swap'
 
-- name: Install iSCSI utils
+- name: Install iSCSI utils for CentOS
   yum: > 
     pkg={{item}} 
     state=present
@@ -70,7 +70,7 @@
     - iscsi-initiator-utils
   when: cluster_type != "fedora-k8s"
 
-- name: Install iSCSI utils
+- name: Install iSCSI utils for Fedora
   dnf: > 
     pkg={{item}} 
     state=present
@@ -91,7 +91,7 @@
 #    regexp: '^SELINUX'
 #    line: 'SELINUX=disabled'
 
-- name: Kubernetes Repo config
+- name: Configure the Kubernetes Repo
   shell: setenforce 0
   when: cluster_type != "fedora-k8s"
 
