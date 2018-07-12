@@ -1,3 +1,0 @@
----
-- name: Create a Docker Swarm
-  include: swarm-cluster.yml

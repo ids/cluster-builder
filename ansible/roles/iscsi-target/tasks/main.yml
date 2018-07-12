@@ -1,8 +1,0 @@
----
-- name: Install iSCSI target utils server
-  yum: >
-    name={{item}}
-    state=present
-  with_items:
-   - scsi-target-utils
-

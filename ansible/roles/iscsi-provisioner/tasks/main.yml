@@ -1,3 +1,0 @@
-- name: Generate the iSCSI provisioner manifests for Targetd Server
-  include: iscsi-provisioner.yml
-  when: "targetd_server is defined"

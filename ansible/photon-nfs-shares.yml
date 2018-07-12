@@ -1,8 +1,0 @@
----
-- hosts: all
-  remote_user: root
-  become: false
-  gather_facts: false
-  roles:
-  - role: nfs-shares
-

@@ -1,2 +1,0 @@
-- name: Configure Auditd
-  include: auditd.yml

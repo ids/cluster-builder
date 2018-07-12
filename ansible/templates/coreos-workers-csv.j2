@@ -1,4 +1,0 @@
-WORKER_MAC,HOST
-{% for host in groups['coreos_workers'] %}
-{{ hostvars[host].vm_mac_addr }},{{ hostvars[host].inventory_hostname | replace(network_dn + '.',"")  }}.{{ network_dn }}
-{% endfor %}

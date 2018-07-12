@@ -1,9 +1,0 @@
----
-- name: Configure node-exporter for all nodes
-  include: node-exporter.yml
-
-- name: Configure metrics and cAdvisor for all nodes
-  include: metrics.yml
-
-- name: Configure ELK Logging
-  include: logging.yml
