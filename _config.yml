@@ -17,7 +17,6 @@ collections:
     docs: {output: true, permalink: '/docs/:path/'}
 defaults:
     - {scope: {type: posts}, values: {permalink: '/blog/:year/:month/:day/:title'}}
-    - {scope: {path: ""}, values: {image: {path: /images/logo-2018-icon.png, width: 1200, height: 630}}}
 exclude:
     - node_modules
     - README.md
