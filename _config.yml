@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-title: Cluster Builder
+title: cluster-builder
 email: admin@idstudios.io
 description: 'Automatically Deploy Kubernetes, Docker Swarm and DC/OS Orchestration Clusters into VMware Environments.'
 url: 'https://cluster-builder.idstudios.io'

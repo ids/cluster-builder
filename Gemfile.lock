@@ -246,6 +246,7 @@ PLATFORMS
 DEPENDENCIES
   github-pages
   jekyll-polyglot
+  jekyll-theme-slate
 
 BUNDLED WITH
    1.15.1

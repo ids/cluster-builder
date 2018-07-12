@@ -1,0 +1,45 @@
+---
+---
+
+@import "jekyll-theme-slate";
+
+#header_wrap img {
+  display: inline-block;
+  width: 135px;
+  border: none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  text-align: center;
+  margin-top: -10px;
+  margin-left: 10px;
+}
+
+#footer_wrap .idstudios-logo {
+  width: 165px;
+  border: none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  position: absolute;
+  top: 15px;
+  left: 25px;
+  border: 1px solid #999;
+  border-radius: 10px;
+}
+
+#header_wrap .inner {
+  max-width: 75%;
+}
+
+#main_content.inner {
+  max-width: 75%;
+}
+
+#footer_wrap .inner {
+  max-width: 75%;
+  text-align: left;
+}
+
+footer p,
+footer a {
+  color: #777;
+}
