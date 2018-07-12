@@ -1,1 +1,47 @@
-theme: jekyll-theme-slate
+title: Cluster Builder
+email: admin@idstudios.io
+description: 'Automatically Deploy Kubernetes, Docker Swarm and DC/OS Orchestration Clusters into VMware Environments.'
+url: 'https://cluster-builder.idstudios.io'
+github_username: ids
+future: true
+excerpt_separator: '---'
+plugins:
+    - jekyll-redirect-from
+    - jekyll-sitemap
+    - jekyll-seo-tag
+    - jekyll-feed
+    - jemoji
+sass:
+    style: compressed
+collections:
+    docs: {output: true, permalink: '/docs/:path/'}
+defaults:
+    - {scope: {type: posts}, values: {permalink: '/blog/:year/:month/:day/:title'}}
+    - {scope: {path: ""}, values: {image: {path: /images/logo-2018-icon.png, width: 1200, height: 630}}}
+exclude:
+    - node_modules
+    - README.md
+    - LICENSE.md
+    - CNAME
+    - Gemfile
+    - Gemfile.lock
+    - Gruntfile.js
+    - package.json
+    - script
+    - spec
+include:
+    - _pages
+logo: /images/logo-2018-icon.png
+
+# github.com/untra/polyglot
+languages:
+  - en
+default_lang: en
+exclude_from_localization:
+  - bower_components
+  - css
+  - images
+  - js
+  - lib
+  - script
+parallel_localization: true
