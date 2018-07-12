@@ -5,7 +5,7 @@ Cluster Builder
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
-[![cluster-builder asciicast](https://asciinema.org/a/5fLUKmpkddRr6KZEUgbuPg5oJ.png)](https://www.idstudios.io/cluster-builder.svg)
+![cluster-builder asciicast](https://www.idstudios.io/cluster-builder.svg)
 
 ## Overview
 
