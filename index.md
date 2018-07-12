@@ -1,5 +1,5 @@
 ---
-title:  Home 
+title:  cluster-builder 
 ---
 
 ##### Automating the Creation of Container Orchestration Clusters in VMware Environments
