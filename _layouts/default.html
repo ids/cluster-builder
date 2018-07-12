@@ -11,7 +11,6 @@
   </head>
 
   <body>
-    <img class="idstudios-logo img-responsive center-bloc" src="/assets/images/logo-2018-icon.png" />
 
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
@@ -21,10 +20,10 @@
           <div class="title-header">
               <div class="container">
                   <div class="row">
-                    <div class="col col-md-2" >
-                      <img src="/assets/images/cb.png"  />
+                    <div class="col col-12 col-xs-12 col-sm-11 col-md-3 col-lg-2" >
+                      <div id="cb-logo" ></div>
                     </div>
-                    <div class="col col-md-10">
+                    <div class="col project-cell">
                         <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
                         <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
                     </div>
@@ -50,9 +49,18 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
         <footer class="inner">
-            {% if site.github.is_project_page %}
-            <p class="copyright">{{ site.title | default: site.github.repository_name }} is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a> and published with <a href="https://pages.github.com">GitHub Pages</a></p>
-            {% endif %}
+            <div class="container">
+          <div class="row">
+            <div class="col col-11">
+                    {% if site.github.is_project_page %}
+                    <p class="copyright">{{ site.title | default: site.github.repository_name }} is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a> and published with <a href="https://pages.github.com">GitHub Pages</a></p>
+                    {% endif %}
+            </div>
+            <div class="col col-1" >
+                <img class="idstudios-logo center-bloc" src="/assets/images/logo-2018-icon.png" />
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
 
