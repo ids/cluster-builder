@@ -2,11 +2,15 @@
 title:  Home 
 ---
 
-Automated creation of container orchestration clusters for VMware environments.  Using freely available tools and only an annotated Ansible inventory file _cluster-builder_ allows you to configure and deploy fleets of virtual machine cluster nodes into ESXi (and Fusion) VMware environments. Completely configured and ready to use for CaaS!
+##### Automating the Creation of Container Orchestration Clusters in VMware Environments
 
 ---
 
-##### Auto-Magic: One Command... Cluster Deployed!
+Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of fleets of VMware VMs to ESXi and Fusion hypervisors.
+
+---
+
+###### Auto-Magic: One Command... Cluster Deployed!
 
 <script src="https://asciinema.org/a/h32J527aKzUHHedqDA6KlQn0F.js" id="asciicast-h32J527aKzUHHedqDA6KlQn0F" async data-autoplay="true" data-size="small" data-speed="10"></script>
 
