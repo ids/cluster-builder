@@ -5,6 +5,10 @@ Cluster Builder
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
+[![cluster-builder asciicast](https://asciinema.org/a/5fLUKmpkddRr6KZEUgbuPg5oJ.png)](https://www.idstudios.io/cluster-builder.svg)
+
+## Overview
+
 ![cluster-builder Overview](docs/images/cluster-builder-overview.png)
 
 __cluster-builder__ enables the automated creation of container orchestration clusters for VMware environments.  Using freely available tools and only an annotated Ansible inventory file, __cluster-builder__ allows you to configure and deploy into ESXi (and Fusion) fleets of virtual machine cluster nodes; as completely configured and ready to use CaaS systems.
