@@ -10,7 +10,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
 
 ---
 
-###### _Auto-Magic: One Command... Cluster Deployed!_
+###### _Auto-Magic: With a single command... the cluster is deployed!_
 
 <script src="https://asciinema.org/a/h32J527aKzUHHedqDA6KlQn0F.js" id="asciicast-h32J527aKzUHHedqDA6KlQn0F" async data-autoplay="true" data-size="small" data-speed="10"></script>
 
