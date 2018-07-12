@@ -1,5 +1,6 @@
 ---
-title:  cluster-builder 
+title:  cluster-builder
+image: /assets/images/cb.png
 ---
 
 ##### Automating the Creation of Container Orchestration Clusters in VMware Environments
