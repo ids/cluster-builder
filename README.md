@@ -7,7 +7,7 @@ Cluster Builder
 
 ![cluster-builder Overview](docs/images/cluster-builder-overview.png)
 
-__cluster-builder__ enables the automated creation of container orchestration clusters for VMware environments.  Using freely available tools and only an annotated Ansible inventory file, __cluster-builder__ allows you to configure and deploy into ESXi (and Fusion) fleets of virtual machine cluster nodes; as completely configured and ready to use CaaS systems.
+Using freely available tools and only an annotated Ansible inventory file __cluster-builder__ enables the configuration and deployment of fleets of VMware VMs to ESXi and Fusion hypervisors.
 
 __cluster-builder__ is a unique toolset in that it can deploy _the identical cluster VM images from production_ to local VMware Fusion development workstations.  This enables both advanced local stack development, as well as meta orchestration cluster development, accelerating all development workflows.  Clusters can be deployed and re-deployed locally _in minutes!_
 
