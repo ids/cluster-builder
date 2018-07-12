@@ -3,10 +3,19 @@
 
 @import "jekyll-theme-slate";
 
+#project_tagline {
+  color: #ccc;
+  font-size: 22px;
+  font-weight: 300;
+  background: none;
+  text-shadow: #111 0px 0px 10px;
+}
+
 #cb-logo {
   display: inline-block;
-  width: 135px;
-  height: 135px;
+  width: 145px;
+  height: 145px;
+  margin-left: 20px;
   border: none;
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -14,7 +23,9 @@
   margin-top: -10px;
   margin-left: auto;
   margin-right: 10px;
-  background: url(../images/cb.png);
+  background-image: url(../images/cb.png);
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
 }
 
 .idstudios-logo {
@@ -33,7 +44,7 @@
 }
 
 .project-cell {
-  margin-left: 20px;
+  margin-left: 0px;
 }
 
 #header_wrap .inner {
