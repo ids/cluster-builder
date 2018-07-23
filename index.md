@@ -32,6 +32,10 @@ __Cluster Builder__ can deploy the following container orchestration clusters:
 
 __Cluster Builder__ can also deploy a __Targetd Storage Appliance__ and associated __iSCSI Provisioner__ to provide backing persisent volume storage for K8s clusters.
 
+> Hard to believe?  It's true.  Cluster Builder is a single infrastructure codebase that can automatically deploy all of the major container orchestration systems as production ready VMware VM clusters.  And if that isn't enough, it can also deploy the backing persistent volume technology to enable full stack container application deployment, _including the database_.  
+
+__Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the cloud stack component of a sane _Hybrid Cloud strategy_. Its _fully open_, _forkable_ and _hackable_.   Why start from scratch?
+
 ---
 <div class="center">
 <img style="width: 100px" src="/assets/images/cbLogo-100.png" >
