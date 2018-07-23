@@ -34,6 +34,12 @@
   min-height: 690px;
 }
 
+#ids-link {
+  margin: auto;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .idstudios-logo {
   width: 60px;
   min-height: 60px;
@@ -42,11 +48,8 @@
   border: none;
   box-shadow: none;
   -webkit-box-shadow: none;
-  bottom: 0px;
-  left: 25px;
   border: 1px solid #999;
   border-radius: 10px;
-  float: right;
   background: url(../images/logo-2018-icon.png);
 }
 
@@ -68,7 +71,7 @@
 
 #footer_wrap .inner {
   max-width: 75%;
-  text-align: right;
+  text-align: center;
 }
 
 #footer_wrap .copyright {
@@ -82,4 +85,8 @@
 footer p,
 footer a {
   color: #777;
+}
+
+h5 {
+  color: #999;
 }

@@ -55,15 +55,13 @@
         <footer class="inner">
             <div class="container">
           <div class="row">
-            <div class="col col-11">
-                    {% if site.github.is_project_page %}
-                    <p class="copyright">{{ site.title | default: site.github.repository_name }} is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a> and published with <a href="https://pages.github.com">GitHub Pages</a></p>
-                    {% endif %}
-            </div>
-            <div class="col col-1" >
-                <a href="https://www.idstudios.io" style="text-decoration: none;">
-                  <img class="idstudios-logo center-bloc" src="/assets/images/logo-2018-icon.png" />
-                </a>
+            <div class="col col-12">
+              {% if site.github.is_project_page %}
+              <p class="copyright">{{ site.title | default: site.github.repository_name }} is maintained by <a id="ids-link" href="https://www.idstudios.io" style="text-decoration: none;">
+                <img class="idstudios-logo center-bloc" src="/assets/images/logo-2018-icon.png" />
+              </a> and published with <a href="https://pages.github.com">GitHub Pages</a></p>
+              {% endif %}
+              
             </div>
           </div>
         </div>
