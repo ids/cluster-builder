@@ -21,6 +21,17 @@ __Cluster Builder__ is a unique toolset that can deploy _the identical cluster V
 
 __Cluster Builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
 
+__Cluster Builder__ can deploy the following container orchestration clusters:
+
+* [DC/OS](https://dcos.io/) on CentOS 7.5
+* [Docker Swarm CE (Community Edition)](https://docs.docker.com/engine/swarm/) on CentOS 7.5, RHEL 7.5 and Photon 2.
+* __Kubernetes__:
+  * [Tectonic CoreOS (RedHat)](https://coreos.com/)
+  * _Vanilla K8s_ KubeAdm CentOS 7.5
+  * _Vanilla K8s_ KubeAdm Fedora  
+
+__Cluster Builder__ can also deploy a __Targetd Storage Appliance__ and associated __iSCSI Provisioner__ to provide backing persisent volume storage for K8s clusters.
+
 ---
 <div class="center">
 <img style="width: 100px" src="/assets/images/cbLogo-100.png" >
