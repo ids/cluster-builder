@@ -13,8 +13,8 @@
 
 #cb-logo {
   display: inline-block;
-  width: 145px;
-  height: 145px;
+  width: 155px;
+  height: 155px;
   margin-left: 20px;
   border: none;
   box-shadow: none;
@@ -23,10 +23,15 @@
   margin-top: -10px;
   margin-left: auto;
   margin-right: 10px;
-  background-image: url(../images/cb.png);
+  background-image: url(../images/cbMascot-150.png);
   background-repeat: no-repeat;
-  background-position: 0px 0px;
+  background-position: 10px 0px;
   cursor: pointer;
+}
+
+.asciicast {
+  background-color: #111;
+  min-height: 690px;
 }
 
 .idstudios-logo {

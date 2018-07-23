@@ -23,6 +23,7 @@ __cluster-builder__ is a unique toolset that can deploy _the identical cluster V
 __cluster-builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
 
 ---
+<img style="width: 50px" src="/assets/images/cbLogo-50.png" >
 [Try Cluster Builder](https://github.com/ids/cluster-builder)
 
 ---
