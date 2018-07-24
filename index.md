@@ -19,7 +19,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
 
 __Cluster Builder__ is a unique toolset that can deploy _the identical cluster VM images used for production_ to local VMware Fusion development workstations for both the _operations_ and _development_ teams alike.  This enables both advanced local stack development, as well as meta orchestration cluster development, accelerating all development workflows on a shared codebase.  Clusters can be deployed and re-deployed locally, _and_ into production, _in minutes!_
 
-__Cluster Builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
+__Cluster Builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the resulting cluster definition packages.
 
 __Cluster Builder__ can deploy the following container orchestration clusters:
 
@@ -34,7 +34,7 @@ __Cluster Builder__ can also deploy a __Targetd Storage Appliance__ and associat
 
 > Hard to believe?  It's true.  Cluster Builder is a single infrastructure codebase that can automatically deploy all of the major container orchestration systems as production ready VMware VM clusters.  And if that isn't enough, it can also deploy the backing persistent volume technology to enable full stack container application deployment, _including the database_.  
 
-__Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter component of a sane _Hybrid Cloud strategy_. Its _fully open_, _forkable_ and _hackable_.   Why start from scratch?
+__Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter component of a cost optimized _Hybrid Cloud strategy_. It's _fully open_, _forkable_ and _hackable_.  _Why start from scratch?_
 
 ---
 <div class="center">
