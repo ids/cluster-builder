@@ -34,7 +34,7 @@ __Cluster Builder__ can also deploy a __Targetd Storage Appliance__ and associat
 
 > Hard to believe?  It's true.  Cluster Builder is a single infrastructure codebase that can automatically deploy all of the major container orchestration systems as production ready VMware VM clusters.  And if that isn't enough, it can also deploy the backing persistent volume technology to enable full stack container application deployment, _including the database_.  
 
-__Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter component of a cost optimized _Hybrid Cloud strategy_. It's _fully open_, _forkable_ and _hackable_.  _Why start from scratch?_
+__Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter components of a cost optimized _Hybrid Cloud strategy_. It's __fully open__, __forkable__ and __hackable__.  _Why start from scratch?_
 
 ---
 <div class="center">
