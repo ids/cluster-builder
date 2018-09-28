@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+v18.09
+------
+
+* Updated `kubeadm` custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__ for Kubernetes 1.12 and updated the configuration format and Canal networking manifests.
+
 v18.06
 ------
 
