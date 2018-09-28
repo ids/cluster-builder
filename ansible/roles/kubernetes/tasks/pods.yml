@@ -1,11 +1,11 @@
 - name: Install Canal RBAC manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
   register: rbac_out
 
 - debug: msg="{{ rbac_out.stdout_lines }}"
 
 - name: Install Canal manifest
-  shell: kubectl apply --validate=false -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
+  shell: kubectl apply --validate=false -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/canal.yaml
   register: canal_out
 
 - debug: msg="{{ canal_out.stdout_lines }}"

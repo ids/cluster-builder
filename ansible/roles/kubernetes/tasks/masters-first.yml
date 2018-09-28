@@ -119,52 +119,6 @@
 
 #- debug: msg="{{ calico_out.stdout_lines }}"
 
-- name: Install Canal RBAC manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/rbac.yaml
-  register: rbac_out
-
-- debug: msg="{{ rbac_out.stdout_lines }}"
-
-- name: Install Canal manifest
-  shell: kubectl apply --validate=false -f https://raw.githubusercontent.com/projectcalico/canal/master/k8s-install/1.7/canal.yaml
-  register: canal_out
-
-- debug: msg="{{ canal_out.stdout_lines }}"
-
-- name: Install Flannel CNI manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-  register: flannel_out
-
-- debug: msg="{{ flannel_out.stdout_lines }}"
-
-- name: Copy Dashboard UI manifest files to node
-  copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/dashboard"
-    dest: /root/
-
-- name: Install Grafana manifest
-  shell: kubectl apply -f /root/dashboard/grafana.yml
-  register: graf_out
-
-- debug: msg="{{ graf_out.stdout_lines }}"
-
-- name: Install Heapster RBAC manifest
-  shell: kubectl apply -f /root/dashboard/heapster-rbac.yml
-  register: heap_out
-
-- debug: msg="{{ heap_out.stdout_lines }}"
-
-- name: Install InfluxDB manifest
-  shell: kubectl apply -f /root/dashboard/influxdb.yml
-  register: influx_out
-
-- debug: msg="{{ influx_out.stdout_lines }}"
-
-- name: Install Kubernetes Dashboard manifest
-  shell: kubectl apply -f /root/dashboard/kubernetes-dashboard.yml
-  register: dash_out
-
-- debug: msg="{{ dash_out.stdout_lines }}"
 
 - name: Generate the master account
   template:
