@@ -113,6 +113,21 @@
   include: workers.yml
   when: "'k8s_workers' in group_names"
 
+- name: Display cluster worker node status
+  shell: kubectl get nodes
+  register: final_nodes_out
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ final_nodes_out.stdout_lines }}"
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
+- name: Install the default Kubernetes PODs
+  include: pods.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
 - name: Configure log rotation
   become: true
   template:
@@ -121,7 +136,7 @@
 
 - name: Wait for the workers to connect to Master and initialize
   pause:
-    minutes: 1
+    minutes: 2
 
 - name: List cluster nodes
   shell: kubectl get nodes
