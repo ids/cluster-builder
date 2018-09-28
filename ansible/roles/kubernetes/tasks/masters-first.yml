@@ -30,7 +30,7 @@
 
 - name: Generate the kubeadm yaml configuration
   template:
-    src: templates/k8s-kube-adm.j2
+    src: templates/k8s-kube-adm-12.j2
     dest: /root/kube-adm.yml
 
 - name: Initialize cluster on first master
