@@ -34,7 +34,7 @@
     dest: /root/kube-adm.yml
 
 - name: Initialize cluster on first master
-  shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
+  shell: "kubeadm init --ignore-preflight-errors --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
   ignore_errors: true
