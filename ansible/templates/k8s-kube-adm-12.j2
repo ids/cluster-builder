@@ -31,10 +31,17 @@ auditPolicy:
   path: ""
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-controlPlaneEndpoint: ""
+controlPlaneEndpoint: "http://{{ k8s_advertise_addr }}:6443"
+apiServerExtraArgs:
+	  authorization-mode: "Node,RBAC"
 etcd:
-  external:
-    endpoints:
+  # one of local or external
+  local:
+    image: "k8s.gcr.io/etcd-amd64:3.2.18"
+    dataDir: "/var/lib/etcd"    
+  extraArgs:
+	  listen-client-urls: "http://{{ k8s_advertise_addr }}:2379"  
+  endpoints:
 {% for host in groups['k8s_masters'] %}
       - "http://{{ hostvars[host].ansible_host }}:2379"
 {% endfor %}
@@ -78,9 +85,5 @@ ipvs:
   syncPeriod: 30s
 kind: KubeProxyConfiguration
 metricsBindAddress: 127.0.0.1:10249
-mode: ""
-nodePortAddresses: null
-oomScoreAdj: -999
-portRange: ""
 resourceContainer: /kube-proxy
 udpIdleTimeout: 250ms
