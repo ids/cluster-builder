@@ -34,8 +34,6 @@ clusterName: kubernetes
 controlPlaneEndpoint: ""
 etcd:
   external:
-    caFile: ""
-    certFile: ""
     endpoints:
 {% for host in groups['k8s_masters'] %}
       - "http://{{ hostvars[host].ansible_host }}:2379"
@@ -48,7 +46,6 @@ networking:
   dnsDomain: cluster.local
   podSubnet: 10.244.0.0/16
   serviceSubnet: 10.96.0.0/12
-unifiedControlPlaneImage: ""
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 bindAddress: 0.0.0.0
