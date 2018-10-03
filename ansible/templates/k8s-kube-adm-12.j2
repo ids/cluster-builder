@@ -1,16 +1,16 @@
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: InitConfiguration
 apiEndpoint:
   advertiseAddress: "{{ k8s_advertise_addr }}"
   bindPort: 6443
-apiVersion: kubeadm.k8s.io/v1alpha3
 bootstrapTokens:
-- groups:
-  - system:bootstrappers:kubeadm:default-node-token
+  - groups:
+    - system:bootstrappers:kubeadm:default-node-token
   token: "{{ k8s_cluster_token }}"
   ttl: 0s
   usages:
   - signing
   - authentication
-kind: InitConfiguration
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
   name: k8s-m1.onprem.idstudios.io
@@ -18,13 +18,14 @@ nodeRegistration:
   - effect: NoSchedule
     key: node-role.kubernetes.io/master
 ---
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: ClusterConfiguration
 apiServerCertSANs:
 {% for host in groups['k8s_masters'] %}
   - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
   - "127.0.0.1"
   - "{{ k8s_admin_url }}"
-apiVersion: kubeadm.k8s.io/v1alpha3
 auditPolicy:
   logDir: /var/log/kubernetes/audit
   logMaxAge: 2
@@ -40,14 +41,13 @@ etcd:
     image: "k8s.gcr.io/etcd-amd64:3.2.18"
     dataDir: "/var/lib/etcd"    
   extraArgs:
-	  listen-client-urls: "http://{{ k8s_advertise_addr }}:2379"  
-  endpoints:
+	  listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ k8s_advertise_addr }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
+  peerCertSANs:
 {% for host in groups['k8s_masters'] %}
       - "http://{{ hostvars[host].ansible_host }}:2379"
 {% endfor %}
     keyFile: ""
 imageRepository: k8s.gcr.io
-kind: ClusterConfiguration
 kubernetesVersion: v1.12.0
 networking:
   dnsDomain: cluster.local
@@ -55,6 +55,7 @@ networking:
   serviceSubnet: 10.96.0.0/12
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
 bindAddress: 0.0.0.0
 clientConnection:
   acceptContentTypes: ""
@@ -83,7 +84,6 @@ ipvs:
   minSyncPeriod: 0s
   scheduler: ""
   syncPeriod: 30s
-kind: KubeProxyConfiguration
 metricsBindAddress: 127.0.0.1:10249
 resourceContainer: /kube-proxy
 udpIdleTimeout: 250ms
