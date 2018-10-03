@@ -4,13 +4,12 @@ apiEndpoint:
   advertiseAddress: "{{ k8s_advertise_addr }}"
   bindPort: 6443
 bootstrapTokens:
-  - groups:
-    - system:bootstrappers:kubeadm:default-node-token
-  token: "{{ k8s_cluster_token }}"
-  ttl: 0s
-  usages:
-  - signing
-  - authentication
+	- token: "{{ k8s_cluster_token }}"
+	  description: "kubeadm bootstrap token"
+	  ttl: "24h"
+    usages:
+    - signing
+    - authentication
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
   name: k8s-m1.onprem.idstudios.io
