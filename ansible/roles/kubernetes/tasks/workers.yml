@@ -5,30 +5,24 @@
     mode: 0766   
   become: true   
 
-- name: Install and accept GPG (CentOS)
-  shell: yum install -y kubectl
-  when: cluster_type != "fedora-k8s"
-
-- name: Install and accept GPG (Fedora)
-  shell: dnf install -y kubectl
-  when: cluster_type == "fedora-k8s"
-
-- name: Install Kubernetes on worker nodes (CentOS)
+- name: Install Kubernetes on first Master (CentOS)
   yum: > 
     pkg={{item}} 
     state=present
   with_items:
-    - kubelet
-    - kubeadm
+    - kubectl-1.12.0-0
+    - kubeadm-1.12.0-0
+    - kubelet-1.12.0-0
   when: cluster_type != "fedora-k8s"
 
-- name: Install Kubernetes on worker nodes (Fedora)
+- name: Install Kubernetes on first Master (Fedora)
   dnf: > 
     pkg={{item}} 
     state=present
   with_items:
-    - kubelet
-    - kubeadm
+    - kubectl-1.12.0-0
+    - kubeadm-1.12.0-0
+    - kubelet-1.12.0-0
   when: cluster_type == "fedora-k8s"
 
 - name: Start kubelet on worker nodes

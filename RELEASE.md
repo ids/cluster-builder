@@ -4,7 +4,11 @@ Release Notes
 v18.09
 ------
 
-* Updated `kubeadm` custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__ for Kubernetes 1.12 and updated the configuration format and Canal networking manifests.
+* Updated `kubeadm` custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__ for Kubernetes 1.12 and updated the configuration format and Canal networking manifests.  Also removed the explicit `etcd` install in the scripts as `kubeadm` now handles creation of the KV store.
+* Fixed `kubeadm` Kubernetes deployments to `1.12.0`.
+* Verified and tested __DC/OS__.
+* Verified and tested __Docker Swarm__ on CentOS.
+* PhotonOS is now deprecated and no longer supported.
 
 v18.06
 ------

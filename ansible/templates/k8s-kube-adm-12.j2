@@ -21,9 +21,12 @@ etcd:
     image: "k8s.gcr.io/etcd-amd64:3.2.18"
     dataDir: "/var/lib/etcd"    
   extraArgs:
-    listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ k8s_advertise_addr }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
+    listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].inventory_hostname }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
   serverCertSANs:
     - "{{ k8s_advertise_addr }}"  
+{% for host in groups['k8s_masters'] %}
+    - "{{ hostvars[host].inventory_hostname }}"
+{% endfor %}
   peerCertSANs:
 {% for host in groups['k8s_masters'] %}
     - "{{ hostvars[host].ansible_host }}"
@@ -48,7 +51,6 @@ bootstrapTokens:
   - signing
   - authentication
 nodeRegistration:
-  name: "{{ k8s_advertise_addr }}"
   criSocket: /var/run/dockershim.sock
   taints:
     - key: "kubeadmNode"

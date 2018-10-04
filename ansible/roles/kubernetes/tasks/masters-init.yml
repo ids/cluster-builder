@@ -26,9 +26,9 @@
     pkg={{item}} 
     state=present
   with_items:
-    - kubectl
-    - kubeadm
-    - kubelet
+    - kubectl-1.12.0-0
+    - kubeadm-1.12.0-0
+    - kubelet-1.12.0-0
   when: cluster_type != "fedora-k8s"
 
 - name: Install Kubernetes on first Master (Fedora)
@@ -36,7 +36,7 @@
     pkg={{item}} 
     state=present
   with_items:
-    - kubectl
-    - kubeadm
-    - kubelet
+    - kubectl-1.12.0-0
+    - kubeadm-1.12.0-0
+    - kubelet-1.12.0-0
   when: cluster_type == "fedora-k8s"
