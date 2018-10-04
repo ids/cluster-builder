@@ -1,25 +1,25 @@
-- name: Install Etcd
-  shell: yum install -y etcd
-  when: cluster_type != "fedora-k8s"
+#- name: Install Etcd
+#  shell: yum install -y etcd
+#  when: cluster_type != "fedora-k8s"
 
 #- name: Install Etcd
 #  shell: dnf install -y etcd
 #  when: cluster_type == "fedora-k8s"
 
-- name: Configure the etcd servers
-  become: true
-  template:
-    src: templates/k8s-etcd-conf.j2
-    dest: /etc/etcd/etcd.conf
-  when: cluster_type != "fedora-k8s"
+#- name: Configure the etcd servers
+#  become: true
+#  template:
+#    src: templates/k8s-etcd-conf.j2
+#    dest: /etc/etcd/etcd.conf
+#  when: cluster_type != "fedora-k8s"
 
-- name: Start etcd 
-  service:
-    name: etcd
-    state: started
-    enabled: yes
-  become: true
-  when: "'k8s_masters' in group_names and cluster_type != 'fedora-k8s'"
+#- name: Start etcd 
+#  service:
+#    name: etcd
+#    state: started
+#    enabled: yes
+#  become: true
+#  when: "'k8s_masters' in group_names and cluster_type != 'fedora-k8s'"
 
 - name: Install Kubernetes on first Master (CentOS)
   yum: > 

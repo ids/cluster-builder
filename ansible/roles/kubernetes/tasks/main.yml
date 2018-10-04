@@ -84,6 +84,14 @@
     src: templates/k8s-repo.j2
     dest: /etc/yum.repos.d/kubernetes.repo
 
+- name: Disable GPG check on repo due to issues with the K8s source repo.
+  lineinfile:
+    dest: /etc/yum.repos.d/kubernetes.repo
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { line: 'repo_gpgcheck=0' }
+
 #- name: Disable SELinux
 #  lineinfile:
 #    path: "/etc/sysconfig/selinux"
