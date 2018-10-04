@@ -37,7 +37,7 @@
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
-  ignore_errors: true
+  ignore_errors: false
 
 - name: Register cluster status
   shell: "cat /tmp/kube-status"
