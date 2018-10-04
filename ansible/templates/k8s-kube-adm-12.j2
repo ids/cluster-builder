@@ -1,7 +1,7 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: InitConfiguration
 bootstrapTokens:
-	- token: "{{ k8s_cluster_token }}"
+  - token: "{{ k8s_cluster_token }}"
 	  description: "kubeadm bootstrap token"
 	  ttl: "24h"
     usages:
