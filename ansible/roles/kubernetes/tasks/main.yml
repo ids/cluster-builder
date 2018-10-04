@@ -142,7 +142,7 @@
     src: templates/k8s-log-rotation.j2
     dest: /etc/logrotate.d/containers
 
-- name: Wait for the workers to connect to Master and initialize
+- name: Wait for the Worker nodes to connect to the Master control plane and initialize
   pause:
     minutes: 2
 

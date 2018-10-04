@@ -38,14 +38,16 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and __Stock CentOS7 and Fedora Kubernetes__ clusters for several platforms:
 
-* PhotonOS Docker CE
 * CentOS 7 Docker CE
 * CentOS 7 Docker EE
 * CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
 * RedHat Enterprise 7 Docker EE
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
-* CentOS 7 Kubernetes (Stock Kubeadm)
+* CentOS 7 Kubernetes (Stock `kubeadm`)
+* Fedora 28 Kubernetes (Stock `kubeadm`)
+
+_PhotonOS Docker CE is now deprecated, if it works, great, if not... consider CentOS or CoreOS_
 
 > [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
 
@@ -65,7 +67,6 @@ VMware ESXi is for staging and production deployments.
 
 ### Docker Swarm Cluster Types
 
-* photon-swarm
 * centos-swarm
 * rhel-swarm
 * centos-ucp
@@ -212,7 +213,7 @@ For __CentOS__ deployments, both the __root__ and __admin__ passwords are prompt
 
 For __PhotonOS__ deployments, only the __root__ will prompt.
 
-> A bit of an annoyance, but it is integrated to ensure that clusters are never deployed into production with default root passwords.  TODO: Enhance to support headless deployments.
+> A bit of an annoyance, but it is integrated to ensure that clusters are never deployed into production with default root passwords.  TODO: Enhance to support prompt-free deployments.
 
 This functionality is also available as as top level script:
 
@@ -309,10 +310,6 @@ And then run the ansible playbook for the platform:
 
 Eg.
 
-	ansible-playbook -i clusters/esxi-photon-swarm/hosts ansible/photon-nfs-shares.yml
-
-or
-
 	ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
@@ -359,8 +356,8 @@ Save this as `ci-runner-kube-config`.
 
 ### Step 3 - Switch to Service Account Context and Verify No Access to Namespace
 
-		export KUBECONFIG=ci-runner-kube-config kubectl config use-context k8s-01-runner
-		export KUBECONFIG=ci-runner-kube-config kubectl get pods
+		kubectl --kubeconfig ci-runner-kube-config config use-context k8s-01-runner
+		kubectl --kubeconfig ci-runner-kube-config get pods
 
 You will see a message indicating that the ci-runner service account does not have access.
 
@@ -435,7 +432,7 @@ For guidance on generating the manifests for your __cluster-builder__ cluster, d
 
 ## Swarm Prometheus Monitoring
 
-Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS and PhotonOS Swarms, with metrics enabled by default.
+Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS Swarms, with metrics enabled by default.
 
 When the following is added to a cluster package hosts file:
 
@@ -473,7 +470,6 @@ A general overview of the highlights:
 
 __Docker CE:__ 17.09.1-ce (or later)
 centos-swarm
-photon-swarm
 rhel-swarm
 
 __Docker EE:__ 2.2.3 (ucp)
@@ -487,7 +483,7 @@ __Tectonic CoreOS__: v1.9.6 (or latest)
 coreos-provisioner
 coreos-pxe
 
-__Stock Kubernetes__: v1.10.4 (or latest)
+__Stock Kubernetes__: v1.12.0
 coreos-k8s
 fedora-k8s
 
@@ -497,15 +493,6 @@ fedora-k8s
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
 * CentOS base VM image is a fully functioning and ready worker node.
 * Default linux kernel is 3.10.x
-
-### PhotonOS Based Clusters
-
-* PhotonOS base VM image OVA template is based on the PhotonOS 2 Minimal iso and is  __862.4MB__, and contains one thinly provisioned SCSI based VMDK disk: 250GB dynamically sizing system block device.
-* PhotonOS VMs are based on Photon OS 2.0 (current), and have a 4.9 (or better) linux kernel
-* PhotonOS VMs are automatically configured with __overlay2__ driver as they have a 4.x kernel
-
-### All Clusters
-
 * Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to swarms
 * The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all Swarm based cluster-builder VMs.
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.

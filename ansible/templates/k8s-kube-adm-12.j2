@@ -1,5 +1,6 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: ClusterConfiguration
+clusterName: "{{ cluster_name }}"
 apiServerCertSANs:
 {% for host in groups['k8s_masters'] %}
   - "{{ hostvars[host].ansible_host }}"
@@ -89,5 +90,4 @@ ipvs:
 metricsBindAddress: 127.0.0.1:10249
 resourceContainer: /kube-proxy
 udpIdleTimeout: 250ms
-
 
