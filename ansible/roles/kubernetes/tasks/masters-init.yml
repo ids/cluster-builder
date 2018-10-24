@@ -21,13 +21,17 @@
 #  become: true
 #  when: "'k8s_masters' in group_names and cluster_type != 'fedora-k8s'"
 
+- name: Update K8s repo
+  shell: "yum -y update"
+  become: true
+
 - name: Install Kubernetes on first Master (CentOS)
   yum: > 
     pkg={{item}} 
     state=present
   with_items:
     - kubectl-1.12.1-2
-    - kubeadm-1.12.1-2
+    - kubeadm-1.12.1-0
     - kubelet-1.12.1-2
   when: cluster_type != "fedora-k8s"
 
@@ -37,6 +41,6 @@
     state=present
   with_items:
     - kubectl-1.12.1-2
-    - kubeadm-1.12.1-2
+    - kubeadm-1.12.1-0
     - kubelet-1.12.1-2
   when: cluster_type == "fedora-k8s"

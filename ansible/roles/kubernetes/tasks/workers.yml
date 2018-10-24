@@ -5,13 +5,17 @@
     mode: 0766   
   become: true   
 
+- name: Update K8s repo
+  shell: "yum -y update"
+  become: true
+
 - name: Install Kubernetes on Worker nodes (CentOS)
   yum: > 
     pkg={{item}} 
     state=present
   with_items:
     - kubectl-1.12.0-0
-    - kubeadm-1.12.1-2
+    - kubeadm-1.12.1-0
     - kubelet-1.12.0-0
   when: cluster_type != "fedora-k8s"
 
@@ -21,7 +25,7 @@
     state=present
   with_items:
     - kubectl-1.12.0-0
-    - kubeadm-1.12.1-2
+    - kubeadm-1.12.1-0
     - kubelet-1.12.0-0
   when: cluster_type == "fedora-k8s"
 
