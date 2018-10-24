@@ -1,3 +1,10 @@
+
+- name: Patch CoreDNS memory limit to deal with bug in 1.12.1
+  shell: "kubectl patch deployment -n=kube-system coredns -p '{\"spec\": {\"template\": {\"spec\":{\"containers\":[{\"image\":\"k8s.gcr.io/coredns:1.2.2\", \"name\":\"coredns\",\"resources\":{\"limits\":{\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"70Mi\"}}}]}}}}'"
+  register: patch_out
+
+- debug: msg="{{ patch_out.stdout_lines }}"
+
 - name: Install Canal RBAC manifest
   shell: kubectl apply -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
   register: rbac_out
