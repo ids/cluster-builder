@@ -483,7 +483,7 @@ __Tectonic CoreOS__: v1.9.6 (or latest)
 coreos-provisioner
 coreos-pxe
 
-__Stock Kubernetes__: v1.12.0
+__Stock Kubernetes__: v1.12.1
 coreos-k8s
 fedora-k8s
 
