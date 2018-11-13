@@ -22,7 +22,9 @@ START_TIME=$SECONDS
 PACKER_CMD="packer build cluster-node-${IMAGE}.json"
 if [ "`uname -r | grep Microsoft | wc -l | xargs`" == "1" ]; then 
   echo "Building in Windows Mode using cmd.exe..."
-  PACKER_CMD="/mnt/c/Windows/System32/cmd.exe /k \"packer build cluster-node-${IMAGE}.json && exit\""
+  WIN_BUILD_DIR=`wslpath -w $PWD`
+  echo "Using path: ${WIN_BUILD_DIR}"
+  PACKER_CMD="cmd.exe /c \"cd ${WIN_BUILD_DIR} && packer.exe build cluster-node-${IMAGE}.json && exit\""
   rm -rf 'output_'$IMAGE'_vmx'
 fi
 
