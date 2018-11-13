@@ -75,15 +75,11 @@ VMs are provisioned based on the **[vmware_vms]** group attributes.
 
 **exsi_host** is the target host where the VM will be deployed. **esxi-user** and **esxi-ds** are fairly straightforward.
 
-**cluster_type**: one of _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _rhel-swarm_, or _rhel-ucp_.
+**cluster_type**: one of _centos-dcos_, _centos-swarm_, _centos-ucp_, _rhel-swarm_, or _rhel-ucp_.
 
 **vmware_target**: _esxi_
 
 #### Networking Options
-
-__esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
-
-__esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
 
 __network_dns__: DNS entry for the primary interface
 

@@ -98,18 +98,6 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: esxi_net is defined
 
-    - name: Remove the 2nd interface when Data network is undefined
-      local_action:
-        module: shell
-        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/ethernet1/s/.*//' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
-      when: esxi_data_net is undefined
-
-    - name: Adjust the 2nd interface Data network name
-      local_action:
-        module: shell
-        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/ethernet1.networkName/s/.*/ethernet1.networkName\ =\ \"{{ esxi_data_net }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
-      when: esxi_data_net is defined
-
     - name: Copy the adjusted vmx into place
       local_action:
         module: shell

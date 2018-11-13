@@ -35,10 +35,31 @@
     fusion_vm_folder: ../virtuals
     ova_template_path: "../{{ ova_template }}"
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
-    vmware_dhcpd_base_path: '/Library/Preferences/VMware\ Fusion/'
-    vmware_dhcpd_cmd: vmnet-cli
 
   tasks:    
+  - name: Set vmware dhcpd configuration location for linux
+    set_fact:
+      vmware_dhcpd_base_path: "/etc/vmware//dhcp"
+      vmware_dhcpd_filename: "dhcpd.conf"
+    run_once: true
+    when: platform == "linux"
+
+  - name: Set vmware dhcpd configuration location for macOS
+    set_fact:
+      vmware_dhcpd_base_path: "/Library/Preferences/VMware\ Fusion/"
+      vmware_dhcpd_filename: "dhcpd.conf"
+    run_once: true
+    when: platform == "darwin"
+
+  - name: Set vmware dhcpd configuration location for Windows
+    set_fact:
+      vmware_dhcpd_base_path: "/mnt/c/ProgramData/VMware"
+      vmware_dhcpd_filename: "vmnetdhcp.conf"
+    run_once: true
+    when: platform == "windows"
+
+  - debug: msg="{{ vmware_dhcpd_base_path }}"
+
   - name: Ensure the target fusion_vm_folder exists
     local_action:
       module: file
@@ -89,15 +110,6 @@
       state: present
       regexp: '^ethernet0.connectionType\s'
       line: 'ethernet0.connectionType = "custom"'
-
-
-  - name: Remove 2nd interface when there is no data network
-    local_action:
-      module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
-      state: absent
-      regexp: 'ethernet1'
-    when: fusion_data_net is undefined
 
   - name: Start the VMs to get the generated MAC addresses
     local_action:
@@ -254,8 +266,6 @@
   vars:
     tmp_folder: ../tmp/
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
-    vmware_dhcpd_base_path: '/Library/Preferences/VMware\ Fusion/'
-    vmware_dhcpd_cmd: vmnet-cli
 
   tasks:
     
@@ -282,7 +292,7 @@
   - name: Stop the VM Network
     local_action:
       module: shell
-      _raw_params: '{{ vmware_dhcpd_cmd }} --stop'
+      _raw_params: 'vmnet-cli --stop'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -290,7 +300,7 @@
   - name: Backup current Control/Data DHCP
     local_action:
       module: shell
-      _raw_params: cp {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-backup.conf
+      _raw_params: cp {{ vmware_dhcpd_base_path }}/dhcpd.conf {{ vmware_dhcpd_base_path }}/dhcpd-backup.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -298,7 +308,7 @@
   - name: Remove any Control/Data block for the current cluster
     local_action:
       module: shell
-      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -306,13 +316,13 @@
   - name: Concatenate the DHCP entries header
     local_action:
       module: shell
-      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >>  {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >>  {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
     run_once: true
     
   - name: Add current DHCP Control/Data block for cluster
     local_action:
       module: shell
-      _raw_params: cat {{ tmp_folder }}/coreos-dhcpd-block.txt >> {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+      _raw_params: cat {{ tmp_folder }}/coreos-dhcpd-block.txt >> {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -320,13 +330,13 @@
   - name: Concatenate the DHCP entries footer
     local_action:
       module: shell
-      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >>  {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf
+      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >>  {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
     run_once: true
 
   - name: Replace current Control/Data DHCP
     local_action:
       module: shell
-      _raw_params: cp {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd-temp.conf {{ vmware_dhcpd_base_path }}{{ fusion_net }}/dhcpd.conf
+      _raw_params: cp {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf {{ vmware_dhcpd_base_path }}/dhcpd.conf
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -334,7 +344,7 @@
   - name: Start the VM Network
     local_action:
       module: shell
-      _raw_params: '{{ vmware_dhcpd_cmd }} --start'
+      _raw_params: 'vmnet-cli --start'
     delegate_to: 127.0.0.1
     become: true
     run_once: true

@@ -203,7 +203,7 @@ function fusion_deploy () {
   sudo date
 
   echo "Creating the Fusion VMs and configuring the network for static IP assignment..."
-  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} vmware_dhcpd_base_path='${DHCPD_BASE_DIR}' vmware_dhcpd_cmd='${DHCPD_CMD}' cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
+  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
     exit 1
@@ -247,12 +247,7 @@ CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//}
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
 
-if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-photon-x86_64.ova
-  OVA_BUILD_TYPE=photon
-  CLUSTER_TYPE_NAME='PhotonOS Swarm'
-  REMOTE_USER=root
-elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
+if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-dcos-x86_64.ova
   CLUSTER_TYPE_NAME='DC/OS Cluster'
   OVA_BUILD_TYPE=centos7-dcos

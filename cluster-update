@@ -9,9 +9,7 @@ fi
 INVENTORY_FILE=./clusters/$CLUSTER_NAME/hosts
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
 
-if [ "$CLUSTER_TYPE" == 'photon-swarm' ]; then
-  echo ""
-elif [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
+if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   echo ""
 elif [ "$CLUSTER_TYPE" == 'centos-swarm' ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/rhel-update.yml

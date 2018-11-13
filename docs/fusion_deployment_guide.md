@@ -51,11 +51,11 @@ Once the VMs have been created, assigned their correct addresses, and are runnin
 
 ### Ansible Fusion Configuration
 
-### Fusion Sample: demo-photon-swarm hosts file
+### Fusion Sample: demo-centos-swarm hosts file
 
     [all:vars]
-    cluster_type=photon-swarm
-    cluster_name=demo-photon-swarm
+    cluster_type=centos-swarm
+    cluster_name=demo-centos-swarm
 
     vmware_target=fusion
     fusion_net="vmnet2"
@@ -86,9 +86,9 @@ Once the VMs have been created, assigned their correct addresses, and are runnin
     demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**: one of _photon-swarm_, _centos-dcos_, _centos-swarm_, _centos-ucp_, _rhel-swarm_, or _rhel-ucp_.
+**cluster_type**: one of _centos-dcos_, _centos-swarm_, _centos-ucp_, _rhel-swarm_, or _rhel-ucp_.
 
-**vmware_target**: _fusion_ 
+**vmware_target**: _fusion_
 
 **fusion_net**: The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
 
@@ -115,10 +115,6 @@ __ucp_admin_user__: The admin user for the UCP
 __ucp_admin_password__: The admin password for the UCP
 
 #### ESXI options:
-
-__esxi_data_net__: The name of the dedicated VMware network for the Data plane (VLAN)
-
-__esxi_data_net_prefix__: The network prefix of the dedicated VMware network for the Data plane (eg. 192.168.2)
 
 __ovftool_parallel=true__: This setting will execute __ovftool__ deployments in parallel rather then one at a time.  This can increase ovftool deployment performance by as much as 150%.
 

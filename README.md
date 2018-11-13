@@ -32,8 +32,7 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 15. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
 16. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
 17. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
-18. [Advanced Swarm Deployment](#advanced-swarm-deployment)
-19. [System Profile](#system-profile)
+18. [System Profile](#system-profile)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and __Stock CentOS7 and Fedora Kubernetes__ clusters for several platforms:
@@ -46,10 +45,6 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tect
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
 * CentOS 7 Kubernetes (Stock `kubeadm`)
 * Fedora 28 Kubernetes (Stock `kubeadm`)
-
-_PhotonOS Docker CE is now deprecated, if it works, great, if not... consider CentOS or CoreOS_
-
-> [PhotonOS](https://vmware.github.io/photon/) is VMware's take on a minimal linux container OS.
 
 ## Deployment Options
 There are currently two types of deployment:
@@ -211,8 +206,6 @@ Change password is now integrated into the cluster deployment process.
 
 For __CentOS__ deployments, both the __root__ and __admin__ passwords are prompted for change at the end of the cluster deployment.
 
-For __PhotonOS__ deployments, only the __root__ will prompt.
-
 > A bit of an annoyance, but it is integrated to ensure that clusters are never deployed into production with default root passwords.  TODO: Enhance to support prompt-free deployments.
 
 This functionality is also available as as top level script:
@@ -287,30 +280,30 @@ For details see the [Kubernetes iSCSI Storage Guide](docs/kubernetes-iscsi-stora
 
 Place the following file in the cluster definition package folder:
 
-	nfs_shares.yml
+  nfs_shares.yml
 
 In the format:
 
-	nfs_shares:
-		- folder: the name of the local mount folder
-			fstab: the fstab entry
-			group: an inventory group of hosts on which to setup this mount
+  nfs_shares:
+    - folder: the name of the local mount folder
+      fstab: the fstab entry
+      group: an inventory group of hosts on which to setup this mount
 
 Eg.
 
-	nfs_shares:
-		- folder: /mnt/nfs/shared
-			fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
-			group: "docker_swarm_worker"
-		- folder: /mnt/nfs/shared
-			fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"   
-			group: "docker_swarm_worker"
-    
+  nfs_shares:
+    - folder: /mnt/nfs/shared
+      fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
+      group: "docker_swarm_worker"
+    - folder: /mnt/nfs/shared
+      fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"
+      group: "docker_swarm_worker"
+
 And then run the ansible playbook for the platform:
 
 Eg.
 
-	ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
+  ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
@@ -320,12 +313,12 @@ Kubernetes RBAC and service accounts offer a popular model for granting controll
 
 ### Step 1 - Create the Service Account
 
-		kubectl create serviceaccount ci-runner
+  kubectl create serviceaccount ci-runner
 
 ### Step 2 - Get the Service Account Secret Tokens & Build Kube Config
 
-		kubectl get secrets
-		kubectl describe secret ci-runner-<hash>
+  kubectl get secrets
+  kubectl describe secret ci-runner-<hash>
 
 This will show two tokens, the CA and the user token.  Use them to construct a kube-config for your cluster using the __ci-runner__ service account.
 
@@ -449,18 +442,6 @@ Promethus can then be reached at: http://<cluster node>:9090
 Grafana at: http://<cluster node>:3000
 
 > TODO: These need to be TLS secured and made production ready
-
-## Advanced Swarm Deployment
-
-The advanced swarm deployment configuration represents the current candidate production deployment model.  It involves the following key aspects:
-
-* [Separate interfaces for Control and Data plane](docs/swarm_seperate_interfaces.md) underlay networks (each VM node in the swarm has two nics on two different subnets)
-* Cluster VM nodes are fully contained within a private VLAN
-* All cluster access is controlled via a Firewall/gateway
-* All management services are load balanced over 3 or more manager nodes
-* All management services are secured by HTTPS
-
-For detailed step-by-step configuration instructions see the [Advanced Swarm Deployment Guide](docs/advanced_swarm.md)
 
 ## System Profile
 

@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+v18.10
+------
+
+* Initial implementation of cluster deployment to local machines on Windows and Linux VMware Workstation hosts.
+* Removed advanced swarm deployment model with seperate control and data plane configuration as this approach is not likely to be carried forward.
+* Removed PhotonOS related artifacts.
+
 v18.09
 ------
 
@@ -69,7 +76,7 @@ v18.04-beta1
 
 > __Note__ that this release requires all Packer output OVA VM images to be rebuilt due to significant changes in the ova profile.
 
-* ~~Updated the CentOS and Photon variants to __Docker 17.12.0-ce__, with explicit versioning.~~
+* ~~Updated the CentOS to __Docker 17.12.0-ce__, with explicit versioning.~~
 * Already downgraded back to __Docker 17.09.1-ce__, as this issue appeared almost immediately in the swarm: https://github.com/docker/libnetwork/issues/2045.  Likely a better policy to skip Docker's .0 releases.
 * Migrated to a __Packer centric__ node provisioning approach moving most of the ansible logic from post OVA provisioning into the packer OVA creation process.  This includes the monitoring agents and underlying plugin dependencies. This results in a __ready-to-go__ node OVA that can be deployed into service simply by:
   * Assigning a static IP
