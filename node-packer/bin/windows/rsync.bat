@@ -14,6 +14,3 @@ del rsync-3.1.2-1.tar
 popd
 
 msiexec /qb /x C:\Windows\Temp\7z920-x64.msi
-
-rem make symlink for c:/vagrant share
-mklink /D "C:\Program Files\OpenSSH\vagrant" "C:\vagrant"

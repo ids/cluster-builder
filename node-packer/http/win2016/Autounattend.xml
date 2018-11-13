@@ -51,7 +51,7 @@
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME </Key>
-                            <Value>Windows Server 2016 SERVERSTANDARDCORE</Value>
+                            <Value>Windows Server 2016 SERVERSTANDARD</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -70,7 +70,7 @@
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
                 <FullName>admin</FullName>
-                <Organization>ACME</Organization>
+                <Organization>IDS</Organization>
             </UserData>
         </component>
     </settings>
@@ -80,7 +80,7 @@
                 <HelpCustomized>false</HelpCustomized>
             </OEMInformation>
             <ComputerName>windows-2016</ComputerName>
-            <TimeZone>Pacific Standard Time</TimeZone>
+            <TimeZone>Mountain Standard Time</TimeZone>
             <RegisteredOwner/>
         </component>
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -105,7 +105,7 @@
                     <PlainText>true</PlainText>
                 </Password>
                 <Enabled>true</Enabled>
-                <Username>Administrator</Username>
+                <Username>admin</Username>
             </AutoLogon>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
@@ -228,6 +228,11 @@
                     <Order>21</Order>
                     <Description>Disable Hibernation Mode</Description>
                 </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c wmic useraccount where "name='admin'" set PasswordExpires=FALSE</CommandLine>
+                    <Order>22</Order>
+                    <Description>Disable password expiration for admin user</Description>
+                </SynchronousCommand>
                 <!-- WITHOUT WINDOWS UPDATES -->
                 <!--
                 <SynchronousCommand wcm:action="add">
@@ -247,30 +252,34 @@
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win-updates.ps1</CommandLine>
                     <Description>Install Windows Updates</Description>
+                    <Order>99</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <!-- END WITH WINDOWS UPDATES -->
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\openssh.ps1 -AutoStart</CommandLine>
+                    <Description>Install OpenSSH</Description>
                     <Order>100</Order>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
-                <!--
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command "Install-WindowsFeature -Name Containers -Restart"</CommandLine>
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command "Install-WindowsFeature -Name Containers -Restart -IncludeAllSubFeature -Confirm:$False"</CommandLine>
                     <Description>Install Containers</Description>
-                    <Order>102</Order>
+                    <Order>101</Order>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command "Install-Module -Name DockerMsftProvider -Repository PSGallery -Force -Confirm:$False"</CommandLine>
                     <Description>Install Provider</Description>
-                    <Order>100</Order>
+                    <Order>102</Order>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command "Install-Package -Name docker -ProviderName DockerMsftProvider -Force -Confirm:$False"</CommandLine>
-                    <Description>Install Provider</Description>
-                    <Order>100</Order>
+                    <Description>Install Docker</Description>
+                    <Order>103</Order>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
-                -->
-                <!-- END WITH WINDOWS UPDATES -->
             </FirstLogonCommands>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -286,7 +295,6 @@
                     <Value>Fender2000</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
-
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
@@ -295,11 +303,10 @@
                         </Password>
                         <Group>administrators</Group>
                         <DisplayName>System Operator</DisplayName>
-                        <Name>sysop</Name>
-                        <Description>System Operator User</Description>
+                        <Name>admin</Name>
+                        <Description>Super User</Description>
                     </LocalAccount>
                 </LocalAccounts>
-
             </UserAccounts>
             <RegisteredOwner/>
         </component>

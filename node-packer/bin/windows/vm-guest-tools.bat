@@ -9,9 +9,9 @@ if "%PACKER_BUILDER_TYPE%" equ "parallels-iso" goto :parallels
 goto :done
 
 :vmware
-sys
-if exist "C:\Users\sysop\windows.iso" (
-    move /Y C:\Users\sysop\windows.iso C:\Windows\Temp
+
+if exist "C:\Users\admin\windows.iso" (
+    move /Y C:\Users\admin\windows.iso C:\Windows\Temp
 )
 
 if not exist "C:\Windows\Temp\windows.iso" (
@@ -28,15 +28,15 @@ goto :done
 
 :virtualbox
 
-move /Y C:\Users\sysop\VBoxGuestAdditions.iso C:\Windows\Temp
+move /Y C:\Users\admin\VBoxGuestAdditions.iso C:\Windows\Temp
 cmd /c ""C:\Program Files\7-Zip\7z.exe" x C:\Windows\Temp\VBoxGuestAdditions.iso -oC:\Windows\Temp\virtualbox"
 cmd /c for %%i in (C:\Windows\Temp\virtualbox\cert\vbox*.cer) do C:\Windows\Temp\virtualbox\cert\VBoxCertUtil add-trusted-publisher %%i --root %%i
 cmd /c C:\Windows\Temp\virtualbox\VBoxWindowsAdditions.exe /S
 goto :done
 
 :parallels
-if exist "C:\Users\sysop\prl-tools-win.iso" (
-	move /Y C:\Users\sysop\prl-tools-win.iso C:\Windows\Temp
+if exist "C:\Users\admin\prl-tools-win.iso" (
+	move /Y C:\Users\admin\prl-tools-win.iso C:\Windows\Temp
 	cmd /C "C:\Program Files\7-Zip\7z.exe" x C:\Windows\Temp\prl-tools-win.iso -oC:\Windows\Temp\parallels
 	cmd /C C:\Windows\Temp\parallels\PTAgent.exe /install_silent
 	rd /S /Q "c:\Windows\Temp\parallels"

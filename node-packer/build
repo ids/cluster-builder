@@ -17,6 +17,8 @@ if [ ! -f keys/authorized_keys ]; then
   bash keys/set-key
 fi
 
+START_TIME=$SECONDS
+
 PACKER_CMD="packer build cluster-node-${IMAGE}.json"
 if [ "`uname -r | grep Microsoft | wc -l | xargs`" == "1" ]; then 
   echo "Building in Windows Mode using cmd.exe..."
@@ -36,7 +38,12 @@ if [ "$IMAGE" == "rhel7" ]; then
   rm -rf 'output_'$IMAGE'_vmx'
 fi
 
-if [ "$IMAGE" == "centos7-dcos" ] || [ "$IMAGE" == "centos7" ] || [ "$IMAGE" == "fedora" ] || [ "$IMAGE" == "photon" ] || [ "$IMAGE" == "rhel7" ]; then
+if [ "$IMAGE" == "centos7-dcos" ] || \
+    [ "$IMAGE" == "win2016" ] || \
+    [ "$IMAGE" == "centos7" ] || \
+    [ "$IMAGE" == "fedora" ] || \
+    [ "$IMAGE" == "photon" ] || \
+    [ "$IMAGE" == "rhel7" ]; then
   echo
   echo 'Building VM image:' $IMAGE
   rm -rf 'output_'$IMAGE'_vmx'
@@ -65,4 +72,9 @@ else
   echo
   echo 'Error: Not a valid VM image type!'
   echo 'usage: build [centos7 (default), centos7-dcos, rhel7, photon, coreos-provisioner, coreos-pxe, fedora, targetd-server]'
+  exit
 fi
+
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
+echo "Template image built in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo

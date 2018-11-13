@@ -73,3 +73,40 @@
   debug: var=node_hostname
   run_once: true
   when: network_dn is defined
+
+- name: Set default platform to linux
+  set_fact:
+    platform: "linux"
+  run_once: true
+
+- name: Determine if platform is macOS
+  local_action:
+    module: shell
+    _raw_params: "uname -ra | grep Darwin | wc -l | xargs"
+  become: false
+  run_once: true
+  register: platform_is_darwin
+    
+- name: Set platform fact when macOS
+  set_fact:
+    platform: "darwin"
+  when: platform_is_darwin.stdout == "1"
+  run_once: true
+
+- name: Determine if platform is Windows
+  local_action:
+    module: shell
+    _raw_params: "uname -ra | grep Microsoft | wc -l | xargs"
+  become: false
+  run_once: true
+  register: platform_is_windows
+    
+- name: Set platform fact when Windows
+  set_fact:
+    platform: "windows"
+  when: platform_is_windows.stdout == "1"
+  run_once: true
+
+- name: Platform
+  debug: var=platform
+  run_once: true

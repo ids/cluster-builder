@@ -90,10 +90,10 @@ function Install-WindowsUpdates() {
     if ($UpdatesToDownload.Count -eq 0) {
         LogWrite "No Updates To Download..."
     } else {
-        LogWrite 'Downloading Updates...'
         $ok = 0;
         while (! $ok) {
             try {
+                LogWrite 'Downloading Updates...'
                 $Downloader = $UpdateSession.CreateUpdateDownloader()
                 $Downloader.Updates = $UpdatesToDownload
                 $Downloader.Download()

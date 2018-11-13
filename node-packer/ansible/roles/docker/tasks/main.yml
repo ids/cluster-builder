@@ -83,13 +83,6 @@
   - net.ipv6.conf.all.disable_ipv6
   - net.ipv6.conf.default.disable_ipv6
 
-# TODO: may be needed at Vagrant provisioning time if added by vagrant
-#- name: Disable IPv6 loopback alias
-#  lineinfile:
-#    dest: /etc/hosts
-#    regexp: "^::1"
-#    state: absent
-
 - name: Enable IPv4 Forwarding
   sysctl:
     name: net.ipv4.ip_forward
