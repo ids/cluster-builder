@@ -191,14 +191,6 @@ function esxi_deploy () {
 
 function fusion_deploy () {
 
-  PLATFORM=`uname -ra`
-  DHCPD_BASE_DIR=/etc/vmware
-  DHCPD_CMD=/etc/init.d/vmware
-  if [[ $PLATFORM == *"Darwin"* ]]; then 
-    DHCPD_BASE_DIR='/Library/Preferences/VMware\ Fusion/'
-    DHCPD_CMD='/Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli'
-  fi 
-
   echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
   sudo date
 
@@ -237,10 +229,10 @@ if [ ! -f $INVENTORY_FILE ]; then
   exit 1
 fi
 
-CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
-VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE`
-CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE`
-REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE`
+CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
 CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
 CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
