@@ -52,6 +52,21 @@
       path: "{{ gen_script_folder }}"
       state: directory
 
+  - name: Calculate VM folder names for Windows
+    set_fact:
+      vm_folder_name: "{{ inventory_hostname }}"
+    when: platform == "windows"
+
+  - name: Calculate VM folder names for macOS
+    set_fact:
+      vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
+    when: platform == "darwin"
+
+  - name: Calculate VM folder names for Linux
+    set_fact:
+      vm_folder_name: "{{ vm_folder_name }}"
+    when: platform == "linux"
+
   - name: Stop the existing VMs (If they aren't running the errors will be ignored) on macOS and Linux.
     local_action:
       module: shell
@@ -79,29 +94,21 @@
       module: shell
       _raw_params: ovftool -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
     when: platform == "linux" or platform == "darwin"
-  
+
+  - name: Remove existing VMs if they exist
+    local_action:
+      module: shell
+      _raw_params: "rm -rf {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+    when: platform == "windows" and overwrite_existing_vms
+    ignore_errors: true
+
   - name: Use ovftool to deploy cluster-node ova to Fusion VMX on Windows.
     local_action:
       module: shell
-      _raw_params: "ovftool.exe -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}\""
+      _raw_params: "ovftool.exe -tt=vmx --overwrite --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}"
     when: platform == "windows" 
 
-  - name: Calculate VM folder names for Windows
-    set_fact:
-      vm_folder_name: "{{ inventory_hostname }}"
-    when: platform == "windows"
-
-  - name: Calculate VM folder names for macOS
-    set_fact:
-      vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
-    when: platform == "darwin"
-
-  - name: Calculate VM folder names for Linux
-    set_fact:
-      vm_folder_name: "{{ vm_folder_name }}"
-    when: platform == "linux"
-
-    - name: Assign the VM CPU Count
+  - name: Assign the VM CPU Count
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
@@ -129,7 +136,7 @@
   - name: Start the VMs to get the generated MAC addresses on Windows
     local_action:
       module: shell
-      _raw_params: "vmrun.exe start {{ fusion_vm_folder }}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui"
+      _raw_params: "vmrun.exe start {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
     become: false
     when: platform == "windows"
 
@@ -163,7 +170,7 @@
   - name: Stop the VMs on Windows
     local_action:
       module: shell
-      _raw_params: "vmrun.exe stop {{ fusion_vm_folder}}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui"
+      _raw_params: "vmrun.exe stop {{ fusion_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
     when: platform == "windows"
 
   - name: Assign the Fusion Control Network Connection Type
@@ -195,24 +202,10 @@
       _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_frag.conf
     run_once: true
 
-  - name: Concatenate the Windows wrapper section
-    local_action:
-      module: shell
-      _raw_params: echo -e '\nhost VMnet2 {'
-    run_once: true
-    when: platform == "windows"
-
   - name: Concatenate the new Control/Data entries
     local_action:
       module: shell
       _raw_params: cat {{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf >> {{ gen_script_folder }}/dhcpd_frag.conf
-
-  - name: Concatenate the Windows wrapper section
-    local_action:
-      module: shell
-      _raw_params: echo -e '\n}'
-    run_once: true
-    when: platform == "windows"
 
   - name: Concatenate the DHCPD entry footer
     local_action:
@@ -232,7 +225,7 @@
   - name: Stop the VM Network on Windows
     local_action:
       module: shell
-      _raw_params: 'net stop vmnetdhcp'
+      _raw_params: '/mnt/c/Windows/System32/net.exe stop vmnetdhcp'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -250,10 +243,45 @@
   - name: Remove any Control block for the current cluster
     local_action:
       module: shell
-      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' '{{ vmware_dhcpd_base_path }}/dhcpd.conf' > '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
+      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}' > '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
+
+  - name: Load Control block into memory
+    local_action:
+      module: shell
+      _raw_params: cat '{{ gen_script_folder }}/dhcpd_frag.conf'
+    delegate_to: 127.0.0.1
+    register: vmware_dhcp_control_block
+    become: true
+    run_once: true
+    when: platform == "windows"
+
+  - name: View control block
+    debug: msg="{{ vmware_dhcp_control_block.stdout_lines }}"
+
+  - name: Update Windows vmnet file
+    local_action:
+      module: shell
+      _raw_params: sed -n -i -e '/host VMnet2/r {{ gen_script_folder }}/dhcpd_frag.conf' -e 1x -e '2,${x;p}' -e '${x;p}' {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
+    delegate_to: 127.0.0.1
+    register: vmware_dhcp_control_block
+    become: true
+    run_once: true
+    when: platform == "windows"
+
+
+#  - name: Update Windows vmnet file
+#    local_action: 
+#      module: lineinfile
+#      dest: '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
+#      insertbefore: "host VMnet2"
+#      line: "{{ item.line }}"
+#    with_items:  
+#      - "{{ vmware_dhcp_control_block.stdout_lines }}"
+#    run_once: true
+#    when: platform == "windows"
 
   - name: Add current DHCP Control block for cluster
     local_action:
@@ -262,6 +290,7 @@
     delegate_to: 127.0.0.1
     become: true
     run_once: true
+    when: platform != "windows"
 
   - name: Backup current Control DHCP
     local_action:
@@ -291,7 +320,7 @@
   - name: Start the VM Network on Windows
     local_action:
       module: shell
-      _raw_params: 'net start vmnetdhcp'
+      _raw_params: '/mnt/c/Windows/System32/net.exe start vmnetdhcp'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -304,7 +333,7 @@
     delegate_to: 127.0.0.1
     become: true
     run_once: true
-    when: platform == "windows"
+    when: platform == "linux"
     
   - name: Remove the DHCPD Control/Data configuration file fragments
     local_action:
@@ -322,7 +351,7 @@
   - name: Start the VMs on Windows
     local_action:
       module: shell
-      _raw_params: "vmrun.exe start {{ fusion_vm_folder}}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui"
+      _raw_params: "vmrun.exe start {{ fusion_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
     when: platform == "windows"
 
   - name: waiting {{ server_static_ip_wait_seconds }} seconds for servers to start up and fetch their permanent ip addresses
