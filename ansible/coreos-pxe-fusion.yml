@@ -69,18 +69,40 @@
   - name: Stop the existing VMs (If they aren't running the errors will be ignored).
     local_action:
       module: shell
-      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx
+      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx
     ignore_errors: true
 
-  - name: Use ovftool to deploy cluster-node ova to Fusion VMX.
+  - name: Use ovftool to deploy cluster-node ova to Fusion VMX on macOS/Linux.
     local_action:
       module: shell
       _raw_params: ovftool -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
+    when: platform == "darwin" or platform == "linux"
   
+  - name: Use ovftool to deploy cluster-node ova to Fusion VMX on Windows.
+    local_action:
+      module: shell
+      _raw_params: ovftool.exe -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
+    when: platform == "windows"
+
+  - name: Calculate VM folder names for Windows
+    set_fact:
+      vm_folder_name: "{{ inventory_hostname }}"
+    when: platform == "windows"
+
+  - name: Calculate VM folder names for macOS
+    set_fact:
+      vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
+    when: platform == "darwin"
+
+  - name: Calculate VM folder names for Linux
+    set_fact:
+      vm_folder_name: "{{ vm_folder_name }}"
+    when: platform == "linux"
+
   - name: Assign the VM CPU Count
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^numvcpus =\s'
       line: 'numvcpus = "{{ numvcpus }}"'
@@ -89,7 +111,7 @@
   - name: Assign the VM Memory
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^memsize =\s'
       line: 'memsize = "{{ memsize }}"'
@@ -98,7 +120,7 @@
   - name: Assign the Fusion Control/Data Network to Interface One
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^ethernet0.vnet =\s'
       line: 'ethernet0.vnet = "{{ fusion_net }}"'
@@ -106,7 +128,7 @@
   - name: Assign the Fusion Control/Data Network to Interface One
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^ethernet0.connectionType\s'
       line: 'ethernet0.connectionType = "custom"'
@@ -114,8 +136,16 @@
   - name: Start the VMs to get the generated MAC addresses
     local_action:
       module: shell
-      _raw_params: vmrun start {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun start {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     become: false
+    when: platform == "linux" or platform == "darwin"
+
+  - name: Start the VMs to get the generated MAC addresses on Windows
+    local_action:
+      module: shell
+      _raw_params: "cmd /c \"vmrun.exe start {{ windows_fusion_vm_folder }}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui\""
+    become: false
+    when: platform == "windows"
 
   - name: Waiting for VMs to generate MAC addresses
     pause:
@@ -124,7 +154,7 @@
   - name: Scan the VMX files for the Control/Data mac addresses
     local_action:
       module: shell
-      _raw_params: cat {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
+      _raw_params: cat {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
     register: vm_mac_addr
   
   - debug: msg="{{ vm_mac_addr.stdout }}"
@@ -139,7 +169,7 @@
   - name: Stop the VMs 
     local_action:
       module: shell
-      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     become: false
 
 

@@ -55,14 +55,22 @@
   - name: Stop the existing VMs (If they aren't running the errors will be ignored) on macOS and Linux.
     local_action:
       module: shell
-      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx
+      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx
     ignore_errors: true
     when: platform == "linux" or platform == "darwin"
+
+  - name: Calculate Windows path using wslpath.
+    local_action:
+      module: shell
+      _raw_params: "wslpath -w {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+    register: windows_vm_start_path
+    ignore_errors: true
+    when: platform == "windows"
 
   - name: Stop the existing VMs (If they aren't running the errors will be ignored) on Windows.
     local_action:
       module: shell
-      _raw_params: cmd /k \"vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx\"
+      _raw_params: "vmrun.exe stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
     ignore_errors: true
     when: platform == "windows"
 
@@ -75,13 +83,28 @@
   - name: Use ovftool to deploy cluster-node ova to Fusion VMX on Windows.
     local_action:
       module: shell
-      _raw_params: ovftool.exe -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
+      _raw_params: "ovftool.exe -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}\""
     when: platform == "windows" 
 
-  - name: Assign the VM CPU Count
+  - name: Calculate VM folder names for Windows
+    set_fact:
+      vm_folder_name: "{{ inventory_hostname }}"
+    when: platform == "windows"
+
+  - name: Calculate VM folder names for macOS
+    set_fact:
+      vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
+    when: platform == "darwin"
+
+  - name: Calculate VM folder names for Linux
+    set_fact:
+      vm_folder_name: "{{ vm_folder_name }}"
+    when: platform == "linux"
+
+    - name: Assign the VM CPU Count
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^numvcpus =\s'
       line: 'numvcpus = "{{ numvcpus }}"'
@@ -90,7 +113,7 @@
   - name: Assign the VM Memory
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^memsize =\s'
       line: 'memsize = "{{ memsize }}"'
@@ -99,14 +122,14 @@
   - name: Start the VMs to get the generated MAC addresses on macOS/Linux
     local_action:
       module: shell
-      _raw_params: vmrun start {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun start {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     become: false
     when: platform == "linux" or platform == "darwin"
 
   - name: Start the VMs to get the generated MAC addresses on Windows
     local_action:
       module: shell
-      _raw_params: vmrun.exe start {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: "vmrun.exe start {{ fusion_vm_folder }}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui"
     become: false
     when: platform == "windows"
 
@@ -117,7 +140,7 @@
   - name: Scan the VMX files for the Control/Data mac addresses
     local_action:
       module: shell
-      _raw_params: cat {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
+      _raw_params: cat {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
     register: vm_mac
   
   - debug: msg="{{ vm_mac.stdout }}"
@@ -134,19 +157,19 @@
   - name: Stop the VMs on macOS/Linux
     local_action:
       module: shell
-      _raw_params: vmrun stop {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun stop {{ fusion_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: platform == "linux" or platform == "darwin"
 
   - name: Stop the VMs on Windows
     local_action:
       module: shell
-      _raw_params: vmrun.exe stop {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: "vmrun.exe stop {{ fusion_vm_folder}}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui"
     when: platform == "windows"
 
   - name: Assign the Fusion Control Network Connection Type
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^ethernet0.connectionType =\s'
       line: 'ethernet0.connectionType = "{{ fusion_net_type }}"'
@@ -154,7 +177,7 @@
   - name: Assign the Fusion Control Network to Interface One
     local_action:
       module: lineinfile
-      path: "{{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx"
+      path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
       state: present
       regexp: '^ethernet0.vnet =\s'
       line: 'ethernet0.vnet = "{{ fusion_net }}"'
@@ -191,7 +214,7 @@
     run_once: true
     when: platform == "windows"
 
-  - name: Concatenate the Data entry footer
+  - name: Concatenate the DHCPD entry footer
     local_action:
       module: shell
       _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_frag.conf
@@ -293,13 +316,13 @@
   - name: Start the VMs on macOS/Linux
     local_action:
       module: shell
-      _raw_params: vmrun start {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun start {{ fusion_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: platform == "darwin" or platform == "linux"
 
   - name: Start the VMs on Windows
     local_action:
       module: shell
-      _raw_params: cmd /k 'vmrun start {{ fusion_vm_folder}}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui'
+      _raw_params: "vmrun.exe start {{ fusion_vm_folder}}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui"
     when: platform == "windows"
 
   - name: waiting {{ server_static_ip_wait_seconds }} seconds for servers to start up and fetch their permanent ip addresses
