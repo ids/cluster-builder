@@ -7,7 +7,7 @@ if [ -z CLUSTER_NAME ]; then
   exit
 fi
 INVENTORY_FILE=./clusters/$CLUSTER_NAME/hosts
-CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE`
+CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
 if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   echo ""
