@@ -27,12 +27,19 @@ if [ -z $ACTION ]; then
   show_usage
 fi
 
+PLATFORM=`uname -ra`
+VMRUN_CMD=vmrun
+if [[ $PLATFORM == *"Microsoft"* ]]; then 
+  export ANSIBLE_CONFIG=$PWD/ansible.cfg
+  VMRUN_CMD=vmrun.exe
+fi 
+
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
   
 if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/$VMWARE_TARGET-control-vms.yml --e "vm_action=$ACTION"
-  vmrun list
+  ${VMRUN_CMD} list
 else
   echo
   echo "Invalid: You must specify an action that is one of: start, stop, suspend or destroy"
