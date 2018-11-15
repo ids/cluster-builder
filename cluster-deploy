@@ -219,9 +219,8 @@ function fusion_deploy () {
 
 PLATFORM=`uname -ra`
 if [[ $PLATFORM == *"Microsoft"* ]]; then 
-  export ANSIBLE_CONFIG=./ansible.cfg
+  export ANSIBLE_CONFIG=$PWD/ansible.cfg
 fi 
-
 
 if [ -z INVENTORY_FILE ]; then
   read -s "Enter the target cluster folder: " INVENTORY_FILE

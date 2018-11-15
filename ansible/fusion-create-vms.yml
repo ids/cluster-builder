@@ -227,6 +227,7 @@
       module: shell
       _raw_params: '/mnt/c/Windows/System32/net.exe stop vmnetdhcp'
     delegate_to: 127.0.0.1
+    ignore_errors: true
     become: true
     run_once: true
     when: platform == "windows"
@@ -261,16 +262,14 @@
   - name: View control block
     debug: msg="{{ vmware_dhcp_control_block.stdout_lines }}"
 
-  - name: Update Windows vmnet file
-    local_action:
-      module: shell
-      _raw_params: sed -n -i -e '/host VMnet2/r {{ gen_script_folder }}/dhcpd_frag.conf' -e 1x -e '2,${x;p}' -e '${x;p}' {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
-    delegate_to: 127.0.0.1
-    register: vmware_dhcp_control_block
-    become: true
-    run_once: true
-    when: platform == "windows"
-
+#  - name: Update Windows vmnet file
+#    local_action:
+#      module: shell
+#      _raw_params: sed -n -i -e '/host VMnet8/r {{ gen_script_folder }}/dhcpd_frag.conf' -e 1x -e '2,${x;p}' -e '${x;p}' {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
+#    delegate_to: 127.0.0.1
+#    become: true
+#    run_once: true
+#    when: platform == "windows"
 
 #  - name: Update Windows vmnet file
 #    local_action: 
@@ -290,7 +289,7 @@
     delegate_to: 127.0.0.1
     become: true
     run_once: true
-    when: platform != "windows"
+#    when: platform != "windows"
 
   - name: Backup current Control DHCP
     local_action:
