@@ -155,12 +155,20 @@
   - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
     when: vm_mac is not defined
 
-  - name: Generate the DHCPD Control configuration entries
+  - name: Generate the DHCPD Control configuration entries for macOS/Linux
     local_action:
       module: template
       src: templates/dhcpd_entry.j2
       dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
-  
+    when: platform != "windows"
+
+  - name: Generate the DHCPD Control configuration entries for Windows
+    local_action:
+      module: template
+      src: templates/dhcpd_entry_win.j2
+      dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
+    when: platform == "windows"
+
   - name: Stop the VMs on macOS/Linux
     local_action:
       module: shell
