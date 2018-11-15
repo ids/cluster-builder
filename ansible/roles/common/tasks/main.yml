@@ -110,3 +110,18 @@
 - name: Platform
   debug: var=platform
   run_once: true
+
+- name: Calculate VM folder names for Windows
+  set_fact:
+    vm_folder_name: "{{ inventory_hostname }}"
+  when: platform == "windows"
+
+- name: Calculate VM folder names for macOS
+  set_fact:
+    vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
+  when: platform == "darwin"
+
+- name: Calculate VM folder names for Linux
+  set_fact:
+    vm_folder_name: "{{ vm_folder_name }}"
+  when: platform == "linux"

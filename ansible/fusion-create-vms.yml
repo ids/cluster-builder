@@ -52,21 +52,6 @@
       path: "{{ gen_script_folder }}"
       state: directory
 
-  - name: Calculate VM folder names for Windows
-    set_fact:
-      vm_folder_name: "{{ inventory_hostname }}"
-    when: platform == "windows"
-
-  - name: Calculate VM folder names for macOS
-    set_fact:
-      vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
-    when: platform == "darwin"
-
-  - name: Calculate VM folder names for Linux
-    set_fact:
-      vm_folder_name: "{{ vm_folder_name }}"
-    when: platform == "linux"
-
   - name: Stop the existing VMs (If they aren't running the errors will be ignored) on macOS and Linux.
     local_action:
       module: shell

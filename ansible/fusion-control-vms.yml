@@ -3,42 +3,42 @@
   gather_facts: false
   roles: 
     - common
-    
-  tasks:  
+
+  tasks:    
   - name: Start/Stop/Suspend the VMs on macOS/Linux
     local_action:
       module: shell
-      _raw_params: vmrun {{ vm_action }} {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun {{ vm_action }} {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: vm_action != 'destroy' and platform != "windows"
 
   - name: Start/Stop/Suspend the VMs 
     local_action:
       module: shell
-      _raw_params: vmrun.exe {{ vm_action }} {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun.exe {{ vm_action }} {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: vm_action != 'destroy' and platform == "windows"
 
   - name: Stop the VMs for destruction on macOS/Linux
     local_action:
       module: shell
-      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     ignore_errors: true
     when: vm_action == 'destroy' and platform != "windows"
   
   - name: Destroy the VMs on macOS/Linux
     local_action:
       module: shell
-      _raw_params: rm -rf {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm
+      _raw_params: rm -rf {{ fusion_vm_folder }}/{{ vm_folder_name }}
     when: vm_action == 'destroy' and platform != "windows"
 
   - name: Stop the VMs for destruction on Windows
     local_action:
       module: shell
-      _raw_params: vmrun.exe stop {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm/{{ inventory_hostname }}.vmx nogui
+      _raw_params: vmrun.exe stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     ignore_errors: true
     when: vm_action == 'destroy' and platform == "windows"
   
   - name: Destroy the VMs 
     local_action:
       module: shell
-      _raw_params: rm -rf {{ fusion_vm_folder }}/{{ inventory_hostname }}.vmwarevm
+      _raw_params: rm -rf {{ fusion_vm_folder }}/{{ vm_folder_name }}
     when: vm_action == 'destroy' and platform == "windows"
