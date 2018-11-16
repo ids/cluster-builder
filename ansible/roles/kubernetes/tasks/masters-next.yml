@@ -1,7 +1,7 @@
-- name: Ensure pki folder exists
+- name: ensure pki folder exists
   shell: mkdir -p /etc/kubernetes/pki/
 
-- name: Copy the PKI keys to the other masters
+- name: copy the PKI keys to the other masters
   copy:
     dest: /etc/kubernetes/pki/{{ item }}
     src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
@@ -16,7 +16,7 @@
     - front-proxy-client.key  
     - sa.pub
 
-- name: Copy the PKI certs to the other masters
+- name: copy the PKI certs to the other masters
   copy:
     dest: /etc/kubernetes/pki/{{ item }}
     src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
@@ -29,20 +29,20 @@
     - front-proxy-ca.crt  
     - front-proxy-client.crt  
 
-- name: Copy the kube-adm.yml to the other masters
+- name: copy the kube-adm.yml to the other masters
   copy:
     dest: /root/kube-adm.yml
     src: ../clusters/{{ cluster_pkg_folder }}/kube-adm.yml
   become: true   
 
-- name: Start kubelet on other master nodes
+- name: start kubelet on other master nodes
   service:
     name: kubelet
     state: started
     enabled: yes
   become: true
 
-- name: Initialize cluster on other master nodes
+- name: initialize cluster on other master nodes
   shell: "kubeadm init --config kube-adm.yml"
   args:
     chdir: /root

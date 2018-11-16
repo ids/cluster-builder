@@ -1,23 +1,23 @@
 
-- name: Patch CoreDNS memory limit to deal with bug in 1.12.1
+- name: patch CoreDNS memory limit to deal with bug in 1.12.1
   shell: "kubectl patch deployment -n=kube-system coredns -p '{\"spec\": {\"template\": {\"spec\":{\"containers\":[{\"image\":\"k8s.gcr.io/coredns:1.2.2\", \"name\":\"coredns\",\"resources\":{\"limits\":{\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"70Mi\"}}}]}}}}'"
   register: patch_out
 
 - debug: msg="{{ patch_out.stdout_lines }}"
 
-- name: Install Canal RBAC manifest
+- name: install canal RBAC manifest
   shell: kubectl apply -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
   register: rbac_out
 
 - debug: msg="{{ rbac_out.stdout_lines }}"
 
-- name: Install Canal manifest
+- name: install canal manifest
   shell: kubectl apply --validate=false -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/canal.yaml
   register: canal_out
 
 - debug: msg="{{ canal_out.stdout_lines }}"
 
-- name: Install Flannel CNI manifest
+- name: install flannel CNI manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
   register: flannel_out
 
@@ -54,7 +54,7 @@
 #  shell: kubectl apply -f /root/dashboard/kubernetes-dashboard.yml
 #  register: dash_out
 
-- name: Install Kubernetes Dashboard manifest
+- name: install kubernetes dashboard manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
   register: dash_out
 

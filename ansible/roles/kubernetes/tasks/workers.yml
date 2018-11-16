@@ -1,15 +1,15 @@
-- name: Copy the join_cmd
+- name: copy the join_cmd
   copy:
     dest: /root/join_cmd
     src: ../clusters/{{ cluster_pkg_folder }}/join_cmd
     mode: 0766   
   become: true   
 
-- name: Update K8s repo
+- name: update K8s repo
   shell: "yum -y update"
   become: true
 
-- name: Install Kubernetes on Worker nodes (CentOS)
+- name: install kubernetes on worker nodes (CentOS)
   yum: > 
     pkg={{item}} 
     state=present
@@ -19,7 +19,7 @@
     - kubelet-1.12.1-0
   when: cluster_type != "fedora-k8s"
 
-- name: Install Kubernetes on Worker nodes (Fedora)
+- name: install kubernetes on worker nodes (Fedora)
   dnf: > 
     pkg={{item}} 
     state=present
@@ -29,16 +29,16 @@
     - kubelet-1.12.1-0
   when: cluster_type == "fedora-k8s"
 
-- name: Start kubelet on Worker nodes
+- name: start kubelet on worker nodes
   service:
     name: kubelet
     state: started
     enabled: yes
   become: true
 
-- name: Join Worker to Cluster
+- name: join worker to cluster
   shell: "/root/join_cmd"
   register: worker_join
 
-- name: Worker Join Result
+- name: worker join result
   debug: msg="{{ worker_join.stdout_lines }}"

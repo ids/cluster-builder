@@ -1,93 +1,76 @@
-
-
-#- name: Download Kubectl 
-#  shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-#  args:
-#    chdir: /tmp
-
-#- name: Mark Kubectl executable 
-#  shell: chmod +x ./kubectl
-#  args:
-#    chdir: /tmp
-
-#- name: Move to kubectl to /usr/local/bin 
-#  shell: mv ./kubectl /usr/local/bin/kubectl
-#  args:
-#    chdir: /tmp
-
-- name: Start kubelet on the first master
+- name: start kubelet on the first master
   service:
     name: kubelet
     state: started
     enabled: yes
   become: true
 
-- name: Set k8s_cluster_token default
+- name: set k8s_cluster_token default
   set_fact:
     k8s_cluster_token: "9aeb42.99b7540a5833866a"
   run_once: true
   when: k8s_cluster_token is undefined
 
-- name: Generate the kubeadm yaml configuration
+- name: generate the kubeadm yaml configuration
   template:
     src: templates/k8s-kube-adm-12.j2
     dest: /root/kube-adm.yml
 
-- name: Initialize cluster on first master
+- name: initialize cluster on first master
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
   ignore_errors: false
 
-- name: Register cluster status
+- name: register cluster status
   shell: "cat /tmp/kube-status"
   register: kubeadm_out
 
-- name: Kubeadm Output
+- name: kubeadm output
   debug: msg="{{ kubeadm_out.stdout_lines }}"
 
-- name: Get Join Command
+- name: get join command
   shell: "cat /tmp/kube-status | sed -n '/discovery-token-ca-cert-hash/,$p' "
   register: kubeadm_join_cmd
 
-- name: Kubeadm JOIN Command
+- name: kubeadm join command
   debug: msg="{{ kubeadm_join_cmd.stdout }}"
 
-- name: Export Join Command to /root/join_cmd
+- name: export join command to /root/join_cmd
   shell: "echo '{{ kubeadm_join_cmd.stdout }}' > /root/join_cmd "
 
-- name: Setup Kubectl configuration
+- name: setup kubectl configuration
   shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
 
-- name: Fetch the join_cmd
+- name: fetch the join_cmd file
   fetch:
     src: /root/join_cmd
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
   become: true   
 
-- name: Fetch the kube-adm.yml from the first master
+- name: fetch the kube-adm.yml from the first master
   fetch:
     src: /root/kube-adm.yml
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
   become: true   
 
-- name: Fetch the Kube config from the first master
+- name: fetch the Kube config from the first master
   fetch:
     src: /etc/kubernetes/admin.conf
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
     flat: yes     
   become: true   
 
-- name: Clean the existing PKI directory
+- name: clean the existing PKI directory
   shell: "rm -rf {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
   ignore_errors: true 
 
-- name: Setup the PKI directory
+- name: setup the PKI directory
   shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
 
-- name: Fetch the PKI certs to the local {{ cluster_pkg_folder }}/pki
+- name: fetch the PKI certs to the local {{ cluster_pkg_folder }}/pki
   fetch:
     src: /etc/kubernetes/pki/{{ item }}
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
@@ -107,7 +90,7 @@
     - front-proxy-client.key  
     - sa.pub
 
-- name: Setup Kubectl configuration on first master
+- name: setup Kubectl configuration on first master
   shell: kubectl get nodes
   register: nodes_out
 
@@ -120,39 +103,39 @@
 #- debug: msg="{{ calico_out.stdout_lines }}"
 
 
-- name: Generate the master account
+- name: generate the master account
   template:
     src: templates/k8s-master-account.j2
     dest: /root/kube-master.yml
 
-- name: Install the master account
+- name: install the master account
   shell: kubectl apply -f /root/kube-master.yml
   register: acct_out
 
 - debug: msg="{{ acct_out.stdout_lines }}"
 
-- name: Generate the Web UI token
+- name: generate the Web UI token
   shell: kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}') | grep token | > /root/web-ui-token
 
-- name: Fetch the Web UI token to the local {{ cluster_pkg_folder }}
+- name: fetch the Web UI token to the local {{ cluster_pkg_folder }}
   fetch:
     src: /root/web-ui-token
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
   become: true   
 
-- name: Get Master Node status
+- name: get master node status
   shell: kubectl get nodes
   register: master_node_out
 
 - debug: msg="{{ master_node_out.stdout_lines }}"
 
-- name: Copy Traefik manifest
+- name: copy traefik manifest
   copy:
     src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/traefik-nodeport.yml"
     dest: /root/
 
-- name: Install Traefik manifest
+- name: install traefik manifest
   shell: kubectl apply -f /root/traefik-nodeport.yml
   register: traefik_out
 

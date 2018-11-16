@@ -2,6 +2,8 @@ WSL Setup Notes
 ===============
 
 * Install the default ansible via apt-get
+* Install kubectl with apt-get
+* Install docker-ce on Windows WSL
 * Ensure to start the Bash shell with "Run as Administrator"
 * Install Packer for Windows
 * Install VMware Workstation

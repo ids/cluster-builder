@@ -4,7 +4,7 @@
     state: absent
   when: cluster_type != "fedora-k8s"
 
-- name: Remove any existing daemon.json
+- name: remove any existing daemon.json
   shell: rm /etc/docker/daemon.json
   ignore_errors: true
   when: cluster_type != "fedora-k8s"
@@ -21,48 +21,48 @@
     state: present
   when: cluster_type == "fedora-k8s"
 
-- name: Start docker daemon
+- name: start docker daemon
   service:
     name: docker
     state: started
     enabled: yes
 
-- name: Disable firewalld 
+- name: disable firewalld 
   service:
     name: firewalld
     state: stopped
     enabled: no
 
-- name: Configure sysctl for ip4
+- name: configure sysctl for ip4
   lineinfile:
     path: "/etc/sysctl.conf"
     state: present
     regexp: '^net.bridge.bridge-nf-call-iptables =\s'
     line: 'net.bridge.bridge-nf-call-iptables = 1'
   
-- name: Configure sysctlfor ip6
+- name: configure sysctlfor ip6
   lineinfile:
     path: "/etc/sysctl.conf"
     state: present
     regexp: '^net.bridge.bridge-nf-call-ip6tables =\s'
     line: 'net.bridge.bridge-nf-call-ip6tables = 1'
 
-- name: Configure sysctl for ip4
+- name: configure sysctl for ip4
   shell: sysctl net.bridge.bridge-nf-call-iptables=1
   
-- name: Attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
+- name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf
 
-- name: Turn swap off
+- name: turn swap off
   shell: swapoff -a
 
-- name: Remove Swap from fstab
+- name: remove Swap from fstab
   lineinfile:
     path: /etc/fstab
     state: absent
     regexp: '^/dev/mapper/system-swap'
 
-- name: Install iSCSI utils for CentOS
+- name: install iSCSI utils for CentOS
   yum: > 
     pkg={{item}} 
     state=present
@@ -70,7 +70,7 @@
     - iscsi-initiator-utils
   when: cluster_type != "fedora-k8s"
 
-- name: Install iSCSI utils for Fedora
+- name: install iSCSI utils for Fedora
   dnf: > 
     pkg={{item}} 
     state=present
@@ -78,13 +78,13 @@
     - iscsi-initiator-utils
   when: cluster_type == "fedora-k8s"
 
-- name: Configure the Kubernetes Repo
+- name: configure the Kubernetes Repo
   become: true
   template:
     src: templates/k8s-repo.j2
     dest: /etc/yum.repos.d/kubernetes.repo
 
-- name: Disable GPG check on repo due to issues with the K8s source repo.
+- name: disable GPG check on repo due to issues with the K8s source repo.
   lineinfile:
     dest: /etc/yum.repos.d/kubernetes.repo
     line: "{{ item.line }}"
@@ -99,29 +99,29 @@
 #    regexp: '^SELINUX'
 #    line: 'SELINUX=disabled'
 
-- name: Configure the Kubernetes Repo
+- name: configure the Kubernetes Repo
   shell: setenforce 0
   when: cluster_type != "fedora-k8s"
 
-- name: Initialize the Masters Etcd cluster
+- name: initialize the Masters Etcd cluster
   include: masters-init.yml
   when: "'k8s_masters' in group_names"
 
-- name: Configure the First Kubernetes Master
+- name: configure the First Kubernetes Master
   include: masters-first.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: Configure the Remaining Kubernetes Master
+- name: configure the Remaining Kubernetes Master
   include: masters-next.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname != groups['k8s_masters'][0]"
 
-- name: Configure the Kubernetes Workers
+- name: configure the Kubernetes Workers
   include: workers.yml
   when: "'k8s_workers' in group_names"
 
-- name: Display cluster worker node status
+- name: display cluster worker node status
   shell: kubectl get nodes
   register: final_nodes_out
   when: "'k8s_masters' in group_names
@@ -131,22 +131,22 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: Install the default Kubernetes PODs
+- name: install the default Kubernetes PODs
   include: pods.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: Configure log rotation
+- name: configure log rotation
   become: true
   template:
     src: templates/k8s-log-rotation.j2
     dest: /etc/logrotate.d/containers
 
-- name: Wait for the Worker nodes to connect to the Master control plane and initialize
+- name: wait for the worker nodes to connect to the Master control plane and initialize
   pause:
     minutes: 2
 
-- name: List cluster nodes
+- name: list cluster nodes
   shell: kubectl get nodes
   register: final_nodes_out
   when: "'k8s_masters' in group_names
@@ -156,7 +156,7 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: List all running pods
+- name: list all running pods
   shell: kubectl get pods --all-namespaces
   register: final_pods_out
   when: "'k8s_masters' in group_names
@@ -166,7 +166,7 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: List all services
+- name: list all services
   shell: kubectl get svc --all-namespaces
   register: final_svc_out
   when: "'k8s_masters' in group_names
