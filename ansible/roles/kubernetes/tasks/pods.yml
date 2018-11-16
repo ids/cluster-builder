@@ -28,11 +28,11 @@
 #    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/dashboard"
 #    dest: /root/
 
-- name: Install Grafana manifest
-  shell: kubectl apply -f /root/dashboard/grafana.yml
-  register: graf_out
+#- name: Install Grafana manifest
+#  shell: kubectl apply -f /root/dashboard/grafana.yml
+#  register: graf_out
 
-- debug: msg="{{ graf_out.stdout_lines }}"
+#- debug: msg="{{ graf_out.stdout_lines }}"
 
 #- name: Install Heapster RBAC manifest
 #  shell: kubectl apply -f /root/dashboard/heapster-rbac.yml
