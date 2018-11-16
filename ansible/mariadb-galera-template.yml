@@ -22,7 +22,7 @@
   - debug: var=galera_cluster_home
     run_once: true
 
-  - name: Ensure the cluster folder exists
+  - name: ensure the cluster folder exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ galera_cluster_folder }} ]; then mkdir {{ galera_cluster_folder }}; fi"
@@ -30,7 +30,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Ensure the cluster home exists
+  - name: ensure the cluster home exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ galera_cluster_home }} ]; then mkdir {{ galera_cluster_home }}; fi"
@@ -38,7 +38,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Ensure the cluster 3-node sub-folder exists
+  - name: ensure the cluster 3-node sub-folder exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ galera_cluster_home }}/3 ]; then mkdir {{ galera_cluster_home }}/3; fi"
@@ -46,7 +46,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Ensure the cluster 5-node sub-folder exists
+  - name: ensure the cluster 5-node sub-folder exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ galera_cluster_home }}/5 ]; then mkdir {{ galera_cluster_home }}/5; fi"
@@ -55,7 +55,7 @@
     ignore_errors: true
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Purge existing yaml from 3-node cluster
+  - name: purge existing yaml from 3-node cluster
     local_action:
       module: shell
       _raw_params: "cd {{ galera_cluster_home }}/3 && rm *.yml"
@@ -63,7 +63,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Purge existing yaml from 5-node cluster
+  - name: purge existing yaml from 5-node cluster
     local_action:
       module: shell
       _raw_params: "cd {{ galera_cluster_home }}/5 && rm *.yml"
@@ -72,7 +72,7 @@
     ignore_errors: true
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Generate the 3-Node static iSCSI based galera volumes manifest
+  - name: generate the 3-Node static iSCSI based galera volumes manifest
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-volumes-static.j2
@@ -82,7 +82,7 @@
     become: false
     when: galera_cluster_seed_iscsi_targetportal is defined
 
-  - name: Generate the 3-Node Dynamic iSCSI Targetd based galera volumes manifest
+  - name: generate the 3-Node Dynamic iSCSI Targetd based galera volumes manifest
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-volumes-targetd.j2
@@ -92,7 +92,7 @@
     become: false
     when: galera_iscsi_storage_class is defined 
 
-  - name: Generate the 3-Node vSphere Targetd based galera volumes manifest
+  - name: generate the 3-Node vSphere Targetd based galera volumes manifest
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-vsphere-volumes.j2
@@ -102,7 +102,7 @@
     become: false
     when: galera_vsphere_storage_class is defined 
 
-  - name: Generate the 5-Node iSCSI based galera volumes manifest
+  - name: generate the 5-Node iSCSI based galera volumes manifest
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-volumes.j2
@@ -112,7 +112,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Generate the 5-Node vSphere based galera volumes manifest
+  - name: generate the 5-Node vSphere based galera volumes manifest
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-vsphere-volumes.j2
@@ -122,7 +122,7 @@
     become: false
     when: galera_cluster_node4_iscsi_targetportal is defined and galera_vsphere_storage_class is defined 
 
-  - name: Generate the galera 3-nodes manifest
+  - name: generate the galera 3-nodes manifest
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-nodes.j2
@@ -131,7 +131,7 @@
     run_once: true
     become: false
 
-  - name: Generate the galera 5-nodes manifest
+  - name: generate the galera 5-nodes manifest
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-nodes.j2
@@ -141,7 +141,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Generate the galera 3-nodes manifest with backup agent
+  - name: generate the galera 3-nodes manifest with backup agent
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-nodes-backup.j2
@@ -150,7 +150,7 @@
     run_once: true
     become: false
 
-  - name: Generate the galera 5-nodes manifest with backup agent
+  - name: generate the galera 5-nodes manifest with backup agent
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-nodes-backup.j2
@@ -160,7 +160,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Generate the 3-nodes galera haproxy manifest
+  - name: generate the 3-nodes galera haproxy manifest
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-haproxy.j2
@@ -169,7 +169,7 @@
     run_once: true
     become: false
 
-  - name: Generate the 5-nodes galera haproxy manifest
+  - name: generate the 5-nodes galera haproxy manifest
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-haproxy.j2
@@ -179,7 +179,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Generate the 3-node galera seed manifest
+  - name: generate the 3-node galera seed manifest
     local_action:
       module: template
       src: templates/galera/galera-seed.j2
@@ -188,7 +188,7 @@
     run_once: true
     become: false
 
-  - name: Generate the 5-node galera seed manifest
+  - name: generate the 5-node galera seed manifest
     local_action:
       module: template
       src: templates/galera/galera-seed.j2
@@ -198,7 +198,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: Generate the 3-node galera external nodeport manifest
+  - name: generate the 3-node galera external nodeport manifest
     local_action:
       module: template
       src: templates/galera/galera-external-nodeport.j2
@@ -208,7 +208,7 @@
     become: false
     when: galera_vsphere_storage_class is undefined 
 
-  - name: Generate the 3-node galera external lb manifest
+  - name: generate the 3-node galera external lb manifest
     local_action:
       module: template
       src: templates/galera/galera-external-lb.j2
@@ -218,7 +218,7 @@
     become: false
     when: galera_vsphere_storage_class is defined 
 
-  - name: Generate the 5-node galera external nodeport manifest
+  - name: generate the 5-node galera external nodeport manifest
     local_action:
       module: template
       src: templates/galera/galera-external-access.j2
@@ -228,7 +228,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined and galera_vsphere_storage_class is undefined'
 
-  - name: Generate the 5-node galera external lb manifest
+  - name: generate the 5-node galera external lb manifest
     local_action:
       module: template
       src: templates/galera/galera-external-lb.j2
@@ -238,7 +238,7 @@
     become: false
     when: galera_cluster_node4_iscsi_targetportal is defined and galera_vsphere_storage_class is defined 
 
-  - name: Generate the 3-Node restore to seed job manifest
+  - name: generate the 3-Node restore to seed job manifest
     local_action:
       module: template
       src: templates/galera/galera-restore-seed-job.j2
@@ -247,7 +247,7 @@
     run_once: true
     become: false
 
-  - name: Generate the 5-node restore to seed job manifest
+  - name: generate the 5-node restore to seed job manifest
     local_action:
       module: template
       src: templates/galera/galera-restore-seed-job.j2
@@ -257,7 +257,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
     
-  - name: Generate the 3-Node namespace manifest
+  - name: generate the 3-Node namespace manifest
     local_action:
       module: template
       src: templates/galera/galera-namespace.j2
@@ -266,7 +266,7 @@
     run_once: true
     become: false
 
-  - name: Generate the 5-node namespace manifest
+  - name: generate the 5-node namespace manifest
     local_action:
       module: template
       src: templates/galera/galera-namespace.j2
@@ -276,7 +276,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
     
-  - name: Generate the 3-Node purge volumes job manifest
+  - name: generate the 3-Node purge volumes job manifest
     local_action:
       module: template
       src: templates/galera/3-node/galera-3-purge-volumes-jobs.j2
@@ -286,7 +286,7 @@
     become: false
     when: galera_vsphere_storage_class is undefined 
 
-  - name: Generate the 5-node purge volumes job manifest
+  - name: generate the 5-node purge volumes job manifest
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-purge-volumes-jobs.j2

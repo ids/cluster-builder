@@ -1,5 +1,5 @@
 ---
-- name: Determine base control-builder path
+- name: determine base control-builder path
   set_fact:
     cluster_builder_dir: "{{ playbook_dir | replace('/ansible', '') }}"
   when: cluster_pkg_folder is undefined
@@ -9,7 +9,7 @@
   when: cluster_pkg_folder is undefined
   run_once: true
 
-- name: Determine cluster_pkg_folder
+- name: determine cluster_pkg_folder
   set_fact:
     cluster_pkg_folder: "{{ inventory_dir | replace(cluster_builder_dir + '/clusters/', '') }}"
   when: cluster_pkg_folder is undefined
@@ -18,13 +18,13 @@
 - debug: var=cluster_pkg_folder
   run_once: true
 
-- name: Determine dns settings for docker daemon (override)
+- name: determine dns settings for docker daemon (override)
   set_fact:
     docker_daemon_dns: '{{ docker_daemon_dns_override }}'
   when: docker_daemon_dns_override is defined 
   run_once: true
 
-- name: Determine dns settings for docker daemon (data network w/ single)
+- name: determine dns settings for docker daemon (data network w/ single)
   set_fact:
     docker_daemon_dns: '"{{ data_network_dns }}"'
   when: docker_daemon_dns_override is undefined 
@@ -32,7 +32,7 @@
     and data_network_dns2 is undefined
   run_once: true
 
-- name: Determine dns settings for docker daemon (data network w/ 2 entries)
+- name: determine dns settings for docker daemon (data network w/ 2 entries)
   set_fact:
     docker_daemon_dns: '"{{ data_network_dns }}", "{{ data_network_dns2 }}"'
   when: docker_daemon_dns_override is undefined 
@@ -40,7 +40,7 @@
     and data_network_dns2 is defined
   run_once: true
 
-- name: Determine dns settings for docker daemon (main network w/ single)
+- name: determine dns settings for docker daemon (main network w/ single)
   set_fact:
     docker_daemon_dns: '"{{ network_dns }}"'
   when: docker_daemon_dns_override is undefined 
@@ -49,7 +49,7 @@
     and network_dns2 is undefined
   run_once: true
 
-- name: Determine dns settings for docker daemon (main network w/ 2 entries)
+- name: determine dns settings for docker daemon (main network w/ 2 entries)
   set_fact:
     docker_daemon_dns: '"{{ network_dns }}", "{{ network_dns2 }}"'
   when: docker_daemon_dns_override is undefined 
@@ -58,28 +58,28 @@
     and network_dns2 is defined
   run_once: true
 
-- name: Calculated dns settings for docker daemon
+- name: calculated dns settings for docker daemon
   debug: var=docker_daemon_dns
   run_once: true
   when: network_dn is defined
 
-- name: Determine FQDN Node Name
+- name: determine FQDN node name
   set_fact:
     node_hostname: "{{ inventory_hostname | replace('.' + network_dn, '') }}"
   run_once: true
   when: network_dn is defined
 
-- name: Calculated simple node host name
+- name: calculated simple node host name
   debug: var=node_hostname
   run_once: true
   when: network_dn is defined
 
-- name: Set default platform to linux
+- name: set default platform to linux
   set_fact:
     platform: "linux"
   run_once: true
 
-- name: Determine if platform is macOS
+- name: determine if platform is macOS
   local_action:
     module: shell
     _raw_params: "uname -ra | grep Darwin | wc -l | xargs"
@@ -87,13 +87,13 @@
   run_once: true
   register: platform_is_darwin
     
-- name: Set platform fact when macOS
+- name: set platform fact when macOS
   set_fact:
     platform: "darwin"
   when: platform_is_darwin.stdout == "1"
   run_once: true
 
-- name: Determine if platform is Windows
+- name: determine if platform is Windows
   local_action:
     module: shell
     _raw_params: "uname -ra | grep Microsoft | wc -l | xargs"
@@ -101,27 +101,27 @@
   run_once: true
   register: platform_is_windows
     
-- name: Set platform fact when Windows
+- name: set platform fact when Windows
   set_fact:
     platform: "windows"
   when: platform_is_windows.stdout == "1"
   run_once: true
 
-- name: Platform
+- name: platform
   debug: var=platform
   run_once: true
 
-- name: Calculate VM folder names for Windows
+- name: calculate VM folder names for Windows
   set_fact:
     vm_folder_name: "{{ inventory_hostname }}"
   when: platform == "windows"
 
-- name: Calculate VM folder names for macOS
+- name: calculate VM folder names for macOS
   set_fact:
     vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
   when: platform == "darwin"
 
-- name: Calculate VM folder names for Linux
+- name: calculate VM folder names for Linux
   set_fact:
     vm_folder_name: "{{ vm_folder_name }}"
   when: platform == "linux"

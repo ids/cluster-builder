@@ -3,13 +3,13 @@
 - hosts: all
   gather_facts: false
   tasks:
-  - name: Set coreos_linux_version
+  - name: set coreos_linux_version
     set_fact:
       coreos_linux_version: "1745.7.0"
     run_once: true
     when: coreos_linux_version is undefined
 
-  - name: Set coreos_linux_channel
+  - name: set coreos_linux_channel
     set_fact:
       coreos_linux_channel: "stable"
     run_once: true
@@ -37,21 +37,21 @@
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
 
   tasks:    
-  - name: Set vmware dhcpd configuration location for linux
+  - name: set vmware dhcpd configuration location for linux
     set_fact:
       vmware_dhcpd_base_path: "/etc/vmware//dhcp"
       vmware_dhcpd_filename: "dhcpd.conf"
     run_once: true
     when: platform == "linux"
 
-  - name: Set vmware dhcpd configuration location for macOS
+  - name: set vmware dhcpd configuration location for macOS
     set_fact:
       vmware_dhcpd_base_path: "/Library/Preferences/VMware\ Fusion/"
       vmware_dhcpd_filename: "dhcpd.conf"
     run_once: true
     when: platform == "darwin"
 
-  - name: Set vmware dhcpd configuration location for Windows
+  - name: set vmware dhcpd configuration location for Windows
     set_fact:
       vmware_dhcpd_base_path: "/mnt/c/ProgramData/VMware"
       vmware_dhcpd_filename: "vmnetdhcp.conf"
@@ -60,46 +60,46 @@
 
   - debug: msg="{{ vmware_dhcpd_base_path }}"
 
-  - name: Ensure the target fusion_vm_folder exists
+  - name: ensure the target fusion_vm_folder exists
     local_action:
       module: file
       path: "{{ fusion_vm_folder }}"
       state: directory
 
-  - name: Stop the existing VMs (If they aren't running the errors will be ignored).
+  - name: stop the existing VMs (If they aren't running the errors will be ignored).
     local_action:
       module: shell
       _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx
     ignore_errors: true
 
-  - name: Use ovftool to deploy cluster-node ova to Fusion VMX on macOS/Linux.
+  - name: use ovftool to deploy cluster-node ova to Fusion VMX on macOS/Linux.
     local_action:
       module: shell
       _raw_params: ovftool -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
     when: platform == "darwin" or platform == "linux"
   
-  - name: Use ovftool to deploy cluster-node ova to Fusion VMX on Windows.
+  - name: use ovftool to deploy cluster-node ova to Fusion VMX on Windows.
     local_action:
       module: shell
       _raw_params: ovftool.exe -tt=vmx -o --network={{ fusion_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ fusion_vm_folder }}/
     when: platform == "windows"
 
-  - name: Calculate VM folder names for Windows
+  - name: calculate VM folder names for Windows
     set_fact:
       vm_folder_name: "{{ inventory_hostname }}"
     when: platform == "windows"
 
-  - name: Calculate VM folder names for macOS
+  - name: calculate VM folder names for macOS
     set_fact:
       vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
     when: platform == "darwin"
 
-  - name: Calculate VM folder names for Linux
+  - name: calculate VM folder names for Linux
     set_fact:
       vm_folder_name: "{{ vm_folder_name }}"
     when: platform == "linux"
 
-  - name: Assign the VM CPU Count
+  - name: assign the VM CPU Count
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
@@ -108,7 +108,7 @@
       line: 'numvcpus = "{{ numvcpus }}"'
     when: numvcpus is defined
 
-  - name: Assign the VM Memory
+  - name: assign the VM memory
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
@@ -117,7 +117,7 @@
       line: 'memsize = "{{ memsize }}"'
     when: memsize is defined
 
-  - name: Assign the Fusion Control/Data Network to Interface One
+  - name: assign the Fusion network to primary interface 
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
@@ -125,7 +125,7 @@
       regexp: '^ethernet0.vnet =\s'
       line: 'ethernet0.vnet = "{{ fusion_net }}"'
 
-  - name: Assign the Fusion Control/Data Network to Interface One
+  - name: Assign the Fusion network type
     local_action:
       module: lineinfile
       path: "{{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
@@ -133,25 +133,25 @@
       regexp: '^ethernet0.connectionType\s'
       line: 'ethernet0.connectionType = "custom"'
 
-  - name: Start the VMs to get the generated MAC addresses
+  - name: start the VMs to get the generated MAC addresses
     local_action:
       module: shell
       _raw_params: vmrun start {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     become: false
     when: platform == "linux" or platform == "darwin"
 
-  - name: Start the VMs to get the generated MAC addresses on Windows
+  - name: start the VMs to get the generated MAC addresses on Windows
     local_action:
       module: shell
       _raw_params: "cmd /c \"vmrun.exe start {{ windows_fusion_vm_folder }}\{{ vm_folder_name }}\{{ inventory_hostname }}.vmx nogui\""
     become: false
     when: platform == "windows"
 
-  - name: Waiting for VMs to generate MAC addresses
+  - name: waiting for VMs to generate MAC addresses
     pause:
       seconds: 30
     
-  - name: Scan the VMX files for the Control/Data mac addresses
+  - name: scan the VMX files for the mac addresses
     local_action:
       module: shell
       _raw_params: cat {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
@@ -162,11 +162,11 @@
   - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
     when: vm_mac_addr is not defined    
 
-  - name: Set MAC Fact
+  - name: set MAC address fact
     set_fact:
       vm_mac_addr: "{{ vm_mac_addr.stdout }}"
 
-  - name: Stop the VMs 
+  - name: stop the VMs 
     local_action:
       module: shell
       _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
@@ -191,7 +191,7 @@
 
   tasks:
 
-  - name: Load tectonic_matchbox_ca
+  - name: load tectonic_matchbox_ca
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/ca.crt"
@@ -202,18 +202,18 @@
   - debug: msg="{{ tectonic_matchbox_ca_load.stdout }}" 
     run_once: true
 
-  - name: Set vanilla k8s default to false (Full Tectonic Install)
+  - name: set vanilla k8s default to false (Full Tectonic Install)
     set_fact:
       tectonic_vanilla_k8s: false
     run_once: true
     when: tectonic_vanilla_k8s is undefined
 
-  - name: Set tectonic_matchbox_ca
+  - name: set tectonic_matchbox_ca
     set_fact:
       tectonic_matchbox_ca: "{{ tectonic_matchbox_ca_load.stdout }}"
     run_once: true
 
-  - name: Load tectonic_matchbox_client_cert
+  - name: load tectonic_matchbox_client_cert
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.crt"
@@ -224,12 +224,12 @@
   - debug: msg="{{ tectonic_matchbox_client_cert_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_matchbox_client_cert
+  - name: set tectonic_matchbox_client_cert
     set_fact:
       tectonic_matchbox_client_cert: "{{ tectonic_matchbox_client_cert_load.stdout }}"
     run_once: true
 
-  - name: Load tectonic_matchbox_client_key
+  - name: load tectonic_matchbox_client_key
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.key"
@@ -240,12 +240,12 @@
   - debug: msg="{{ tectonic_matchbox_client_key_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_matchbox_client_key
+  - name: set tectonic_matchbox_client_key
     set_fact:
       tectonic_matchbox_client_key: "{{ tectonic_matchbox_client_key_load.stdout }}"
     run_once: true
 
-  - name: Load ssh key
+  - name: load ssh key
     local_action:
       module: shell
       _raw_params: "cat ../node-packer/keys/authorized_keys"
@@ -256,12 +256,12 @@
   - debug: msg="{{  tectonic_ssh_key_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_ssh_authorized_key
+  - name: set tectonic_ssh_authorized_key
     set_fact:
       tectonic_ssh_authorized_key: "{{  tectonic_ssh_key_load.stdout }}"
     run_once: true
 
-  - name: Generate the terraform.vars file
+  - name: generate the terraform.vars file
     local_action:
       module: template
       src: templates/coreos-terraform.j2
@@ -270,7 +270,7 @@
     become: false
     run_once: true
 
-  - name: Generate the controllers.csv file
+  - name: generate the controllers.csv file
     local_action:
       module: template
       src: templates/coreos-masters-csv.j2
@@ -279,7 +279,7 @@
     become: false
     run_once: true
 
-  - name: Generate the workers.csv file
+  - name: generate the workers.csv file
     local_action:
       module: template
       src: templates/coreos-workers-csv.j2
@@ -299,7 +299,7 @@
 
   tasks:
     
-  - name: Process the DHCP template file
+  - name: process the DHCP template file
     local_action:
       module: template
       src: templates/coreos-fusion-dhcpd-static-block.j2
@@ -308,7 +308,7 @@
     when: inventory_hostname in groups['coreos_provisioner']
     run_once: true
 
-  - name: Load dhcpd block
+  - name: load dhcpd block
     local_action:
       module: shell
       _raw_params: "cat {{ tmp_folder }}/coreos-dhcpd-block.txt"
@@ -319,7 +319,7 @@
   - debug: msg="{{ coreos_dhcpd_static_block.stdout_lines }}" 
     run_once: true
 
-  - name: Stop the VM Network
+  - name: stop the VM Network
     local_action:
       module: shell
       _raw_params: 'vmnet-cli --stop'
@@ -327,7 +327,7 @@
     become: true
     run_once: true
 
-  - name: Backup current Control/Data DHCP
+  - name: backup current DHCP file
     local_action:
       module: shell
       _raw_params: cp {{ vmware_dhcpd_base_path }}/dhcpd.conf {{ vmware_dhcpd_base_path }}/dhcpd-backup.conf
@@ -335,7 +335,7 @@
     become: true
     run_once: true
 
-  - name: Remove any Control/Data block for the current cluster
+  - name: remove any DHCPD block for the current cluster
     local_action:
       module: shell
       _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' {{ vmware_dhcpd_base_path }}/dhcpd.conf > {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
@@ -343,13 +343,13 @@
     become: true
     run_once: true
   
-  - name: Concatenate the DHCP entries header
+  - name: concatenate the DHCP entries header
     local_action:
       module: shell
       _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >>  {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
     run_once: true
     
-  - name: Add current DHCP Control/Data block for cluster
+  - name: add current DHCP block for cluster
     local_action:
       module: shell
       _raw_params: cat {{ tmp_folder }}/coreos-dhcpd-block.txt >> {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
@@ -357,13 +357,13 @@
     become: true
     run_once: true
 
-  - name: Concatenate the DHCP entries footer
+  - name: concatenate the DHCP entries footer
     local_action:
       module: shell
       _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >>  {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
     run_once: true
 
-  - name: Replace current Control/Data DHCP
+  - name: replace current DHCP
     local_action:
       module: shell
       _raw_params: cp {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf {{ vmware_dhcpd_base_path }}/dhcpd.conf
@@ -371,7 +371,7 @@
     become: true
     run_once: true
 
-  - name: Start the VM Network
+  - name: start the VM network
     local_action:
       module: shell
       _raw_params: 'vmnet-cli --start'
@@ -401,7 +401,7 @@
 #      state: started
 #    when: inventory_hostname in groups['coreos_provisioner']
         
-  - name: Clean up tmp dhcpd block
+  - name: clean up tmp dhcpd block
     local_action:
       module: shell
       _raw_params: "rm {{ tmp_folder }}/coreos-dhcpd-block.txt"

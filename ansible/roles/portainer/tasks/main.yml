@@ -5,27 +5,27 @@
 # provisioned for remote api and portainer access on demand
 
 ---
-- name: Install docker-compose python module
+- name: install docker-compose python module
   pip: name={{ item }} state=latest
   with_items:
     - docker-compose
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Pull Portainer image
+- name: pull portainer image
   shell: docker pull portainer/portainer:develop
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Stop any existing Portainer container (if running)
+- name: stop any existing Portainer container (if running)
   shell: docker stop portainer
   ignore_errors: true
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Remove any existing Portainer container (if exists)
+- name: remove any existing Portainer container (if exists)
   shell: docker rm portainer
   ignore_errors: true
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Start Portainer the old fashioned way
+- name: start portainer the old fashioned way
   shell: 
     cmd: | 
       docker service create --constraint "node.role == manager" -p 9000:9000 \

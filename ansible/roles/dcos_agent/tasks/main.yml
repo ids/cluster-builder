@@ -1,16 +1,16 @@
 
 ---
-- name: Install nfs-utils
+- name: install nfs-utils
   yum: >
     name=nfs-utils
     state=latest
 
-- name: Download DC/OS config 
+- name: download DC/OS config 
   shell: curl -O http://{{ dcos_boot_server }}:{{ dcos_boot_server_port }}/dcos_install.sh
   args:
     chdir: /tmp/dcos
 
-- name: Install DC/OS on private agent nodes
+- name: install DC/OS on private agent nodes
   become: true
   become_method: sudo
   shell: bash dcos_install.sh slave
@@ -25,7 +25,7 @@
 - debug: msg="{{ private_output.stderr_lines }}"
   when: "'dcos_agents_private' in group_names"
 
-- name: Install DC/OS on public agent nodes
+- name: install DC/OS on public agent nodes
   become: true
   become_method: sudo
   shell: bash dcos_install.sh slave_public

@@ -15,6 +15,6 @@
         when: "inventory_hostname == groups['coreos_controllers'][0]"
 
 
-      - name: Waiting for 1m for Tectonic services to settle in
+      - name: waiting for 1m for Tectonic services to settle in
         pause:
           seconds: 60

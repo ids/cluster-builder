@@ -1,2 +1,2 @@
-- name: Security Hardening of RHEL
+- name: security Hardening of RHEL
   include: hardening.yml

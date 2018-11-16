@@ -1,18 +1,18 @@
 
 ---
-- name: Set hostname.
+- name: set hostname.
   become: yes
   shell: hostnamectl set-hostname {{ inventory_hostname }}
 
-- name: Backup hosts file.
+- name: backup hosts file.
   become: yes
   shell: cp /etc/hosts /etc/hosts.orig
 
-- name: Create temp hosts file.
+- name: create temp hosts file.
   become: yes
   shell: cp /etc/hosts /etc/hosts.gen
 
-- name: Add IP address of all hosts to all hosts
+- name: add IP address of all hosts to all hosts
   become: yes
   lineinfile:
     dest: /etc/hosts.gen
@@ -20,6 +20,6 @@
     state: present
   with_items: "{{ groups['all'] }}"  
 
-- name: Promote hosts file.
+- name: promote hosts file.
   become: yes
   shell: cp /etc/hosts.gen /etc/hosts

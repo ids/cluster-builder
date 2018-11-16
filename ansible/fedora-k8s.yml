@@ -15,7 +15,7 @@
   - role: iscsi-provisioner
 
   tasks:
-    - name: Install the iscsi-provisioner secret into the {{ cluster_name }} Kubernetes cluster.
+    - name: install the iscsi-provisioner secret into the {{ cluster_name }} Kubernetes cluster.
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} create secret generic {{ targetd_server_account_credentials }} --from-literal=username={{ targetd_server_account_username }} --from-literal=password={{ targetd_server_account_password }} -n {{ targetd_server_namespace }}"
@@ -28,7 +28,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Apply the iscsi-provisioner storage class and provisioner manifests
+    - name: apply the iscsi-provisioner storage class and provisioner manifests
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi.yml -n {{ targetd_server_namespace }}"
@@ -41,7 +41,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Verify the storage class 
+    - name: verify the storage class 
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get sc -n {{ targetd_server_namespace }}"
@@ -54,7 +54,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Verify the iscsi-provisioner pod
+    - name: verify the iscsi-provisioner pod
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get pods -n {{ targetd_server_namespace }}"

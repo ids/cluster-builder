@@ -8,7 +8,7 @@
 
   tasks:
 
-  - name: Add iSCSI configuration to kubelet.service file
+  - name: add iSCSI configuration to kubelet.service file
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/current-shipping-kubelet.service
@@ -21,7 +21,7 @@
     become: false
     run_once: true
 
-  - name: Add iSCSI configuration to kubelet.service file
+  - name: add iSCSI configuration to kubelet.service file
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/current-shipping-kubelet.service
@@ -34,7 +34,7 @@
     become: false
     run_once: true
 
-  - name: Add iSCSI configuration to kubelet.service file
+  - name: add iSCSI configuration to kubelet.service file
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/current-shipping-kubelet.service
@@ -47,7 +47,7 @@
     become: false
     run_once: true
 
-  - name: Add iSCSI configuration to kubelet.service file
+  - name: add iSCSI configuration to kubelet.service file
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/current-shipping-kubelet.service
@@ -60,7 +60,7 @@
     become: false
     run_once: true
 
-  - name: Add iSCSI configuration to kubelet.service file
+  - name: add iSCSI configuration to kubelet.service file
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/current-shipping-kubelet.service
@@ -73,21 +73,21 @@
     become: false
     run_once: true
 
-  - name: Read VM Node Initiator value for storage class 
+  - name: read VM Node Initiator value for storage class 
     shell: CODE=`cat /etc/iscsi/initiatorname.iscsi` && echo ${CODE//InitiatorName=/}
     register: vm_initiator_code
 
-  - name: Assign fact 
+  - name: assign initiator name fact 
     set_fact:
       initiator_name: "{{ vm_initiator_code.stdout }}"
 
-  - name: Ensure the iscs-manifests folder exists in the cluster package
+  - name: ensure the iscs-manifests folder exists in the cluster package
     local_action:
       module: shell
       _raw_params: mkdir -p ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests
     become: false
 
-  - name: Generate the iSCSI provisioner, roles and storage class manifest
+  - name: generate the iSCSI provisioner, roles and storage class manifest
     local_action:
       module: template
       src: templates/coreos-iscsi-manifests.j2
@@ -95,7 +95,7 @@
       mode: 0766
     become: false
 
-  - name: Generate the iSCSI provisioner secret script
+  - name: generate the iSCSI provisioner secret script
     local_action:
       module: template
       src: templates/coreos-iscsi-secret.j2

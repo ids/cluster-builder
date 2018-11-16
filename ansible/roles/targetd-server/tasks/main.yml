@@ -1,4 +1,4 @@
 ---
-- name: Install Targetd
+- name: install targetd
   include: targetd.yml
 

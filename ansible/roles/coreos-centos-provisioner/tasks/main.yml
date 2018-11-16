@@ -1,12 +1,12 @@
 ---
-- name: Configure Matchbox
+- name: configure matchbox
   include: matchbox.yml
 
-- name: Configure PXE
+- name: configure PXE
   include: pxe.yml
 
-- name: Configure DHCP
+- name: configure DHCP
   include: dhcpd.yml
 
-- name: Configure TFTP
+- name: configure TFTP
   include: tftp.yml

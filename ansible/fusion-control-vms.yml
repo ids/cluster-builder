@@ -5,39 +5,39 @@
     - common
 
   tasks:    
-  - name: Start/Stop/Suspend the VMs on macOS/Linux
+  - name: start/stop/suspend the VMs on macOS/Linux
     local_action:
       module: shell
       _raw_params: vmrun {{ vm_action }} {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: vm_action != 'destroy' and platform != "windows"
 
-  - name: Start/Stop/Suspend the VMs 
+  - name: start/stop/suspend the VMs 
     local_action:
       module: shell
       _raw_params: vmrun.exe {{ vm_action }} {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: vm_action != 'destroy' and platform == "windows"
 
-  - name: Stop the VMs for destruction on macOS/Linux
+  - name: stop the VMs for destruction on macOS/Linux
     local_action:
       module: shell
       _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     ignore_errors: true
     when: vm_action == 'destroy' and platform != "windows"
   
-  - name: Destroy the VMs on macOS/Linux
+  - name: destroy the VMs on macOS/Linux
     local_action:
       module: shell
       _raw_params: rm -rf {{ fusion_vm_folder }}/{{ vm_folder_name }}
     when: vm_action == 'destroy' and platform != "windows"
 
-  - name: Stop the VMs for destruction on Windows
+  - name: stop the VMs for destruction on Windows
     local_action:
       module: shell
       _raw_params: vmrun.exe stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     ignore_errors: true
     when: vm_action == 'destroy' and platform == "windows"
   
-  - name: Destroy the VMs 
+  - name: destroy the VMs 
     local_action:
       module: shell
       _raw_params: rm -rf {{ fusion_vm_folder }}/{{ vm_folder_name }}

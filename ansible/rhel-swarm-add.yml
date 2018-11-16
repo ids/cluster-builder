@@ -27,62 +27,62 @@
   
   tasks:
 
-  - name: Enable the Docker daemon as a service and start it.
+  - name: enable the Docker daemon as a service and start it.
     service:
       name: docker
       state: started
       enabled: yes  
 
-  - name: Check if "Swarm Mode" is enabled.
+  - name: check if "Swarm Mode" is enabled.
     shell: docker info
     changed_when: False
     register: docker_info
     tags:
       - skip_ansible_lint # Suppressing the linter
 
-  - name: Declare the manager node
+  - name: declare the manager node
     shell: wn=$(hostname); mn=(${wn//-/ }); echo $mn-m1
     register: swarm_manager
 
-  - name: Get the worker join-token.
+  - name: get the worker join-token.
     shell: docker swarm join-token -q worker
     changed_when: False
     register: docker_worker_token
     delegate_to: "{{ swarm_manager.stdout }}"
     delegate_facts: True
 
-  - name: Get the manager join-token.
+  - name: get the manager join-token.
     shell: docker swarm join-token -q manager
     changed_when: False
     register: docker_manager_token
     delegate_to: "{{ swarm_manager.stdout }}"
     delegate_facts: True
 
-  - name: Join the pending Swarm worker nodes (Combined Mgmt/Data Interface).
+  - name: join the pending Swarm worker nodes (Combined Mgmt/Data Interface).
     shell: docker swarm join --token "{{ docker_worker_token.stdout }}" {{ swarm_manager.stdout }}
     changed_when: False
     when: "docker_info.stdout.find('Swarm: active') == -1 
     and docker_info.stdout.find('Swarm: pending') == -1 
     and 'docker_swarm_worker' in group_names"
 
-  - name: Join the pending Swarm manager nodes (Combined Mgmt/Data Interface).
+  - name: join the pending Swarm manager nodes (Combined Mgmt/Data Interface).
     shell: docker swarm join --token "{{ docker_manager_token.stdout }}" {{ swarm_manager.stdout }}
     changed_when: False
     when: "docker_info.stdout.find('Swarm: active') == -1
       and docker_info.stdout.find('Swarm: pending') == -1
       and 'docker_swarm_manager' in group_names"
 
-  - name: Determine the node name when there is a network_dn
+  - name: determine the node name when there is a network_dn
     set_fact:
       node_fqdn: "{{ node_hostname }}.{{ network_dn }}"
     when: "use_fqdn_node_name is defined"
 
-  - name: Determine the node name when there is no network_dn
+  - name: determine the node name when there is no network_dn
     set_fact:
       node_fqdn: "{{ inventory_hostname }}"
     when: "use_fqdn_node_name is undefined"
 
-  - name: Get list of labels
+  - name: get list of labels
     command: >-
           docker node inspect
           -f {% raw %}'{{range $key, $value := .Spec.Labels}}{{printf "%s\n" $key}}{{end}}'{% endraw %}
@@ -98,7 +98,7 @@
   - debug:
       msg: "Labels: {{ docker_swarm_labels.stdout_lines }}"
 
-  - name: Assign labels to swarm nodes | if any
+  - name: assign labels to swarm nodes | if any
     command: docker node update --label-add {{ item }}=true {{ node_fqdn }}
     changed_when: False
     with_items:
@@ -110,7 +110,7 @@
       - swarm_labels
 
     ####OLD
-  - name: Generate the wrapper docker-env script
+  - name: generate the wrapper docker-env script
     local_action:
       module: template
       src: templates/docker-env.j2
@@ -120,7 +120,7 @@
     become: false
     ignore_errors: true
 
-  - name: Generate the client test script
+  - name: generate the client test script
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2
@@ -130,7 +130,7 @@
     become: false
     ignore_errors: true
 
-  - name: Remove tmp cluster folder if exists
+  - name: remove tmp cluster folder if exists
     local_action:
       module: shell
       _raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"

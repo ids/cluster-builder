@@ -1,47 +1,47 @@
-- name: Install Targetd
+- name: install targetd service
   yum: >
     name=targetd
     state=latest
 
-- name: Install Targetd CLI
+- name: install targetd CLI
   yum: >
     name=targetcli
     state=latest
 
-- name: Enable the Target.
+- name: enable the Target.
   service:
     name: target
     state: started
     enabled: yes  
 
-- name: Generate custom iSCSI Kublet service def
+- name: generate custom iSCSI Kublet service def
   template:
     src: templates/targetd-yaml.j2
     dest: /etc/target/targetd.yaml
     mode: 0766
 
-- name: Enable the Targetd.
+- name: enable the Targetd.
   service:
     name: targetd
     state: started
     enabled: yes  
 
-- name: Adjust firewall for iscsi service
+- name: adjust firewall for iscsi service
   shell: firewall-cmd --add-service=iscsi-target --permanent
 
-- name: Adjust firewall for iscsi service
+- name: adjust firewall for iscsi service
   shell: firewall-cmd --add-port=18700/tcp --permanent 
 
-- name: Adjust firewall for iscsi service
+- name: adjust firewall for iscsi service
   shell: firewall-cmd --reload
 
-- name: Create the logical volume
+- name: create the logical volume
   shell: pvcreate /dev/sdb
 
-- name: Create the volume group
+- name: create the volume group
   shell: vgcreate vg-targetd /dev/sdb
 
-- name: Enable the Targetd.
+- name: enable the Targetd.
   service:
     name: targetd
     state: restarted

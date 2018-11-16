@@ -69,7 +69,7 @@
     chdir: /etc/certs/docker
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Clean csrs
+- name: clean csrs
   file:
     state: absent
     path: "/etc/certs/docker/*.csr"
@@ -97,7 +97,7 @@
     - "cert"   
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Configure Docker daemon
+- name: configure docker daemon
   lineinfile:
     dest: /etc/docker/daemon.json
     regexp: "{{ item.regexp }}"
@@ -123,14 +123,14 @@
 #  shell: systemctl daemon-reload
 #  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Restart the docker daemon
+- name: restart the docker daemon
   service:
     name: docker
     state: restarted
     enabled: yes  
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: Fetch the client certs
+- name: fetch the client certs
   fetch:
     src: /etc/certs/docker/{{ item }}.pem
     dest: ../clusters/{{ cluster_pkg_folder }}/api-certs/
@@ -144,7 +144,7 @@
     - server-cert                    
   when: "inventory_hostname == groups['docker_swarm_manager'][0]"
             
-- name: Copy up the shared manager certs and keys to other manager nodes
+- name: copy up the shared manager certs and keys to other manager nodes
   copy:
     src: "../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem"
     dest: "/etc/certs/docker/{{ item }}.pem"
@@ -158,7 +158,7 @@
   when: "inventory_hostname in groups['docker_swarm_manager'] 
     and inventory_hostname != groups['docker_swarm_manager'][0]"
             
-- name: Remove local temp server related pem files
+- name: remove local temp server related pem files
   local_action:
     module: file
     path: "../clusters/{{ cluster_pkg_folder }}/api-certs/{{ item }}.pem"
@@ -195,7 +195,7 @@
   when: "inventory_hostname in groups['docker_swarm_manager'] 
     and inventory_hostname != groups['docker_swarm_manager'][0]"
 
-- name: Configure Docker daemon
+- name: configure docker daemon
   lineinfile:
     dest: /etc/docker/daemon.json
     regexp: "{{ item.regexp }}"
@@ -224,7 +224,7 @@
 #  when: "inventory_hostname in groups['docker_swarm_manager'] 
 #    and inventory_hostname != groups['docker_swarm_manager'][0]"
 
-- name: Restart the docker daemon
+- name: restart the docker daemon
   service:
     name: docker
     state: restarted

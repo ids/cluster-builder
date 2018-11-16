@@ -8,13 +8,13 @@
 
   tasks:
 
-  - name: Generate vSphere Storage provider configuration
+  - name: generate vSphere Storage provider configuration
     template:
       src: templates/vsphere-conf.j2
       dest: /etc/kubernetes/vsphere.conf
       mode: 0766
 
-  - name: Generate vSphere Storage provider configuration
+  - name: generate vSphere Storage provider configuration
     local_action:
       module: template
       src: templates/vsphere-conf.j2
@@ -22,7 +22,7 @@
     run_once: true
     become: false
 
-  - name: Add vSphere configuration to kubelet.service file
+  - name: add vSphere configuration to kubelet.service file
     lineinfile:
       dest: /etc/systemd/system/kubelet.service
       regexp: "{{ item.regx }}"
@@ -31,21 +31,21 @@
     with_items:
       - { regx: " --cloud-provider=", line: '--cloud-provider=vsphere --cloud-config=/etc/kubernetes/vsphere.conf \' }
 
-  - name: Extract the kube-apiserver manifest and add cloud provider configuration
+  - name: extract the kube-apiserver manifest and add cloud provider configuration
     local_action:
       module: shell
       _raw_params: kubectl get ds kube-apiserver -n kube-system -o yaml > ../clusters/{{ cluster_pkg_folder }}/kube-apiserver.yaml
     run_once: true
     become: false
 
-  - name: Copy kube-apiserver manifest for adjustment
+  - name: copy kube-apiserver manifest for adjustment
     local_action:
       module: shell
       _raw_params: cp ../clusters/{{ cluster_pkg_folder }}/kube-apiserver.yaml ../clusters/{{ cluster_pkg_folder }}/kube-apiserver-vsphere.yaml
     run_once: true
     become: false
 
-  - name: Amend kube-apiserver manifest with --cloud-provider setting
+  - name: amend kube-apiserver manifest with --cloud-provider setting
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/kube-apiserver-vsphere.yaml
@@ -58,7 +58,7 @@
       - { regx: "      - --cloud-provider=", line: "        - --cloud-provider=vsphere" }
     run_once: true
 
-  - name: Amend kube-apiserver manifest with --cloud-provider setting
+  - name: amend kube-apiserver manifest with --cloud-provider setting
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/kube-apiserver-vsphere.yaml
@@ -72,28 +72,28 @@
       - { regx: "%--cloud-config=", line: "        - --cloud-config=/etc/vsphere" }
     run_once: true
  
-  - name: Apply modified kube-apiserver manifest.
+  - name: apply modified kube-apiserver manifest.
     local_action:
       module: shell
       _raw_params: kubectl apply -f ../clusters/{{ cluster_pkg_folder }}/kube-apiserver-vsphere.yaml
     run_once: true
     become: false
 
-  - name: Extract the kube-controller-manager manifest and add cloud provider configuration
+  - name: extract the kube-controller-manager manifest and add cloud provider configuration
     local_action:
       module: shell
       _raw_params: kubectl get deploy kube-controller-manager -n kube-system -o yaml > ../clusters/{{ cluster_pkg_folder }}/kube-controller-manager.yaml
     run_once: true
     become: false
 
-  - name: Copy kube-controller-manager manifest for adjustment
+  - name: copy kube-controller-manager manifest for adjustment
     local_action:
       module: shell
       _raw_params: cp ../clusters/{{ cluster_pkg_folder }}/kube-controller-manager.yaml ../clusters/{{ cluster_pkg_folder }}/kube-controller-manager-vsphere.yaml
     run_once: true
     become: false
 
-  - name: Amend kube-controller-manager manifest with --cloud-provider setting
+  - name: amend kube-controller-manager manifest with --cloud-provider setting
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/kube-controller-manager-vsphere.yaml
@@ -106,7 +106,7 @@
     with_items:
       - { regx: "        - --cloud-provider=", line: "        - --cloud-provider=vsphere" }
 
-  - name: Amend kube-controller-manager manifest with --cloud-provider setting
+  - name: amend kube-controller-manager manifest with --cloud-provider setting
     local_action:
       module: lineinfile
       dest: ../clusters/{{ cluster_pkg_folder }}/kube-controller-manager-vsphere.yaml
@@ -120,17 +120,17 @@
     with_items:
       - { regx: "%--cloud-config=", line: "        - --cloud-config=/etc/kubernetes/vsphere.conf" }
 
-  - name: Apply modified kube-apiserver manifest.
+  - name: apply modified kube-apiserver manifest.
     local_action:
       module: shell
       _raw_params: kubectl apply -f ../clusters/{{ cluster_pkg_folder }}/kube-controller-manager-vsphere.yaml
     run_once: true
     become: false
 
-  - name: Daemon Reload.
+  - name: daemon reload.
     shell: systemctl daemon-reload
 
-  - name: Restart the Kubelets.
+  - name: restart the kubelets.
     shell: systemctl restart kubelet
 
 - hosts: coreos_workers
@@ -143,7 +143,7 @@
 
   tasks:
 
-  - name: Add vSphere configuration to kubelet.service file
+  - name: add vSphere configuration to kubelet.service file
     lineinfile:
       dest: /etc/systemd/system/kubelet.service
       regexp: "{{ item.regx }}"
@@ -153,9 +153,9 @@
     with_items:
       - { regx: " --cloud-provider=", line: '--cloud-provider=vsphere' }
     
-  - name: Daemon Reload.
+  - name: daemon reload.
     shell: systemctl daemon-reload
 
-  - name: Restart the Kubelets.
+  - name: restart the kubelets.
     shell: systemctl restart kubelet
       

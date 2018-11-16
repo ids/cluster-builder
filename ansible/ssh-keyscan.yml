@@ -3,7 +3,7 @@
 
   gather_facts: false
   tasks:  
-  - name: Add SSH Keyscan to Known Hosts entries 
+  - name: add SSH keyscan to known hosts entries 
     local_action:
       module: shell
       _raw_params: ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts

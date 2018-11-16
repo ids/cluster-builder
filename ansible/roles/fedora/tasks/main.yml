@@ -1,7 +1,7 @@
 ---
-- name: Set Fedora Hostname
+- name: set fedora hostname
   include: hostname.yml
 
-- name: Configure Chronyd
+- name: configure chronyd
   include: chronyd.yml
 

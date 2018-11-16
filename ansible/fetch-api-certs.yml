@@ -5,7 +5,7 @@
   - role: common
       
   tasks:
-  - name: Fetch the client certs
+  - name: fetch the client certs
     fetch:
       src: /etc/certs/docker/{{ item }}.pem
       dest: ../clusters/{{ cluster_pkg_folder }}/api-certs/{{ inventory_hostname }}/
@@ -16,7 +16,7 @@
       - key    
       - cert                    
 
-  - name: Generate the client test script
+  - name: generate the client test script
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2

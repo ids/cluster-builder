@@ -4,12 +4,12 @@
   gather_facts: false
   tasks:  
 
-  - name: Ensure the local data volume exists
+  - name: ensure the local data volume exists
     file:
       path: "/data"
       state: directory
   
-  - name: Generate data backup script for data node.
+  - name: generate data backup script for data node.
     template:
       src: templates/data-backup.j2
       dest: "/data/data-backup.sh"

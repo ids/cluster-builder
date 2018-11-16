@@ -31,7 +31,7 @@
   - role: nfs-shares
   
   tasks:  
-  - name: Generate the wrapper docker-env script
+  - name: generate the wrapper docker-env script
     local_action:
       module: template
       src: templates/docker-env.j2
@@ -40,7 +40,7 @@
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     become: false
 
-  - name: Generate the client test script
+  - name: generate the client test script
     local_action:
       module: template
       src: templates/test-{{ cluster_type }}.j2
@@ -49,7 +49,7 @@
     when: "inventory_hostname == groups['docker_swarm_manager'][0]"
     become: false
 
-  - name: Remove tmp cluster folder if exists
+  - name: remove tmp cluster folder if exists
     local_action:
       module: shell
       _raw_params: "rm -rf ../tmp/{{ cluster_pkg_folder }}"

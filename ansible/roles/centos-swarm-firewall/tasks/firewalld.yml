@@ -1,55 +1,55 @@
 ---
 
-- name: Install the Docker Manager Firewall Service definition
+- name: install the Docker Manager Firewall Service definition
   template:
     src: templates/firewalld/swarm-manager-service.j2
     dest: /etc/firewalld/services/swarm-manager.xml
     mode: 644
   when: "inventory_hostname in groups['docker_swarm_manager']"
 
-- name: Install the Docker Worker Firewall Service definition
+- name: install the Docker Worker Firewall Service definition
   template:
     src: templates/firewalld/swarm-worker-service.j2
     dest: /etc/firewalld/services/swarm-worker.xml
     mode: 644
   when: "inventory_hostname in groups['docker_swarm_worker']"
 
-- name: Enable Firewalld
+- name: enable firewalld
   service:
     name: firewalld
     state: started
     enabled: yes  
 
-- name: Set default Firewalld Zone to DMZ
+- name: set default firewalld Zone to DMZ
   shell: firewall-cmd --set-default-zone=dmz
 
-- name: Enable HTTP Firewalld rule
+- name: enable HTTP firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=http --permanent
 
-- name: Enable HTTPS Firewalld rule
+- name: enable HTTPS firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=https --permanent
 
-- name: Enable SSH Firewalld rule
+- name: enable SSH firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
 
-- name: Enable Docker Manager Firewall rules
+- name: enable docker manager firewall rules
   shell: firewall-cmd --zone=dmz --add-service=swarm-manager --permanent
   when: "inventory_hostname in groups['docker_swarm_manager']"
 
-- name: Enable Docker Worker Firewall rules
+- name: enable docker worker firewall rules
   shell: firewall-cmd --zone=dmz --add-service=swarm-worker --permanent
   when: "inventory_hostname in groups['docker_swarm_worker']"
 
-- name: Reload the Firewalld rules
+- name: reload the firewalld rules
   shell: firewall-cmd --reload
 
-- name: List the active Firewalld rules
+- name: list the active firewalld rules
   shell: firewall-cmd --list-all    
   register: firewalld_rules
 
 - debug: msg="{{ firewalld_rules.stdout_lines }}"
 
-- name: Restart the docker daemon with the new firewall rules
+- name: restart the docker daemon with the new firewall rules
   service:
     name: docker
     state: restarted

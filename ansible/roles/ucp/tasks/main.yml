@@ -1,10 +1,10 @@
 ---
-- name: Stop Docker
+- name: stop docker
   service:
     name: docker
     state: stopped
 
-- name: Uninstall Docker CE
+- name: uninstall docker CE
   yum: > 
     pkg={{item}} 
     state=absent
@@ -13,12 +13,12 @@
     - docker-engine
   ignore_errors: true
 
-- name: Configure EE Docker Url
+- name: configure EE docker Url
   copy:
     content: "{{ ucp_download_url }}"
     dest: /etc/yum/vars/dockerurl
   
-- name: Install EE Dependencies
+- name: install EE dependencies
   yum: > 
     pkg={{item}} 
     state=installed
@@ -27,26 +27,26 @@
     - device-mapper-persistent-data
     - lvm2  
 
-- name: Remove Docker CE Repo
+- name: remove docker CE repo
   file:
     path: /etc/yum.repos.d/docker-ce.repo
     state: absent
 
-- name: Download Docker EE GPG Key
+- name: download docker EE GPG key
   shell: curl -OL "{{ ucp_download_url }}/centos/gpg"
   args: 
     chdir: /tmp
 
-- name: Move Docker EE GPG Key
+- name: move docker EE GPG key
   shell: mv /tmp/gpg /etc/dockeree_gpg
     
-- name: Import Docker EE GPG Key
+- name: import docker EE GPG key
   shell: rpm --import /etc/dockeree_gpg
 
-- name: Install Docker EE Repo
+- name: install docker EE repo
   shell: yum-config-manager --add-repo "{{ ucp_download_url }}/centos/docker-ee.repo"
 
-- name: Install Docker EE 
+- name: install docker EE 
   yum: > 
     pkg={{item}} 
     state=installed

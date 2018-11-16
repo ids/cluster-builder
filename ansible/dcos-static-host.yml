@@ -5,7 +5,7 @@
   become_method: sudo
   any_errors_fatal: true
   tasks:
-    - name: Add internal elastic DNS name to hosts file
+    - name: add internal elastic DNS name to hosts file
       lineinfile:
         path: /etc/hosts
         regexp: '^%elastic.idstudios.local'

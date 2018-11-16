@@ -12,7 +12,7 @@
     run_once: true
     when: nfs_shares_config.stat.exists == True
 
-  - name: Load empty nfs_shares
+  - name: load empty nfs_shares
     include_vars:
       file: "nfs-shares-empty.yml"
     run_once: true
@@ -22,7 +22,7 @@
     when: nfs_shares_config.stat.exists == True
     run_once: true
 
-  - name: Ensure the NFS mounts exist
+  - name: ensure the NFS mounts exist
     file:
       path: "{{ item.folder }}"
       state: directory
@@ -30,7 +30,7 @@
     with_items: 
       - "{{ nfs_shares }}"
 
-  - name: Create fstab entry for shared storage and backup volumes
+  - name: create fstab entry for shared storage and backup volumes
     lineinfile:
       path: "/etc/fstab"
       state: present
@@ -40,20 +40,20 @@
     with_items: 
       - "{{ nfs_shares }}"
 
-  - name: Unmount the volumes
+  - name: unmount the volumes
     shell: umount {{ item.folder }}
     when: "item.folder is defined and (item.group is undefined or item.group in group_names)"
     ignore_errors: true
     with_items: 
       - "{{ nfs_shares }}"
     
-  - name: Mount the volumes
+  - name: mount the volumes
     shell: mount {{ item.folder }}
     when: "item.folder is defined and (item.group is undefined or item.group in group_names)"
     with_items: 
       - "{{ nfs_shares }}"
 
-  - name: List the volume
+  - name: list the volume
     shell: ls -al "{{ item.folder }}"
     register: local_out
     when: "item.folder is defined and (item.group is undefined or item.group in group_names)"

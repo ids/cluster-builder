@@ -13,7 +13,7 @@
 
   tasks:
 
-  - name: Determine service port
+  - name: determine service port
     set_fact:
       drupal_service_port: 80
     when: drupal_service_port is undefined
@@ -22,7 +22,7 @@
   - debug: var=drupal_service_port
     run_once: true
 
-  - name: Ensure the deployment folder exists
+  - name: ensure the deployment folder exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ drupal_deployment_folder }} ]; then mkdir {{ drupal_deployment_folder }}; fi"
@@ -30,7 +30,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Ensure the deployment home exists
+  - name: ensure the deployment home exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ drupal_deployment_home }} ]; then mkdir {{ drupal_deployment_home }}; fi"
@@ -38,7 +38,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Purge existing yaml 
+  - name: purge existing yaml 
     local_action:
       module: shell
       _raw_params: "cd {{ drupal_deployment_home }} && rm *.yml"
@@ -46,7 +46,7 @@
     run_once: true
     ignore_errors: true
 
-  - name: Generate the Drupal manifest
+  - name: generate the Drupal manifest
     local_action:
       module: template
       src: templates/drupal/drupal.j2
@@ -55,7 +55,7 @@
     run_once: true
     become: false
 
-  - name: Generate the CoreOS Tectonic Ingress manifest
+  - name: generate the CoreOS Tectonic Ingress manifest
     local_action:
       module: template
       src: templates/drupal/drupal-tectonic-ingress.j2
@@ -65,7 +65,7 @@
     become: false
     when: drupal_nodeport is defined 
 
-  - name: Generate the Nginx manifest
+  - name: generate the Nginx manifest
     local_action:
       module: template
       src: templates/drupal/drupal-nginx-ingress.j2
@@ -74,17 +74,7 @@
     run_once: true
     become: false
 
-  - name: Generate the PKS LB manifest
-    local_action:
-      module: template
-      src: templates/drupal/drupal-pks-lb.j2
-      dest: "{{ drupal_deployment_home }}/drupal-pks-lb.yml"
-      mode: 0755
-    run_once: true
-    become: false
-    when: drupal_nodeport is undefined
-
-  - name: Generate the Traefik Ingress manifest
+  - name: generate the Traefik Ingress manifest
     local_action:
       module: template
       src: templates/drupal/drupal-traefik-ingress.j2
@@ -94,7 +84,7 @@
     become: false
     when: drupal_nodeport is undefined
 
-  - name: Ensure the loadtests folder exists
+  - name: ensure the loadtests folder exists
     local_action:
       module: shell
       _raw_params: "if [ ! -d {{ drupal_deployment_home }}/loadtests ]; then mkdir {{ drupal_deployment_home }}/loadtests; fi"
@@ -102,7 +92,7 @@
     run_once: true
     ignore_errors: true
     
-  - name: Generate the medium load tests
+  - name: generate the medium load tests
     local_action:
       module: template
       src: templates/drupal/tests/drupal-load-test-med.j2
@@ -111,7 +101,7 @@
     run_once: true
     become: false
     
-  - name: Generate the heavy load tests
+  - name: generate the heavy load tests
     local_action:
       module: template
       src: templates/drupal/tests/drupal-load-test-heavy.j2

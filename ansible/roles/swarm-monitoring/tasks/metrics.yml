@@ -1,10 +1,10 @@
 ---
-- name: Establish prometheus server settings
+- name: establish prometheus server settings
   set_fact: 
     docker_prometheus_server: "{{ groups['docker_prometheus_server'][0] }}"
   when: docker_prometheus_server is undefined and groups['docker_prometheus_server'] is defined
 
-- name: Ensure metrics are enabled in daemon.json
+- name: ensure metrics are enabled in daemon.json
   lineinfile:
     dest: /etc/docker/daemon.json
     regexp: "{{ item.regexp }}"
@@ -14,31 +14,31 @@
   with_items:
     - { regexp: 'metrics-addr', line: '"metrics-addr" : "0.0.0.0:9323",' }
 
-- name: Create prometheus etc
+- name: create prometheus etc
   file:
     path: /etc/prometheus
     state: directory
     mode: 0755
   when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
 
-- name: Create and install the prometheus configuration file
+- name: create and install the prometheus configuration file
   template:
     src: templates/prometheus.j2
     dest: /etc/prometheus/prometheus.yml
     mode: 0644
   when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
 
-- name: Remove any running prometheus server 
+- name: remove any running prometheus server 
   shell: docker service rm monitor-prometheus
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   ignore_errors: true
 
-- name: Create the prometheus data volume
+- name: create the prometheus data volume
   shell: docker volume create prometheus-data
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   ignore_errors: true
 
-- name: Install prometheus 
+- name: install prometheus 
   shell: 
     cmd: | 
       docker service create --replicas 1 --name monitor-prometheus \
@@ -57,15 +57,15 @@
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   run_once: true
 
-- name: Stop cadvisor on all nodes 
+- name: stop cadvisor on all nodes 
   shell: docker stop cadvisor
   ignore_errors: true
 
-- name: Remove cadvisor on all nodes 
+- name: remove cadvisor on all nodes 
   shell: docker rm cadvisor
   ignore_errors: true
 
-- name: Install cadvisor on all nodes 
+- name: install cadvisor on all nodes 
   shell: 
     cmd: | 
       docker run \
@@ -83,19 +83,19 @@
         --name=cadvisor \
         google/cadvisor:latest    
 
-- name: Create grafana host data volume
+- name: create grafana host data volume
   file:
     path: /data/grafana
     state: directory
     mode: 0755
   when: "docker_prometheus_server is defined and inventory_hostname == docker_prometheus_server"
 
-- name: Remove any running grafana server 
+- name: remove any running grafana server 
   shell: docker service rm monitor-grafana
   when: "docker_prometheus_server is defined and inventory_hostname in groups['docker_swarm_manager']"
   ignore_errors: true
 
-- name: Install grafana 
+- name: install grafana 
   shell: 
     cmd: | 
       docker service create --replicas 1 --name monitor-grafana \

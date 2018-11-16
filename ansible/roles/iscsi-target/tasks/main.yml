@@ -1,5 +1,5 @@
 ---
-- name: Install iSCSI target utils server
+- name: install iSCSI target utils server
   yum: >
     name={{item}}
     state=present

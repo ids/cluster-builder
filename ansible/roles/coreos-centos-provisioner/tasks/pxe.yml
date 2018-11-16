@@ -1,9 +1,9 @@
 ---
-- name: Delete the existing default
+- name: delete the existing default
   shell: rm /var/lib/tftpboot/pxelinux.cfg/default
   ignore_errors: true
 
-- name: Chain PXE to iPXE for CoreOS
+- name: chain PXE to iPXE for CoreOS
   template:
     src: templates/pxelinux-default.j2
     dest: /var/lib/tftpboot/pxelinux.cfg/default

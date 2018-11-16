@@ -1,11 +1,11 @@
 ---
-- name: Ensure tmp location exists 
+- name: ensure tmp location exists 
   file:
     path: /tmp/dcos
     state: directory
     mode: 0755
     
-- name: Ensure Kubernetes starts with swap tolerance
+- name: ensure kubernetes starts with swap tolerance
   lineinfile:
     path: /etc/environment
     regexp: '^%KUBELET_SWAP_ARGS'

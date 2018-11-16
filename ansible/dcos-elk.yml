@@ -7,23 +7,23 @@
   become_method: sudo
   any_errors_fatal: true
   tasks:
-    - name: Download filebeat to each node 
+    - name: download filebeat to each node 
       shell: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.0.0-x86_64.rpm
 
-    - name: Install filebeat 
+    - name: install filebeat 
       yum:
         name: /home/admin/filebeat-5.0.0-x86_64.rpm
         state: present
 
-    - name: Ensure /var/log/dcos directory exists
+    - name: ensure /var/log/dcos directory exists
       file:
         path: "/var/log/dcos"
         state: directory
 
-    - name: Backup existing filebeat.yml
+    - name: backup existing filebeat.yml
       shell: mv /etc/filebeat/filebeat.yml /etc/filebeat/filebeat.yml.BAK
 
-    - name: Generate proper filebeat.yml
+    - name: generate proper filebeat.yml
       template:
         src: templates/dcos-filebeat.j2
         dest: /etc/filebeat/filebeat.yml
@@ -47,7 +47,7 @@
   become_method: sudo
   any_errors_fatal: true
   tasks:
-    - name: Generate journalctl-filebeat.service for Agents
+    - name: generate journalctl-filebeat.service for Agents
       template:
         src: templates/dcos-journalctl-filebeat-agent.j2
         dest: /etc/systemd/system/dcos-journalctl-filebeat.service
@@ -59,7 +59,7 @@
   become_method: sudo
   any_errors_fatal: true
   tasks:
-    - name: Add internal elastic DNS name to hosts file
+    - name: add internal elastic DNS name to hosts file
       lineinfile:
         path: /etc/hosts
         regexp: '^%elastic.idstudios.local'

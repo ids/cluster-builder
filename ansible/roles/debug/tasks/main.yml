@@ -1,11 +1,11 @@
 ---
 # Install common debugging tools
 
-- name: Install JQ
+- name: install JQ
   include: jq.yml
 
-- name: Install Probe
+- name: install Probe
   include: probe.yml
 
-- name: Install net-tools
+- name: install net-tools
   include: net-tools.yml

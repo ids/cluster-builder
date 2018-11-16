@@ -1,5 +1,5 @@
 ---
-- name: Install JQ
+- name: install JQ
   get_url:
     url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
     dest: /usr/local/sbin/jq

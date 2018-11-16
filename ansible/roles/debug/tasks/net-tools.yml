@@ -1,5 +1,5 @@
 ---
-- name: Install net-tools
+- name: install net-tools
   yum: >
     name={{item}}
     state=present

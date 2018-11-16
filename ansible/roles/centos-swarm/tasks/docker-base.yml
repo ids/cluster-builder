@@ -1,12 +1,12 @@
-- name: Ensure Docker etc
+- name: ensure docker etc
   shell: mkdir -p /etc/docker
 
-- name: Configure the default docker daemon.json 
+- name: configure the default docker daemon.json 
   template:
     src: templates/docker_daemon_default.j2
     dest: /etc/docker/daemon.json
 
-- name: Restart the docker daemon with the updated default daemon.json configuration
+- name: restart the docker daemon with the updated default daemon.json configuration
   service:
     name: docker
     state: restarted

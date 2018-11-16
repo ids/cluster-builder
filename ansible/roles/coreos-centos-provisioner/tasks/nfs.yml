@@ -1,16 +1,16 @@
-- name: Start and enable NFS daemon
+- name: start and enable NFS daemon
   service:
     name: nfsd
     state: started
     enabled: yes  
 
-- name: Start and enable RPC Bind daemon
+- name: start and enable RPC bind daemon
   service:
     name: rpcbind
     state: started
     enabled: yes  
 
-- name: Start and enable RPC Statd daemon
+- name: start and enable RPC statd daemon
   service:
     name: rpc-statd
     state: started

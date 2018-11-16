@@ -4,5 +4,5 @@
   gather_facts: true
   tasks:
 
-  - name: Validate Ansible Configuration
+  - name: validate ansible configuration
     ping:

@@ -19,37 +19,37 @@
   
   tasks:
 
-    - name: Set server_static_ip_wait_seconds if undefined
+    - name: set server_static_ip_wait_seconds if undefined
       set_fact:
         server_static_ip_wait_seconds: 180
       run_once: true
       when: server_static_ip_wait_seconds is undefined
 
-    - name: Check that the static.network exists
+    - name: check that the static.network exists
       stat:
         path: /etc/systemd/network/static.network
       register: stat_result
 
-    - name: Assign network_cidr as default /24 when undefined
+    - name: assign network_cidr as default /24 when undefined
       set_fact:
         network_cidr: "24"
       when: network_cidr is undefined 
 
-    - name: Generate static networkd unit file
+    - name: generate static networkd unit file
       template:
         src: templates/coreos-static-net.j2
         dest: /etc/systemd/network/static.network
         mode: 0655
 #      when: stat_result.stat.exists == False 
 
-    - name: Restart with static IP assignment
+    - name: restart with static IP assignment
       service:
         name: systemd-networkd
         state: restarted
         enabled: yes
  #     when: stat_result.stat.exists == False 
 
-    - name: Verify servers are at their permanent ip addresses
+    - name: verify servers are at their permanent ip addresses
       local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay={{ server_static_ip_wait_seconds }} timeout=600
       become: false
   #    when: stat_result.stat.exists == False 
@@ -69,7 +69,7 @@
 
   tasks:
 
-    - name: Install the iscsi-provisioner secret into the {{ cluster_name }} CoreOS cluster.
+    - name: install the iscsi-provisioner secret into the {{ cluster_name }} CoreOS cluster.
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} create secret generic {{ targetd_server_account_credentials }} --from-literal=username={{ targetd_server_account_username }} --from-literal=password={{ targetd_server_account_password }} -n {{ targetd_server_namespace }}"
@@ -82,7 +82,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Apply the iscsi-provisioner storage class and provisioner manifests
+    - name: apply the iscsi-provisioner storage class and provisioner manifests
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/coreos-iscsi.yml -n {{ targetd_server_namespace }}"
@@ -95,7 +95,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Verify the storage class 
+    - name: verify the storage class 
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get sc -n {{ targetd_server_namespace }}"
@@ -108,7 +108,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Verify the iscsi-provisioner pod
+    - name: verify the iscsi-provisioner pod
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get pods -n {{ targetd_server_namespace }}"
@@ -121,7 +121,7 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: Apply the open-vm-tools
+    - name: apply the open-vm-tools
       local_action:
         module: shell
         _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../xtras/coreos/open-vm-tools.yml"

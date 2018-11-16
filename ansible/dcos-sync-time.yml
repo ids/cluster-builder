@@ -5,20 +5,20 @@
   gather_facts: false
   tasks:  
 
-  - name: Get Before Date/Time
+  - name: get before date/time
     shell: date
     register: before_out
 
-  - name: Stop Chrony
+  - name: stop chrony
     shell: systemctl stop chronyd
 
-  - name: Sync time manually
+  - name: sync time manually
     shell: chronyd -q 'server ca.pool.ntp.org iburst'
 
-  - name: Start Chrony
+  - name: start chrony
     shell: systemctl start chronyd
 
-  - name: Get After Date/Time
+  - name: get after date/time
     shell: date
     register: after_out
 

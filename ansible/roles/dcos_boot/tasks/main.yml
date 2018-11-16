@@ -1,12 +1,12 @@
 
 ---
-- name: Ensure dcos/genconf location exists 
+- name: ensure dcos/genconf location exists 
   file:
     path: /home/admin/dcos/genconf
     state: directory
     mode: 0755
 
-- name: Copy genconf/config.yaml to boot server
+- name: copy genconf/config.yaml to boot server
   template:
     src: ../../templates/config.j2
     dest: /home/admin/dcos/genconf/config.yaml
@@ -14,7 +14,7 @@
     group: admin
     mode: 0644
 
-- name: Copy genconf/ip-detect to boot server
+- name: copy genconf/ip-detect to boot server
   template:
     src: ../../templates/ip-detect.j2
     dest: /home/admin/dcos/genconf/ip-detect
@@ -22,13 +22,13 @@
     group: admin
     mode: 0644
 
-- name: Download DC/OS config generator
+- name: download DC/OS config generator
   shell: curl -O https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
   args:
     chdir: /home/admin/dcos
     creates: "/home/admin/dcos/dcos-genconf.af6ddc2f5e95b1c1d9-79a0dfe0944948a33a.tar"
 
-- name: Generate the DC/OS boot config
+- name: generate the DC/OS boot config
   shell: bash dcos_generate_config.sh
   args:
     chdir: /home/admin/dcos
@@ -36,7 +36,7 @@
 
 - debug: msg="{{ config_output.stdout }}"
 
-- name: Launch NGINX config service to host the boot config
+- name: launch NGINX config service to host the boot config
   docker_container:
     name: dcos-boot-config
     image: nginx

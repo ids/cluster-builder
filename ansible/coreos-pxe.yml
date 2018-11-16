@@ -3,13 +3,13 @@
 - hosts: all
   gather_facts: false
   tasks:
-  - name: Set coreos_linux_version
+  - name: set coreos_linux_version
     set_fact:
       coreos_linux_version: "1745.7.0"
     run_once: true
     when: coreos_linux_version is undefined
 
-  - name: Set coreos_linux_channel
+  - name: set coreos_linux_channel
     set_fact:
       coreos_linux_channel: "stable"
     run_once: true
@@ -36,7 +36,7 @@
   
   tasks:  
 
-    - name: Scan the VMS for the VM ID
+    - name: scan the VMS for the VM ID
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep " {{ inventory_hostname }} " | cut -d" " -f1
@@ -44,7 +44,7 @@
     
     - debug: msg="{{ vm_id.stdout }}"
 
-    - name: Find the MAC
+    - name: find the MAC address
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/device.getdevices {{ vm_id.stdout }} | grep macAddress | sed -e 's/         macAddress = "//g' | sed -e 's/", //g'
@@ -52,24 +52,24 @@
     
     - debug: msg="{{ vm_mac_addr.stdout_lines }}"
 
-    - name: Set MAC Fact
+    - name: set MAC address fact
       set_fact:
         vm_mac_addr: "{{ vm_mac_addr.stdout }}"
 
-    - name: Stop the VMs
+    - name: stop the VMs
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
       ignore_errors: true
 
-    - name: Adjust the memSize value on the ESXi VM
+    - name: adjust the memSize value on the ESXi VM
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/memSize/s/.*/memSize\ =\ \"{{ memsize }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
       when: memsize is defined
 
-    - name: Copy the adjusted vmx into place
+    - name: copy the adjusted vmx into place
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
@@ -87,31 +87,31 @@
 #        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
 #      when: memsize is defined
 
-    - name: Adjust the numvcpus value on the ESXi VM
+    - name: adjust the numvcpus value on the ESXi VM
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/numvcpus/s/.*/numvcpus\ =\ \"{{ numvcpus }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
       when: numvcpus is defined
 
-    - name: Copy the adjusted vmx into place
+    - name: copy the adjusted vmx into place
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: numvcpus is defined
 
-    - name: Adjust the Primary interface network name
+    - name: adjust the Primary interface network name
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/ethernet0.networkName/s/.*/ethernet0.networkName\ =\ \"{{ esxi_net }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
       when: esxi_net is defined
 
-    - name: Copy the adjusted vmx into place
+    - name: copy the adjusted vmx into place
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: esxi_net is defined
 
-    - name: Delete the adjusted vmx file
+    - name: delete the adjusted vmx file
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "rm /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
@@ -138,7 +138,7 @@
 
   tasks:
 
-  - name: Load tectonic_matchbox_ca
+  - name: load tectonic_matchbox_ca
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/ca.crt"
@@ -149,24 +149,24 @@
   - debug: msg="{{ tectonic_matchbox_ca_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_matchbox_ca
+  - name: set tectonic_matchbox_ca
     set_fact:
       tectonic_matchbox_ca: "{{ tectonic_matchbox_ca_load.stdout }}"
     run_once: true
 
-  - name: Set k8s_cluster_cidr
+  - name: set k8s_cluster_cidr
     set_fact:
       k8s_cluster_cidr: "{{ tectonic_k8s_cluster_cidr }}"
     run_once: true
     when: k8s_cluster_cidr is undefined
 
-  - name: Set vanilla k8s default to false (Full Tectonic Install)
+  - name: set vanilla k8s default to false (Full Tectonic Install)
     set_fact:
       tectonic_vanilla_k8s: false
     run_once: true
     when: tectonic_vanilla_k8s is undefined
 
-  - name: Load tectonic_matchbox_client_cert
+  - name: load tectonic_matchbox_client_cert
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.crt"
@@ -177,12 +177,12 @@
   - debug: msg="{{ tectonic_matchbox_client_cert_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_matchbox_client_cert
+  - name: set tectonic_matchbox_client_cert
     set_fact:
       tectonic_matchbox_client_cert: "{{ tectonic_matchbox_client_cert_load.stdout }}"
     run_once: true
 
-  - name: Load tectonic_matchbox_client_key
+  - name: load tectonic_matchbox_client_key
     local_action:
       module: shell
       _raw_params: "cat ../clusters/{{ cluster_pkg_folder }}/matchbox-certs/client.key"
@@ -193,12 +193,12 @@
   - debug: msg="{{ tectonic_matchbox_client_key_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_matchbox_client_key
+  - name: set tectonic_matchbox_client_key
     set_fact:
       tectonic_matchbox_client_key: "{{ tectonic_matchbox_client_key_load.stdout }}"
     run_once: true
 
-  - name: Load ssh key
+  - name: load ssh key
     local_action:
       module: shell
       _raw_params: "cat ../node-packer/keys/authorized_keys"
@@ -210,13 +210,13 @@
   - debug: msg="{{  tectonic_ssh_key_load.stdout }}" 
     run_once: true
 
-  - name: Set tectonic_ssh_authorized_key
+  - name: set tectonic_ssh_authorized_key
     set_fact:
       tectonic_ssh_authorized_key: "{{  tectonic_ssh_key_load.stdout }}"
     run_once: true
     when: tectonic_ssh_authorized_key is undefined
 
-  - name: Generate the terraform.vars file
+  - name: generate the terraform.vars file
     local_action:
       module: template
       src: templates/coreos-terraform.j2
@@ -225,7 +225,7 @@
     become: false
     run_once: true
 
-  - name: Generate custom iSCSI Kublet service def
+  - name: generate custom iSCSI kublet service def
     local_action:
       module: template
       src: templates/coreos-kubelet-service-iscsi.j2
@@ -234,7 +234,7 @@
     become: false
     when: tectonic_networking != "canal"
 
-  - name: Generate custom iSCSI/Canal Kublet service def
+  - name: generate custom iSCSI/Canal kublet service def
     local_action:
       module: template
       src: templates/coreos-kubelet-service-iscsi-canal.j2
@@ -243,7 +243,7 @@
     become: false
     when: tectonic_networking == "canal"
 
-  - name: Generate the iSCSI script
+  - name: generate the iSCSI script
     local_action:
       module: template
       src: templates/coreos-iscsi-script.j2
@@ -251,7 +251,7 @@
       mode: 0766
     become: false
 
-  - name: Generate the masters.csv file
+  - name: generate the masters.csv file
     local_action:
       module: template
       src: templates/coreos-masters-csv.j2
@@ -260,7 +260,7 @@
     become: false
     run_once: true
 
-  - name: Generate the workers.csv file
+  - name: generate the workers.csv file
     local_action:
       module: template
       src: templates/coreos-workers-csv.j2
@@ -278,7 +278,7 @@
 
   tasks:
 
-  - name: Process the DHCP template file
+  - name: process the DHCP template file
     local_action:
       module: template
       src: templates/coreos-dhcpd-static-block.j2
@@ -287,7 +287,7 @@
     when: inventory_hostname in groups['coreos_provisioner']
     run_once: true
 
-  - name: Load dhcpd block
+  - name: load dhcpd block
     local_action:
       module: shell
       _raw_params: "cat ../tmp/coreos-dhcpd-block.txt"
@@ -298,13 +298,13 @@
   - debug: msg="{{ coreos_dhcpd_static_block.stdout_lines }}" 
     run_once: true
 
-  - name: Stop the DHCPD server
+  - name: stop the DHCPD server
     service:
       name: dhcpd
       state: stopped
     when: inventory_hostname in groups['coreos_provisioner']
 
-  - name: Remove the DHCP server with the static blocks
+  - name: remove the DHCP server with the static blocks
     blockinfile:
       dest: /etc/dhcp/dhcpd.conf
       state: absent
@@ -313,7 +313,7 @@
         {{ coreos_dhcpd_static_block.stdout }}
     when: inventory_hostname in groups['coreos_provisioner']
 
-  - name: Update the DHCP server with the static blocks
+  - name: update the DHCP server with the static blocks
     blockinfile:
       dest: /etc/dhcp/dhcpd.conf
       insertafter: "EOF"
@@ -322,13 +322,13 @@
         {{ coreos_dhcpd_static_block.stdout }}
     when: inventory_hostname in groups['coreos_provisioner']
 
-  - name: Start the DHCPD server
+  - name: start the DHCPD server
     service:
       name: dhcpd
       state: started
     when: inventory_hostname in groups['coreos_provisioner']
         
-  - name: Clean up tmp dhcpd block
+  - name: clean up tmp dhcpd block
     local_action:
       module: shell
       _raw_params: "rm ../tmp/coreos-dhcpd-block.txt"

@@ -1,5 +1,5 @@
 ---
-- name: Start and enable TFTP daemon
+- name: start and enable TFTP daemon
   service:
     name: tftp
     state: started
