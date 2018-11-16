@@ -213,14 +213,17 @@ function fusion_deploy () {
   fi 
 
   echo
-  echo "SUCCESS: Fusion ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
 
 }
 
 PLATFORM=`uname -ra`
+VMWARE_APP="VMware Workstation"
 if [[ $PLATFORM == *"Microsoft"* ]]; then 
   export ANSIBLE_CONFIG=$PWD/ansible.cfg
-fi 
+elif [[ $PLATFORM == *"Darwin"* ]]; then
+  VMWARE_APP="VMware Fusion"
+fi
 
 if [ -z INVENTORY_FILE ]; then
   read -s "Enter the target cluster folder: " INVENTORY_FILE
