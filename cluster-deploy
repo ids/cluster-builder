@@ -194,7 +194,7 @@ function fusion_deploy () {
   echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
   sudo date
 
-  echo "Creating the Fusion VMs and configuring the network for static IP assignment..."
+  echo "Creating the ${VMWARE_APP} VMs and configuring the network for static IP assignment..."
   ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
@@ -204,7 +204,7 @@ function fusion_deploy () {
   echo "Configuring the ${CLUSTER_TYPE_NAME} Cluster..."
   ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
-    echo "FAIL: Fusion ${CLUSTER_TYPE_NAME} creation failed!"
+    echo "FAIL: ${VMWARE_APP} ${CLUSTER_TYPE_NAME} creation failed!"
     exit 1
   fi
 
