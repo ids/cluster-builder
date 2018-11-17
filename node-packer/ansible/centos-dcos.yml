@@ -1,5 +1,5 @@
 ---
-# This playbook upgrades Centos7
+# This playbook upgrades Centos7 for DC/OS
 
 - hosts: all
   gather_facts: no
@@ -7,6 +7,8 @@
   become_user: root
   become_method: sudo
   roles:
+  - role: centos-dcos
+  - role: centos-dcos-ssh
   - role: dcos-node
   - role: debug
   
