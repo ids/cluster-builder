@@ -4,12 +4,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 bash $DIR/docker-env info
 
+{% if docker_swarm_mgmt_gw is defined %}  
+URL=https://{{ docker_swarm_mgmt_gw }}:9000
+{% else %}
+URL=http://{{ inventory_hostname }}:9000
+{% endif %}
+
 PLATFORM=`uname -ra`
 if [[ $PLATFORM == *"Darwin"* ]]; then 
-  {% if docker_swarm_mgmt_gw is defined %}  
-  open https://{{ docker_swarm_mgmt_gw }}:9000
-  {% else %}
-  open http://{{ inventory_hostname }}:9000
-  {% endif %}
+  open ${URL}
+elif [[ $PLATFORM == *"Microsoft"* ]]; then 
+  cmd.exe /c 'start chrome ${URL}'
+else
+  chome "${URL}"
 fi 
-
