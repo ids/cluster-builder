@@ -228,7 +228,7 @@
   - name: stop the VM network on Linux
     local_action:
       module: shell
-      _raw_params: 'systemctl stop vmnetdhcp'
+      _raw_params: 'systemctl stop vmware'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
@@ -321,7 +321,7 @@
   - name: start the VM network on Linux
     local_action:
       module: shell
-      _raw_params: 'vmnet-cli --start'
+      _raw_params: 'systemctl start vmware'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
