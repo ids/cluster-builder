@@ -17,7 +17,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-__Cluster Builder__ is a unique toolset that can deploy _the identical cluster VM images used for production_ to local VMware Fusion development workstations for both the _operations_ and _development_ teams alike.  This enables both advanced local stack development, as well as meta orchestration cluster development, accelerating all development workflows on a shared codebase.  Clusters can be deployed and re-deployed locally, _and_ into production, _in minutes!_
+__Cluster Builder__ is a Packer and Ansible based infrastructure as codebase that can deploy _identical cluster VM images in both local development and production VMware environments_, supporting both _operational_ and _development_ team workflows.  This enables advanced local stack development, as well as meta infrastructure orchestration cluster development.  Clusters can be deployed and re-deployed locally, _and_ into production, identically, _in minutes!_
 
 __Cluster Builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this re-usable framework can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the resulting cluster definition packages.
 
@@ -32,7 +32,7 @@ __Cluster Builder__ can deploy the following container orchestration clusters:
 
 __Cluster Builder__ can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent volume storage for K8s clusters.
 
-> Hard to believe?  It's true.  Cluster Builder is a single infrastructure codebase that can automatically deploy all of the major container orchestration systems as production ready VMware VM clusters.  And if that isn't enough, it can also deploy the backing persistent volume technology to enable full stack containerized application deployment (_including the database_).  
+> Hard to believe?  It's true.  Cluster Builder is a single infrastructure codebase that can automatically deploy all of the major container orchestration systems as production ready VMware VM clusters.  Not enough? It can also deploy the backing persistent volume technology to enable full stack containerized application deployment (_including the database_).  
 
 __Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter components of a cost optimized _Hybrid Cloud strategy_. It's __fully open__, __forkable__ and __hackable__.  _Why start from scratch?_
 
@@ -69,6 +69,12 @@ window.onload = function() {
     switch(cluster) {
       case "VMware ESXi":
         cluster = "VMware Fusion";
+        break;
+      case "VMware Fusion":
+        cluster = "VMware Workstation Windows";
+        break;
+      case "VMware Workstation Windows":
+        cluster = "VMware Workstation Linux";
         break;
       default:
         cluster = "VMware ESXi";
