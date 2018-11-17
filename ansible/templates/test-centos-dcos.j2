@@ -1,7 +1,10 @@
 #!/bin/bash
 
-{% if docker_swarm_mgmt_gw is defined %}  
-open https://{{ docker_swarm_mgmt_gw }}
-{% else %}
-open http://{{ inventory_hostname }}
-{% endif %}
+PLATFORM=`uname -ra`
+if [[ $PLATFORM == *"Darwin"* ]]; then 
+  open https://{{ inventory_hostname }}
+elif [[ $PLATFORM == *"Microsoft"* ]]; then 
+  cmd.exe /k 'start chrome "https://{{ inventory_hostname }}"'
+else
+  chome "https://{{ inventory_hostname }}"
+fi 
