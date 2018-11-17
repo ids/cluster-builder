@@ -118,10 +118,10 @@
 
 - name: calculate VM folder names for macOS
   set_fact:
-    vm_folder_name: "{{ vm_folder_name }}.vmwarevm"
+    vm_folder_name: "{{ inventory_hostname }}.vmwarevm"
   when: platform == "darwin"
 
 - name: calculate VM folder names for Linux
   set_fact:
-    vm_folder_name: "{{ vm_folder_name }}"
+    vm_folder_name: "{{ inventory_hostname }}"
   when: platform == "linux"
