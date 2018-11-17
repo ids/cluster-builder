@@ -1,17 +1,18 @@
 Release Notes
 =============
 
-v18.10
+v18.12
 ------
 
 * Initial implementation of cluster deployment to local machines on Windows and Linux VMware Workstation hosts.
-* Removed advanced swarm deployment model with seperate control and data plane configuration as this approach is not likely to be carried forward.
-* Removed PhotonOS related artifacts as PhotonOS is no longer relevant due to VMware's misstep with PKS.  Proof that better technology does not trump legacy enterprise software politics.
+* Removed advanced swarm deployment model with seperate control and data plane configuration as this approach will not be carried forward.
+* Removed PhotonOS related artifacts as PhotonOS is no longer relevant due to VMware's misstep with PKS.  Proof that better technology does not always trump legacy enterprise software politics.
+* Removed UCP/Docker EE related artifacts as Docker EE is no longer supported, and not likely to have a future.
 * Cleaned up the code base and pruned out artifacts no longer required or relevant.
 * Initial packer build of candidate Windows2016 node in preparation for Windows 2019 Kubernetes networking support.
-* Verified and tested __DC/OS__ deployment locally on Windows and Linux.
-* Verified and tested __Docker Swarm__ on CentOS deployment locally on Windows and Linux.
-* Verified and tested __Vanilla Kubernetes__ deployment locally on Windows and Linux.
+* Verified and tested __DC/OS__ deployment locally on Windows, Linux and macOS.
+* Verified and tested __Docker CE Swarm__ on CentOS deployment locally on Windows, Linux and macOS.
+* Verified and tested __Vanilla Kubernetes 1.12__ deployment locally on Windows, Linux and macOS.
 
 v18.09
 ------

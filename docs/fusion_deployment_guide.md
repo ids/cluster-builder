@@ -86,7 +86,7 @@ Once the VMs have been created, assigned their correct addresses, and are runnin
     demo-swarm-w3 numvcpus=2 memsize=3072 
 
 
-**cluster_type**: one of _centos-dcos_, _centos-swarm_, _centos-ucp_, _rhel-swarm_, or _rhel-ucp_.
+**cluster_type**: one of _centos-dcos_, _centos-swarm_, _rhel-swarm_.
 
 **vmware_target**: _fusion_
 
@@ -105,14 +105,6 @@ __network_dn__: Domain name for the primary interface subnet
 __docker_prometheus_server=<host>__: The specified server will have **prometheus** and **grafana** instances installed.
 
 __docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
-
-For deploying Docker EE UCP, there are also additional fields required:
-
-__ucp_download_url__: The Docker EE Engine Download Url
-
-__ucp_admin_user__: The admin user for the UCP
-
-__ucp_admin_password__: The admin password for the UCP
 
 #### ESXI options:
 

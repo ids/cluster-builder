@@ -1,2 +1,0 @@
-docker_swarm_mgmt_gw: "{{ inventory_hostname }}"
-docker_swarm_mgmt_cn: "{{ inventory_hostname }}"

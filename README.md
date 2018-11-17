@@ -38,10 +38,8 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and __Stock CentOS7 and Fedora Kubernetes__ clusters for several platforms:
 
 * CentOS 7 Docker CE
-* CentOS 7 Docker EE
 * CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
-* RedHat Enterprise 7 Docker EE
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
 * CentOS 7 Kubernetes (Stock `kubeadm`)
 * Fedora 28 Kubernetes (Stock `kubeadm`)
@@ -64,8 +62,6 @@ VMware ESXi is for staging and production deployments.
 
 * centos-swarm
 * rhel-swarm
-* centos-ucp
-* rhel-ucp
 
 ### DC/OS Cluster Types
 
@@ -116,11 +112,38 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 * __kubectl__ 1.9+ (CoreOS Only - `brew install/upgrade kubernetes-cli`)
 
-> Note: For Docker EE edition you will need to provide a valid Docker EE download URL and license file.
+__Linux Setup Notes__
+
+* Configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
+* Ensure all VMware tools and Packer are in PATH.
+* Ensure that the hosts configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.
+
+__macOS Setup Notes__
+
+There are no special setup instructions for macOS.  The default configuration on macOS was the basis for the original cluster-builder.
 
 ### Windows
 
-There is now experimental Windows support for ESXi deployments. See the [Windows Readme](docs/README_Windows.md).
+* VMware Workstation Pro 12+
+* VMware ESXi 6.5+ (optional)
+* Windows Subsystem for Linux by Ubuntu (WSL)
+* __Ansible__ installed in the WSL via apt-get
+* __kubectl__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
+* __docker-ce__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
+* Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+
+__Windows Setup Notes__
+
+* When starting the WSL Bash shell make sure to start it with __Run as Administrator__.
+* Configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
+* Ensure all VMware tools and Packer are in PATH for __bash__ and __cmd__.  This can be done by adding them to the Windows system path.
+  * vmrun.exe
+  * ovftool.exe
+* Ensure that the hosts configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.
+
+Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
+
+### Cluster Builder Control Station
 
 The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) is also an alternative.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
 
@@ -141,9 +164,6 @@ For instructions see the [Cluster Builder Control](https://github.com/ids/cluste
 VMs for provisioning.
 
 * The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **node-packer/output_ovas**.  See the cluster node packer [readme](https://github.com/ids/cluster-builder/blob/master/node-packer/README.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
-
-__Note for Docker EE__
-The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __docker_subscription.lic__ file.
 
 __Note for Red Hat Deployments__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
@@ -453,10 +473,6 @@ __Docker CE:__ 17.09.1-ce (or later)
 centos-swarm
 rhel-swarm
 
-__Docker EE:__ 2.2.3 (ucp)
-centos-ucp
-rhel-ucp
-
 __DC/OS__: 1.11 (or latest)
 centos-dcos
 
@@ -477,8 +493,8 @@ fedora-k8s
 * Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to swarms
 * The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all Swarm based cluster-builder VMs.
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
-* Deployments can include configurable options for log shipping to ELK, using logstash.  Docker EE/UCP can also be configured to ship to __syslogd__ server post-deployment.
+* Deployments can include configurable options for log shipping to ELK, using logstash.  
 * Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring for Docker Swarm.  Tectonic CoreOS has built in Prometheus/Grafana integrations for Kubernetes that are quite a bit more advanced then the Swarm implementation.
-* Remote API and TLS certificates are installed and configured on Docker CE deployments, enabling a unified application stack deployment model for both Docker EE and CE clusters.
+* Remote API and TLS certificates are installed and configured on Docker CE deployments.
 
 > Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.

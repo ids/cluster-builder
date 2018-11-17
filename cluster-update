@@ -13,10 +13,6 @@ if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   echo ""
 elif [ "$CLUSTER_TYPE" == 'centos-swarm' ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/rhel-update.yml
-elif [ "$CLUSTER_TYPE" == 'centos-ucp' ]; then
-  ansible-playbook -i $INVENTORY_FILE ansible/rhel-update.yml
 elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
-  ansible-playbook -i $INVENTORY_FILE ansible/rhel-update.yml
-elif [ "$CLUSTER_TYPE" == 'rhel-ucp' ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/rhel-update.yml
 fi
