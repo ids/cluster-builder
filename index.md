@@ -1,9 +1,6 @@
 ---
 title:  Cluster Builder
 ---
-<div id="title-flash">Automating the Creation of <span id="title-cluster-type">Kubernetes, DC/OS and Docker CE Swarm</span> Clusters on <span id="title-vmware-env">VMware Hypervisors</span></div>
-
----
 
 Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of fleets of VMware VMs to ESXi and Fusion hypervisors.
 
