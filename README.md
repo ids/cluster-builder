@@ -114,13 +114,15 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 
 __Linux Setup Notes__
 
-* Configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
-* Ensure all VMware tools and Packer are in PATH.
-* Ensure that the hosts configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.
+* For local machine deployments, configure _VMnet8_ (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnets (which map to the demo.idstudios.io and vm.idstudios.io example DNS names in the example cluster definition packages), but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified in the configuration, which in the case of Windows should be __vmnet8__.
+* Ensure all VMware tools and Packer are in __PATH__.
+* Ensure that the hosts configuration for local deployments uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.
+
+> __Note__ Make sure and use _VMware's Virtual Network Editor_ that comes with the Pro version of Fusion/Workstation.  Trying to adjust the interface subnets by hand can be problematic.
 
 __macOS Setup Notes__
 
-There are no special setup instructions for macOS.  The default configuration on macOS was the basis for the original cluster-builder.
+* The locally deployed examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created in Fusion Pro before attempting to deploy the fusion demos.
 
 ### Windows
 
@@ -135,13 +137,13 @@ There are no special setup instructions for macOS.  The default configuration on
 __Windows Setup Notes__
 
 * When starting the WSL Bash shell make sure to start it with __Run as Administrator__.
-* Configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
+* For local machine deployments, configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
 * Ensure all VMware tools and Packer are in PATH for __bash__ and __cmd__.  This can be done by adding them to the Windows system path.
   * vmrun.exe
   * ovftool.exe
-* Ensure that the hosts configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.
+* For local deployments ensure that the hosts configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.
 
-Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
+Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
 
 ### Cluster Builder Control Station
 
