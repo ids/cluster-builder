@@ -14,7 +14,7 @@ PLATFORM=`uname -ra`
 if [[ $PLATFORM == *"Darwin"* ]]; then 
   open ${URL}
 elif [[ $PLATFORM == *"Microsoft"* ]]; then 
-  cmd.exe /c 'start chrome ${URL}'
+  cmd.exe /c 'start chrome http://{{ inventory_hostname }}:9000'
 else
   google-chrome "${URL}"
 fi 
