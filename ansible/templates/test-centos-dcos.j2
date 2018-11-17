@@ -6,5 +6,5 @@ if [[ $PLATFORM == *"Darwin"* ]]; then
 elif [[ $PLATFORM == *"Microsoft"* ]]; then 
   cmd.exe /c 'start chrome https://{{ inventory_hostname }}'
 else
-  chome "https://{{ inventory_hostname }}"
+  google-chrome https://{{ inventory_hostname }}
 fi 
