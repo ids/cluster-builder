@@ -6,11 +6,16 @@
     fusion_vm_folder: ../virtuals
     ova_template_path: "../{{ ova_template }}"
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
-    fusion_net: 'vmnet2'
   roles:
     - role: common
 
   tasks:    
+  - name: set default fusion network to vmnet2
+    set_fact:
+      fusion_net: "vmnet2"
+    run_once: true
+    when: fusion_net is undefined
+
   - name: set vmware dhcpd configuration location for linux
     set_fact:
       vmware_dhcpd_base_path: "/etc/vmware/{{ fusion_net }}/dhcpd"
@@ -234,14 +239,14 @@
     run_once: true
     when: platform =="linux"
 
-  - name: remove any DHCPD block for the current cluster
+  - name: remove any DHCPD block for the current cluster on macOS/Linux
     local_action:
       module: shell
       _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}' > '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
     delegate_to: 127.0.0.1
     become: true
     run_once: true
-
+  
   - name: load DHCPD block into memory
     local_action:
       module: shell
@@ -250,7 +255,15 @@
     register: vmware_dhcp_control_block
     become: true
     run_once: true
-    when: platform == "windows"
+  
+  - name: load DHCPD block into memory
+    local_action:
+      module: shell
+      _raw_params: cat '{{ gen_script_folder }}/dhcpd_frag.conf'
+    delegate_to: 127.0.0.1
+    register: vmware_dhcp_control_block
+    become: true
+    run_once: true
 
   - name: view DHCPD block
     debug: msg="{{ vmware_dhcp_control_block.stdout_lines }}"
