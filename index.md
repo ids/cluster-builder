@@ -1,10 +1,7 @@
 ---
 title:  Cluster Builder
 ---
-
-Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of fleets of VMware VMs to ESXi and Fusion hypervisors.
-
----
+<div id="title-flash">Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of fleets of VMware VMs to ESXi and Fusion hypervisors.</div>
 
 > One command... and the cluster is deployed!
 
