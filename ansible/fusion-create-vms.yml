@@ -6,14 +6,19 @@
     fusion_vm_folder: ../virtuals
     ova_template_path: "../{{ ova_template }}"
     gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
-    fusion_net: 'vmnet2'
   roles:
     - role: common
 
   tasks:    
+  - name: set default fusion network to vmnet2
+    set_fact:
+      fusion_net: "vmnet2"
+    run_once: true
+    when: fusion_net is undefined
+
   - name: set vmware dhcpd configuration location for linux
     set_fact:
-      vmware_dhcpd_base_path: "/etc/vmware/{{ fusion_net }}/dhcp"
+      vmware_dhcpd_base_path: "/etc/vmware/{{ fusion_net }}/dhcpd"
       vmware_dhcpd_filename: "dhcpd.conf"
     run_once: true
     when: platform == "linux"
