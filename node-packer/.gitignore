@@ -1,6 +1,7 @@
 output_*_vmx/**
 output_ovas/*.ova
-iso/*.iso
+iso/*.*
+!iso/Readme.md
 keys/authorized_keys
 packer_cache
 **/*.retry
