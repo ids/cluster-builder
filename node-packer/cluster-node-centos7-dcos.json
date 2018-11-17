@@ -30,7 +30,8 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/zerodisk.sh"
+      "script": "bin/zerodisk.sh",
+      "expect_disconnect": true
     }
   ],
 
