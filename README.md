@@ -7,13 +7,13 @@ Cluster Builder
 
 ![cluster-builder Overview](docs/images/cluster-builder-overview.png)
 
-Using freely available tools and only an annotated Ansible inventory file __cluster-builder__ enables the configuration and deployment of fleets of VMware VMs to ESXi and Fusion hypervisors.
+Using freely available tools and only an annotated Ansible inventory file __Cluster Builder__ enables the configuration and deployment of fleets of VMware VMs to ESXi, Workstation and Fusion hypervisors.
 
-__cluster-builder__ is a unique toolset that can deploy _the identical cluster VM images used for production_ to local VMware Fusion development workstations for both the _operations_ and _development_ teams alike.  This enables both advanced local stack development, as well as meta orchestration cluster development, accelerating all development workflows on a shared codebase.  Clusters can be deployed and re-deployed locally, _and_ into production, _in minutes!_
+__Cluster Builder__ is a Packer and Ansible based infrastructure as codebase that can deploy _identical cluster VM images in both local development and production VMware environments_, supporting both _operational_ and _development_ team workflows.  This enables advanced local stack development, as well as meta infrastructure orchestration cluster development.  Clusters can be deployed and re-deployed locally, _and_ into production, identically, _in minutes!_
 
-__cluster-builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
+__Cluster Builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definitions packages.
 
-__cluster-builder__ was designed to handle ~all~ most of the complexity associated with on-prem deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Tectonic CoreOS](https://coreos.com) container orchestration clusters.
+__Cluster Builder__ was designed to handle ~all~ most of the complexity associated with on-prem deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and __Kubernetes__/[Tectonic CoreOS](https://coreos.com) container orchestration clusters.
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
@@ -35,26 +35,28 @@ __cluster-builder__ was designed to handle ~all~ most of the complexity associat
 18. [System Profile](#system-profile)
 
 ## Supported Clusters
-The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and __Stock CentOS7 and Fedora Kubernetes__ clusters for several platforms:
+The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and tock __CentOS 7.5__ and __Fedora 29 Kubernetes__ clusters for several platforms:
 
 * CentOS 7 Docker CE
 * CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
-* CentOS 7 Kubernetes (Stock `kubeadm`)
-* Fedora 28 Kubernetes (Stock `kubeadm`)
+* CentOS 7.5 Kubernetes (Stock `kubeadm`)
+* Fedora 29 Kubernetes (Stock `kubeadm`)
 
 ## Deployment Options
-There are currently two types of deployment:
+There are currently two types of deployment, __local machine__ and remote __ESXI__ hypervisor (or vSphere):
 
-* VMware Fusion
+Local deployments are supported for:
+* VMware Fusion 10+ Pro for macOS
+* VMware Workstation 10+ Pro for Windows
+* Vmware Workstation 10+ Pro for Linux
+
+and for production usage:
+
 * VMware ESXi (vSphere)
 
-The VMware Fusion deployment is intended for local development.
-
-VMware ESXi is for staging and production deployments.
-
-> __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
+> __Note__ that __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
