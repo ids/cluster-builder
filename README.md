@@ -167,6 +167,8 @@ For instructions see the [Cluster Builder Control](https://github.com/ids/cluste
 * It is necessary that the **id_rsa.pub** value of the **cluster-builder** operator account be set in the **node-packer/keys/authorized_keys**. This is required as the scripts use passwordless SSH to access the 
 VMs for provisioning.
 
+* You will like want to adjust your __sudo__ timeout if you are doing local workstation deployments with minimal resources.  This can be done with __visudo__ and setting the [timestamp_timeout](https://lifehacker.com/make-sudo-sessions-last-longer-in-linux-1221545774) value.
+
 * The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **node-packer/output_ovas**.  See the cluster node packer [readme](https://github.com/ids/cluster-builder/blob/master/node-packer/README.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
 __Note for Red Hat Deployments__
