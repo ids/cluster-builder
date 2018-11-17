@@ -1,7 +1,7 @@
 ---
 title:  Cluster Builder
 ---
-<div id="title-flash">Automating the Creation of <span id="title-cluster-type">Kubernetes</span> Clusters in <span id="title-vmware-env">VMware ESXi</span> Environments</div>
+<div id="title-flash">Automating the Creation of <span id="title-cluster-type">Kubernetes, DC/OS and Docker CE Swarm</span> Clusters on <span id="title-vmware-env">VMware Hypervisors</span></div>
 
 ---
 
@@ -85,11 +85,11 @@ window.onload = function() {
     });
   }
 
-  setInterval(swapClusterType,5000);
-  setInterval(swapEnv,3500);
+  //setInterval(swapClusterType,5000);
+  //setInterval(swapEnv,3500);
 
-  swapClusterType();
-  swapEnv();
+  //swapClusterType();
+  //swapEnv();
 
 }
 
