@@ -4,7 +4,7 @@ PLATFORM=`uname -ra`
 if [[ $PLATFORM == *"Darwin"* ]]; then 
   open https://{{ inventory_hostname }}
 elif [[ $PLATFORM == *"Microsoft"* ]]; then 
-  cmd.exe /k 'start chrome "https://{{ inventory_hostname }}"'
+  cmd.exe /c 'start chrome https://{{ inventory_hostname }}'
 else
   chome "https://{{ inventory_hostname }}"
 fi 
