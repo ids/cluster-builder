@@ -8,8 +8,12 @@ master_list:
 - {{ hostvars[host].ansible_host }}
 {% endfor %}
 resolvers:
-- 192.168.1.10
-- 8.8.8.8
+{% if network_dns is not none -%}   
+- {{ network_dns }}
+{% endif %}
+{% if network_dns2 is not none -%}   
+- {{ network_dns2 }}
+{% endif %}
 {% if network_dn is not none %}   
 dns_search: {{ network_dn }}
 {% endif %}
