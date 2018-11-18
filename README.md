@@ -112,7 +112,8 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible 2.3+ `brew install/upgrade ansible`
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
-* __kubectl__ 1.9+ (CoreOS Only - `brew install/upgrade kubernetes-cli`)
+* __kubectl__ 1.9+ (Kubernetes and CoreOS Only - `brew install/upgrade kubernetes-cli`)
+* Docker for Mac or __docker-ce__ (Swarm only)
 
 __Linux Setup Notes__
 
@@ -120,8 +121,9 @@ __Linux Setup Notes__
 * Ensure all VMware tools and Packer are in __PATH__:
   * vmrun
   * ovftool
-* Ensure __kubectl__ is in the path (for K8s deployments).
-* Ensure __docker__ is in the path (for swarm deployments).
+* Ensure __kubectl__ is in the PATH (for K8s deployments).
+* Ensure __docker__ is in the PATH (for swarm deployments).
+* Ensure __dig__ is in the PATH.
 * For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
 > __Note__ Make sure and use _VMware's Virtual Network Editor_ that comes with the Pro version of Fusion/Workstation.  Trying to adjust the interface subnets by hand can be problematic.
@@ -147,8 +149,9 @@ __Windows Setup Notes__
 * Ensure all VMware tools and Packer are in PATH for __bash__ and __cmd__.  This can be done by adding them to the Windows system path:
   * vmrun.exe
   * ovftool.exe
-* Ensure __kubectl__ is in the path (for K8s deployments).
-* Ensure __docker__ is in the path (for swarm deployments).
+* Ensure __kubectl__ is in the PATH (for K8s deployments).
+* Ensure __docker__ is in the PATH (for swarm deployments).
+* Ensure __dig__ is in the PATH.
 * For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
 Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.

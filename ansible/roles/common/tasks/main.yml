@@ -125,3 +125,10 @@
   set_fact:
     vm_folder_name: "{{ inventory_hostname }}"
   when: platform == "linux"
+
+- name: ensure all inventory host names resolve via DNS (dig)
+  local_action:
+    module: shell
+    _raw_params: "dig +short -t srv {{ inventory_hostname }}"
+  become: false
+
