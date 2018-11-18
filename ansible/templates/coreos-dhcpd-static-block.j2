@@ -3,11 +3,6 @@ host {{ hostvars[host].inventory_hostname }} {
     hardware ethernet {{ hostvars[host].vm_mac_addr }};
     fixed-address {{ hostvars[host].ansible_host }};
     option host-name "{{ hostvars[host].inventory_hostname }}";
-    {% if network_dns2 is defined %}  
-    option domain-name-servers {{ network_dns }},{{ network_dns2 }},8.8.8.8;
-    {% else %}
-    option domain-name-servers {{ network_dns }},8.8.8.8;
-    {% endif %}    
 }
 {% endfor %}
 
@@ -16,10 +11,5 @@ host {{ hostvars[host].inventory_hostname }} {
     hardware ethernet {{ hostvars[host].vm_mac_addr }};
     fixed-address {{ hostvars[host].ansible_host }};
     option host-name "{{ hostvars[host].inventory_hostname }}";
-    {% if network_dns2 is defined %}  
-    option domain-name-servers {{ network_dns }},{{ network_dns2 }},8.8.8.8;
-    {% else %}
-    option domain-name-servers {{ network_dns }},8.8.8.8;
-    {% endif %}    
 }
 {% endfor %}
