@@ -47,9 +47,10 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tect
 There are currently two types of deployment, __local machine__ and remote __ESXI__ hypervisor (or vSphere):
 
 Local deployments are supported for:
-* VMware Fusion 10+ Pro for macOS
-* VMware Workstation 10+ Pro for Windows
-* Vmware Workstation 10+ Pro for Linux
+
+* VMware Fusion Pro 10+ for macOS
+* VMware Workstation Pro 12+ for Windows
+* Vmware Workstation Pro 12+ for Linux
 
 and for production usage:
 
@@ -106,7 +107,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 
 ### macOS / Linux
 
-* VMware Fusion Pro 8+ / Workstation Pro 12+
+* VMware Fusion Pro 10+ / Workstation Pro 12+
 * VMware ESXi 6.5+ (optional)
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible 2.3+ `brew install/upgrade ansible`
