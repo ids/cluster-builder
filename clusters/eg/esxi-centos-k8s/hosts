@@ -1,0 +1,48 @@
+[all:vars]
+cluster_type=centos-k8s
+cluster_name=k8s
+remote_user=admin
+
+vmware_target=esxi
+overwrite_existing_vms=true
+ovftool_parallel=true
+
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
+
+network=192.168.1.0
+network_mask=255.255.255.0
+network_gateway=192.168.1.2
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=idstudios.local
+
+targetd_server=192.168.1.200
+targetd_server_iqn=iqn.2018-06.io.idstudios.test-core:storage
+targetd_server_volume_group=vg-targetd
+targetd_server_provisioner_name=iscsi-targetd
+targetd_server_storage_class=iscsi-targetd-vg-targetd
+targetd_server_account_credentials=targetd-account
+targetd_server_account_username=admin
+targetd_server_account_password=happyduck
+targetd_server_namespace=default
+
+k8s_admin_url=k8s-admin.idstudios.local
+k8s_advertise_addr=192.168.1.220
+k8s_ingress_url=k8s-ingress.idstudios.local
+k8s_cluster_token=9aeb42.99b7540a5833866a
+
+[k8s_masters]
+k8s-m1.idstudios.local ansible_host=192.168.1.220 etcd_name=etcd1
+
+[k8s_workers]
+k8s-w1.idstudios.local ansible_host=192.168.1.221 
+k8s-w2.idstudios.local ansible_host=192.168.1.222 
+k8s-w3.idstudios.local ansible_host=192.168.1.223 
+
+[vmware_vms]
+k8s-m1.idstudios.local numvcpus=8 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+
+k8s-w1.idstudios.local numvcpus=4 memsize=5144 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+k8s-w2.idstudios.local numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+k8s-w3.idstudios.local numvcpus=4 memsize=5144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd

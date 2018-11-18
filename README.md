@@ -195,15 +195,24 @@ Eg. In the **clusters/eg** folder there is:
 
 Sample cluster packages are located in the **clusters/eg** folder and can be copied into the **clusters** folder.
 
-#### VMware Fusion Examples
+> __Note__ that for all the cluster definition package examples you will need to ensure that the network specified, and DNS names used resolve correctly to the _IP Addresses_ specified in the __hosts__ files.
+> Eg.  
+> [k8s_masters]
+> k8s-m1.idstudios.local ansible_host=192.168.1.220 etcd_name=etcd1
+> 
+> The inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
 
-* [DC/OS in VMware Fusion](clusters/eg/demo-centos-dcos/hosts)
-* [Docker CE in VMware Fusion](clusters/eg/demo-centos-swarm/hosts)
-* [Tectonic CoreOS in VMware Fusion - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
+#### VMware Fusion/Workstation Examples
+
+* [Kubernetes 1.12 in VMware Fusion/Workstation](clusters/eg/demo-centos-k8s/hosts)
+* [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-centos-dcos/hosts)
+* [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-centos-swarm/hosts)
+* [Tectonic CoreOS in VMware Fusion/Workstation - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
 
 
 #### VMware ESXi Examples
 
+* [Kubernetes 1.12 in ESXi](clusters/eg/esxi-centos-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-centos-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-centos-swarm/hosts)
 * [Tectonic CoreOS on ESXi - Provisioner](clusters/eg/core-provisioner/hosts) and [Clusters](clusters/eg/core/hosts).
