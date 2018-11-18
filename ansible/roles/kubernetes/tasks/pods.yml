@@ -47,6 +47,52 @@
 
 - debug: msg="{{ influx_out.stdout_lines }}"
 
+- name: Install Metrics Server - Aggregated Metrics Reader
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/aggregated-metrics-reader.yaml
+  register: metric_1_out
+
+- debug: msg="{{ metric_1_out.stdout_lines }}"
+
+- name: Install Metrics Server - Auth Delegator
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/auth-delegator.yaml
+  register: metric_2_out
+
+- debug: msg="{{ metric_2_out.stdout_lines }}"
+
+- name: Install Metrics Server - Auth Reader
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/auth-reader.yaml
+  register: metric_3_out
+
+- debug: msg="{{ metric_3_out.stdout_lines }}"
+
+- name: Install Metrics Server - Metrics API Service
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-apiservice.yaml
+  register: metric_4_out
+
+- debug: msg="{{ metric_4_out.stdout_lines }}"
+
+- name: Install Metrics Server - Metrics Server Deployment
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-server-deployment.yaml
+  register: metric_5_out
+
+- debug: msg="{{ metric_5_out.stdout_lines }}"
+
+- name: Install Metrics Server - Metrics Server Service
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-server-service.yaml
+  register: metric_6_out
+
+- debug: msg="{{ metric_6_out.stdout_lines }}"
+
+- name: Install Metrics Server - Resource Reader
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/resource-reader.yaml
+  register: metric_7_out
+
+- debug: msg="{{ metric_7_out.stdout_lines }}"
+
+- name: wait for the metrics server to initialize
+  pause:
+    minutes: 1
+
 - name: install kubernetes dashboard manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
   register: dash_out
