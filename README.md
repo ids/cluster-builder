@@ -17,22 +17,21 @@ __Cluster Builder__ was designed to handle ~all~ most of the complexity associat
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
-3. [Required Software](#required-software)
-4. [General Preparation](#general-preparation)
-5. [Cluster Definition Packages](#cluster-definition-packages)
-6. [Cluster Builder Usage](#cluster-builder-usage)
-7. [Deploying a Cluster](#deploying-a-cluster)
-8. [Change Cluster Password](#change-cluster-password)
-9. [Patching a Cluster](#patching-a-cluster)
-10. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
-11. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-12. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-13. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](#kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-14. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-15. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-16. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-17. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
-18. [System Profile](#system-profile)
+3. [Setup and Environment Preparation](#setup-and-environment-preparation)
+4. [Cluster Definition Packages](#cluster-definition-packages)
+5. [Cluster Builder Usage](#cluster-builder-usage)
+6. [Deploying a Cluster](#deploying-a-cluster)
+7. [Change Cluster Password](#change-cluster-password)
+8. [Patching a Cluster](#patching-a-cluster)
+9. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
+10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+12. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](#kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+13. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+14. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
+17. [System Profile](#system-profile)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and tock __CentOS 7.5__ and __Fedora 29 Kubernetes__ clusters for several platforms:
@@ -103,7 +102,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 
 > __Note__ it is best to deploy the __Targetd Storage Appliance__ prior to installing the Kubernetes cluster as the cluster deployment process will deploy and configure an __iscsi-provisioner__ deployment configured for the Targetd server when it already exists - and when the cluster _hosts_ file contains the necessary configuration information for the Targetd.
 
-## Required Software
+## Setup and Environment Preparation
 
 ### macOS / Linux
 
@@ -160,7 +159,7 @@ It can even be built remotely directly on an ESXi server, which is the intended 
 
 For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
 
-## General Preparation and Deployment Guides
+### General Preparation
 
 * For all cluster types ensure that the host names specified in the inventory file also resolve.  For ESXi deployments these should resolve via DNS.  For Fusion deployments you can use __/etc/hosts__ on the host, but DNS resolution still works best.
 
