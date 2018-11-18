@@ -65,23 +65,3 @@
     state: present
   with_items:
     - { regx: "GRUB_CMDLINE_LINUX=", line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=system/root rd.lvm.lv=system/swap rhgb quiet elevator=deadline"' }
-
-- name: configure sysctl for ip4
-  lineinfile:
-    path: "/etc/sysctl.conf"
-    state: present
-    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
-    line: 'net.bridge.bridge-nf-call-iptables = 1'
-  
-- name: configure sysctlfor ip6
-  lineinfile:
-    path: "/etc/sysctl.conf"
-    state: present
-    regexp: '^net.bridge.bridge-nf-call-ip6tables =\s'
-    line: 'net.bridge.bridge-nf-call-ip6tables = 1'
-
-- name: configure sysctl for ip4
-  shell: sysctl net.bridge.bridge-nf-call-iptables=1
-  
-- name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
-  shell: sysctl -p /etc/sysctl.conf

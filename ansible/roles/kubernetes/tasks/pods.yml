@@ -23,36 +23,29 @@
 
 - debug: msg="{{ flannel_out.stdout_lines }}"
 
-#- name: Copy Dashboard UI manifest files to node
-#  copy:
-#    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/dashboard"
-#    dest: /root/
+- name: Install Grafana manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
+  register: graf_out
 
-#- name: Install Grafana manifest
-#  shell: kubectl apply -f /root/dashboard/grafana.yml
-#  register: graf_out
+- debug: msg="{{ graf_out.stdout_lines }}"
 
-#- debug: msg="{{ graf_out.stdout_lines }}"
+- name: Install Heapster RBAC manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
+  register: heap_rbac_out
 
-#- name: Install Heapster RBAC manifest
-#  shell: kubectl apply -f /root/dashboard/heapster-rbac.yml
-#  register: heap_out
+- debug: msg="{{ heap_rbac_out.stdout_lines }}"
 
-#- name: Install Heapster RBAC manifest
-#  shell: kubectl apply -f /root/dashboard/heapster-rbac.yml
-#  register: heap_out
+- name: Install Heapster manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
+  register: heap_out
 
-#- debug: msg="{{ heap_out.stdout_lines }}"
+- debug: msg="{{ heap_out.stdout_lines }}"
 
-#- name: Install InfluxDB manifest
-#  shell: kubectl apply -f /root/dashboard/influxdb.yml
-#  register: influx_out
+- name: Install InfluxDB manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
+  register: influx_out
 
-#- debug: msg="{{ influx_out.stdout_lines }}"
-
-#- name: Install Kubernetes Dashboard manifest
-#  shell: kubectl apply -f /root/dashboard/kubernetes-dashboard.yml
-#  register: dash_out
+- debug: msg="{{ influx_out.stdout_lines }}"
 
 - name: install kubernetes dashboard manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
