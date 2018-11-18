@@ -3,11 +3,9 @@ host {{ inventory_hostname }} {
     hardware ethernet {{ vm_mac.stdout }};
     fixed-address {{ ansible_host }};
     option host-name "{{ inventory_hostname }}";
-    {% if platform == "darwin" -%}  
     {% if network_dns is defined and network_dns2 is undefined -%}  
     option domain-name-servers {{ network_dns }}, 8.8.8.8;
     {% elif network_dns is defined and network_dns2 is defined -%}  
     option domain-name-servers {{ network_dns }}, {{ network_dns2 }};
-    {% endif %}    
     {% endif %}    
 }
