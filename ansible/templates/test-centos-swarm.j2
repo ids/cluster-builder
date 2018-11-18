@@ -16,5 +16,5 @@ if [[ $PLATFORM == *"Darwin"* ]]; then
 elif [[ $PLATFORM == *"Microsoft"* ]]; then 
   cmd.exe /c 'start chrome http://{{ inventory_hostname }}:9000'
 else
-  `google-chrome "${URL}" >/dev/null 2>&1`
+  `google-chrome ${URL} &`
 fi 
