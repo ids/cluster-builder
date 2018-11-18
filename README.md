@@ -83,15 +83,15 @@ There are also two experimental custom built Kubernetes variants:
 * centos-k8s
 * fedora-k8s
 
-__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.10__ clusters that implement:
+__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that implement:
 
 * Canal/Flannel CNI Networking with Network Policy support
-* Traefik for Ingress
+* Traefik for ingress and load balancing
 * iSCSI Provisioner and Targetd integration for PVC storage
 
 The __CentOS7 K8s__ cluster has been load tested and performs as well as CoreOS and with similar stability.
 
-The __Fedora K8s__ cluster is considered experimental, but has the latest 4.x kernel and most up to date binaries.
+The __Fedora K8s__ cluster is the bleeding edge and more for experimentation.
 
 ### Extras
 
