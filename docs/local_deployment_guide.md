@@ -1,25 +1,27 @@
-## Cluster Builder - VMware Fusion Deployment Guide
+## Cluster Builder - VMware Local Deployment Guide
 
-VMware Fusion deployment is geared toward building small clusters on a laptop for demo purposes.
+VMware local deployment is geared toward building small clusters on a laptop for demo purposes.  Deployments are made to local machines running:
+
+* VMware Fusion Pro 10+ on macOS
+* VMware Workstation Pro 12+ on Windows
+* VMware Workstation Pro 12+ on Linux
 
 > **Note:** DC/OS requires at least 16GB of ram on the target machine.
 
 ---
-### Fusion Preparation
+### Notes
 
-* The examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created before attempting to deploy the fusion demos.
-
-* The VMware Fusion application should be running.
+* The VMware Fusion application should be running on macOS.
 
 * The VMware tools need to be in the PATH
 
-* The Swarm Node hostnames must be specified in the host machine /etc/hosts
+* The hostnames used in the cluster definition packages must resolve via DNS or be statically set in `/etc/hosts`
 
 #### VMware Tools Path
 
 Ensure the VMware CLI tools are setup in the BASH PATH:
 
-Eg.
+Eg for macOS.
 
 		export VM_TOOLS="/Library/Application Support/VMware Fusion"
 		export PATH=$PATH:/usr/local/bin:/usr/bin:~/bin:$VM_TOOLS
@@ -41,6 +43,8 @@ The hostnames of the target VM nodes used in the cluster definition package:
 		192.168.100.92	demo-swarm-w2
 		192.168.100.93	demo-swarm-w3
 
+> The preferred approach is to use a DNS server.
+
 ---
 
 > The script requires an active local sudo session as the VMware network controls require sudo, but this is difficult to prompt for with ansible.  If you don't have one, the script will prompt you for your local SUDO machine password.
@@ -48,6 +52,8 @@ The hostnames of the target VM nodes used in the cluster definition package:
 The ansible scripts will adjust your local VMware network dhcpd.conf file based on the MAC addresses assigned during creation of the VMs, and the static IPs will be assigned by VMware via MAC address.
 
 Once the VMs have been created, assigned their correct addresses, and are running, cluster provisioning process will begin.
+
+> __Note__ that all settings marked as __fusion__ apply to all of the VMware desktop platforms.
 
 ### Ansible Fusion Configuration
 
@@ -88,7 +94,7 @@ Once the VMs have been created, assigned their correct addresses, and are runnin
 
 **cluster_type**: one of _centos-dcos_, _centos-swarm_, _rhel-swarm_.
 
-**vmware_target**: _fusion_
+**vmware_target**: _fusion_ (also applies for workstation)
 
 **fusion_net**: The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
 
@@ -106,36 +112,13 @@ __docker_prometheus_server=<host>__: The specified server will have **prometheus
 
 __docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
 
-#### ESXI options:
-
-__ovftool_parallel=true__: This setting will execute __ovftool__ deployments in parallel rather then one at a time.  This can increase ovftool deployment performance by as much as 150%.
-
-#### Advanced options:
-
-__ovftool_parallel=true__: When set on ESXI deployments it will cause the ovftool processes to run in parallel in the background, resulting in as much as 20% performance increase in some environments. 
-
-> Note that at the present time running ovftool in parallel will scramble the output to the console - but this won't affect the outcome.
 
 __docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
 
 __docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
-
-__data_network_mask__: The network mask for the data network
-
-__data_network_gateway__: The gateway address for the data network
 
 __docker_daemon_dns_override__: (optional)  By default, cluster-builder will use the dns entries defined for the host interfaces (network_dns, network_dns2, etc).  If a different DNS configuration is desired for Docker, this value can be used to override the default behavior.  It must be supplied in the JSON string array form:
 
 		docker_daemon_dns_override='"192.168.1.1", "8.8.8.8"'
 
 > Note the single quotes wrapping the double quotes.
-
-> When deploying two interface nodes, the Data plane interface should be assigned the default gateway, and the Control/Mgmt plane interface should NOT be assigned a default gateway.
-
-__data_network_dns__: DNS entry for the data plane interface
-
-__data_network_dns2__: 2nd DNS entry for the data plane interface
-
-__data_network_dns3__: 3rd DNS entry for the data plane interface
-
-__data_network_dn__: Domain name for the data interface subnet

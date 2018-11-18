@@ -180,9 +180,9 @@ VMs for provisioning.
 __Note for Red Hat Deployments__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
 
-See the [Fusion Deployment Guide](docs/fusion_deployment_guide.md) for details on deploying on VMware Fusion.
+See the [Local Deployment Guide](docs/local_deployment_guide.md) for details about deploying on VMware Fusion and Workstation.
 
-See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details on deploying to ESXi hypervisor(s).
+See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about deploying to ESXi hypervisor(s).
 
 ## Cluster Definition Packages
 
