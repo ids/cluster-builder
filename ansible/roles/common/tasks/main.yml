@@ -132,3 +132,9 @@
     _raw_params: "host {{ inventory_hostname }}"
   become: false
 
+- name: ensure network_gateway is reachable (this ensures the subnet is correct for the virtual interfaces and networks used)
+  local_action:
+    module: shell
+    _raw_params: "ping {{ network_gateway }}"
+  become: false
+  run_once: true
