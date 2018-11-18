@@ -340,7 +340,7 @@
     run_once: true
     when: platform == "linux"
     
-  - name: remove the DHCPD Control/Data configuration file fragments
+  - name: remove the DHCPD configuration file fragments
     local_action:
       module: file
       path: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
