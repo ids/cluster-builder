@@ -11,3 +11,6 @@
     regexp: '^%KUBELET_SWAP_ARGS'
     line: 'KUBELET_SWAP_ARGS="–fail-swap-on=false"'
     create: yes
+
+- name: configure chronyd
+  include: chronyd.yml
