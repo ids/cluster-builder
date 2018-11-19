@@ -12,7 +12,6 @@ auditPolicy:
   logMaxAge: 2
   path: ""
 certificatesDir: /etc/kubernetes/pki
-clusterName: kubernetes
 controlPlaneEndpoint: "{{ k8s_advertise_addr }}:6443"
 apiServerExtraArgs:
   authorization-mode: "Node,RBAC"

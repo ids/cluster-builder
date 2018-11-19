@@ -1,0 +1,33 @@
+- name: copy customized Heapster RBAC manifest
+  copy:
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/dashboard/heapster-rbac.yml"
+    dest: /root/
+  
+- name: install customized Heapster RBAC manifest
+  shell: kubectl apply -f /root/heapster-rbac.yml
+  register: heap_rbac_out
+
+#- name: install Heapster RBAC manifest
+#  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/rbac/heapster-rbac.yaml
+#  register: heap_rbac_out
+
+- debug: msg="{{ heap_rbac_out.stdout_lines }}"
+
+- name: copy customized Heapster manifest
+  copy:
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/dashboard/heapster.yml"
+    dest: /root/
+
+- name: install customized Heapster manifest
+  shell: kubectl apply -f /root/heapster.yml
+  register: heap_out
+
+#- name: Install Heapster manifest
+#  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/heapster.yaml
+#  register: heap_out
+
+- debug: msg="{{ heap_out.stdout_lines }}"
+
+- name: wait for the heapster service to initialize
+  pause:
+    minutes: 1
