@@ -9,7 +9,7 @@ v18.12
 * Removed PhotonOS related artifacts as PhotonOS is no longer relevant due to VMware's misstep with PKS.  Proof that better technology does not always trump legacy enterprise software politics.
 * Removed UCP/Docker EE related artifacts as Docker EE is no longer supported, and not likely to have a future.
 * Cleaned up the code base and pruned out artifacts no longer required or relevant.
-* Initial packer build of candidate Windows2016 node in preparation for Windows 2019 Kubernetes networking support.
+* Initial packer build of candidate Windows 2016 node in preparation for Windows 2019 Kubernetes networking support.
 * Verified and tested __DC/OS 1.11__ local deployment on Windows and macOS. _Linux mileage may vary for some reason still under investigation_.
 * Verified and tested __Docker CE Swarm__ on CentOS deployment locally on Windows, Linux and macOS.
 * __Most importantly__, verified and tested __CentOS 7.5 Vanilla Kubernetes 1.12__ deployment locally on Windows, Linux and macOS.  A solid up to date reference Kubernetes.
