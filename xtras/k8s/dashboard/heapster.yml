@@ -17,18 +17,14 @@ spec:
         task: monitoring
         k8s-app: heapster
     spec:
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Exists"  
-        effect: "NoSchedule" 
       serviceAccountName: heapster
       containers:
       - name: heapster
-        image: k8s.gcr.io/heapster-amd64:v1.4.2
+        image: k8s.gcr.io/heapster-amd64:v1.5.4
         imagePullPolicy: IfNotPresent
         command:
         - /heapster
-        - --source=kubernetes:https://kubernetes.default
+        - --source=kubernetes:https://kubernetes.default&kubeletHttps=true&kubeletPort=10255&insecure=true
         - --sink=influxdb:http://monitoring-influxdb.kube-system.svc:8086
 ---
 apiVersion: v1
