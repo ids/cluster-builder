@@ -43,6 +43,17 @@
   include: metric-server.yml
   when: "install_metrics_server is defined"
 
+- name: copy customized traefik manifest
+  copy:
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/traefik-nodeport.yml"
+    dest: /root/
+
+- name: install traefik ingress controller manifest
+  shell: kubectl apply -f /root/traefik-nodeport.yml
+  register: traefik_out
+
+- debug: msg="{{ traefik_out.stdout_lines }}"
+
 - name: install kubernetes dashboard manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
   register: dash_out

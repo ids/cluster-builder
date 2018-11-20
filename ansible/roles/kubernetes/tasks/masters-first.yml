@@ -129,14 +129,3 @@
   register: master_node_out
 
 - debug: msg="{{ master_node_out.stdout_lines }}"
-
-- name: copy traefik manifest
-  copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/traefik-nodeport.yml"
-    dest: /root/
-
-- name: install traefik manifest
-  shell: kubectl apply -f /root/traefik-nodeport.yml
-  register: traefik_out
-
-- debug: msg="{{ traefik_out.stdout_lines }}"
