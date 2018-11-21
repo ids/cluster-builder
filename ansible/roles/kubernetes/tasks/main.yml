@@ -79,10 +79,7 @@
   when: cluster_type == "fedora-k8s"
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
-  service:
-  name: iscsid
-  state: started
-  enabled: yes
+  shell: systemctl enable iscsid
 
 - name: configure the Kubernetes Repo
   become: true
