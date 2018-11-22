@@ -82,7 +82,6 @@
       mode: 0755
     run_once: true
     become: false
-    when: drupal_nodeport is undefined
 
   - name: ensure the loadtests folder exists
     local_action:
