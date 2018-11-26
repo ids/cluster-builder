@@ -52,11 +52,23 @@
 #  shell: kubectl apply -f /root/traefik-nodeport.yml
 #  register: traefik_out
 
-- name: install traefik ingress controller daemonset manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-ds.yaml
-  register: traefik_out
+#- name: install traefik ingress controller daemonset manifest
+#  shell: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-ds.yaml
+#  register: traefik_out
 
-- debug: msg="{{ traefik_out.stdout_lines }}"
+#- debug: msg="{{ traefik_out.stdout_lines }}"
+
+- name: install NGINX ingress controller dependencies manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
+  register: nginx_dep_out
+
+- debug: msg="{{ nginx_dep_out.stdout_lines }}"
+
+- name: install NGINX ingress controller  manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/baremetal/service-nodeport.yaml
+  register: nginx_out
+
+- debug: msg="{{ nginx_out.stdout_lines }}"
 
 - name: install kubernetes dashboard manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
