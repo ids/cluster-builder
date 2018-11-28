@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ galera_cluster_name }}-galera-lb
+  namespace: web
+spec:
+  ports:
+    - name: mysql
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+  selector:
+    cluster: {{ galera_cluster_name }}-galera-main
+  sessionAffinity: None
+status:
+  loadBalancer: {}

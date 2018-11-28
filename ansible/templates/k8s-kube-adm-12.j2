@@ -35,7 +35,7 @@ imageRepository: k8s.gcr.io
 kubernetesVersion: v1.12.1
 networking:
   dnsDomain: cluster.local
-  podSubnet: 10.244.0.0/16
+  podSubnet: {{ k8s_cluster_cidr }}
   serviceSubnet: 10.96.0.0/12
 ---
 apiVersion: kubeadm.k8s.io/v1alpha3
@@ -66,7 +66,7 @@ clientConnection:
   contentType: application/vnd.kubernetes.protobuf
   kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
   qps: 5
-clusterCIDR: 10.244.0.0/16
+clusterCIDR: {{ k8s_cluster_cidr }}
 configSyncPeriod: 15m0s
 conntrack:
   max: null

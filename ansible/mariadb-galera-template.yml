@@ -169,6 +169,15 @@
     run_once: true
     become: false
 
+  - name: generate the 3-nodes galera native LB manifest
+    local_action:
+      module: template
+      src: templates/galera/3-node/galera-3-native-lb.j2
+      dest: "{{ galera_cluster_home }}/3/galera-native-lb.yml"
+      mode: 0766
+    run_once: true
+    become: false
+
   - name: generate the 5-nodes galera haproxy manifest
     local_action:
       module: template
