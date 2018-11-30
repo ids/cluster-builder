@@ -1,0 +1,11 @@
+- name: install NGINX ingress controller dependencies manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
+  register: nginx_dep_out
+
+- debug: msg="{{ nginx_dep_out.stdout_lines }}"
+
+- name: install NGINX ingress controller  manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/baremetal/service-nodeport.yaml
+  register: nginx_out
+
+- debug: msg="{{ nginx_out.stdout_lines }}"

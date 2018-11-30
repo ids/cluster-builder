@@ -1,3 +1,18 @@
+- name: download helm binary 
+  shell: curl -L -O https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz
+  args:
+    chdir: /tmp
+
+- name: unpack helm binary 
+  shell: tar -zxvf helm-*-linux-amd64.tar.gz
+  args:
+    chdir: /tmp
+
+- name: install helm binary 
+  shell: mv linux-amd64/helm /usr/local/bin/helm
+  args:
+    chdir: /tmp
+
 - name: create Helm Service Account
   shell: kubectl create serviceaccount tiller --namespace kube-system
   register: rbac_out
@@ -7,16 +22,20 @@
 - name: copy Helm RBAC manifest
   copy:
     src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/helm-rbac.yml"
-    dest: /root/
+    dest: /tmp/
 
 - name: install Helm RBAC manifest
-  shell: kubectl apply -f /root/helm-rbac.yml
+  shell: kubectl apply -f /tmp/helm-rbac.yml
   register: helmrbac_out
 
 - debug: msg="{{ helmrbac_out.stdout_lines }}"
 
 - name: initialize Helm (install Tiller)
-  shell: helm init --service-account tiller
+  shell: /usr/local/bin/helm init --service-account tiller
   register: init_out
 
 - debug: msg="{{ init_out.stdout_lines }}"
+
+- name: give the Tiller pod time to get ready
+  pause:
+    minutes: 3

@@ -1,0 +1,18 @@
+- name: install canal RBAC manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/rbac.yaml
+  register: canal_rbac_out
+  
+- debug: msg="{{ canal_rbac_out.stdout_lines }}"
+  
+- name: install canal manifest
+  shell: kubectl apply --validate=false -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/installation/hosted/canal/canal.yaml
+  register: canal_out
+  
+- debug: msg="{{ canal_out.stdout_lines }}"
+  
+- name: install flannel CNI manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  register: flannel_out
+  
+- debug: msg="{{ flannel_out.stdout_lines }}"
+  

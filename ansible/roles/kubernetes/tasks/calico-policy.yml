@@ -1,0 +1,32 @@
+- name: install Calico Node Policy manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/kubernetes-datastore/calico-networking/calico-node.yaml
+  register: calico_policy_out
+  when: k8s_network_cni == "calico"
+
+- debug: msg="{{ calico_policy_out.stdout_lines }}"
+  when: k8s_network_cni == "calico"
+
+- name: wait for the Calico nodes to restart
+  pause:
+    minutes: 1
+
+- name: install Istio
+  include: istio.yml
+
+#- name: install Helm
+#  include: helm.yml
+
+#- name: install Istio via Helm
+#  include: istio-helm.yml
+
+- name: install Calico Istio injection configmap manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml
+  register: calico_istio_out
+
+- debug: msg="{{ calico_istio_out.stdout_lines }}"
+
+- name: install Calico service mesh manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-app-layer-policy.yaml
+  register: calico_mesh_out
+
+- debug: msg="{{ calico_mesh_out.stdout_lines }}"

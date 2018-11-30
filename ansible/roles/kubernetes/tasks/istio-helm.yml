@@ -1,0 +1,17 @@
+
+- name: download latest Istio
+  shell: "curl -L https://git.io/getLatestIstio | sh -"
+  args:
+    chdir: /tmp
+
+#- name: Install Istio CRDs
+#  shell: kubectl apply -f /tmp/istio*/install/kubernetes/helm/istio/templates/crds.yaml
+#  register: istio_out
+
+#- debug: msg="{{ istio_out.stdout_lines }}"
+
+- name: install Istio via Helm
+  shell: /usr/local/bin/helm install /tmp/istio*/install/kubernetes/helm/istio --name istio --namespace istio-system
+  register: istio_helm_out
+
+- debug: msg="{{ istio_helm_out.stdout_lines }}"

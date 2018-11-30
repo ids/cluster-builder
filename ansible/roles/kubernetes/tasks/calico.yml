@@ -1,0 +1,25 @@
+
+- name: configure NetworkManager for Calico
+  become: true
+  template:
+    src: templates/calico-conf.j2
+    dest: /etc/NetworkManager/conf.d/calico.conf
+
+- name: install Calico RBAC manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  register: calico_rbac_out
+  
+- debug: msg="{{ calico_rbac_out.stdout_lines }}"
+  
+- name: generate custom Calico manifest
+  become: true
+  template:
+    src: templates/calico-3.3.j2
+    dest: /tmp/calico.yml
+
+- name: install Calico manifest
+  shell: kubectl apply -f /tmp/calico.yml
+  register: calico_out
+  
+- debug: msg="{{ calico_out.stdout_lines }}"
+  

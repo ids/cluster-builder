@@ -1,0 +1,25 @@
+- name: install InfluxDB manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
+  register: influx_out
+
+- debug: msg="{{ influx_out.stdout_lines }}"
+
+- name: install Grafana manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
+  register: graf_out
+
+- debug: msg="{{ graf_out.stdout_lines }}"
+
+- name: configure the heapster metrics service
+  include: heapster.yml
+  when: "install_metrics_server is undefined"
+
+- name: configure the metrics server service
+  include: metric-server.yml
+  when: "install_metrics_server is defined"
+
+- name: install kubernetes dashboard manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+  register: dash_out
+
+- debug: msg="{{ dash_out.stdout_lines }}"

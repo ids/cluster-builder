@@ -1,0 +1,11 @@
+- name: generate the coredns configmap manifest
+  shell: kubectl -n kube-system get configmap coredns -o yaml > /tmp/coredns-configmap.yml
+
+- name: clear the loop check from the coredns configmap
+  shell: sed -i '/loop/d' /tmp/coredns-configmap.yml
+
+- name: apply the modified coredns configmap manifest
+  shell: kubectl apply -f /tmp/coredns-configmap.yml
+
+- name: delete the existing coredns pods to force restart
+  shell: kubectl -n kube-system delete pod -l k8s-app=kube-dns
