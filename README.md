@@ -98,7 +98,19 @@ _or_
 
 > The __CentOS7 K8s__ cluster has been load tested and perform  near the performance of CoreOS w/ Canal CNI and with similar stability, and > 30% faster then CoreOS w/ Calico CNI networking.
 
+```
+# CentOS 7.5 - Dec 1, 2018
+$ uname -ra
+Linux k8s-w3 3.10.0-862.14.4.el7.x86_64 #1 SMP Wed Sep 26 15:12:11 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+```
+
 The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 4.x kernel.
+
+```
+# Fedora 29 - Dec 1, 2018
+$ uname -ra
+Linux k8s-w5 4.18.10-200.fc28.x86_64 #1 SMP Wed Sep 26 09:48:36 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+```
 
 > Both __CentOS7 and Fedora 29__ based K8s clusters are 1.12.x, significantly newer then the 1.9.x Tectonic K8s versions.
 
