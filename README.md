@@ -122,7 +122,7 @@ Linux k8s-w5 4.18.10-200.fc28.x86_64 #1 SMP Wed Sep 26 09:48:36 UTC 2018 x86_64 
 
 #### Tectonic CoreOS : Deprecated
 
-The future of __Tectonic CoreOS__ in the form pre-RedHat does not exist.  The jury is still out on whether the _OpenShift_ variant is going to be worth all the customizations and quirks of _OpenShift_, which has never been a widely loved K8s platform.
+The future of __Tectonic CoreOS__ in the form pre-RedHat does not exist.  The jury is still out on whether the _OpenShift_ variant is going to be worth all the customizations and quirks of _OpenShift_.  It's a lot of extra stuff.  And __CentOS 7.5__ with `kubeadm` is testing as a solid, stable onpremise K8s.
 
 There remains two special deployment builds in support of the old __Tectonic CoreOS__:
 
