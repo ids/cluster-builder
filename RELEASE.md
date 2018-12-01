@@ -4,16 +4,21 @@ Release Notes
 v18.12
 ------
 
-* Initial implementation of cluster deployment to local machines on Windows and Linux VMware Workstation hosts.
+* Initial implementation of cluster deployment to local machines on __Windows and Linux VMware Workstation hosts__.
+* Verified and tested __DC/OS 1.11__ local deployment on Windows and macOS. _Linux mileage may vary for some reason still under investigation_.
+* Verified and tested __Docker CE Swarm__ on CentOS deployment locally on Windows, Linux and macOS.
+* Verified and tested __CentOS 7.5 Vanilla Kubernetes 1.12__ deployment __locally on Windows, Linux and macOS__.  A solid up to date reference Kubernetes.
+* Updated `fedora-k8s` to __Fedora 29__.
+* Added support for __Calico CNI Plugin w/ Istio and Network Policy__ for both __CentOS 7.5__ and __Fedora 29__. __k8s_network__cni__ allows selection of __canal__ (default), __calico__ and __calico-policy__ (whcih includes Istio and Network Policy).  Load tested and validated _Network Policy_ functionality on `centos-k8s` with __calico-policy__.
+* Changed default ingress controller on `kubeadm` clusters to `nginx`, and added setting for selecting: __k8s_ingress_controller__ is one of __nginx__ (default), __traefik-nodeport__, __traefik-daemonset__ and __traefik-deployment__.
+* Completed and tested initial packer build of candidate Windows 2016 node in preparation for Windows 2019 Kubernetes networking support.
 * Removed advanced swarm deployment model with seperate control and data plane configuration as this approach will not be carried forward.
 * Removed PhotonOS related artifacts as PhotonOS is no longer relevant due to VMware's misstep with PKS.  Proof that better technology does not always trump legacy enterprise software politics.
 * Removed UCP/Docker EE related artifacts as Docker EE is no longer supported, and not likely to have a future.
 * Cleaned up the code base and pruned out artifacts no longer required or relevant.
-* Initial packer build of candidate Windows 2016 node in preparation for Windows 2019 Kubernetes networking support.
-* Verified and tested __DC/OS 1.11__ local deployment on Windows and macOS. _Linux mileage may vary for some reason still under investigation_.
-* Verified and tested __Docker CE Swarm__ on CentOS deployment locally on Windows, Linux and macOS.
-* __Most importantly__, verified and tested __CentOS 7.5 Vanilla Kubernetes 1.12__ deployment locally on Windows, Linux and macOS.  A solid up to date reference Kubernetes.
-* ESXi deployment should work as expected on all platforms, however the [cluster-builder-control](https://github.com/ids/cluster-builder-control) station is still recommended. _Also known conceptually as a bastion server or jump box. This is no longer limited to the CentOS version supplied and can, in fact, be a Windows based jump box_.
+
+
+> With support now on Windows and Linux workstations, ESXi deployment should work as expected on all platforms, however the [cluster-builder-control](https://github.com/ids/cluster-builder-control) station is still recommended. _Also known conceptually as a bastion server or jump box. This is no longer limited to the CentOS version supplied and can, in fact, be a Windows based jump box_.
 
 v18.09
 ------
