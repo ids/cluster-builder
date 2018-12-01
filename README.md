@@ -80,8 +80,9 @@ There are two maintained `kubeadm` built Kubernetes variants:
 * centos-k8s
 * fedora-k8s
 
-__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that implement:
+__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that come out-of-the-box with the following functionality:
 
+__CNI:__
 * Canal/Flannel CNI network plugin with _Network Policy_ support
 
 _or_
@@ -92,8 +93,13 @@ _or_
 
 * Calico CNI network plugin with Istio and _Network Policy_
 
+__Ingress:__
 * Traefik or NGINX for ingress and load balancing
+
+__Dashboard:__
 * The Kubernetes Dashboard w/ Heapster integration and dashboard graphics (soon to support Metrics Server)
+
+__Storage:__
 * iSCSI Provisioner integration and with an external Targetd Storage Appliance VM for PVC storage
 
 > The __CentOS7 K8s__ cluster has been load tested and perform  near the performance of CoreOS w/ Canal CNI and with similar stability, and > 30% faster then CoreOS w/ Calico CNI networking.
