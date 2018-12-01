@@ -83,15 +83,15 @@ There are two maintained `kubeadm` built Kubernetes variants:
 __centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that come out-of-the-box with the following functionality:
 
 __CNI:__
-* Canal/Flannel CNI network plugin with _Network Policy_ support
+* [Canal/Flannel](https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
 
 _or_
 
-* Calico CNI network plugin without _Network Policy_
+* [Calico](https://www.projectcalico.org/) CNI network plugin without _Network Policy_
 
 _or_ 
 
-* Calico CNI network plugin with Istio and _Network Policy_
+* Calico CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
 __Ingress:__
 * Traefik or NGINX for ingress and load balancing
