@@ -19,19 +19,21 @@ __Cluster Builder__ was designed to handle ~all~ most of the complexity associat
 2. [Deployment Options](#deployment-options)
 3. [Setup and Environment Preparation](#setup-and-environment-preparation)
 4. [Cluster Definition Packages](#cluster-definition-packages)
-5. [Cluster Builder Usage](#cluster-builder-usage)
-6. [Deploying a Cluster](#deploying-a-cluster)
-7. [Change Cluster Password](#change-cluster-password)
-8. [Patching a Cluster](#patching-a-cluster)
-9. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
-10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-12. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](#kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-13. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-14. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
-17. [System Profile](#system-profile)
+5. [General Cluster Configuration](#general-cluster-configuration)
+6. [Kubernetes KubeAdm Configuration](#kubernetes-kubeadm-configuration)
+7. [Cluster Builder Usage](#cluster-builder-usage)
+8. [Deploying a Cluster](#deploying-a-cluster)
+9. [Change Cluster Password](#change-cluster-password)
+10. [Patching a Cluster](#patching-a-cluster)
+11. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
+12. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+13. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+17. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+18. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
+19. [System Profile](#system-profile)
 
 ## Supported Clusters
 The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and tock __CentOS 7.5__ and __Fedora 29 Kubernetes__ clusters for several platforms:
@@ -42,6 +44,8 @@ The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tect
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
 * CentOS 7.5 Kubernetes (Stock `kubeadm`)
 * Fedora 29 Kubernetes (Stock `kubeadm`)
+
+> The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Tectonic CoreOS, while a once great Kubernetes, has now been _assimilated_ into _OpenShift_, and with all the M&As around those products, the future is a tangled web.  Meanwhile, the stock `kubeadm` based clusters are getting quite stable and reliable.
 
 ## Deployment Options
 There are currently two types of deployment, __local machine__ and remote __ESXI__ hypervisor (or vSphere):
@@ -71,27 +75,43 @@ and for production usage:
 
 ### Kubernetes Cluster Types
 
-There are two special builds in support of __Tectonic CoreOS__:
-
-* coreos-provisioner
-* coreos-pxe
-
-For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
-
-There are also two experimental custom built Kubernetes variants:
+There are two maintained `kubeadm` built Kubernetes variants:
 
 * centos-k8s
 * fedora-k8s
 
 __centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that implement:
 
-* Canal/Flannel CNI Networking with Network Policy support
-* Traefik for ingress and load balancing
-* iSCSI Provisioner and Targetd integration for PVC storage
+* Canal/Flannel CNI network plugin with _Network Policy_ support
 
-The __CentOS7 K8s__ cluster has been load tested and performs as well as CoreOS and with similar stability.
+_or_
 
-The __Fedora K8s__ cluster is the bleeding edge and more for experimentation.
+* Calico CNI network plugin without _Network Policy_
+
+_or_ 
+
+* Calico CNI network plugin with Istio and _Network Policy_
+
+* Traefik or NGINX for ingress and load balancing
+* The Kubernetes Dashboard w/ Heapster integration and dashboard graphics (soon to support Metrics Server)
+* iSCSI Provisioner integration and with an external Targetd Storage Appliance VM for PVC storage
+
+> The __CentOS7 K8s__ cluster has been load tested and perform  near the performance of CoreOS w/ Canal CNI and with similar stability, and > 30% faster then CoreOS w/ Calico CNI networking.
+
+The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 4.x kernel.
+
+> Both __CentOS7 and Fedora 29__ based K8s clusters are 1.12.x, significantly newer then the 1.9.x Tectonic K8s versions.
+
+#### Tectonic CoreOS : Deprecated
+
+The future of __Tectonic CoreOS__ in the form pre-RedHat does not exist.  The jury is still out on whether the _OpenShift_ variant is going to be worth all the customizations and quirks of _OpenShift_, which has never been a widely loved K8s platform.
+
+There remains two special deployment builds in support of the old __Tectonic CoreOS__:
+
+* coreos-provisioner
+* coreos-pxe
+
+For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
 
 ### Extras
 
@@ -183,10 +203,6 @@ VMs for provisioning.
 __Note for Red Hat Deployments__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
 
-See the [Local Deployment Guide](docs/local_deployment_guide.md) for details about deploying on VMware Fusion and Workstation.
-
-See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about deploying to ESXi hypervisor(s).
-
 ## Cluster Definition Packages
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
@@ -204,6 +220,47 @@ Sample cluster packages are located in the **clusters/eg** folder and can be cop
 > k8s-m1.idstudios.local ansible_host=192.168.1.220 etcd_name=etcd1
 > 
 > The inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
+
+## General Cluster Configuration
+
+The following guides containe some specific setup information depending on the target deployment.
+
+See the [Local Deployment Guide](docs/local_deployment_guide.md) for details about deploying on VMware Fusion and Workstation.
+
+See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about deploying to ESXi hypervisor(s).
+
+## Kubernetes KubeAdm Configuration
+
+In addition to some of the general __hosts__ file configuration parameters described in the above guides, there are some special __K8s__ configuration paramters to note:
+
+	k8s_network_cni=calico-policy
+
+The __k8s_network_cni__ setting can be one of: __canal__, __calico__ or __calico-policy__ (which includes Istio).  It defaults to __canal__.
+
+	k8s_ingress_controller=nginx
+
+The __k8s_ingress_controller__ setting can be one of: __nginx__, __traefik-nodeport__, __traefik-daemonset__ or __traefik-deploymnet__.  It defaults to __nginx__ which is exposed over _NodePort_.
+
+	k8s_cluster_cidr=10.10.10.0/16
+
+This defaults to __192.168.0.0/16__, but may conflict with your environment if this network is already in use.  Use __k8s_cluster_cidr__ to override.
+
+	k8s_admin_url=k8s-admin.onprem.idstudios.io
+
+The __k8s_admin_url__ setting should be either a load balancer or round-robin DNS configuration that resolves to all of the __master__ nodes.
+
+	k8s_ingress_url=k8s-ingress.onprem.idstudios.io
+
+The __k8s_ingress_url__ setting should be either a load balancer or round-robin DNS configuration that resolves to all of the __worker__ nodes.
+
+	k8s_cluster_token=9aeb42.99b7540a5833866a
+
+The __k8s_cluster_token__ should be unique to each cluster.
+
+	k8s_coredns_loop_check_disable=true
+
+(optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__ or __calico-policy__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
+
 
 #### VMware Fusion/Workstation Examples
 

@@ -16,6 +16,12 @@
   run_once: true
   when: k8s_cluster_cidr is undefined and k8s_network_cni == "calico"
 
+- name: set k8s_ingress_controller default for NGINX
+  set_fact:
+    k8s_ingress_controller: nginx
+  run_once: true
+  when: k8s_ingress_controller is undefined
+  
 - name: remove the updated docker-ce
   yum:
     name: docker-ce

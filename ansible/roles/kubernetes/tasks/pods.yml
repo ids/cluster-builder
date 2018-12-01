@@ -11,20 +11,23 @@
 
 - name: configure Calico CNI network plugin
   include: calico.yml
-  when: k8s_network_cni == "calico"
+  when: k8s_network_cni == "calico" or k8s_network_cni == "calico-policy"
 
 - name: apply the temporary coredns loop patch 
   include: coredns-loop.yml
+  when: k8s_coredns_loop_check_disable is defined
 
 - name: configure Calico CNI Network Policy 
   include: calico-policy.yml
-  when: k8s_network_cni == "calico"
+  when: k8s_network_cni == "calico-policy"
 
-#- name: configure Traefik ingress controller 
-#  include: traefik.yml
+- name: configure Traefik ingress controller 
+  include: traefik.yml
+  when: k8s_ingress_controller == "traefik-daemonset" or k8s_ingress_controller == "traefik-deployment"
 
 - name: configure NGINX ingress controller 
   include: nginx.yml
+  when: k8s_ingress_controller == "nginx"
 
 - name: configure the Kubernetes Dashboard 
   include: kubernetes-dashboard.yml
