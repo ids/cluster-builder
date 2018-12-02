@@ -15,34 +15,40 @@ network_mask=255.255.255.0
 network_gateway=192.168.1.2
 network_dns=8.8.8.8
 network_dns2=8.8.4.4
-network_dn=idstudios.local
+network_dn=onprem.idstudios.io
 
-targetd_server=192.168.1.200
-targetd_server_iqn=iqn.2018-06.io.idstudios.test-core:storage
+targetd_server=192.168.1.205
+targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
 targetd_server_volume_group=vg-targetd
 targetd_server_provisioner_name=iscsi-targetd
-targetd_server_storage_class=iscsi-targetd-vg-targetd
 targetd_server_account_credentials=targetd-account
 targetd_server_account_username=admin
-targetd_server_account_password=happyduck
+targetd_server_account_password=ciao
 targetd_server_namespace=default
 
-k8s_admin_url=k8s-admin.idstudios.local
+k8s_coredns_loop_check_disable=true
+k8s_network_cni=calico-policy
+k8s_cluster_cidr=10.10.10.0/16
+k8s_admin_url=k8s-admin.onprem.idstudios.io
 k8s_advertise_addr=192.168.1.220
-k8s_ingress_url=k8s-ingress.idstudios.local
+k8s_ingress_url=k8s-ingress.onprem.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 
 [k8s_masters]
-k8s-m1.idstudios.local ansible_host=192.168.1.220 etcd_name=etcd1
+k8s-m1 ansible_host=192.168.1.220 etcd_name=etcd1
 
 [k8s_workers]
-k8s-w1.idstudios.local ansible_host=192.168.1.221 
-k8s-w2.idstudios.local ansible_host=192.168.1.222 
-k8s-w3.idstudios.local ansible_host=192.168.1.223 
+k8s-w1 ansible_host=192.168.1.221 
+k8s-w2 ansible_host=192.168.1.222 
+k8s-w3 ansible_host=192.168.1.223 
+k8s-w4 ansible_host=192.168.1.224 
+k8s-w5 ansible_host=192.168.1.225 
 
 [vmware_vms]
-k8s-m1.idstudios.local numvcpus=8 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+k8s-m1 numvcpus=8 memsize=5144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
 
-k8s-w1.idstudios.local numvcpus=4 memsize=5144 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
-k8s-w2.idstudios.local numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
-k8s-w3.idstudios.local numvcpus=4 memsize=5144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+k8s-w1 numvcpus=4 memsize=5144 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+k8s-w2 numvcpus=4 memsize=5144 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+k8s-w3 numvcpus=4 memsize=5144 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+k8s-w4 numvcpus=4 memsize=5144 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+k8s-w5 numvcpus=4 memsize=5144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd

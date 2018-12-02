@@ -15,6 +15,12 @@
 
 - debug: msg="{{ istio_out.stdout_lines }}"
 
+- name: Install FlexVolume daemonset into istio-system (needed for sidecar injection)
+  shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml
+  register: flex_out
+
+- debug: msg="{{ flex_out.stdout_lines }}"
+
 - name: clean up Istio download
   shell: rm -rf istio*
   args:
