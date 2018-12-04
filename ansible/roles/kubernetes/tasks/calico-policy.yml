@@ -1,10 +1,8 @@
 - name: install Calico Node Policy manifest
   shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/kubernetes-datastore/calico-networking/calico-node.yaml
   register: calico_policy_out
-  when: k8s_network_cni == "calico"
 
 - debug: msg="{{ calico_policy_out.stdout_lines }}"
-  when: k8s_network_cni == "calico"
 
 - name: wait for the Calico nodes to restart
   pause:
