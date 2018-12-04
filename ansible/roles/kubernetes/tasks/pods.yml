@@ -21,6 +21,10 @@
   include: calico-policy.yml
   when: k8s_network_cni == "calico-policy"
 
+- name: configure MetalLB on premise Load Balancer  
+  include: metal-lb.yml
+  when: k8s_metallb_address_range is defined
+
 - name: configure Traefik ingress controller 
   include: traefik.yml
   when: k8s_ingress_controller == "traefik-daemonset" or k8s_ingress_controller == "traefik-deployment"

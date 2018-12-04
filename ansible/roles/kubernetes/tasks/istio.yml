@@ -3,19 +3,19 @@
   args:
     chdir: /tmp
 
-- name: Install Istio CRDs
+- name: install Istio CRDs
   shell: kubectl apply -f /tmp/istio*/install/kubernetes/helm/istio/templates/crds.yaml
   register: istio_crd_out
 
 - debug: msg="{{ istio_crd_out.stdout_lines }}"
 
-- name: Install Istio for Calico authentication (no TLS)
+- name: install Istio for Calico authentication (no TLS)
   shell: kubectl apply -f /tmp/istio*/install/kubernetes/istio-demo.yaml
   register: istio_out
 
 - debug: msg="{{ istio_out.stdout_lines }}"
 
-- name: Install FlexVolume daemonset into istio-system (needed for sidecar injection)
+- name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
   shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml
   register: flex_out
 

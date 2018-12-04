@@ -93,8 +93,11 @@ _or_
 
 * Calico CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 
+__Load Balancer:__
+* [MetalLB](https://metallb.universe.tf/) the on-premise load balancer
+
 __Ingress:__
-* Traefik or NGINX for ingress and load balancing
+* Traefik or NGINX for ingress and inbound traffic routing
 
 __Dashboard:__
 * The Kubernetes Dashboard w/ Heapster integration and dashboard graphics (soon to support Metrics Server)
@@ -254,6 +257,10 @@ In addition to some of the general __hosts__ file configuration parameters descr
 	k8s_network_cni=calico-policy
 
 The __k8s_network_cni__ setting can be one of: __canal__, __calico__ or __calico-policy__ (which includes Istio).  It defaults to __canal__.
+
+	k8s_metallb_address_range=192.168.1.180-192.168.1.190
+
+The __k8s_metallb_address_range__ setting, when populated, will trigger the install of [MetalLB](https://metallb.universe.tf/), the on-premise load balancer for Kubernetes. It must be set to a valid address range for the cluster, with a subnet routeable to the cluster nodes.
 
 	k8s_ingress_controller=nginx
 
