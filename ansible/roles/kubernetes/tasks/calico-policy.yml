@@ -19,14 +19,14 @@
 #- name: install Istio via Helm
 #  include: istio-helm.yml
 
-#- name: install Calico Istio injection configmap manifest
-#  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml
-#  register: calico_istio_out
+- name: install Calico Istio injection configmap manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml
+  register: calico_istio_out
 
-#- debug: msg="{{ calico_istio_out.stdout_lines }}"
+- debug: msg="{{ calico_istio_out.stdout_lines }}"
 
-#- name: install Calico service mesh manifest
-#  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-app-layer-policy.yaml
-#  register: calico_mesh_out
+- name: install Calico service mesh manifest
+  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-app-layer-policy.yaml
+  register: calico_mesh_out
 
-#- debug: msg="{{ calico_mesh_out.stdout_lines }}"
+- debug: msg="{{ calico_mesh_out.stdout_lines }}"

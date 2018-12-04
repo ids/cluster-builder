@@ -32,6 +32,6 @@
 - name: configure the Kubernetes Dashboard 
   include: kubernetes-dashboard.yml
 
-#- name: configure MetalLB on premise Load Balancer  
-#  include: metal-lb.yml
-#  when: k8s_metallb_address_range is defined
+- name: configure MetalLB on premise Load Balancer  
+  include: metal-lb.yml
+  when: k8s_metallb_address_range is defined
