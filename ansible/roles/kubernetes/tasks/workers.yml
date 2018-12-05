@@ -14,9 +14,9 @@
     pkg={{item}} 
     state=present
   with_items:
-    - kubectl-1.12.*
-    - kubeadm-1.12.*
-    - kubelet-1.12.*
+    - "kubectl-{{ k8s_version }}"
+    - "kubeadm-{{ k8s_version }}"
+    - "kubelet-{{ k8s_version }}"
   when: cluster_type != "fedora-k8s"
 
 - name: install kubernetes on worker nodes (Fedora)
@@ -24,9 +24,9 @@
     pkg={{item}} 
     state=present
   with_items:
-    - kubectl-1.12.*
-    - kubeadm-1.12.*
-    - kubelet-1.12.*
+    - "kubectl-{{ k8s_version }}"
+    - "kubeadm-{{ k8s_version }}"
+    - "kubelet-{{ k8s_version }}"
   when: cluster_type == "fedora-k8s"
 
 - name: start kubelet on worker nodes
