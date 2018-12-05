@@ -11,12 +11,6 @@
 - name: install Istio
   include: istio.yml
 
-#- name: install Helm
-#  include: helm.yml
-
-#- name: install Istio via Helm
-#  include: istio-helm.yml
-
 - name: install Calico Istio injection configmap manifest
   shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml
   register: calico_istio_out

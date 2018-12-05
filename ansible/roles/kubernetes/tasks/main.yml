@@ -172,6 +172,10 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
+- name: wait for the CNI to settle in...
+  pause:
+    minutes: 2
+
 - name: configure ingress and load balancing 
   include: ingress.yml
   when: "'k8s_masters' in group_names
