@@ -158,6 +158,10 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
+- name: wait for the worker nodes to connect to the Master control plane and initialize
+  pause:
+    minutes: 2
+
 - name: install the default Kubernetes PODs
   include: pods.yml
   when: "'k8s_masters' in group_names
@@ -169,7 +173,7 @@
     src: templates/k8s-log-rotation.j2
     dest: /etc/logrotate.d/containers
 
-- name: wait for the worker nodes to connect to the Master control plane and initialize
+- name: wait for the pods to settle in
   pause:
     minutes: 2
 

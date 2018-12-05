@@ -1,9 +1,9 @@
 
-#- name: patch CoreDNS memory limit to deal with bug in 1.12.1
-#  shell: "kubectl patch deployment -n=kube-system coredns -p '{\"spec\": {\"template\": {\"spec\":{\"containers\":[{\"image\":\"k8s.gcr.io/coredns:1.2.2\", \"name\":\"coredns\",\"resources\":{\"limits\":{\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"70Mi\"}}}]}}}}'"
-#  register: patch_out
+- name: patch CoreDNS memory limit to deal with bug in 1.12.1
+  shell: "kubectl patch deployment -n=kube-system coredns -p '{\"spec\": {\"template\": {\"spec\":{\"containers\":[{\"image\":\"k8s.gcr.io/coredns:1.2.2\", \"name\":\"coredns\",\"resources\":{\"limits\":{\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"70Mi\"}}}]}}}}'"
+  register: patch_out
 
-#- debug: msg="{{ patch_out.stdout_lines }}"
+- debug: msg="{{ patch_out.stdout_lines }}"
 
 - name: configure Canal CNI network plugin
   include: canal.yml
@@ -32,6 +32,6 @@
 - name: configure the Kubernetes Dashboard 
   include: kubernetes-dashboard.yml
 
-- name: configure MetalLB on premise Load Balancer  
-  include: metal-lb.yml
-  when: k8s_metallb_address_range is defined
+#- name: configure MetalLB on premise Load Balancer  
+#  include: metal-lb.yml
+#  when: k8s_metallb_address_range is defined
