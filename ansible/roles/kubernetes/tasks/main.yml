@@ -53,9 +53,15 @@
 
 - name: configure sysctl for ip4
   shell: sysctl net.bridge.bridge-nf-call-iptables=1
-  
+
+#- name: configure sysctl forwarding ip4
+#  shell: sysctl net.ipv4.conf.all.forwarding=1
+    
 - name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf
+
+- name: add iptables forwarding rule for modern docker
+  shell: iptables -P FORWARD ACCEPT
 
 - name: turn swap off
   shell: swapoff -a
@@ -110,9 +116,8 @@
   shell: setenforce 0
   when: cluster_type != "fedora-k8s"
 
-- name: initialize the Masters cluster
-  include: masters-init.yml
-  when: "'k8s_masters' in group_names"
+- name: install Kubernetes on all the nodes
+  include: k8s-install.yml
 
 - name: configure the first Kubernetes master
   include: masters-first.yml

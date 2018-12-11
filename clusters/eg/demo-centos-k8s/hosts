@@ -26,8 +26,8 @@ targetd_server_account_password=ciao
 targetd_server_namespace=default
 
 k8s_coredns_loop_check_disable=true
-k8s_network_cni=calico-policy
-k8s_cluster_cidr=10.10.10.0/16
+k8s_network_cni=calico
+k8s_cluster_cidr=10.10.0.0/16
 k8s_admin_url=k8s-admin.onprem.idstudios.io
 k8s_advertise_addr=192.168.1.220
 k8s_ingress_url=k8s-ingress.onprem.idstudios.io

@@ -20,11 +20,11 @@
 
 - name: copy customized Istio manifest
   copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-demo-auth.yml"
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-demo.yml"
     dest: /tmp/
 
 - name: install Istio for Calico authentication (no TLS)
-  shell: kubectl apply -f /tmp/istio-demo-auth.yml
+  shell: kubectl apply -f /tmp/istio-demo.yml
   register: istio_out
 
 - debug: msg="{{ istio_out.stdout_lines }}"
@@ -36,7 +36,7 @@
 
 - name: wait for the enormous Istio installation to complete
   pause:
-    minutes: 3
+    minutes: 5
 
 - name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
   shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml

@@ -83,7 +83,7 @@ There are two maintained `kubeadm` built Kubernetes variants:
 __centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that come out-of-the-box with the following functionality:
 
 __CNI:__
-* [Canal/Flannel](https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
+* [Canal/Flannel](https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
 
 _or_
 
@@ -254,6 +254,10 @@ See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about
 
 In addition to some of the general __hosts__ file configuration parameters described in the above guides, there are some special __K8s__ configuration paramters to note:
 
+	k8s_version=1.12.*
+
+The __k8s_version__ setting controls what version of the kubernetes binaries are installed on the nodes.  Note that the `kubeadm` configuration file is fixed to, and in the format of, version 1.12 at this time.
+
 	k8s_network_cni=calico-policy
 
 The __k8s_network_cni__ setting can be one of: __canal__, __calico__ or __calico-policy__ (which includes Istio).  It defaults to __canal__.
@@ -266,9 +270,11 @@ The __k8s_metallb_address_range__ setting, when populated, will trigger the inst
 
 The __k8s_ingress_controller__ setting can be one of: __nginx__, __traefik-nodeport__, __traefik-daemonset__ or __traefik-deploymnet__.  It defaults to __nginx__ which is exposed over _NodePort_.
 
-	k8s_cluster_cidr=10.10.10.0/16
+	k8s_cluster_cidr=10.10.0.0/16
 
-This defaults to __192.168.0.0/16__, but may conflict with your environment if this network is already in use.  Use __k8s_cluster_cidr__ to override.
+This defaults to __10.244.0.0/16__ for Canal and __192.168.0.0/16__ for Calico, but may conflict with your environment if this network is already in use.  Use __k8s_cluster_cidr__ to override.
+
+> As an example, my management network is `192.168.1.0/24`, and my local virtual network for VMware is `192.168.100.0/24`.  Therefore the default for _Calico_ will not work and many of the pods would not start due to network address conflict.  In this case `10.10.0.0/16` worked best and I was able to install `calico-policy` with Istio.
 
 	k8s_admin_url=k8s-admin.onprem.idstudios.io
 

@@ -5,7 +5,7 @@
 #    dest: /tmp/calico-node.yml
 
 - name: download the current Calico Node default manifest
-  shell: curl -L -O https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/kubernetes-datastore/calico-networking/calico-node.yaml
+  shell: "curl -L -O https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/manifests/app-layer-policy/kubernetes-datastore/calico-networking/calico-node.yaml"
   args:
     chdir: /tmp
   register: calico_def_out
@@ -29,19 +29,19 @@
 
 - name: wait for the Calico nodes to restart
   pause:
-    minutes: 2
+    minutes: 4
 
 - name: install Istio
   include: istio.yml
 
 - name: install Calico Istio injection configmap manifest
-  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml
+  shell: "kubectl apply -f https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml"
   register: calico_istio_out
 
 - debug: msg="{{ calico_istio_out.stdout_lines }}"
 
 - name: install Calico service mesh manifest
-  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-app-layer-policy.yaml
+  shell: "kubectl apply -f https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-app-layer-policy.yaml"
   register: calico_mesh_out
 
 - debug: msg="{{ calico_mesh_out.stdout_lines }}"

@@ -12,7 +12,7 @@
   tasks:
 
     - name: download the current Calico default manifest
-      shell: curl -L -O https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+      shell: "curl -L -O https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml"
       args:
         chdir: /tmp
       register: calico_def_out
