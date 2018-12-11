@@ -488,48 +488,53 @@ Save this as `ci-runner-kube-config`.
 
 ### Step 3 - Switch to Service Account Context and Verify No Access to Namespace
 
-		kubectl --kubeconfig ci-runner-kube-config config use-context k8s-01-runner
-		kubectl --kubeconfig ci-runner-kube-config get pods
-
+```
+kubectl --kubeconfig ci-runner-kube-config config use-context k8s-01-runner
+kubectl --kubeconfig ci-runner-kube-config get pods
+```
 You will see a message indicating that the ci-runner service account does not have access.
 
 ### Step 4 - Create ClusterRole and ClusterRoleBinding to Grant Access to Namespace
 
-		apiVersion: rbac.authorization.k8s.io/v1
-		kind: ClusterRole
-		metadata:
-			name: ci-runner-role
-		rules:
-		- apiGroups: [""]
-			resources: ["pods"]
-			verbs: ["get", "list", "watch"]  
-		---
-		apiVersion: rbac.authorization.k8s.io/v1
-		kind: RoleBinding
-		metadata:
-			name: ci-runner-role-binding
-			namespace: default
-		roleRef:
-			apiGroup: rbac.authorization.k8s.io
-			kind: ClusterRole
-			name: ci-runner-role
-		subjects:
-		- kind: ServiceAccount
-			name: ci-runner
-			namespace: default  
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+	name: ci-runner-role
+rules:
+- apiGroups: [""]
+	resources: ["pods"]
+	verbs: ["get", "list", "watch"]  
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+	name: ci-runner-role-binding
+	namespace: default
+roleRef:
+	apiGroup: rbac.authorization.k8s.io
+	kind: ClusterRole
+	name: ci-runner-role
+subjects:
+- kind: ServiceAccount
+	name: ci-runner
+	namespace: default  
+```
 
 In this example __ci-runner__ has access to __get__,__list__ and __watch__ pods in the default namespace.
 
 For a __CI/CD__ deployment your ACLs may look more like the following:
 
-		apiVersion: rbac.authorization.k8s.io/v1
-		kind: ClusterRole
-		metadata:
-			name: ci-runner-role
-		rules:
-			- apiGroups: [""]
-				resources: ["*"]
-				verbs: ["*"]
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+	name: ci-runner-role
+rules:
+	- apiGroups: [""]
+		resources: ["*"]
+		verbs: ["*"]
+```
 
 Which grants full access to the service account namespace (in this case _default_).
 
@@ -541,18 +546,20 @@ And paste it in the secrets stored in __Gitlab Project > Settings > CI/CD > Secr
 
 Then use the codeified kube-config to access the target Kubernetes cluster in Gitlab CI/CD:
 
-		deploy:
-			stage: deploy
-			image: lwolf/helm-kubectl-docker:v152_213
-			before_script:
-				- mkdir -p /etc/deploy
-				- echo ${kube_config} | base64 -d > ${KUBECONFIG}
-				- kubectl config use-context k8s-01
-			script:
-				- kubectl get pods -n kube-system
-				- kubectl do some deployment stuff here
-			only:
-			- master
+```
+deploy:
+	stage: deploy
+	image: lwolf/helm-kubectl-docker:v152_213
+	before_script:
+		- mkdir -p /etc/deploy
+		- echo ${kube_config} | base64 -d > ${KUBECONFIG}
+		- kubectl config use-context k8s-01
+	script:
+		- kubectl get pods -n kube-system
+		- kubectl do some deployment stuff here
+	only:
+	- master
+```
 
 ## Kubernetes Load Testing Sample Stack
 
