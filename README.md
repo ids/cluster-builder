@@ -596,20 +596,23 @@ A general overview of the highlights:
 ### Docker Versions
 
 __Docker CE:__ 17.09.1-ce (or later)
-centos-swarm
-rhel-swarm
+
+* centos-swarm
+* rhel-swarm
 
 __DC/OS__: 1.11 (or latest)
-centos-dcos
+
+* centos-dcos
 
 __Tectonic CoreOS__: v1.9.6 (or latest)
-coreos-provisioner
-coreos-pxe
 
-__Stock Kubernetes__: v1.12.1
-coreos-k8s
-fedora-k8s
+* coreos-provisioner
+* coreos-pxe
 
+__Stock Kubernetes__: v1.12.x
+
+* coreos-k8s
+* fedora-k8s
 
 ### CentOS Based Clusters
 
