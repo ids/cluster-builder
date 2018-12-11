@@ -59,6 +59,7 @@
     when: platform == "windows"
 
   - debug: msg="{{ vmware_dhcpd_base_path }}"
+    run_once: true
 
   - name: ensure the target fusion_vm_folder exists
     local_action:

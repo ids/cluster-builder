@@ -6,4 +6,4 @@
 
 - name: apply the temporary coredns loop patch 
   include: coredns-loop.yml
-  when: k8s_coredns_loop_check_disable is defined
+  when: k8s_coredns_loop_check_disable == true
