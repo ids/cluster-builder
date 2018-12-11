@@ -528,7 +528,7 @@ For a __CI/CD__ deployment your ACLs may look more like the following:
 ```
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
-metadata:
+metadata:	
 	name: ci-runner-role
 rules:
 	- apiGroups: [""]
@@ -540,7 +540,7 @@ Which grants full access to the service account namespace (in this case _default
 
 ### Step 5 - Base64 the Service Account kube-config into a Gitlab CI/CD Secret
 
-		cat ci-runner-kube-config | base64 | pbcopy
+	cat ci-runner-kube-config | base64 | pbcopy
 
 And paste it in the secrets stored in __Gitlab Project > Settings > CI/CD > Secret Variables__.
 
