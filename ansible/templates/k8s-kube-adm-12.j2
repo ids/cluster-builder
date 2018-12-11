@@ -6,7 +6,13 @@ apiServerCertSANs:
   - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
   - "127.0.0.1"
+  - "10.96.0.1"
   - "{{ k8s_admin_url }}"
+  - "kubernetes.default.svc.cluster.local"
+  - "kubernetes.default.svc"
+  - "kubernetes.default"
+  - "kubernetes"
+  - "cluster.local"
 auditPolicy:
   logDir: /var/log/kubernetes/audit
   logMaxAge: 2
@@ -32,7 +38,7 @@ etcd:
     - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
 imageRepository: k8s.gcr.io
-kubernetesVersion: v1.12.1
+kubernetesVersion: v1.12.3
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ k8s_cluster_cidr }}

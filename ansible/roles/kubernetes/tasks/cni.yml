@@ -6,6 +6,3 @@
   include: cni-calico.yml
   when: k8s_network_cni == "calico" or k8s_network_cni == "calico-policy"
 
-- name: configure Calico CNI Network Policy 
-  include: cni-calico-policy.yml
-  when: k8s_network_cni == "calico-policy"

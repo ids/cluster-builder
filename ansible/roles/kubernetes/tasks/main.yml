@@ -1,44 +1,6 @@
-- name: set k8s_version default
-  set_fact:
-    k8s_version: 1.12.*
-  run_once: true
-  when: k8s_version is undefined
-
-- debug: msg="{{ k8s_version }}"
-  run_once: true
-
-- name: set k8s_network_cni default
-  set_fact:
-    k8s_network_cni: "canal"
-  run_once: true
-  when: k8s_network_cni is undefined
-
-- debug: msg="{{ k8s_network_cni }}"
-  run_once: true
-
-- name: set k8s_cluster_cidr default for Canal CNI
-  set_fact:
-    k8s_cluster_cidr: 10.244.0.0/16
-  run_once: true
-  when: k8s_cluster_cidr is undefined and k8s_network_cni == "canal"
-
-- name: set k8s_cluster_cidr default for Calico CNI
-  set_fact:
-    k8s_cluster_cidr: 192.168.0.0/24
-  run_once: true
-  when: k8s_cluster_cidr is undefined and k8s_network_cni == "calico"
-
-- debug: msg="{{ k8s_cluster_cidr }}"
-  run_once: true
-
-- name: set k8s_ingress_controller default for NGINX
-  set_fact:
-    k8s_ingress_controller: nginx
-  run_once: true
-  when: k8s_ingress_controller is undefined
-
-- debug: msg="{{ k8s_ingress_controller }}"
-  run_once: true
+- name: configure common defaults 
+  include: common.yml
+  when: "'k8s_masters' in group_names and inventory_hostname == groups['k8s_masters'][0]"
 
 - name: remove the updated docker-ce
   yum:
@@ -172,18 +134,43 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: wait for the CNI to settle in...
+- name: wait for CoreDNS and CNI to be healthy
   pause:
-    minutes: 2
+    minutes: 1
 
-- name: configure ingress and load balancing 
-  include: ingress.yml
+- name: display cluster master node status
+  shell: kubectl get nodes
+  register: final_nodes_out
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ final_nodes_out.stdout_lines }}"
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
 - name: configure the Kubernetes workers
   include: workers.yml
   when: "'k8s_workers' in group_names"
+
+- name: wait for the worker nodes to connect to the Master control plane and initialize
+  pause:
+    minutes: 2
+    
+- name: configure Calico CNI Network Policy 
+  include: cni-calico-policy.yml
+  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+
+- name: give the Calico CNI time to reconcile
+  pause:
+    minutes: 5
+  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+
+- name: configure ingress and load balancing 
+  include: ingress.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
 
 - name: display cluster worker node status
   shell: kubectl get nodes
@@ -194,10 +181,6 @@
 - debug: msg="{{ final_nodes_out.stdout_lines }}"
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
-
-- name: wait for the worker nodes to connect to the Master control plane and initialize
-  pause:
-    minutes: 2
 
 - name: configure the Kubernetes Dashboard 
   include: kubernetes-dashboard.yml

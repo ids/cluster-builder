@@ -1,0 +1,41 @@
+- name: set k8s_version default
+  set_fact:
+    k8s_version: 1.12.*
+  run_once: true
+  when: k8s_version is undefined
+
+- debug: msg="{{ k8s_version }}"
+  run_once: true
+
+- name: set k8s_network_cni default
+  set_fact:
+    k8s_network_cni: "canal"
+  run_once: true
+  when: k8s_network_cni is undefined
+
+- debug: msg="{{ k8s_network_cni }}"
+  run_once: true
+
+- name: set k8s_cluster_cidr default for Canal CNI
+  set_fact:
+    k8s_cluster_cidr: 10.244.0.0/16
+  run_once: true
+  when: k8s_cluster_cidr is undefined and k8s_network_cni == "canal"
+
+- name: set k8s_cluster_cidr default for Calico CNI
+  set_fact:
+    k8s_cluster_cidr: 192.168.0.0/16
+  run_once: true
+  when: k8s_cluster_cidr is undefined and k8s_network_cni == "calico" or k8s_network_cni == "calico-policy"
+
+- debug: msg="{{ k8s_cluster_cidr }}"
+  run_once: true
+
+- name: set k8s_ingress_controller default for NGINX
+  set_fact:
+    k8s_ingress_controller: nginx
+  run_once: true
+  when: k8s_ingress_controller is undefined
+
+- debug: msg="{{ k8s_ingress_controller }}"
+  run_once: true

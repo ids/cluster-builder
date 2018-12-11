@@ -11,14 +11,37 @@
   
 - debug: msg="{{ calico_rbac_out.stdout_lines }}"
   
-- name: generate custom Calico manifest
-  become: true
-  template:
-    src: templates/calico-3.3.j2
-    dest: /tmp/calico.yml
+#- name: install Calico default manifest
+#  shell: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+#  register: calico_def_out
+  
+#- debug: msg="{{ calico_def_out.stdout_lines }}"
+
+- name: download the current Calico default manifest
+  shell: curl -L -O https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+  args:
+    chdir: /tmp
+  register: calico_def_out
+  
+- debug: msg="{{ calico_def_out.stdout_lines }}"
+
+- name: "update the manifest with the correct cluster CIDR: {{ k8s_cluster_cidr }}"
+  shell: "sed 's/.*192.168.0.0.*/              value: \"{{ k8s_cluster_cidr | replace('/', '\\/') }}\"/' /tmp/calico.yaml > /tmp/calico-fixed.yaml"
+
+#- name: generate custom Calico manifest
+#  become: true
+#  template:
+#    src: templates/calico-3.3.j2
+#    dest: /tmp/calico.yaml
+
+- name: view modified Calico manifest
+  shell: cat /tmp/calico-fixed.yaml
+  register: calico_view_out
+  
+- debug: msg="{{ calico_view_out.stdout_lines }}"
 
 - name: install Calico manifest
-  shell: kubectl apply -f /tmp/calico.yml
+  shell: kubectl apply -f /tmp/calico-fixed.yaml
   register: calico_out
   
 - debug: msg="{{ calico_out.stdout_lines }}"
