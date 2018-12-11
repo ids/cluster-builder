@@ -230,8 +230,10 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 
 Eg. In the **clusters/eg** folder there is:
 
-		demo-centos-swarm
-			|_ hosts
+```
+demo-centos-swarm
+	|_ hosts
+```
 
 Sample cluster packages are located in the **clusters/eg** folder and can be copied into the **clusters** folder.
 
@@ -314,24 +316,25 @@ The __cluster-builder__ project is designed as a generic toolset for deployment.
 
 It is recommended that an organization establish a base folder git repository within the __clusters__ folder to store their cluster definition packages.  Anything kept in __clusters__ will be ignored by the parent cluster-builder git repository.
 
-Eg.
+__Eg.__
 
-	cluster-builder
-		|_ clusters
-			|_ ids (my organization - git repo - named anything - shorter is better)
-				|_ swarm-dev (my cluster definition package)
-					|_ hosts (the cluster inventory hosts file)
-
+```
+cluster-builder
+	|_ clusters
+		|_ ids (my organization - git repo - named anything - shorter is better)
+			|_ swarm-dev (my cluster definition package)
+				|_ hosts (the cluster inventory hosts file)
+```
 All resulting artifacts from __cluster-builder__ are then stored within the cluster definition package.
 
 ## Deploying a Cluster
 To deploy a cluster use **cluster-deploy**:
 
-    $ bash cluster-deploy <inventory-package | cluster-name>
+	$ bash cluster-deploy <inventory-package | cluster-name>
 
 Eg.
 
-    $ bash cluster-deploy eg/demo-centos-swarm
+	$ bash cluster-deploy eg/demo-centos-swarm
 
 ## Change Cluster Password
 Change password is now integrated into the cluster deployment process.
@@ -353,32 +356,32 @@ It is intended to be run on a regular basis as per the standard operating proced
 ## Patching a Cluster
 To update the nodes on a deployed cluster, use **cluster-update**:
 
-    $ bash cluster-deploy <inventory-package | cluster-name>
+	$ bash cluster-deploy <inventory-package | cluster-name>
 
-Eg.
+__Eg.__
 
-    $ bash cluster-deploy eg/esxi-rhel-swarm
+	$ bash cluster-deploy eg/esxi-rhel-swarm
 
 ## Adding a Node to a Cluster
 To add a new node to an existing cluster, update the original hosts file with the new node.
 Then use **cluster-add**:
 
-    $ bash cluster-add <inventory-package | cluster-name>
+	$ bash cluster-add <inventory-package | cluster-name>
 
-Eg.
+__Eg.__
 
-    $ bash cluster-add esxi-rhel-swarm
+	$ bash cluster-add esxi-rhel-swarm
 
 ## Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
 Use **cluster-control**:
 
-    bash cluster-control <inventory-package | cluster-name> <action: one of stop|suspend|start|destroy>
+	bash cluster-control <inventory-package | cluster-name> <action: one of stop|suspend|start|destroy>
 
-Eg.
+__Eg.__
 
-    $ bash cluster-control demo-centos-swarm suspend
+	$ bash cluster-control demo-centos-swarm suspend
 
 
 ## VMware Docker Storage Volume Driver Plugin
@@ -392,7 +395,7 @@ It is easiest to download the VIB to a shared datastore accessible to all of the
 
 > Make sure to put the VIB in tmp on the ESX server and reference it absolutely:
 
-Eg.
+__Eg.__
 
 	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.20.15f5e1d-0.0.1.vib
 
@@ -416,13 +419,16 @@ Place the following file in the cluster definition package folder:
 
 In the format:
 
+```
   nfs_shares:
     - folder: the name of the local mount folder
       fstab: the fstab entry
       group: an inventory group of hosts on which to setup this mount
+```
 
-Eg.
+__Eg.__
 
+```
   nfs_shares:
     - folder: /mnt/nfs/shared
       fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
@@ -430,10 +436,11 @@ Eg.
     - folder: /mnt/nfs/shared
       fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"
       group: "docker_swarm_worker"
+```
 
 And then run the ansible playbook for the platform:
 
-Eg.
+__Eg.__
 
   ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
 
@@ -454,7 +461,7 @@ Kubernetes RBAC and service accounts offer a popular model for granting controll
 
 This will show two tokens, the CA and the user token.  Use them to construct a kube-config for your cluster using the __ci-runner__ service account.
 
-Eg.
+__Eg.__
 
 ```
 apiVersion: v1
@@ -563,7 +570,7 @@ When the following is added to a cluster package hosts file:
 
 docker_prometheus_server=<ansible inventory hostname>
 
-Eg.
+__Eg.__
 
 	docker_prometheus_server=swarm-m1
 
