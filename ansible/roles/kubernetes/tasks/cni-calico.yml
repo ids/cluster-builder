@@ -8,8 +8,10 @@
 - name: install Calico RBAC manifest
   shell: "kubectl apply -f https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml"
   register: calico_rbac_out
-  
+  when: k8s_calico_version == "v3.3"
+
 - debug: msg="{{ calico_rbac_out.stdout_lines }}"
+  when: k8s_calico_version == "v3.3"
   
 - name: download the current Calico default manifest
   shell: "curl -L -O https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml"
