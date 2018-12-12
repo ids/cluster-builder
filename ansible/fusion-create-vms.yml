@@ -38,6 +38,7 @@
     when: platform == "windows"
 
   - debug: msg="{{ vmware_dhcpd_base_path }}"
+    run_once: true
 
   - name: set server_static_ip_wait_seconds if undefined
     set_fact:

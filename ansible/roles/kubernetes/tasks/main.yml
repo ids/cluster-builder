@@ -11,6 +11,7 @@
 - name: remove any existing daemon.json
   shell: rm /etc/docker/daemon.json
   ignore_errors: true
+  warn: false
   when: cluster_type != "fedora-k8s"
 
 - name: install base distro docker for CentOS
@@ -112,7 +113,7 @@
 #    regexp: '^SELINUX'
 #    line: 'SELINUX=disabled'
 
-- name: configure the Kubernetes Repo
+- name: disable SELinux
   shell: setenforce 0
   when: cluster_type != "fedora-k8s"
 
