@@ -1,7 +1,6 @@
 - name: update K8s repo
   shell: "yum -y update"
   become: true
-  warn: false
   
 - name: install K8s (CentOS)
   shell: "yum -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
