@@ -18,7 +18,7 @@ START_TIME=$SECONDS
 OVFTOOL_CMD=ovftool.exe
 {% else %}
 OVFTOOL_CMD=ovftool
-{% fi %}
+{% endif %}
 
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
