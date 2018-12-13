@@ -10,6 +10,8 @@
 
 - name: remove any existing daemon.json
   shell: rm /etc/docker/daemon.json
+  args:
+    warn: false
   ignore_errors: true
   when: cluster_type != "fedora-k8s"
 

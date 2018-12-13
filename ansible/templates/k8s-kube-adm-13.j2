@@ -1,0 +1,84 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+clusterName: "{{ cluster_name }}"
+apiServerCertSANs:
+{% for host in groups['k8s_masters'] %}
+  - "{{ hostvars[host].ansible_host }}"
+{% endfor %}
+  - "127.0.0.1"
+  - "10.96.0.1"
+  - "{{ k8s_admin_url }}"
+  - "kubernetes.default.svc.cluster.local"
+  - "kubernetes.default.svc"
+  - "kubernetes.default"
+  - "kubernetes"
+  - "cluster.local"
+etcd:
+  local:
+    image: "k8s.gcr.io/etcd-amd64:3.2.24"
+    dataDir: "/var/lib/etcd"    
+  extraArgs:
+    listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].inventory_hostname }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
+  serverCertSANs:
+    - "{{ k8s_advertise_addr }}"  
+{% for host in groups['k8s_masters'] %}
+    - "{{ hostvars[host].inventory_hostname }}"
+{% endfor %}
+  peerCertSANs:
+{% for host in groups['k8s_masters'] %}
+    - "{{ hostvars[host].ansible_host }}"
+{% endfor %}
+certificatesDir: /etc/kubernetes/pki
+controlPlaneEndpoint: "{{ k8s_advertise_addr }}:6443"
+kubernetesVersion: "v1.13.0"
+apiServer:
+  extraArgs:
+    authorization-mode: "Node,RBAC"
+  certSANs:
+    - "{{ k8s_advertise_addr }}"  
+{% for host in groups['k8s_masters'] %}
+    - "{{ hostvars[host].inventory_hostname }}"
+{% endfor %}
+  timeoutForControlPlane: 4m0s
+controllerManager:
+  extraArgs:
+    "node-cidr-mask-size": "20"
+imageRepository: "k8s.gcr.io"
+useHyperKubeImage: false
+networking:
+  dnsDomain: cluster.local
+  podSubnet: {{ k8s_cluster_cidr }}
+---
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: InitConfiguration
+bootstrapTokens:
+- token: "9a08jv.c0izixklcxtmnze7"
+  description: "kubeadm bootstrap token"
+  ttl: "24h"
+- token: "783bde.3f89s0fje9f38fhf"
+  description: "another bootstrap token"
+  usages:
+  - authentication
+  - signing
+  groups:
+  - system:bootstrappers:kubeadm:default-node-token
+nodeRegistration:
+  criSocket: "/var/run/dockershim.sock"
+  taints:
+  - key: "kubeadmNode"
+    value: "master"
+    effect: "NoSchedule"
+  kubeletExtraArgs:
+    cgroupDriver: "cgroupfs"
+localAPIEndpoint:
+  advertiseAddress: "{{ k8s_advertise_addr }}"
+  bindPort: 6443
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+# kubelet specific options here
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+bindAddress: 0.0.0.0
+clusterCIDR: {{ k8s_cluster_cidr }}
