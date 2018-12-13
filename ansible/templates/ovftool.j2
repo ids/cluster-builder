@@ -14,7 +14,7 @@ START_TIME=$SECONDS
 #  echo "Using OVA: ${OVA_TEMPLATE_PATH}"
 #fi
 
-{% if hostvars[host].platform == "windows" %}
+{% if platform == "windows" %}
 OVFTOOL_CMD=ovftool.exe
 {% else %}
 OVFTOOL_CMD=ovftool
