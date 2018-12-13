@@ -4,21 +4,27 @@ OVA_TEMPLATE_PATH={{ ova_template_path }}
 START_TIME=$SECONDS
 
 # this here for experimental windows support
-if [ -f /mnt/vmware-tools/ovftool.exe ]; then
-  echo "Using ovftool.exe alias for Windows!"
-  shopt -s expand_aliases
-  alias ovftool=/mnt/vmware-tools/ovftool.exe
-  CPATH=/mnt/c/Users/`whoami`
-  USER_PATH=${PWD/$CPATH/''}
-  OVA_TEMPLATE_PATH="file://C:/Users/`whoami`$USER_PATH/{{ ova_template_path }}"
-  echo "Using OVA: ${OVA_TEMPLATE_PATH}"
-fi
-  
+#if [ -f /mnt/vmware-tools/ovftool.exe ]; then
+#  echo "Using ovftool.exe alias for Windows!"
+#  shopt -s expand_aliases
+#  alias ovftool=/mnt/vmware-tools/ovftool.exe
+#  CPATH=/mnt/c/Users/`whoami`
+#  USER_PATH=${PWD/$CPATH/''}
+#  OVA_TEMPLATE_PATH="file://C:/Users/`whoami`$USER_PATH/{{ ova_template_path }}"
+#  echo "Using OVA: ${OVA_TEMPLATE_PATH}"
+#fi
+
+{% if hostvars[host].platform == "windows" %}
+OVFTOOL_CMD=ovftool.exe
+{% else %}
+OVFTOOL_CMD=ovftool
+{% fi %}
+
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
 
 read -r -d '' OVFCMD << EOM
-ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+${OVFTOOL_CMD} --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
     --numberOfCpus:vm={{ hostvars[host].numvcpus }} \
     --name="{{ hostvars[host].inventory_hostname }}" \
     --diskMode=thin \
@@ -35,7 +41,7 @@ EOM
   {% else %}
 
 read -r -d '' OVFCMD << EOM
-ovftool --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
+${OVFTOOL_CMD} --powerOffTarget --memorySize:vm={{ hostvars[host].memsize }} \
     {% if overwrite_existing_vms is defined  -%}
       --overwrite \
     {% endif %}
