@@ -3,28 +3,32 @@
 #  args:
 #    chdir: /tmp
 
-- name: copy customized Istio CRD manifest
-  copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-crds.yml"
-    dest: /tmp/
+#- name: copy customized Istio CRD manifest
+#  copy:
+#    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-crds.yml"
+#    dest: /tmp/
 
 #- name: install Istio CRDs
 #  shell: kubectl apply -f /tmp/istio*/install/kubernetes/helm/istio/templates/crds.yaml
 #  register: istio_crd_out
 
-- name: install Istio CRDs
-  shell: kubectl apply -f /tmp/istio-crds.yml
-  register: istio_crd_out
+#- name: install Istio CRDs
+#  shell: kubectl apply -f /tmp/istio-crds.yml
+#  register: istio_crd_out
 
-- debug: msg="{{ istio_crd_out.stdout_lines }}"
+#- debug: msg="{{ istio_crd_out.stdout_lines }}"
 
-- name: copy customized Istio manifest
-  copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-demo.yml"
-    dest: /tmp/
+#- name: copy customized Istio manifest
+#  copy:
+#    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-demo.yml"
+#    dest: /tmp/
 
-- name: install Istio for Calico authentication (no TLS)
-  shell: kubectl apply -f /tmp/istio-demo.yml
+#- name: install Istio for Calico authentication (no TLS)
+#  shell: kubectl apply -f /tmp/istio-demo.yml
+#  register: istio_out
+
+- name: install Istio 1.0.2 for Calico authentication (no TLS)
+  shell: kubectl apply -f https://raw.githubusercontent.com/knative/serving/v0.2.2/third_party/istio-1.0.2/istio.yaml
   register: istio_out
 
 - debug: msg="{{ istio_out.stdout_lines }}"

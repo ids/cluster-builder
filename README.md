@@ -157,6 +157,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 * __kubectl__ 1.9+ (Kubernetes and CoreOS Only - `brew install/upgrade kubernetes-cli`)
 * Docker for Mac or __docker-ce__ (Swarm only)
+* Python `pip`
 
 __Linux Setup Notes__
 
@@ -184,6 +185,7 @@ __macOS Setup Notes__
 * __kubectl__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
 * __docker-ce__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+* Python `pip` installed in the WSL
 
 __Windows Setup Notes__
 
