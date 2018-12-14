@@ -262,7 +262,8 @@ In addition to some of the general __hosts__ file configuration parameters descr
 
 	k8s_version=1.12.*
 
-The __k8s_version__ setting controls what version of the kubernetes binaries are installed on the nodes.  Note that the `kubeadm` configuration file is fixed to, and in the format of, version 1.12 at this time.
+The __k8s_version__ setting controls what version of the kubernetes binaries are installed on the nodes.  
+This can be used to set a specific version of __1.12__ or __1.13__, or it can be set to the latest patch release in the series using the __*__ wildcard.
 
 	k8s_network_cni=calico-policy
 

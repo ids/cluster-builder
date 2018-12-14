@@ -4,10 +4,10 @@ Release Notes
 v18.12
 ------
 
-* Initial implementation of cluster deployment to local machines on __Windows and Linux VMware Workstation hosts__.
+* Initial implementation of cluster deployment to local machines on __Windows and Linux VMware Workstation hosts__.  Windows can now deploy to both rvSphere/ESXi and local VMware Workstation environments.  Windows is now a first class cluster builder!
 * Verified and tested __DC/OS 1.11__ local deployment on Windows and macOS. _Linux mileage may vary for some reason still under investigation_.
 * Verified and tested __Docker CE Swarm__ on CentOS deployment locally on Windows, Linux and macOS.
-* Verified and tested __CentOS 7.5 Vanilla Kubernetes 1.12__ deployment __locally on Windows, Linux and macOS__.  A solid up to date reference Kubernetes.
+* Verified and tested __CentOS 7.5 Vanilla Kubernetes 1.12__ deployment __locally on Windows, Linux and macOS__.  A solid up to date reference Kubernetes.  Early support for __1.13__.
 * Updated `fedora-k8s` to __Fedora 29__.
 * Integrated [MetalLB](https://metallb.universe.tf/) into the __Vanilla Kubernetes__ configuration.
 * Added support for __Calico CNI Plugin w/ Istio and Network Policy__ for both __CentOS 7.5__ and __Fedora 29__. __k8s_network__cni__ allows selection of __canal__ (default), __calico__ and __calico-policy__ (whcih includes Istio and Network Policy).  Load tested and validated _Network Policy_ functionality on `centos-k8s` with __calico-policy__.  However, testing of __canal__ and __metal-lb__ shows a performance delta as compared to _Calico_ so as to make the overhead of _Istio_ a consideration.  Likely not worth it unless you plan on using _Istio_, and even then...
@@ -17,7 +17,6 @@ v18.12
 * Removed PhotonOS related artifacts as PhotonOS is no longer relevant due to VMware's misstep with PKS.  Proof that better technology does not always trump legacy enterprise software politics.
 * Removed UCP/Docker EE related artifacts as Docker EE is no longer supported, and not likely to have a future.
 * Cleaned up the code base and pruned out artifacts no longer required or relevant.
-
 
 > With support now on Windows and Linux workstations, ESXi deployment should work as expected on all platforms, however the [cluster-builder-control](https://github.com/ids/cluster-builder-control) station is still recommended. _Also known conceptually as a bastion server or jump box. This is no longer limited to the CentOS version supplied and can, in fact, be a Windows based jump box_.
 

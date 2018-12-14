@@ -62,8 +62,8 @@
 - name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf
 
-#- name: add iptables forwarding rule for modern docker
-#  shell: iptables -P FORWARD ACCEPT
+- name: add iptables forwarding rule for modern docker
+  shell: iptables -P FORWARD ACCEPT
 
 - name: turn swap off
   shell: swapoff -a
