@@ -1,9 +1,3 @@
-- name: install Istio 1.0.2 CRDS (for Knative)
-  shell: kubectl apply -f https://raw.githubusercontent.com/knative/serving/v0.2.2/third_party/istio-1.0.2/istio-crds.yaml
-  register: istio_crds_out
-
-- debug: msg="{{ istio_crds_out.stdout_lines }}"
-
 - name: install Istio 1.0.2 (for Knative)
   shell: kubectl apply -f https://raw.githubusercontent.com/knative/serving/v0.2.2/third_party/istio-1.0.2/istio.yaml
   register: istio_out

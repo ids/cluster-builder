@@ -4,13 +4,13 @@
     chdir: /tmp
 
 - name: install Istio CRDs
-  shell: kubectl apply -f /tmp/istio-crds.yml
+  shell: kubectl apply -f /tmp/istio*/install/kubernetes/helm/istio/templates/crds.yaml
   register: istio_crd_out
 
 - debug: msg="{{ istio_crd_out.stdout_lines }}"
 
-- name: install Istio 1.0.4 for Calico authentication (no TLS)
-  shell: kubectl apply -f /tmp/istio-demo.yml
+- name: install latest Istio for Calico authentication (no TLS)
+  shell: kubectl apply -f /tmp/istio*/install/kubernetes/istio-demo.yml
   register: istio_out
 
 - debug: msg="{{ istio_out.stdout_lines }}"

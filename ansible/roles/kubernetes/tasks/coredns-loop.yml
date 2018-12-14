@@ -3,7 +3,9 @@
 
 - name: clear the loop check from the coredns configmap
   shell: sed -i '/loop/d' /tmp/coredns-configmap.yml
-
+  args:
+    warn: false
+    
 - name: apply the modified coredns configmap manifest
   shell: kubectl apply -f /tmp/coredns-configmap.yml
 
