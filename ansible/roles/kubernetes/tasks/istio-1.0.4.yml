@@ -1,16 +1,7 @@
-#- name: download latest Istio
-#  shell: "curl -L https://git.io/getLatestIstio | sh -"
-#  args:
-#    chdir: /tmp
-
 - name: copy customized Istio CRD manifest
   copy:
     src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-crds.yml"
     dest: /tmp/
-
-#- name: install Istio CRDs
-#  shell: kubectl apply -f /tmp/istio*/install/kubernetes/helm/istio/templates/crds.yaml
-#  register: istio_crd_out
 
 - name: install Istio CRDs
   shell: kubectl apply -f /tmp/istio-crds.yml
@@ -23,20 +14,9 @@
     src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-demo.yml"
     dest: /tmp/
 
-#- name: install Istio 1.0.4 for Calico authentication (no TLS)
-#  shell: kubectl apply -f /tmp/istio-demo.yml
-#  register: istio_out
-
-- name: install Istio 1.0.2 for Calico authentication (no TLS)
-  shell: kubectl apply -f https://raw.githubusercontent.com/knative/serving/v0.2.2/third_party/istio-1.0.2/istio.yaml
+- name: install Istio 1.0.4 for Calico authentication (no TLS)
+  shell: kubectl apply -f /tmp/istio-demo.yml
   register: istio_out
-
-- debug: msg="{{ istio_out.stdout_lines }}"
-
-#- name: clean up Istio download
-#  shell: rm -rf istio*
-#  args:
-#    chdir: /tmp
 
 - name: wait for the enormous Istio installation to complete
   pause:

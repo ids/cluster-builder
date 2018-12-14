@@ -1,0 +1,15 @@
+- name: install Istio 1.0.2 for Calico authentication (no TLS)
+  shell: kubectl apply -f https://raw.githubusercontent.com/knative/serving/v0.2.2/third_party/istio-1.0.2/istio.yaml
+  register: istio_out
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+
+- name: wait for the enormous Istio installation to complete
+  pause:
+    minutes: 5
+
+- name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
+  shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml
+  register: flex_out
+
+- debug: msg="{{ flex_out.stdout_lines }}"

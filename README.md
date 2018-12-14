@@ -235,7 +235,7 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 Eg. In the **clusters/eg** folder there is:
 
 ```
-demo-centos-swarm
+demo-swarm
 	|_ hosts
 ```
 
@@ -299,20 +299,19 @@ The __k8s_cluster_token__ should be unique to each cluster.
 
 (optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__ or __calico-policy__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
 
-
 #### VMware Fusion/Workstation Examples
 
-* [Kubernetes 1.12 in VMware Fusion/Workstation](clusters/eg/demo-centos-k8s/hosts)
-* [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-centos-dcos/hosts)
-* [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-centos-swarm/hosts)
+* [Kubernetes 1.12 in VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
+* [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
+* [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 * [Tectonic CoreOS in VMware Fusion/Workstation - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
 
 
 #### VMware ESXi Examples
 
-* [Kubernetes 1.12 in ESXi](clusters/eg/esxi-centos-k8s/hosts)
-* [DC/OS on ESXi](clusters/eg/esxi-centos-dcos/hosts)
-* [Docker CE on ESXi](clusters/eg/esxi-centos-swarm/hosts)
+* [Kubernetes 1.12 in ESXi](clusters/eg/esxi-k8s/hosts)
+* [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
+* [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 * [Tectonic CoreOS on ESXi - Provisioner](clusters/eg/core-provisioner/hosts) and [Clusters](clusters/eg/core/hosts).
 
 ## Cluster Builder Usage
@@ -339,7 +338,7 @@ To deploy a cluster use **cluster-deploy**:
 
 Eg.
 
-	$ bash cluster-deploy eg/demo-centos-swarm
+	$ bash cluster-deploy eg/demo-swarm
 
 ## Change Cluster Password
 Change password is now integrated into the cluster deployment process.
@@ -354,7 +353,7 @@ This functionality is also available as as top level script:
 
 Eg.
 
-	bash cluster-passwd esxi-centos-swarm admin
+	bash cluster-passwd esxi-swarm admin
 
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
 
@@ -386,7 +385,7 @@ Use **cluster-control**:
 
 __Eg.__
 
-	$ bash cluster-control demo-centos-swarm suspend
+	$ bash cluster-control demo-swarm suspend
 
 
 ## VMware Docker Storage Volume Driver Plugin
@@ -447,7 +446,7 @@ And then run the ansible playbook for the platform:
 
 __Eg.__
 
-  ansible-playbook -i clusters/esxi-centos-swarm/hosts ansible/centos-nfs-shares.yml
+  ansible-playbook -i clusters/eg/esxi-swarm/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
