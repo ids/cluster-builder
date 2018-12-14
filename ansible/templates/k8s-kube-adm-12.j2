@@ -51,6 +51,7 @@ bootstrapTokens:
   - signing
   - authentication
 nodeRegistration:
+  nodeName: {{ k8s_advertise_addr }}
   criSocket: /var/run/dockershim.sock
   taints:
     - key: "kubeadmNode"
