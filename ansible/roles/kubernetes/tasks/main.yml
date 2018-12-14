@@ -1,7 +1,3 @@
-- name: configure common defaults 
-  include: common.yml
-  when: "'k8s_masters' in group_names and inventory_hostname == groups['k8s_masters'][0]"
-
 - name: remove the updated docker-ce
   yum:
     name: docker-ce
@@ -180,7 +176,7 @@
 
 - name: configure Istio
   include: istio.yml
-  when: k8s_install_istio|bool == true and 'k8s_masters' in group_names
+  when: (k8s_install_istio|bool == true) and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
 - name: give the Calico CNI time to reconcile

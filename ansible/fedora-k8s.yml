@@ -10,6 +10,7 @@
 
   roles:
   - role: common
+  - role: common-k8s
   - role: fedora
   - role: kubernetes
   - role: iscsi-provisioner
