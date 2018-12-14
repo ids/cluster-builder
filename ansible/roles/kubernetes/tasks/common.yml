@@ -20,7 +20,13 @@
   set_fact:
     k8s_install_istio: false
   run_once: true
-  when: k8s_install_istio is undefined
+  when: k8s_install_istio is undefined and k8s_network_cni != 'calico-policy'
+
+- name: set k8s_install_istio default
+  set_fact:
+    k8s_install_istio: true
+  run_once: true
+  when: k8s_install_istio is undefined and k8s_network_cni == 'calico-policy'
 
 - debug: msg="install istio -> {{ k8s_install_istio }}"
   run_once: true

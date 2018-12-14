@@ -159,6 +159,16 @@
   include: workers.yml
   when: "'k8s_workers' in group_names"
 
+- name: configure ingress and load balancing 
+  include: ingress.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
+- name: configure the Kubernetes Dashboard 
+  include: kubernetes-dashboard.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
 - name: wait for the worker nodes to connect to the Master control plane and initialize
   pause:
     minutes: 2
@@ -168,16 +178,16 @@
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
+- name: configure Istio
+  include: istio.yml
+  when: k8s_install_istio|bool == true and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+
 - name: give the Calico CNI time to reconcile
   pause:
     minutes: 5
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
-
-- name: configure ingress and load balancing 
-  include: ingress.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
 
 - name: display cluster worker node status
   shell: kubectl get nodes
@@ -186,11 +196,6 @@
     and inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_nodes_out.stdout_lines }}"
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
-
-- name: configure the Kubernetes Dashboard 
-  include: kubernetes-dashboard.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 

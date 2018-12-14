@@ -1,0 +1,21 @@
+- name: install Istio
+  include: "istio-{{ k8s_istio_version }}.yml"
+  register: istio_out
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+
+- name: install Calico Istio injection configmap manifest
+  shell: "kubectl apply -f https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-inject-configmap.yaml"
+  register: calico_istio_out
+  when: k8s_network_cni == 'calico-policy'
+
+- debug: msg="{{ calico_istio_out.stdout_lines }}"
+  when: k8s_network_cni == 'calico-policy'
+
+- name: install Calico service mesh manifest
+  shell: "kubectl apply -f https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/manifests/app-layer-policy/istio-app-layer-policy.yaml"
+  register: calico_mesh_out
+  when: k8s_network_cni == 'calico-policy'
+
+- debug: msg="{{ calico_mesh_out.stdout_lines }}"
+  when: k8s_network_cni == 'calico-policy'
