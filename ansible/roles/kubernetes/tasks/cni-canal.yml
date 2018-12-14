@@ -16,3 +16,10 @@
   
 - debug: msg="{{ flannel_out.stdout_lines }}"
   
+- name: install Istio
+  include: istio.yml
+  register: istio_out
+  when: k8s_install_istio is true
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+  when: k8s_install_istio is true
