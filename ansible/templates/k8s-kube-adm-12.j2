@@ -8,11 +8,6 @@ apiServerCertSANs:
   - "127.0.0.1"
   - "10.96.0.1"
   - "{{ k8s_admin_url }}"
-  - "kubernetes.default.svc.cluster.local"
-  - "kubernetes.default.svc"
-  - "kubernetes.default"
-  - "kubernetes"
-  - "cluster.local"
 auditPolicy:
   logDir: /var/log/kubernetes/audit
   logMaxAge: 2
