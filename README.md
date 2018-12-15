@@ -258,7 +258,7 @@ See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about
 
 ## Kubernetes KubeAdm Configuration
 
-In addition to some of the general __hosts__ file configuration parameters described in the above guides, there are some special __K8s__ configuration paramters to note:
+With respect to `centos-k8s` and `fedora-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
 
 	k8s_version=1.12.*
 
