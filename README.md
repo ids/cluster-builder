@@ -396,7 +396,7 @@ This functionality is also available as as top level script:
 
 Eg.
 
-	bash cluster-passwd esxi-swarm admin
+	bash cluster-passwd eg/esxi-swarm admin
 
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
 
@@ -407,7 +407,7 @@ To update the nodes on a deployed cluster, use **cluster-update**:
 
 __Eg.__
 
-	$ bash cluster-deploy eg/esxi-rhel-swarm
+	$ bash cluster-deploy eg/esxi-swarm
 
 ## Adding a Node to a Cluster
 To add a new node to an existing cluster, update the original hosts file with the new node.
@@ -428,7 +428,7 @@ Use **cluster-control**:
 
 __Eg.__
 
-	$ bash cluster-control demo-swarm suspend
+	$ bash cluster-control eg/demo-swarm suspend
 
 
 ## VMware Docker Storage Volume Driver Plugin
@@ -656,7 +656,7 @@ __Tectonic CoreOS__: v1.9.6 (or latest)
 * coreos-provisioner
 * coreos-pxe
 
-__Stock Kubernetes__: v1.12.x
+__Stock Kubernetes__: v1.12.x, v1.13.x
 
 * coreos-k8s
 * fedora-k8s
