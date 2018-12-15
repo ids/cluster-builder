@@ -283,6 +283,11 @@ This defaults to __10.244.0.0/16__ for Canal and __192.168.0.0/16__ for Calico, 
 
 > As an example, my management network is `192.168.1.0/24`, and my local virtual network for VMware is `192.168.100.0/24`.  Therefore the default for _Calico_ will not work and many of the pods would not start due to network address conflict.  In this case `10.10.0.0/16` worked best and I was able to install `calico-policy` with Istio.
 
+	k8s_install_istio=true/false
+	k8s_istio_version=1.0.2/1.0.4/latest # 1.0.4 or latest are recommended
+
+The __k8s_install_istio__ setting determines whether __Istio__ is installed.  It works with both _Canal_ and _Calico_ CNIs, but _Calico_ depends on it for network policy, so when `calico-policy` is selected __Istio__ will be installed and this setting will be `true` .__k8s_istio_version__ is for future upgrades as _1.0.4_ is the only version tested and working.
+
 	k8s_admin_url=k8s-admin.onprem.idstudios.io
 
 The __k8s_admin_url__ setting should be either a load balancer or round-robin DNS configuration that resolves to all of the __master__ nodes.
@@ -299,11 +304,11 @@ The __k8s_cluster_token__ should be unique to each cluster.
 
 (optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__ or __calico-policy__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
 
-##### Working KubeAdm Formulas
+#### Working KubeAdm Formulas
 
 > The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.
 
-###### CentOS 7.5, K8s 1.13.1, Canal CNI w/ Network Policy, MetalLB, NGINX
+##### CentOS 7.5, K8s 1.13.1, Canal CNI w/ Network Policy, MetalLB, NGINX
 
 Deployed to the local VMware Fusion private network of `192.168.100.0/24`.
 
@@ -320,7 +325,7 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-###### CentOS 7.5, K8s 1.13.1, Calico CNI w/ Network Policy, Istio Service Mesh, MetalLB, NGINX
+##### CentOS 7.5, K8s 1.13.1, Calico CNI w/ Network Policy, Istio Service Mesh, MetalLB, NGINX
 
 Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
 
