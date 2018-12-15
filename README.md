@@ -299,7 +299,45 @@ The __k8s_cluster_token__ should be unique to each cluster.
 
 (optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__ or __calico-policy__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
 
-#### VMware Fusion/Workstation Examples
+##### Working KubeAdm Formulas
+
+> The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.
+
+###### CentOS 7.5, K8s 1.13.1, Canal CNI w/ Network Policy, MetalLB, NGINX
+
+Deployed to the local VMware Fusion private network of `192.168.100.0/24`.
+
+```
+k8s_version=1.13.*
+k8s_metallb_address_range=192.168.100.150-192.168.100.169
+k8s_network_cni=canal
+k8s_install_istio=true
+k8s_istio_version=1.0.4
+k8s_coredns_loop_check_disable=false
+k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_advertise_addr=192.168.100.200
+k8s_ingress_url=k8s-ingress.demo.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
+```
+
+###### CentOS 7.5, K8s 1.13.1, Calico CNI w/ Network Policy, Istio Service Mesh, MetalLB, NGINX
+
+Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
+
+```
+k8s_version=1.13.*
+k8s_istio_version=latest
+k8s_metallb_address_range=192.168.1.160-192.168.1.179
+k8s_network_cni=calico-policy
+k8s_cluster_cidr=10.10.0.0/16
+k8s_coredns_loop_check_disable=true
+k8s_admin_url=k8s-admin.onprem.idstudios.io
+k8s_advertise_addr=192.168.1.220
+k8s_ingress_url=k8s-ingress.onprem.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866b
+```
+
+#### VMware Fusion/Workstation Complete Examples
 
 * [Kubernetes 1.12 in VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
