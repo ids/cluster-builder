@@ -325,6 +325,8 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
+> At this present time the _Canal_ configuration is the only one with a working _Istio_.  While the _Calico w/ Istio_ appears to work with respect to _Network Policy_, there are problems with the _Istio_ ingress gateway.  _Knative_ does not appear to work with either configuration at the present time - work is ongoing.
+
 ##### CentOS 7.5, K8s 1.13.1, Calico CNI w/ Network Policy, Istio Service Mesh, MetalLB, NGINX
 
 Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
