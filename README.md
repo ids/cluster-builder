@@ -365,13 +365,13 @@ It is recommended that an organization establish a base folder git repository wi
 
 __Eg.__
 
-```
+<pre>
 cluster-builder
 	|_ clusters
 		|_ ids          # an organization - git repo - named anything - shorter is better
 			|_ swarm-dev  # a cluster definition package in the organization repo
 				|_ hosts    # the cluster inventory hosts file
-```
+</pre>
 All resulting artifacts from __cluster-builder__ are then stored within the cluster definition package.
 
 ## Deploying a Cluster
