@@ -72,18 +72,14 @@
 
 - name: install iSCSI utils for CentOS
   yum: > 
-    pkg={{item}} 
+    pkg=iscsi-initiator-utils 
     state=present
-  with_items:
-    - iscsi-initiator-utils
   when: cluster_type != "fedora-k8s"
 
 - name: install iSCSI utils for Fedora
   dnf: > 
-    pkg={{item}} 
+    pkg=iscsi-initiator-utils 
     state=present
-  with_items:
-    - iscsi-initiator-utils
   when: cluster_type == "fedora-k8s"
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
