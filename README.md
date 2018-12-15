@@ -612,7 +612,7 @@ deploy:
 
 A sample application stack has been included with cluster-builder that can be used to perform basic performance and load testing on deployed Kubernetes clusters.
 
-It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster__ paired with a __Drupal 7__ web front-end, which accesses the database through a dedicated __HA Proxy__ load balancer.
+It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster__ paired with a __Drupal 7__ web front-end, which accesses the database through either a dedicated __HA Proxy__ (legacy mode), or via an internal native k8s load balanced service.
 
 For guidance on generating the manifests for your __cluster-builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
 
