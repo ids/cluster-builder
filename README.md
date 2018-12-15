@@ -368,9 +368,9 @@ __Eg.__
 ```
 cluster-builder
 	|_ clusters
-		|_ ids (my organization - git repo - named anything - shorter is better)
-			|_ swarm-dev (my cluster definition package)
-				|_ hosts (the cluster inventory hosts file)
+		|_ ids  				# an organization - git repo - named anything - shorter is better
+			|_ swarm-dev  # a cluster definition package in the organization repo
+				|_ hosts  	# the cluster inventory hosts file
 ```
 All resulting artifacts from __cluster-builder__ are then stored within the cluster definition package.
 
