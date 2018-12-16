@@ -31,13 +31,13 @@
 - debug: msg="install istio -> {{ k8s_install_istio }}"
   run_once: true
 
-- name: set k8s_install_knative default
+- name: set k8s_install_knative_lite default
   set_fact:
-    k8s_install_knative: false
+    k8s_install_knative_lite: false
   run_once: true
-  when: k8s_install_knative is undefined
+  when: k8s_install_knative_lite is undefined
 
-- debug: msg="install knative -> {{ k8s_install_knative }}"
+- debug: msg="install knative -> {{ k8s_install_knative_lite }}"
   run_once: true
 
 - name: set k8s_istio_version default

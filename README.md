@@ -284,9 +284,13 @@ This defaults to __10.244.0.0/16__ for Canal and __192.168.0.0/16__ for Calico, 
 > As an example, my management network is `192.168.1.0/24`, and my local virtual network for VMware is `192.168.100.0/24`.  Therefore the default for _Calico_ will not work and many of the pods would not start due to network address conflict.  In this case `10.10.0.0/16` worked best and I was able to install `calico-policy` with Istio.
 
 	k8s_install_istio=true/false
-	k8s_istio_version=1.0.2/1.0.4/latest # 1.0.4 or latest are recommended
+	k8s_istio_version=1.0.2/1.0.4/latest/knative # 1.0.4 or knative are recommended
 
-The __k8s_install_istio__ setting determines whether __Istio__ is installed.  It works with both _Canal_ and _Calico_ CNIs, but _Calico_ depends on it for network policy, so when `calico-policy` is selected __Istio__ will be installed and this setting will be `true` .__k8s_istio_version__ is for future upgrades as _1.0.4_ is the only version tested and working.
+The __k8s_install_istio__ setting determines whether __Istio__ is installed.  It works with both _Canal_ and _Calico_ CNIs, but _Calico_ depends on it for network policy, so when `calico-policy` is selected __Istio__ will be installed and this setting will be `true` .__k8s_istio_version__ allows the version to be tailored, as _Knative_ works with a specific version which is referenced as `knative`.
+
+	k8s_install_knative_lite=true/false
+
+The __k8s_install_knative_lite__ setting determines whether __Knative Lite__ is installed.  At the present time the full __Knative__ installation is under development.
 
 	k8s_admin_url=k8s-admin.onprem.idstudios.io
 
@@ -318,7 +322,7 @@ k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_install_istio=true
 k8s_istio_version=latest
-k8s_install_knative=true
+k8s_install_knative_lite=true
 k8s_coredns_loop_check_disable=false
 k8s_admin_url=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
