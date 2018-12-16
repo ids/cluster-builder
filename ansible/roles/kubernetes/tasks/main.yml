@@ -58,8 +58,8 @@
 - name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf
 
-- name: add iptables forwarding rule for modern docker
-  shell: iptables -P FORWARD ACCEPT
+#- name: add iptables forwarding rule for modern docker
+#  shell: iptables -P FORWARD ACCEPT
 
 - name: turn swap off
   shell: swapoff -a
@@ -135,7 +135,7 @@
 
 - name: wait for CoreDNS and CNI to be healthy
   pause:
-    minutes: 1
+    minutes: 3
 
 - name: display cluster master node status
   shell: kubectl get nodes
@@ -179,6 +179,11 @@
   pause:
     minutes: 5
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+
+- name: configure Knative
+  include: knative.yml
+  when: (k8s_install_knative|bool == true) and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
 - name: display cluster worker node status

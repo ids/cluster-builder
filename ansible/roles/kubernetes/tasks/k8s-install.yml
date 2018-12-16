@@ -1,9 +1,13 @@
 - name: update K8s repo
   shell: "yum -y update"
+  args:
+    warn: false
   become: true
   
 - name: install K8s (CentOS)
   shell: "yum -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+  args:
+    warn: false
   register: k8s_install
   when: cluster_type != "fedora-k8s"
 
@@ -12,6 +16,8 @@
 
 - name: install K8s (Fedora)
   shell: "dnf -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+  args:
+    warn: false
   register: k8s_install
   when: cluster_type == "fedora-k8s"
 

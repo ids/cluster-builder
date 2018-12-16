@@ -1,0 +1,31 @@
+
+
+- name: install latest Istio CRDS
+  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio-crds.yaml > | kubectl apply -f -"
+  register: istio_crds_out
+  args:
+    chdir: /tmp
+
+- debug: msg="{{ istio_crd_out.stdout_lines }}"
+
+- name: install latest Istio (NodePort)
+  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml | sed 's/LoadBalancer/NodePort/' | kubectl apply -f -"
+  register: istio_out
+  args:
+    chdir: /tmp
+  when: k8s_metallb_address_range is undefined
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+
+- name: install latest Istio (LoadBalancer)
+  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml | kubectl apply -f -"
+  register: istio_out
+  args:
+    chdir: /tmp
+  when: k8s_metallb_address_range is defined
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+
+- name: wait for the enormous Istio installation to complete
+  pause:
+    minutes: 5

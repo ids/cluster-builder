@@ -1,0 +1,21 @@
+- name: install latest Knative (NodePort)
+  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml | sed 's/LoadBalancer/NodePort/' | kubectl apply -f -"
+  register: knative_out
+  args:
+    chdir: /tmp
+  when: k8s_metallb_address_range is undefined
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+
+- name: install latest Knative (LoadBalancer)
+  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml | kubectl apply -f -"
+  register: knative_out
+  args:
+    chdir: /tmp
+  when: k8s_metallb_address_range is defined
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+
+- name: wait for Knative installation to complete
+  pause:
+    minutes: 3

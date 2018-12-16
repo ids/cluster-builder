@@ -31,6 +31,15 @@
 - debug: msg="install istio -> {{ k8s_install_istio }}"
   run_once: true
 
+- name: set k8s_install_knative default
+  set_fact:
+    k8s_install_knative: false
+  run_once: true
+  when: k8s_install_knative is undefined
+
+- debug: msg="install knative -> {{ k8s_install_knative }}"
+  run_once: true
+
 - name: set k8s_istio_version default
   set_fact:
     k8s_istio_version: 1.0.4
