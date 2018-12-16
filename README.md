@@ -317,7 +317,8 @@ k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_install_istio=true
-k8s_istio_version=1.0.4
+k8s_istio_version=latest
+k8s_install_knative=true
 k8s_coredns_loop_check_disable=false
 k8s_admin_url=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
@@ -325,7 +326,7 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-> At this present time the _Canal_ configuration is the only one with a working _Istio_.  While the _Calico w/ Istio_ appears to work with respect to _Network Policy_, there are problems with the _Istio_ ingress gateway.  _Knative_ does not appear to work with either configuration at the present time - work is ongoing.
+> At this present time the _Canal_ configuration is the only one with a working _Istio_ and _Knative_.  Work is ongoing.
 
 ##### CentOS 7.5, K8s 1.13.1, Calico CNI w/ Network Policy, Istio Service Mesh, MetalLB, NGINX
 

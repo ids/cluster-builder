@@ -1,6 +1,6 @@
 
 
-- name: install latest Istio CRDS
+- name: install latest Istio CRDS for Knative
   shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio-crds.yaml > | kubectl apply -f -"
   register: istio_crds_out
   args:
@@ -8,7 +8,7 @@
 
 - debug: msg="{{ istio_crd_out.stdout_lines }}"
 
-- name: install latest Istio (NodePort)
+- name: install latest Istio (NodePort) for Knative
   shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml | sed 's/LoadBalancer/NodePort/' | kubectl apply -f -"
   register: istio_out
   args:
@@ -17,7 +17,7 @@
 
 - debug: msg="{{ istio_out.stdout_lines }}"
 
-- name: install latest Istio (LoadBalancer)
+- name: install latest Istio (LoadBalancer) for Knative
   shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml | kubectl apply -f -"
   register: istio_out
   args:
@@ -29,3 +29,9 @@
 - name: wait for the enormous Istio installation to complete
   pause:
     minutes: 5
+
+- name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
+  shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml
+  register: flex_out
+
+- debug: msg="{{ flex_out.stdout_lines }}"
