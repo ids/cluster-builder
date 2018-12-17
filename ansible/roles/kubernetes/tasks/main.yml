@@ -148,11 +148,10 @@
     and inventory_hostname == groups['k8s_masters'][0]"
 
 - name: remove the master taint
-  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  shell: kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
   when: "'k8s_masters' in group_names
     and k8s_workloads_on_master|bool == True
     and inventory_hostname == groups['k8s_masters'][0]"
-  ingore_errors: true
 
 - name: configure the Kubernetes workers
   include: workers.yml
