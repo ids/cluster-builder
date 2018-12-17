@@ -16,6 +16,7 @@
   when: k8s_metallb_address_range is undefined
 
 - debug: msg="{{ istio_out.stdout_lines }}"
+  when: k8s_metallb_address_range is undefined
 
 - name: install latest Istio (LoadBalancer) for Knative
   shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml | kubectl apply -f -"
@@ -25,6 +26,7 @@
   when: k8s_metallb_address_range is defined
 
 - debug: msg="{{ istio_out.stdout_lines }}"
+  when: k8s_metallb_address_range is defined
 
 - name: wait for the enormous Istio installation to complete
   pause:
