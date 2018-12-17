@@ -6,6 +6,7 @@
   when: k8s_metallb_address_range is undefined
 
 - debug: msg="{{ knative_out.stdout_lines }}"
+  when: k8s_metallb_address_range is undefined
 
 - name: install latest Knative (LoadBalancer)
   shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml | kubectl apply -f -"
@@ -15,7 +16,8 @@
   when: k8s_metallb_address_range is defined
 
 - debug: msg="{{ knative_out.stdout_lines }}"
+  when: k8s_metallb_address_range is defined
 
 - name: wait for Knative installation to complete
   pause:
-    minutes: 3
+    minutes: 5
