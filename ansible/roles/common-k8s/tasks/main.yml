@@ -131,10 +131,21 @@
   set_fact:
     k8s_cni_wait_min: 5
   run_once: true
-  when: k8s_cni_wait_min is undefined
+  when: k8s_cni_wait_min is undefined and k8s_network_cni == "canal"
 
 - debug: msg="k8s_cni_wait_min -> {{ k8s_cni_wait_min }}"
   run_once: true
+  when: k8s_cni_wait_min is undefined and k8s_network_cni == "canal"
+
+- name: set k8s_cni_wait_min default
+  set_fact:
+    k8s_cni_wait_min: 7
+  run_once: true
+  when: k8s_cni_wait_min is undefined and k8s_network_cni != "canal"
+
+- debug: msg="k8s_cni_wait_min -> {{ k8s_cni_wait_min }}"
+  run_once: true
+  when: k8s_cni_wait_min is undefined and k8s_network_cni != "canal"
 
 - name: set k8s_workloads_on_master default
   set_fact:
