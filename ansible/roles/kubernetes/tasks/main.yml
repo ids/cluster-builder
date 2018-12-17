@@ -163,7 +163,7 @@
 
 - name: wait for the worker nodes to connect to the Master control plane and initialize
   pause:
-    minutes: 2
+    minutes: 5
     
 - name: configure Calico CNI Network Policy 
   include: cni-calico-policy.yml
@@ -177,7 +177,7 @@
 
 - name: give the Calico CNI time to reconcile
   pause:
-    minutes: 5
+    minutes: 7
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
