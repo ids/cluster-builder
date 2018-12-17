@@ -1,6 +1,6 @@
 - name: copy customized Istio CRD manifest
   copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-crds.yml"
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio/istio-crds.yml"
     dest: /tmp/
 
 - name: install Istio CRDs
@@ -11,7 +11,7 @@
 
 - name: copy customized Istio manifest
   copy:
-    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio-demo.yml"
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/istio/istio-demo.yml"
     dest: /tmp/
 
 - name: install Istio 1.0.4 for Calico authentication (no TLS)
