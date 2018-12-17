@@ -6,7 +6,7 @@
   args:
     chdir: /tmp
 
-- debug: msg="{{ istio_crd_out.stdout_lines }}"
+- debug: msg="{{ istio_crds_out.stdout_lines }}"
 
 - name: install latest Istio (NodePort) for Knative
   shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml | sed 's/LoadBalancer/NodePort/' | kubectl apply -f -"
