@@ -29,5 +29,5 @@
 
 - name: wait for the Calico nodes to restart
   pause:
-    minutes: 3
+    minutes: "{{ k8s_calico_node_wait_min }}"
 

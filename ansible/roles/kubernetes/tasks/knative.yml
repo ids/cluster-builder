@@ -20,4 +20,4 @@
 
 - name: wait for Knative installation to complete
   pause:
-    minutes: 5
+    minutes: "{{ k8s_knative_wait_min }}"

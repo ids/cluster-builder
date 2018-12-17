@@ -82,6 +82,60 @@
 - debug: msg="{{ k8s_ingress_controller }}"
   run_once: true
 
+- name: set k8s_istio_wait_min default
+  set_fact:
+    k8s_istio_wait_min: 7
+  run_once: true
+  when: k8s_istio_wait_min is undefined
+
+- debug: msg="k8s_istio_wait_min -> {{ k8s_istio_wait_min }}"
+  run_once: true
+
+- name: set k8s_calico_node_wait_min default
+  set_fact:
+    k8s_calico_node_wait_min: 3
+  run_once: true
+  when: k8s_calico_node_wait_min is undefined
+
+- debug: msg="k8s_calico_node_wait_min -> {{ k8s_calico_node_wait_min }}"
+  run_once: true
+
+- name: set k8s_calico_policy_wait_min default
+  set_fact:
+    k8s_calico_policy_wait_min: 5
+  run_once: true
+  when: k8s_calico_policy_wait_min is undefined
+
+- debug: msg="k8s_calico_policy_wait_min -> {{ k8s_calico_policy_wait_min }}"
+  run_once: true
+
+- name: set k8s_worker_wait_min default
+  set_fact:
+    k8s_worker_wait_min: 5
+  run_once: true
+  when: k8s_worker_wait_min is undefined
+
+- debug: msg="k8s_worker_wait_min -> {{ k8s_worker_wait_min }}"
+  run_once: true
+
+- name: set k8s_knative_wait_min default
+  set_fact:
+    k8s_knative_wait_min: 7
+  run_once: true
+  when: k8s_knative_wait_min is undefined
+
+- debug: msg="k8s_knative_wait_min -> {{ k8s_knative_wait_min }}"
+  run_once: true
+
+- name: set k8s_cni_wait_min default
+  set_fact:
+    k8s_cni_wait_min: 5
+  run_once: true
+  when: k8s_cni_wait_min is undefined
+
+- debug: msg="k8s_cni_wait_min -> {{ k8s_cni_wait_min }}"
+  run_once: true
+
 - name: set k8s_coredns_loop_check_disable default
   set_fact:
     k8s_coredns_loop_check_disable: "true"

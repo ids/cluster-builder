@@ -22,7 +22,7 @@
 
 - name: wait for the enormous Istio installation to complete
   pause:
-    minutes: 5
+    minutes: "{{ k8s_istio_wait_min }}"
 
 - name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
   shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml

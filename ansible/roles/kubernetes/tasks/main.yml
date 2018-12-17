@@ -135,7 +135,7 @@
 
 - name: wait for CoreDNS and CNI to be healthy
   pause:
-    minutes: 3
+    minutes: "{{ k8s_cni_wait_min }}"
 
 - name: display cluster master node status
   shell: kubectl get nodes
@@ -163,7 +163,7 @@
 
 - name: wait for the worker nodes to connect to the Master control plane and initialize
   pause:
-    minutes: 5
+    minutes: "{{ k8s_worker_wait_min }}"
     
 - name: configure Calico CNI Network Policy 
   include: cni-calico-policy.yml
@@ -177,7 +177,7 @@
 
 - name: give the Calico CNI time to reconcile
   pause:
-    minutes: 7
+    minutes: "{{ k8s_calico_policy_wait_min }}"
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
