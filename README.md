@@ -308,6 +308,15 @@ The __k8s_cluster_token__ should be unique to each cluster.
 
 (optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__ or __calico-policy__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
 
+	k8s_cni_wait_min=7
+	k8s_worker_wait_min=7
+	k8s_calico_policy_wait_min=5
+	k8s_calico_node_wait_min=3
+	k8s_istio_wait_min=7
+	k8s_knative_wait_min=5
+
+The __k8s_XXX_wait_min__ settings allow control of various pauses during the cluster deployment.  The wait times will vary depending on your environment, and if deployments proceed too soon the PODS will not come up properly.  Adjust these values as required.  Larger clusters will require longer wait times.
+
 #### Working KubeAdm Formulas
 
 > The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.
