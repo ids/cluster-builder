@@ -60,7 +60,7 @@ EOM
         
   {% endif %}
 
-  {% if ovftool_parallel is defined %}
+  {% if ovftool_parallel|bool == True %}
     eval "${OVFCMD} &"
   {% else %}
     eval "${OVFCMD}"
@@ -73,7 +73,7 @@ EOM
         
 {% endfor %}
 
-{% if ovftool_parallel is defined %}
+{% if ovftool_parallel|bool == True %}
 wait
 {% endif %}
 
