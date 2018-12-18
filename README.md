@@ -321,7 +321,16 @@ The __k8s_XXX_wait_min__ settings allow control of various pauses during the clu
 
 > The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.
 
-##### CentOS 7.5, K8s 1.13.1, Canal CNI w/ Network Policy, MetalLB, NGINX
+The following example cluster formulas have been tested and contain the following components:
+
+* __CentOS 7.5__ minimal OS node
+* `kubeadm` based __1.12.x__ and __1.13.x__ Kubernetes w/ __Canal CNI__ or __Calico CNI__ network plugins
+* __Istio__ service mesh
+* __MetalLB__ baremetal load balancer
+* __NGINX__ ingress conroller
+* __Knative__ Kubernetes serverless add-on
+
+##### Canal CNI
 
 Deployed to the local VMware Fusion private network of `192.168.100.0/24`.
 
@@ -339,23 +348,24 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-> At this present time the _Canal_ configuration is the only one with a working _Istio_ and _Knative_.  Work is ongoing.
-
-##### CentOS 7.5, K8s 1.13.1, Calico CNI w/ Network Policy, Istio Service Mesh, MetalLB, NGINX
+##### Calico CNI
 
 Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
 
 ```
 k8s_version=1.13.*
-k8s_istio_version=latest
-k8s_metallb_address_range=192.168.1.160-192.168.1.179
+k8s_install_istio=true
+k8s_istio_version=1.0.4
+k8s_install_knative_lite=true
+k8s_metallb_address_range=192.168.1.190-192.168.1.195
 k8s_network_cni=calico-policy
 k8s_cluster_cidr=10.10.0.0/16
 k8s_coredns_loop_check_disable=true
-k8s_admin_url=k8s-admin.onprem.idstudios.io
-k8s_advertise_addr=192.168.1.220
-k8s_ingress_url=k8s-ingress.onprem.idstudios.io
+k8s_admin_url=k8s2-admin.onprem.idstudios.io
+k8s_advertise_addr=192.168.1.230
+k8s_ingress_url=k8s2-ingress.onprem.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866b
+
 ```
 
 #### VMware Fusion/Workstation Complete Examples
