@@ -10,39 +10,29 @@ fusion_net="vmnet2"         # this should be vmnet8 for Windows and Linux
 fusion_net_type="custom"    # this should be nat for Windows and Linux
 
 network_mask=255.255.255.0
-network_gateway=192.168.100.1   # this subnet should match the subnet of the above assigned vmware nic
-network_dns=192.168.100.1
-network_dns2=8.8.8.8
-network_dns3=8.8.4.4
+network_gateway=192.168.100.1
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
 network_dn=demo.idstudios.io
 
-targetd_server=192.168.1.200
-targetd_server_iqn=iqn.2018-06.io.idstudios.test-core:storage
-targetd_server_volume_group=vg-targetd
-targetd_server_provisioner_name=iscsi-targetd
-targetd_server_account_credentials=targetd-account
-targetd_server_account_username=admin
-targetd_server_account_password=ciao
-targetd_server_namespace=default
-
+k8s_version=1.13.*
+k8s_metallb_address_range=192.168.100.150-192.168.100.169
+k8s_network_cni=canal
+k8s_install_istio=true
+k8s_istio_version=knative
+k8s_install_knative=true
 k8s_coredns_loop_check_disable=true
-k8s_network_cni=calico
-k8s_cluster_cidr=10.10.0.0/16
-k8s_admin_url=k8s-admin.onprem.idstudios.io
-k8s_advertise_addr=192.168.1.220
-k8s_ingress_url=k8s-ingress.onprem.idstudios.io
+k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_advertise_addr=192.168.100.200
+k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
+k8s_workloads_on_master=true
 
 [k8s_masters]
-centos-k8s-m1.demo.idstudios.io ansible_host=192.168.100.200 etcd_name=etcd1
-
-[k8s_workers]
-centos-k8s-w1.demo.idstudios.io ansible_host=192.168.100.201 
-centos-k8s-w2.demo.idstudios.io ansible_host=192.168.100.202 
-centos-k8s-w3.demo.idstudios.io ansible_host=192.168.100.203 
+k8s-m1.demo.idstudios.io ansible_host=192.168.100.200 
 
 [vmware_vms]
-centos-k8s-m1.demo.idstudios.io numvcpus=2 memsize=2048
-centos-k8s-w1.demo.idstudios.io numvcpus=2 memsize=2048 
-centos-k8s-w2.demo.idstudios.io numvcpus=2 memsize=2048 
-centos-k8s-w3.demo.idstudios.io numvcpus=2 memsize=2048 
+k8s-m1.demo.idstudios.io numvcpus=4 memsize=5192
+
+
+

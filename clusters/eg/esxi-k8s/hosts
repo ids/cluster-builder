@@ -24,18 +24,22 @@ targetd_server_provisioner_name=iscsi-targetd
 targetd_server_account_credentials=targetd-account
 targetd_server_account_username=admin
 targetd_server_account_password=ciao
-targetd_server_namespace=default
+targetd_server_namespace=kube-system
 
+k8s_version=1.13.*
+k8s_install_istio=true
+k8s_istio_version=knative
+k8s_install_knative=true
+k8s_network_cni=canal
+k8s_metallb_address_range=192.168.1.160-192.168.1.179
 k8s_coredns_loop_check_disable=true
-k8s_network_cni=calico-policy
-k8s_cluster_cidr=10.10.10.0/16
 k8s_admin_url=k8s-admin.onprem.idstudios.io
 k8s_advertise_addr=192.168.1.220
 k8s_ingress_url=k8s-ingress.onprem.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 
 [k8s_masters]
-k8s-m1 ansible_host=192.168.1.220 etcd_name=etcd1
+k8s-m1 ansible_host=192.168.1.220 
 
 [k8s_workers]
 k8s-w1 ansible_host=192.168.1.221 

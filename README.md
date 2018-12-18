@@ -367,7 +367,7 @@ k8s_cluster_token=9aeb42.99b7540a5833866b
 
 #### VMware Fusion/Workstation Complete Examples
 
-* [Kubernetes 1.12 in VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
+* [Single Node CentOS 7.5 Kubernetes 1.13 in VMware Fusion/Workstation w/ Knative](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 * [Tectonic CoreOS in VMware Fusion/Workstation - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
@@ -375,7 +375,7 @@ k8s_cluster_token=9aeb42.99b7540a5833866b
 
 #### VMware ESXi Examples
 
-* [Kubernetes 1.12 in ESXi](clusters/eg/esxi-k8s/hosts)
+* [Kubernetes 1.13 on CentOS 7.5 in ESXi w/ Knative](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 * [Tectonic CoreOS on ESXi - Provisioner](clusters/eg/core-provisioner/hosts) and [Clusters](clusters/eg/core/hosts).
