@@ -328,7 +328,7 @@ The following example cluster formulas have been tested and contain the followin
 * __Istio__ service mesh
 * __MetalLB__ baremetal load balancer
 * __NGINX__ ingress conroller
-* __Knative__ Kubernetes serverless add-on
+* __Knative__ Kubernetes serverless add-on (only working on Canal)
 
 ##### Canal CNI
 
@@ -348,6 +348,8 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
+> At the present time __Knative__ only works with the __Canal CNI__.
+
 ##### Calico CNI
 
 Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
@@ -356,7 +358,7 @@ Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
 k8s_version=1.13.*
 k8s_install_istio=true
 k8s_istio_version=1.0.4
-k8s_install_knative_lite=true
+k8s_install_knative_lite=false
 k8s_metallb_address_range=192.168.1.190-192.168.1.195
 k8s_network_cni=calico-policy
 k8s_cluster_cidr=10.10.0.0/16
