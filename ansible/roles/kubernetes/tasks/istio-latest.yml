@@ -10,7 +10,7 @@
 - debug: msg="{{ istio_crd_out.stdout_lines }}"
 
 - name: install latest Istio for Calico authentication (no TLS)
-  shell: kubectl apply -f /tmp/istio*/install/kubernetes/istio-demo.yaml
+  shell: kubectl apply -f /tmp/istio*/install/kubernetes/istio-demo-auth.yaml
   register: istio_out
 
 - debug: msg="{{ istio_out.stdout_lines }}"
