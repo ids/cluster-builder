@@ -122,7 +122,7 @@
 - debug: msg="{{ acct_out.stdout_lines }}"
 
 - name: generate the Web UI token
-  shell: kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}') > /root/web-ui-token
+  shell: "kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}') | grep token: | sed 's/token:      //' > /root/web-ui-token"
 
 - name: fetch the Web UI token to the local {{ cluster_pkg_folder }}
   fetch:
