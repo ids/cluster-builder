@@ -82,29 +82,13 @@ There are two maintained `kubeadm` built Kubernetes variants:
 * centos-k8s
 * fedora-k8s
 
-__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12__ clusters that come out-of-the-box with the following functionality:
+__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12, 1.13 or later__ clusters that come pre-configured with common options:
 
-__CNI:__
 * [Canal/Flannel](https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
-
-_or_
-
-* [Calico](https://www.projectcalico.org/) CNI network plugin without _Network Policy_
-
-_or_ 
-
-* Calico CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
-
-__Load Balancer:__
+* [Calico](https://www.projectcalico.org/) CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 * [MetalLB](https://metallb.universe.tf/) the on-premise load balancer
-
-__Ingress:__
-* Traefik or NGINX for ingress and inbound traffic routing
-
-__Dashboard:__
+* NGINX or Traefik for ingress and inbound traffic routing
 * The Kubernetes Dashboard w/ Heapster integration and dashboard graphics (soon to support Metrics Server)
-
-__Storage:__
 * iSCSI Provisioner integration and with an external Targetd Storage Appliance VM for PVC storage
 
 > The __CentOS7 K8s__ cluster has been load tested and perform  near the performance of CoreOS w/ Canal CNI and with similar stability, and > 30% faster then CoreOS w/ Calico CNI networking.
@@ -123,7 +107,7 @@ $ uname -ra
 Linux k8s-w5 4.18.10-200.fc28.x86_64 #1 SMP Wed Sep 26 09:48:36 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-> Both __CentOS7 and Fedora 29__ based K8s clusters are 1.12.x, significantly newer then the 1.9.x Tectonic K8s versions.
+> Both __CentOS7 and Fedora 29__ based K8s clusters are 1.12.x or later, significantly newer then the 1.9.x Tectonic K8s versions.
 
 #### Tectonic CoreOS : Deprecated
 
