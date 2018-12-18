@@ -364,7 +364,6 @@ k8s_cluster_token=9aeb42.99b7540a5833866b
 
 > While _Calico_ appears to work with _Istio_, and network policy is functioning, _Istio_ itself is not.  There are different issues depending on which version of _Istio_ and _Calico_ used, none fully functioning at this time (at least on our bare metal clusters).  _Canal_ is definately less trouble and appears to work well with _MetalLB_.
 
-
 #### VMware Fusion/Workstation Complete Examples
 
 * [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.5 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
