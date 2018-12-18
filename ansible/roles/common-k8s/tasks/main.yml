@@ -49,6 +49,15 @@
 - debug: msg="install istio version -> {{ k8s_istio_version }}"
   run_once: true
 
+- name: set k8s_istio_tls default
+  set_fact:
+    k8s_istio_tls: false
+  run_once: true
+  when: k8s_istio_tls is undefined
+
+- debug: msg="install istio version -> {{ k8s_istio_version }}"
+  run_once: true
+
 - name: set k8s_cluster_cidr default for Canal CNI
   set_fact:
     k8s_cluster_cidr: 10.244.0.0/16
