@@ -82,7 +82,7 @@ There are two maintained `kubeadm` built Kubernetes variants:
 * centos-k8s
 * fedora-k8s
 
-__centos-k8s__ and __fedora-k8s__ are custom __Kubernetes 1.12, 1.13 or later__ clusters that come pre-configured with common options:
+__centos-k8s__ and __fedora-k8s__ are `kubeadm` build __Kubernetes__ clusters (1.12+) that come pre-configured with common options:
 
 * [Canal/Flannel](https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
 * [Calico](https://www.projectcalico.org/) CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
@@ -106,8 +106,6 @@ The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentatio
 $ uname -ra
 Linux k8s-w5 4.18.10-200.fc28.x86_64 #1 SMP Wed Sep 26 09:48:36 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
-
-> Both __CentOS7 and Fedora 29__ based K8s clusters are 1.12.x or later, significantly newer then the 1.9.x Tectonic K8s versions.
 
 #### Tectonic CoreOS : Deprecated
 
