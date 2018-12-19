@@ -9,7 +9,7 @@ Packer builds VMware cluster nodes in **CentOS 7** for use in DC/OS & Swarm Clus
 
 > Note: To save time you may want to seed the __iso__ folder with the respective iso files used in the creation of CentOS or RHEL based VMs.  Simply download them and place them in the __iso__ folder. Packer will download them on demand if they don't exist already in the folder.
 
-[CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso)
+[CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso)
 
 ## Usage
 > Make sure to create **keys/authorized_keys** before you run build.  This is installed in the **root** account of the vm.  Provisioning scripts that use this image are based on passwordless ssh.

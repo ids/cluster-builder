@@ -521,7 +521,7 @@ Kubernetes RBAC and service accounts offer a popular model for granting controll
 
 ### Step 1 - Create the Service Account
 
-  kubectl create serviceaccount ci-runner
+	kubectl create serviceaccount ci-runner
 
 ### Step 2 - Get the Service Account Secret Tokens & Build Kube Config
 
