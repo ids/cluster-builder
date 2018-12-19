@@ -325,7 +325,7 @@ k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_install_istio=true
-k8s_istio_version=latest
+k8s_istio_version=1.0.1
 k8s_install_knative_lite=true
 k8s_coredns_loop_check_disable=true
 k8s_admin_url=k8s-admin.demo.idstudios.io
@@ -363,6 +363,8 @@ k8s_cluster_token=9aeb42.99b7540a5833866b
 ```
 
 > While _Calico_ appears to work with _Istio_, and network policy is functioning, _Istio_ itself is not.  There are different issues depending on which version of _Istio_ and _Calico_ used, none fully functioning at this time (at least on our bare metal clusters).  _Canal_ is definately less trouble and appears to work well with _MetalLB_.
+
+> This is sort of a mess:  Knative 0.2.2 maps to Istio 1.0.1, and the recently released Knative 0.2.3 requires Istio 1.0.2.  Calico 3.4 seems to require a later version then these.
 
 #### VMware Fusion/Workstation Complete Examples
 

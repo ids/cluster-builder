@@ -40,9 +40,18 @@
 - debug: msg="install knative -> {{ k8s_install_knative_lite }}"
   run_once: true
 
+- name: set k8s_knative_version default
+  set_fact:
+    k8s_knative_version: 0.2.2
+  run_once: true
+  when: k8s_knative_version is undefined
+
+- debug: msg="install knative version -> {{ k8s_knative_version }}"
+  run_once: true
+
 - name: set k8s_istio_version default
   set_fact:
-    k8s_istio_version: 1.0.4
+    k8s_istio_version: 1.0.2
   run_once: true
   when: k8s_istio_version is undefined
 
@@ -93,7 +102,7 @@
 
 - name: set k8s_istio_wait_min default
   set_fact:
-    k8s_istio_wait_min: 8
+    k8s_istio_wait_min: 5
   run_once: true
   when: k8s_istio_wait_min is undefined
 
@@ -120,7 +129,7 @@
 
 - name: set k8s_worker_wait_min default
   set_fact:
-    k8s_worker_wait_min: 5
+    k8s_worker_wait_min: 1
   run_once: true
   when: k8s_worker_wait_min is undefined
 
@@ -129,7 +138,7 @@
 
 - name: set k8s_knative_wait_min default
   set_fact:
-    k8s_knative_wait_min: 7
+    k8s_knative_wait_min: 5
   run_once: true
   when: k8s_knative_wait_min is undefined
 
