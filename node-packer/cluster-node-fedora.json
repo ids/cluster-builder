@@ -68,7 +68,9 @@
         "numvcpus": "2"
       },
       "vmx_data_post": {
-        "ethernet0.connectionType": "bridged"
+        "ethernet0.connectionType": "bridged",
+        "ide1:0.filename": "",
+        "ide1:0.present": "FALSE"
       }
     }
   ]
