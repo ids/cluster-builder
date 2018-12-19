@@ -34,7 +34,10 @@
         "RemoteDisplay.vnc.port": "5900",
         "memsize": "4096",
         "numvcpus": "4",
-        "scsi0.virtualDev": "lsisas1068"
+        "scsi0.virtualDev": "lsisas1068",
+        "ethernet0.connectionType": "bridged",
+        "ide1:0.filename": "",
+        "ide1:0.present": "FALSE"
       }
     }
   ],
