@@ -1,25 +1,33 @@
 - name: download latest Knative (NodePort)
-  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml | sed 's/LoadBalancer/NodePort/' > knative.yml"
+  local_action:
+    module: shell
+    _raw_params: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml | sed 's/LoadBalancer/NodePort/' > ../clusters/{{ cluster_pkg_folder }}/knative.yml"
+  become: false
+  run_once: true
   register: knative_out
-  args:
-    chdir: /tmp
   when: k8s_metallb_address_range is undefined
-
+  
 - debug: msg="{{ knative_out.stdout_lines }}"
   when: k8s_metallb_address_range is undefined
 
 - name: download latest Knative (LoadBalancer)
-  shell: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml > knative.yml"
+  local_action:
+    module: shell
+    _raw_params: "curl -L https://storage.googleapis.com/knative-releases/serving/latest/release-lite.yaml > ../clusters/{{ cluster_pkg_folder }}/knative.yml"
+  become: false
+  run_once: true
   register: knative_out
-  args:
-    chdir: /tmp
   when: k8s_metallb_address_range is defined
 
 - debug: msg="{{ knative_out.stdout_lines }}"
   when: k8s_metallb_address_range is defined
 
 - name: install Knative Lite 
-  shell: kubectl apply -f /tmp/knative.yml
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../clusters/{{ cluster_pkg_folder }}/knative.yml"
+  become: false
+  run_once: true
   register: knative_out
 
 - debug: msg="{{ knative_out.stdout_lines }}"
