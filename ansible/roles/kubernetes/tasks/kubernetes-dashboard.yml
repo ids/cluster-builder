@@ -1,11 +1,11 @@
 - name: install InfluxDB manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/influxdb.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-retired/heapster/v1.5.4/deploy/kube-config/influxdb/influxdb.yaml
   register: influx_out
 
 - debug: msg="{{ influx_out.stdout_lines }}"
 
 - name: install Grafana manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/heapster/master/deploy/kube-config/influxdb/grafana.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-retired/heapster/v1.5.4/deploy/kube-config/influxdb/grafana.yaml
   register: graf_out
 
 - debug: msg="{{ graf_out.stdout_lines }}"
