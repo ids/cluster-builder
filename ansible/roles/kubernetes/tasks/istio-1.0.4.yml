@@ -1,20 +1,20 @@
 - name: copy up the manifest for Istio 1.0.4 CRDS
   copy:
-    src: ../xtras/istio/1.0.4/istio-crds.yaml
+    src: ../xtras/k8s/istio/1.0.4/istio-crds.yaml
     dest: /tmp/istio-crds.yml
     mode: 0766   
   become: true   
 
 - name: copy up the manifest for Istio 1.0.4 no TLS
   copy:
-    src: ../xtras/istio/1.0.4/istio-demo.yaml
+    src: ../xtras/k8s/istio/1.0.4/istio-demo.yaml
     dest: /tmp/istio-demo.yml
     mode: 0766   
   become: true   
 
 - name: copy up the manifest for Istio 1.0.4 no TLS
   copy:
-    src: ../xtras/istio/1.0.4/istio-demo-auth.yaml
+    src: ../xtras/k8s/istio/1.0.4/istio-demo-auth.yaml
     dest: /tmp/istio-demo-auth.yml
     mode: 0766   
   become: true   

@@ -1,13 +1,13 @@
 - name: copy up the manifest for Istio lite 1.0.1 CRDS
   copy:
-    src: ../xtras/istio/1.0.1/istio-lite-crds.yaml
+    src: ../xtras/k8s/istio/1.0.1/istio-lite-crds.yaml
     dest: /tmp/istio-crds.yml
     mode: 0766   
   become: true   
 
 - name: copy up the manifest for Istio lite 1.0.1
   copy:
-    src: ../xtras/istio/1.0.1/istio-lite.yaml
+    src: ../xtras/k8s/istio/1.0.1/istio-lite.yaml
     dest: /tmp/istio.yml
     mode: 0766   
   become: true   
