@@ -55,7 +55,7 @@
   run_once: true
   when: k8s_knative_base_domain is undefined
 
-- debug: msg="install knative version -> {{ k8s_knative_base_domain }}"
+- debug: msg="install knative base domain -> {{ k8s_knative_base_domain }}"
   run_once: true
 
 - name: set k8s_istio_version default
