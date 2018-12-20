@@ -19,8 +19,8 @@ k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_install_istio=true
-k8s_istio_version=knative
-k8s_install_knative_lite=true
+k8s_istio_version=1.0.4
+k8s_install_knative_lite=false
 k8s_coredns_loop_check_disable=true
 k8s_admin_url=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
@@ -32,7 +32,7 @@ k8s_workloads_on_master=true
 k8s-m1.demo.idstudios.io ansible_host=192.168.100.200 
 
 [vmware_vms]
-k8s-m1.demo.idstudios.io numvcpus=4 memsize=5192
+k8s-m1.demo.idstudios.io numvcpus=4 memsize=8192
 
 
 
