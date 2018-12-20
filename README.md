@@ -305,18 +305,23 @@ The __k8s_XXX_wait_min__ settings allow control of various pauses during the clu
 
 #### Working KubeAdm Formulas
 
-> The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.
+The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.  
+
+> The interdependencies of some of the complex stack components that make up a modern K8s cluster have become onerous. It has taken awhile to sort out the version dependencies. Initial attempts to depend on master branch versions did not fare well over time, and within days one or more dependent system would fail in deployment.  For this reason the tested configuration is fixed to specific versions of the components and does not rely on the stability of any one project's master branch.
+
+For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _8GB of RAM and 4 vCPU_ to your single node cluster.
 
 ##### Canal CNI
 
-The following example __Canal__ cluster has been tested and contains the following components:
+The following tested __Canal__ based cluster configuration contains the following components:
 
-* __CentOS 7.5__ minimal OS node
-* `kubeadm` based __1.12.x__ and __1.13.x__ Kubernetes w/ __Canal CNI__ network plugin
-* __Istio__ service mesh
-* __MetalLB__ baremetal load balancer
-* __NGINX__ ingress conroller
-* __Knative__ Kubernetes serverless add-on
+* __CentOS 7.6 (1810)__ minimal OS node
+* `kubeadm` based __1.12.x__ and __1.13.x__ Kubernetes w/ __Canal CNI (3.4)__ network plugin
+* __Istio (1.0.1)__ service mesh
+* __MetalLB (0.7.3)__ baremetal load balancer
+* __NGINX Ingress Controller (0.21)__
+* __Knative (0.2.2)__ Kubernetes serverless add-on
+* __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
 
 Deployed to the local VMware Fusion private network of `192.168.100.0/24`.
 
@@ -325,8 +330,9 @@ k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_install_istio=true
-k8s_istio_version=knative
+k8s_istio_version=1.0.1
 k8s_install_knative_lite=true
+k8s_knative_version=0.2.2
 k8s_coredns_loop_check_disable=true
 k8s_admin_url=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
@@ -334,35 +340,7 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-##### Calico CNI
-
-The following example __Calico__ cluster has been tested and contains the following components:
-
-* __CentOS 7.5__ minimal OS node
-* `kubeadm` based __1.12.x__ and __1.13.x__ Kubernetes w/ __Calico CNI__ network plugin
-* __Istio__ for nework policy only
-* __MetalLB__ baremetal load balancer
-* __NGINX__ ingress conroller
-
-Deployed to the local VMware ESXI private network of `192.168.1.0/24`.
-
-```
-k8s_version=1.13.*
-k8s_install_istio=true
-k8s_istio_version=latest
-k8s_install_knative_lite=false
-k8s_metallb_address_range=192.168.1.190-192.168.1.195
-k8s_network_cni=calico-policy
-k8s_cluster_cidr=10.10.0.0/16
-k8s_coredns_loop_check_disable=true
-k8s_admin_url=k8s2-admin.onprem.idstudios.io
-k8s_advertise_addr=192.168.1.230
-k8s_ingress_url=k8s2-ingress.onprem.idstudios.io
-k8s_cluster_token=9aeb42.99b7540a5833866b
-
-```
-
-> While _Calico_ appears to work with _Istio_, and network policy is functioning, _Istio_ itself is not.  There are different issues depending on which version of _Istio_ and _Calico_ used, none fully functioning at this time (at least on our bare metal clusters).  _Canal_ is definately less trouble and appears to work well with _MetalLB_.
+> Work is underway on a stable stack involving _Calico CNI_, your mileage at this time may vary.
 
 #### VMware Fusion/Workstation Complete Examples
 
