@@ -19,7 +19,7 @@
   when: "install_metrics_server is defined"
 
 - name: install kubernetes dashboard manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
   register: dash_out
 
 - debug: msg="{{ dash_out.stdout_lines }}"
