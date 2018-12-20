@@ -1,0 +1,32 @@
+- name: install local Knative Lite {{ k8s_knative_version }}
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f ../xtras/k8s/knative/knative-lite-{{ k8s_knative_version }}.yml"
+  become: false
+  run_once: true
+  ignore_errors: true
+  register: knative_out
+  when: k8s_knative_base_domain == "example.com"
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  run_once: true
+  when: k8s_knative_base_domain == "example.com"
+
+- name: install local Knative Lite {{ k8s_knative_version }}
+  local_action:
+    module: shell
+    _raw_params: "cat ../xtras/k8s/knative/knative-lite-{{ k8s_knative_version }}.yml | sed 's/example.com/{{ k8s_knative_base_domain }}/'  | kubectl --kubeconfig {{ kube_config_file }} apply -f -"
+  become: false
+  run_once: true
+  ignore_errors: true
+  register: knative_out
+  when: k8s_knative_base_domain != "example.com"
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  run_once: true
+  when: k8s_knative_base_domain != "example.com"
+
+
+- name: wait for Knative installation to complete
+  pause:
+    minutes: "{{ k8s_knative_wait_min }}"

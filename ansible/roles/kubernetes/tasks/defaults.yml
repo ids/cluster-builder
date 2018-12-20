@@ -49,6 +49,15 @@
 - debug: msg="install knative version -> {{ k8s_knative_version }}"
   run_once: true
 
+- name: set k8s_knative_base_domain default
+  set_fact:
+    k8s_knative_base_domain: example.com
+  run_once: true
+  when: k8s_knative_base_domain is undefined
+
+- debug: msg="install knative version -> {{ k8s_knative_base_domain }}"
+  run_once: true
+
 - name: set k8s_istio_version default
   set_fact:
     k8s_istio_version: 1.0.2

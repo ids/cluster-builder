@@ -24,7 +24,7 @@
 
 - debug: msg="{{ istio_out.stdout_lines }}"
 
-- name: wait for the Istio lite installation to complete
+- name: wait for the Istio lite 1.0.1 installation to complete
   pause:
     minutes: "{{ k8s_istio_wait_min }}"
 
