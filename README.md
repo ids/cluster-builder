@@ -307,9 +307,7 @@ The __k8s_XXX_wait_min__ settings allow control of various pauses during the clu
 
 The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.  
 
-> The interdependencies of some of the pluggable components that make up a modern K8s cluster have become onerous. It has taken awhile to sort out the version dependencies, the online documentation often leads to misery, especially if it points to a master branch. Initial attempts to depend on master branch versions did not fare well over time, and within days one or more dependent systems would fail in deployment.  For this reason the tested configuration is fixed to specific versions of the components and does not rely on the stability of any one project's master branch.
-
-For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _8GB of RAM and 4 vCPU_ to your single node cluster.
+For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
 
 ##### Canal CNI
 
@@ -320,7 +318,7 @@ The following tested __Canal__ based cluster configuration contains the followin
 * __Istio (1.0.1)__ service mesh
 * __MetalLB (0.7.3)__ baremetal load balancer
 * __NGINX Ingress Controller (0.21)__
-* __Knative (0.2.2)__ Kubernetes serverless add-on
+* __Knative lite (0.2.2)__ Kubernetes serverless add-on
 * __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
 
 Deployed to the local VMware Fusion private network of `192.168.100.0/24`.
