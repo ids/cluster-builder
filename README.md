@@ -38,13 +38,13 @@ Designed to handle ~all~ most of the complexity associated with on-prem deployme
 19. [System Profile](#system-profile)
 
 ## Supported Clusters
-The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and tock __CentOS 7.5__ and __Fedora 29 Kubernetes__ clusters for several platforms:
+The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __Tectonic CoreOS__ and tock __CentOS 7.6__ and __Fedora 29 Kubernetes__ clusters for several platforms:
 
 * CentOS 7 Docker CE
 * CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
 * CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
-* CentOS 7.5 Kubernetes (Stock `kubeadm`)
+* CentOS 7.6 Kubernetes (Stock `kubeadm`)
 * Fedora 29 Kubernetes (Stock `kubeadm`)
 
 > The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Tectonic CoreOS, while a once great Kubernetes, has now been _assimilated_ into _OpenShift_, and with all the M&As around those products, the future is a tangled web.  Meanwhile, the stock `kubeadm` based clusters are getting quite stable and reliable.
@@ -109,7 +109,7 @@ Linux k8s-w5 4.18.10-200.fc28.x86_64 #1 SMP Wed Sep 26 09:48:36 UTC 2018 x86_64 
 
 #### Tectonic CoreOS : Deprecated
 
-The future of __Tectonic CoreOS__ in the form pre-RedHat does not exist.  The jury is still out on whether the _OpenShift_ variant is going to be worth all the customizations and quirks of _OpenShift_.  It's a lot of extra stuff.  And __CentOS 7.5__ with `kubeadm` is testing as a solid, stable onpremise K8s.
+The future of __Tectonic CoreOS__ in the form pre-RedHat does not exist.  The jury is still out on whether the _OpenShift_ variant is going to be worth all the customizations and quirks of _OpenShift_.  It's a lot of extra stuff.  And __CentOS 7.6__ with `kubeadm` is testing as a solid, stable onpremise K8s.
 
 There remains two special deployment builds in support of the old __Tectonic CoreOS__:
 
@@ -359,7 +359,7 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 
 #### VMware Fusion/Workstation Complete Examples
 
-* [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.5 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
+* [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 * [Tectonic CoreOS in VMware Fusion/Workstation - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
@@ -367,7 +367,7 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 
 #### VMware ESXi Examples
 
-* [Kubernetes 1.13 w/ Knative on CentOS 7.5 - ESXi ](clusters/eg/esxi-k8s/hosts)
+* [Kubernetes 1.13 w/ Knative on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 * [Tectonic CoreOS on ESXi - Provisioner](clusters/eg/core-provisioner/hosts) and [Clusters](clusters/eg/core/hosts).
