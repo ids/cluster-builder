@@ -36,7 +36,7 @@ Designed to handle ~all~ most of the complexity associated with on-prem deployme
 19. [System Profile](#system-profile)
 
 ## Supported Clusters
-The **cluster-builder** currently supports building __Swarm__, __DC/OS__, __CentOS 7.6__ and __Fedora 29 Kubernetes__ clusters:
+Currently supported clusters:
 
 * CentOS 7 Docker CE
 * CentOS 7 DC/OS
