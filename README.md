@@ -340,7 +340,24 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-> Work is underway on a stable stack involving _Calico CNI_, your mileage at this time may vary.
+Current to this release, the following settings also work and are indexed to the latest `Knative` release, which is __0.2.3__.  __Note__ that the `k8s_knative_version` is set to `latest`, and the `k8s_istio_version` to `knative`.
+
+```
+k8s_version=1.13.*
+k8s_metallb_address_range=192.168.100.150-192.168.100.169
+k8s_network_cni=canal
+k8s_install_knative_lite=true
+k8s_knative_version=latest
+k8s_install_istio=true
+k8s_istio_version=knative
+k8s_coredns_loop_check_disable=true
+k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_advertise_addr=192.168.100.200
+k8s_ingress_url=k8s-ingress.demo.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
+```
+
+> Work is underway on a stable stack involving _Calico CNI_, mileage may vary at this time .
 
 #### VMware Fusion/Workstation Complete Examples
 
