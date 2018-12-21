@@ -36,7 +36,6 @@ Designed to handle ~all~ most of the complexity associated with on-prem deployme
 19. [System Profile](#system-profile)
 
 ## Supported Clusters
-Currently supported clusters:
 
 * CentOS 7 Docker CE
 * CentOS 7 DC/OS
