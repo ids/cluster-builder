@@ -94,9 +94,9 @@ __centos-k8s__ and __fedora-k8s__ are `kubeadm` build __Kubernetes__ clusters (1
 > The __CentOS7 K8s__ cluster has been load tested and perform  near the performance of CoreOS w/ Canal CNI and with similar stability, and > 30% faster then CoreOS w/ Calico CNI networking.
 
 ```
-# CentOS 7.5 - Dec 1, 2018
+# CentOS 7.5 - Dec 21, 2018
 $ uname -ra
-Linux k8s-w3 3.10.0-862.14.4.el7.x86_64 #1 SMP Wed Sep 26 15:12:11 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+Linux k8s-m1 3.10.0-957.1.3.el7.x86_64 #1 SMP Thu Nov 29 14:49:43 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 4.x kernel.
