@@ -6,7 +6,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
 
 > One command... and the cluster is deployed!
 
-<script src="https://asciinema.org/a/h32J527aKzUHHedqDA6KlQn0F.js" id="asciicast-h32J527aKzUHHedqDA6KlQn0F" async data-autoplay="true" data-theme="monokai" data-size="small" data-speed="10"></script>
+<script src="https://asciinema.org/a/h32J527aKzUHHedqDA6KlQn0F.js" id="asciicast-h32J527aKzUHHedqDA6KlQn0F" class="asciiwindow" async data-autoplay="true" data-theme="monokai" data-size="small" data-speed="10"></script>
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -18,12 +18,11 @@ __Cluster Builder__ follows an [immutable infrastructure](https://www.digitaloce
 
 __Cluster Builder__ can deploy the following container orchestration clusters:
 
-* [DC/OS](https://dcos.io/) on CentOS 7.5
-* [Docker Swarm CE (Community Edition)](https://docs.docker.com/engine/swarm/) on CentOS 7.5, RHEL 7.5 and Photon 2.
-* __Kubernetes__:
-  * [Tectonic CoreOS (RedHat)](https://coreos.com/)
-  * _Vanilla K8s_ KubeAdm CentOS 7.5
-  * _Vanilla K8s_ KubeAdm Fedora  
+* [Kubernetes](https://kubernetes.io/):
+  * _Vanilla K8s_ `kubeadm` CentOS 7.6
+  * _Vanilla K8s_ `kubeadm` Fedora  
+* [DC/OS](https://dcos.io/) on CentOS 7.6
+* [Docker Swarm CE (Community Edition)](https://docs.docker.com/engine/swarm/) on CentOS/RHEL 7.6.
 
 __Cluster Builder__ can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent volume storage for K8s clusters.
 
