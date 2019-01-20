@@ -128,6 +128,9 @@
     
     - debug: msg="{{ vm_temp_ip.stdout }}"
 
+    - fail: msg="failed to determine temporary IP address of VM"
+      when: vm_temp_ip is not defined or vm_temp_ip == ''
+
     - name: generate the static networking config files
       local_action:
         module: template
