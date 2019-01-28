@@ -42,6 +42,7 @@ fi
 
 if [ "$IMAGE" == "centos7-dcos" ] || \
     [ "$IMAGE" == "win2016" ] || \
+    [ "$IMAGE" == "win2019" ] || \
     [ "$IMAGE" == "centos7" ] || \
     [ "$IMAGE" == "fedora" ] || \
     [ "$IMAGE" == "rhel7" ]; then
@@ -72,7 +73,7 @@ elif [ "$IMAGE" == "targetd-server" ]; then
 else
   echo
   echo 'Error: Not a valid VM image type!'
-  echo 'usage: build [centos7 (default), centos7-dcos, rhel7, coreos-provisioner, coreos-pxe, fedora, targetd-server]'
+  echo 'usage: build [centos7 (default), centos7-dcos, rhel7, win2016, win2019, coreos-provisioner, coreos-pxe, fedora, targetd-server]'
   exit
 fi
 
