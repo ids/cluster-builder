@@ -1,7 +1,6 @@
 - name: apply default k8s settings
   include: defaults.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  run_once: true
 
 - name: remove the updated docker-ce
   yum:

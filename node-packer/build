@@ -51,24 +51,18 @@ if [ "$IMAGE" == "centos7-dcos" ] || \
   rm -rf 'output_'$IMAGE'_vmx'
   eval $PACKER_CMD
   rm -rf 'output_'$IMAGE'_vmx'
-elif [ "$IMAGE" == "coreos-pxe" ]; then
-  echo
-  echo 'Building CoreOS PXE Node:' $IMAGE
-  if [ ! -f coreos-node/core-disk.vmdk ]; then
-    vmware-vdiskmanager -c -t 0 -s 250GB -a buslogic coreos-pxe-node/core-disk.vmdk 
-  fi 
-  ovftool --overwrite coreos-pxe-node/coreos-pxe-node.vmx output_ovas/coreos-pxe-node.ova
-elif [ "$IMAGE" == "coreos-provisioner" ]; then
-  echo
-  echo 'Building CoreOS Provisioner'
-  rm -rf 'output_'$IMAGE'_vmx'
-  packer build coreos-centos-provisioner.json
-  rm -rf 'output_'$IMAGE'_vmx'
 elif [ "$IMAGE" == "targetd-server" ]; then
   echo
   echo 'Building Targetd iSCSI Storage Appliance'
+  PACKER_CMD="packer build targetd-server-appliance.json"
+  if [ "`uname -r | grep Microsoft | wc -l | xargs`" == "1" ]; then 
+    echo "Building in Windows Mode using cmd.exe..."
+    WIN_BUILD_DIR=`wslpath -w $PWD`
+    echo "Using path: ${WIN_BUILD_DIR}"
+    PACKER_CMD="cmd.exe /c \"cd ${WIN_BUILD_DIR} && packer.exe build targetd-server-appliance.json && exit\""
+  fi
   rm -rf 'output_'$IMAGE'_vmx'
-  packer build targetd-server-appliance.json
+  eval $PACKER_CMD
   rm -rf 'output_'$IMAGE'_vmx'
 else
   echo

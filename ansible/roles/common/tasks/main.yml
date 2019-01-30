@@ -131,3 +131,8 @@
     module: shell
     _raw_params: "host {{ inventory_hostname }}"
   become: false
+
+- name: set overwrite_existing_vms default
+  set_fact:
+    overwrite_existing_vms: false
+  when: overwrite_existing_vms is undefined

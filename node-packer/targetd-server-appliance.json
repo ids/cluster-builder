@@ -42,14 +42,6 @@
   },
   {
     "type": "shell-local",
-    "inline": ["echo 'scsi0:1.present = \"TRUE\"' >> output_targetd-server_vmx/targetd-server-x86_64.vmx "]
-  },
-  {
-    "type": "shell-local",
-    "inline": ["echo 'scsi0:1.fileName = \"pv-disk.vmdk\"' >> output_targetd-server_vmx/targetd-server-x86_64.vmx "]
-  },
-  {
-    "type": "shell-local",
     "inline": [
         "ovftool --overwrite output_targetd-server_vmx/targetd-server-x86_64.vmx output_ovas/targetd-server-x86_64.ova"
     ]
@@ -87,9 +79,9 @@
         "ethernet0.connectionType": "nat"
       },
       "vmx_data_post": {
-        "ethernet0.connectionType": "bridged",
-        "ide1:0.filename": "",
-        "ide1:0.present": "FALSE"
+        "ide1:0.present": "FALSE",
+        "scsi0:1.present": "TRUE",
+        "scsi0:1.fileName":"pv-disk.vmdk"
       }
     }
   ]
