@@ -35,7 +35,7 @@ etcd:
     - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
 imageRepository: k8s.gcr.io
-kubernetesVersion: v1.13.0
+kubernetesVersion: v1.13.2
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ k8s_cluster_cidr }}

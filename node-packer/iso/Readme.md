@@ -1,4 +1,4 @@
 ISO files should download here automatically by packer
 
-Atomic 1708 Checksum (sha256)
-bf2a0cbf2e9042efacebc4e8277ec12957ac04fbcc2d2905d1e90c92709b4ebe
+17763.253.190108-0006.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us
+
