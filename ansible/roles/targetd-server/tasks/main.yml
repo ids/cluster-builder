@@ -1,7 +1,4 @@
 ---
-- name: setup targetd defaults
-  include: defaults.yml
-
 - name: install targetd
   include: targetd.yml
 

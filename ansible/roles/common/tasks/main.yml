@@ -136,3 +136,30 @@
   set_fact:
     overwrite_existing_vms: false
   when: overwrite_existing_vms is undefined
+
+- name: set targetd_server_namespace default
+  set_fact:
+    targetd_server_namespace: "kube-system"
+  run_once: true
+  when: targetd_server_namespace is undefined
+
+- debug: msg="{{ targetd_server_namespace }}"
+  run_once: true
+
+- name: set targetd_server_account_username default
+  set_fact:
+    targetd_server_account_username: "admin"
+  run_once: true
+  when: targetd_server_account_username is undefined
+
+- debug: msg="{{ targetd_server_account_username }}"
+  run_once: true
+
+- name: set targetd_server_account_password default
+  set_fact:
+    targetd_server_account_password: "caio"
+  run_once: true
+  when: targetd_server_account_password is undefined
+
+- debug: msg="{{ targetd_server_account_password }}"
+  run_once: true
