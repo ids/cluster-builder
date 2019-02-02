@@ -310,13 +310,15 @@ For local development single node deployments (`k8s_workloads_on_master`), as in
 
 The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
 
-	targetd_server=192.168.100.250
-	targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
-	targetd_server_volume_group=vg-targetd
-	targetd_server_provisioner_name=iscsi-targetd
-	targetd_server_account_credentials=targetd-account
-	targetd_server_account_username=admin
-	targetd_server_account_password=ciao
+```
+targetd_server=192.168.100.250
+targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
+targetd_server_volume_group=vg-targetd
+targetd_server_provisioner_name=iscsi-targetd
+targetd_server_account_credentials=targetd-account
+targetd_server_account_username=admin
+targetd_server_account_password=ciao
+```
 
 Adjust the settings to suit your environment, and then simply copy the settings block into any cluster configuration you wish to have access to the iSCSI services.
 
@@ -377,6 +379,21 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ESXi deployment](clusters/eg/esxi-k8s/hosts).
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
+
+##### Calico Policy Kubernetes
+
+Not fully tested, but the `calico-policy` CNI variant comes up clean.
+
+```
+k8s_version=1.13.*
+k8s_metallb_address_range=192.168.1.80-192.168.1.95
+k8s_network_cni=calico-policy
+k8s_cluster_cidr=10.10.0.0/16
+k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_advertise_addr=192.168.100.200
+k8s_ingress_url=k8s-ingress.demo.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
+```
 
 #### VMware Fusion/Workstation Complete Examples
 
