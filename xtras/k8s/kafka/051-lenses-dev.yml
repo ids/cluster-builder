@@ -1,0 +1,75 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-lenses
+  namespace: kafka
+spec:
+  selector:
+    app: kafka-lenses
+  ports:
+  - protocol: TCP
+    name: lenses-port1
+    port: 3030
+    targetPort: 3030
+  - protocol: TCP
+    name: lenses-port2
+    port: 9092
+    targetPort: 9092
+  - protocol: TCP
+    name: lenses-port3
+    port: 2181
+    targetPort: 2181
+  - protocol: TCP
+    name: lenses-port4
+    port: 8081
+    targetPort: 8081
+  - protocol: TCP
+    name: lenses-port5
+    port: 9581
+    targetPort: 9581
+  - protocol: TCP
+    name: lenses-port6
+    port: 9582
+    targetPort: 9582
+  - protocol: TCP
+    name: lenses-port7
+    port: 9584
+    targetPort: 9584
+  - protocol: TCP
+    name: lenses-port8
+    port: 9585
+    targetPort: 9585
+  type: LoadBalancer    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-lenses
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-lenses
+  template:
+    metadata:
+      labels:
+        app: kafka-lenses
+    spec:
+      containers:
+      - name: kafka-lenses
+        image: landoop/kafka-lenses-dev
+        ports:
+        - containerPort: 3030
+        - containerPort: 9092
+        - containerPort: 2181
+        - containerPort: 8081
+        - containerPort: 9581
+        - containerPort: 9582
+        - containerPort: 9584
+        - containerPort: 9585
+        env:
+        - name: EULA
+          value: "https://dl.lenses.stream/d/?id=a0b4a66b-d57d-421c-ab6a-692957a59cac"
+        - name: ADV_HOST
+          value: "192.168.100.153"

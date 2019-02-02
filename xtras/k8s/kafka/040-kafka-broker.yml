@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: kafka-broker0
+  namespace: kafka
 spec:
   template:
     metadata:
