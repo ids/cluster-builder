@@ -300,13 +300,13 @@ The __k8s_workloads_on_master__ setting removes all taints on the master node th
 
 The __k8s_XXX_wait_min__ settings allow control of various pauses during the cluster deployment.  The wait times will vary depending on your environment, and if deployments proceed too soon the PODS will not come up properly.  Adjust these values as required.  Larger clusters will require longer wait times.
 
-#### Working KubeAdm Formulas
+### Working KubeAdm Formulas
 
 The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.  
 
 For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s-single/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
 
-##### Targetd Storage Appliance
+#### Formula: Targetd Storage Appliance
 
 The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
 
@@ -324,7 +324,7 @@ Adjust the settings to suit your environment, and then simply copy the settings 
 
 See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and [ESXi deployment](clusters/eg/targetd-server/hosts).
 
-##### Basic Kubernetes
+#### Formula: Basic Kubernetes (Stable)
 
 A stable foundation to build on:
 
@@ -346,7 +346,7 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-##### Complete Kubernetes
+#### Formula: Complete Kubernetes (Stable)
 
 A complete platform with service mesh and serverless.
 
@@ -380,7 +380,7 @@ See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ES
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
 
-##### Calico Policy Kubernetes
+#### Formula: Calico Policy Kubernetes (Experimental)
 
 Not fully tested, but the `calico-policy` CNI variant comes up clean.
 
@@ -395,14 +395,14 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-#### VMware Fusion/Workstation Complete Examples
+### VMware Fusion/Workstation Complete Examples
 
 * [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 
 
-#### VMware ESXi Examples
+### VMware ESXi Examples
 
 * [Kubernetes 1.13 w/ Knative on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
