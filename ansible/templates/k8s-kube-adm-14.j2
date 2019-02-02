@@ -40,8 +40,7 @@ etcd:
   {% for host in groups['k8s_masters'] %}
   - "{{ hostvars[host].ansible_host }}"
   {% endfor %}
-
-kubernetesVersion: "v1.13.0"
+kubernetesVersion: "v1.14.0"
 apiServer:
   extraArgs:
     authorization-mode: "Node,RBAC"

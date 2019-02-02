@@ -26,7 +26,6 @@
   run_once: true
   when: k8s_knative_base_domain != "example.com"
 
-
 - name: wait for Knative installation to complete
   pause:
     minutes: "{{ k8s_knative_wait_min }}"

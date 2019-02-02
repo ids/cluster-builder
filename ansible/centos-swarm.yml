@@ -21,6 +21,7 @@
 
   roles:
   - role: common
+  - role: docker
   - role: centos-swarm
   - role: centos-swarm-firewall
   - role: swarm

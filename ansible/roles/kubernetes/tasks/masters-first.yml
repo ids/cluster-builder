@@ -23,6 +23,12 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.13")
 
+- name: generate the kubeadm 1.14 yaml configuration
+  template:
+    src: templates/k8s-kube-adm-14.j2
+    dest: /root/kube-adm.yml
+  when: k8s_version is search("1.14")
+
 - name: initialize cluster on first master
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:

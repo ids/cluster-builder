@@ -35,10 +35,10 @@ etcd:
     - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
 imageRepository: k8s.gcr.io
-kubernetesVersion: v1.13.2
+kubernetesVersion: v{{ k8s_semantic_version }}
 networking:
   dnsDomain: cluster.local
-  podSubnet: {{ k8s_cluster_cidr }}
+  podSubnet: "{{ k8s_cluster_cidr }}"
 ---
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: InitConfiguration
@@ -69,7 +69,7 @@ clientConnection:
   contentType: application/vnd.kubernetes.protobuf
   kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
   qps: 5
-clusterCIDR: {{ k8s_cluster_cidr }}
+clusterCIDR: "{{ k8s_cluster_cidr }}"
 configSyncPeriod: 15m0s
 conntrack:
   max: null

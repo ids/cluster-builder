@@ -39,15 +39,8 @@ k8s_workloads_on_master=true
 [k8s_masters]
 k8s-m1.demo.idstudios.io ansible_host=192.168.100.200 
 
-[k8s_workers]
-k8s-w1.demo.idstudios.io ansible_host=192.168.100.201
-k8s-w2.demo.idstudios.io ansible_host=192.168.100.202
-k8s-w3.demo.idstudios.io ansible_host=192.168.100.203
-
 [vmware_vms]
-k8s-m1.demo.idstudios.io numvcpus=4 memsize=2048
-k8s-w1.demo.idstudios.io numvcpus=4 memsize=3072
-k8s-w2.demo.idstudios.io numvcpus=4 memsize=3072
-k8s-w3.demo.idstudios.io numvcpus=4 memsize=3072
+k8s-m1.demo.idstudios.io numvcpus=4 memsize=8192
+
 
 

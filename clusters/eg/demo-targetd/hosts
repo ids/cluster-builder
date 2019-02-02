@@ -3,19 +3,19 @@ cluster_type=targetd-server
 cluster_name=targetd
 remote_user=admin
 
-vmware_target=esxi
-overwrite_existing_vms=true
+vmware_target=fusion
+fusion_vm_folder="../virtuals"
 
-esxi_net="VM Network" 
-esxi_net_prefix=192.168.1
+fusion_net="vmnet2"         # this should be vmnet8 for Windows and Linux
+fusion_net_type="custom"    # this should be nat for Windows and Linux
 
 network_mask=255.255.255.0
-network_gateway=192.168.1.1
+network_gateway=192.168.100.1
 network_dns=8.8.8.8
 network_dns2=8.8.4.4
-network_dn=onprem.idstudios.io
+network_dn=demo.idstudios.io
 
-targetd_server=192.168.1.200
+targetd_server=192.168.100.250
 targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
 targetd_server_volume_group=vg-targetd
 targetd_server_provisioner_name=iscsi-targetd
@@ -24,7 +24,10 @@ targetd_server_account_username=admin
 targetd_server_account_password=ciao
 
 [targetd_server]
-storage-server ansible_host=192.168.1.200 esxi_host=esxi-6 esxi_user=root
+targetd.demo.idstudios.io ansible_host=192.168.100.250 
 
 [vmware_vms]
-storage-server numvcpus=4 memsize=6144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+targetd.demo.idstudios.io numvcpus=2 memsize=1024
+
+
+

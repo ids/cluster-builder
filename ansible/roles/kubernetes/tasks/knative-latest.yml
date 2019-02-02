@@ -3,6 +3,8 @@
   register: knative_out
   args:
     chdir: /tmp
+  ignore_errors: true
+  run_once: true
   when: k8s_metallb_address_range is undefined 
 
 - debug: msg="{{ knative_out.stdout_lines }}"
@@ -13,6 +15,8 @@
   register: knative_out
   args:
     chdir: /tmp
+  ignore_errors: true
+  run_once: true
   when: k8s_metallb_address_range is defined
 
 - debug: msg="{{ knative_out.stdout_lines }}"

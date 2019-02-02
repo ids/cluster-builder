@@ -1,8 +1,8 @@
 - name: install Knative latest
-  include: "knative-{{ k8s_knative_version }}.yml"
+  include: "knative-latest.yml"
   when: k8s_knative_version == "latest"
 
 - name: install specific Knative version {{ k8s_knative_version }}
-  include: "knative-{{ k8s_knative_version }}.yml"
+  include: "knative-version.yml"
   when: k8s_knative_version != "latest"
 

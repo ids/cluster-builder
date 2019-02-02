@@ -306,60 +306,83 @@ The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deploym
 
 For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
 
-##### Canal CNI
+##### Targetd Storage Appliance
+
+The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
+
+	targetd_server=192.168.100.250
+	targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
+	targetd_server_volume_group=vg-targetd
+	targetd_server_provisioner_name=iscsi-targetd
+	targetd_server_account_credentials=targetd-account
+	targetd_server_account_username=admin
+	targetd_server_account_password=ciao
+
+Adjust the settings to suit your environment, and then simply copy the settings block into any cluster configuration you wish to have access to the iSCSI services.
+
+See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and [ESXi deployment](clusters/eg/targetd-server/hosts).
+
+##### Basic Kubernetes
+
+A stable foundation to build on:
+
+* __CentOS 7.6 (1810)__ minimal OS node
+* `kubeadm` __1.13.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin w/ Network Policy
+* __MetalLB (0.7.3)__ baremetal load balancer
+* __NGINX Ingress Controller (0.21)__
+* __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
+
+(As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
+
+```
+k8s_version=1.13.*
+k8s_metallb_address_range=192.168.100.150-192.168.100.169
+k8s_network_cni=canal
+k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_advertise_addr=192.168.100.200
+k8s_ingress_url=k8s-ingress.demo.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
+```
+
+##### Complete Kubernetes
+
+A complete platform with service mesh and serverless.
 
 The following tested __Canal__ based cluster configuration contains the following components:
 
 * __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm` based __1.12.x__ and __1.13.x__ Kubernetes w/ __Canal CNI (3.4)__ network plugin
-* __Istio (1.0.1)__ service mesh
+* `kubeadm` __1.13.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin
+* __Istio (1.0.2)__ service mesh
 * __MetalLB (0.7.3)__ baremetal load balancer
 * __NGINX Ingress Controller (0.21)__
-* __Knative lite (0.2.2)__ Kubernetes serverless add-on
+* __Knative lite (0.3.0)__ Kubernetes serverless add-on
 * __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
 
-Deployed to the local VMware Fusion private network of `192.168.100.0/24`.
+(As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
 
 ```
 k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_install_istio=true
-k8s_istio_version=1.0.1
+k8s_istio_version=1.0.2
 k8s_install_knative_lite=true
-k8s_knative_version=0.2.2
-k8s_coredns_loop_check_disable=true
+k8s_knative_version=0.3.0
 k8s_admin_url=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
 k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-Current to this release, the following settings also work and are indexed to the latest `Knative` release, which is __0.2.3__.  __Note__ that the `k8s_knative_version` is set to `latest`, and the `k8s_istio_version` to `knative`.
+See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ESXi deployment](clusters/eg/esxi-k8s/hosts).
 
-```
-k8s_version=1.13.*
-k8s_metallb_address_range=192.168.100.150-192.168.100.169
-k8s_network_cni=canal
-k8s_install_knative_lite=true
-k8s_knative_version=latest
-k8s_install_istio=true
-k8s_istio_version=knative
-k8s_coredns_loop_check_disable=true
-k8s_admin_url=k8s-admin.demo.idstudios.io
-k8s_advertise_addr=192.168.100.200
-k8s_ingress_url=k8s-ingress.demo.idstudios.io
-k8s_cluster_token=9aeb42.99b7540a5833866a
-```
-
-> Work is underway on a stable stack involving _Calico CNI_, mileage may vary at this time .
+> Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
 
 #### VMware Fusion/Workstation Complete Examples
 
 * [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
-* [Tectonic CoreOS in VMware Fusion/Workstation - Provisioner](clusters/eg/demo-core-provisioner/hosts) and [Clusters](clusters/eg/demo-core/hosts).
 
 
 #### VMware ESXi Examples
@@ -367,7 +390,6 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 * [Kubernetes 1.13 w/ Knative on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
-* [Tectonic CoreOS on ESXi - Provisioner](clusters/eg/core-provisioner/hosts) and [Clusters](clusters/eg/core/hosts).
 
 ## Cluster Builder Usage
 

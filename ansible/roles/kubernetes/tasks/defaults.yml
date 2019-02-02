@@ -1,10 +1,31 @@
 - name: set k8s_version default
   set_fact:
-    k8s_version: 1.12.*
+    k8s_version: 1.13.*
   run_once: true
   when: k8s_version is undefined
 
 - debug: msg="{{ k8s_version }}"
+  run_once: true
+
+- name: set k8s_semantic_version default
+  set_fact:
+    k8s_semantic_version: 1.13.3
+  run_once: true
+  when: k8s_version == "1.13.*"
+
+- name: set k8s_semantic_version default
+  set_fact:
+    k8s_semantic_version: 1.12.5
+  run_once: true
+  when: k8s_version == "1.12.*"
+
+- name: set k8s_semantic_version default
+  set_fact:
+    k8s_semantic_version: 1.13.3
+  run_once: true
+  when: k8s_semantic_version is undefined
+
+- debug: msg="{{ k8s_semantic_version }}"
   run_once: true
 
 - name: set k8s_network_cni default
@@ -185,7 +206,7 @@
 
 - name: set k8s_coredns_loop_check_disable default
   set_fact:
-    k8s_coredns_loop_check_disable: "true"
+    k8s_coredns_loop_check_disable: false
   run_once: true
   when: k8s_coredns_loop_check_disable is undefined
 

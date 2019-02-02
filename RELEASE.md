@@ -1,6 +1,21 @@
 Release Notes
 =============
 
+v19.02
+------
+
+* Fixed latest stable defaults for __CentOS 7__ `kubeadm` Kubernetes:
+  * __CentOS 7.6 1810__ w/ updates
+  * Kubernetes - __v1.13.3__
+  * Canal CNI w/ Network Policy - __v3.5__
+  * MetalLB Native Load Balancer - __v0.73__
+  * NGINX Ingress Controller - __v0.21__
+  * Istio Service Mesh - __v1.0.2__
+  * Knative Serverless Platform - __v0.3.0__
+* Updated examples and readme to reflect new stable formula.
+* Added experimental __Kafka__ manifests in `xtras`
+* Set base `node-packer` __CentOS__ ova to use base distro docker version by default, as this is preferred by __k8s__ and __DC/OS__.
+
 v18.12
 ------
 
