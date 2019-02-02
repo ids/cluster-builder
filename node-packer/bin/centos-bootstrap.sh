@@ -7,16 +7,22 @@ set -o pipefail
 # Instructions from https://flatpacklinux.com/2016/05/27/install-ansible-2-1-on-rhelcentos-7-with-pip/
 
 echo '>>> Updating'
-#sudo yum makecache fast
+yum makecache fast
 
 echo '>>> Installing yum-utils'
 yum install -y yum-utils
 
 # Add the EPEL repository, and install Ansible.
 echo '>>> Adding EPEL yum repo'
-yum-config-manager --add-repo=https://dl.fedoraproject.org/pub/epel/7/x86_64/
-curl --fail --location --silent --show-error --verbose -o /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+#yum-config-manager --add-repo=https://dl.fedoraproject.org/pub/epel/7/x86_64/
+#curl --fail --location --silent --show-error --verbose -o /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+#rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+
+yum install -y epel-release
+yum repolist
+
+echo '>>> Updating'
+yum makecache fast
 
 echo '>>> Cleaning yum cache'
 yum clean all
