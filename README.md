@@ -304,7 +304,7 @@ The __k8s_XXX_wait_min__ settings allow control of various pauses during the clu
 
 The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.  
 
-For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
+For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s-single/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
 
 ##### Targetd Storage Appliance
 
