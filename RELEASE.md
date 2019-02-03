@@ -16,6 +16,7 @@ v19.02
 * Added experimental __Kafka__ manifests in `xtras`
 * Set base `node-packer` __CentOS__ ova to use base distro docker version by default, as this is preferred by __k8s__ and __DC/OS__.
 * Removed last remnants of Tectonic CoreOS and updated documentation accordingly.
+* Added __CentOS__ kernel parameter tuning for network performance on nodes.
 
 v18.12
 ------
