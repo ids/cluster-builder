@@ -40,3 +40,17 @@ spec:
     port: 9585
     targetPort: 9585
   type: LoadBalancer    
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kafka-lenses-data-volume-claim
+  namespace: kafka
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "iscsi-targetd-vg-targetd"  
+spec:
+  resources:
+    requests:
+      storage: 5Gi
+  accessModes:
+    - ReadWriteOnce

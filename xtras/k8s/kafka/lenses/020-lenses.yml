@@ -17,6 +17,13 @@ spec:
       containers:
       - name: kafka-lenses
         image: landoop/kafka-lenses-dev
+        env:
+        - name: EULA
+          value: "https://dl.lenses.stream/d/?id=a0b4a66b-d57d-421c-ab6a-692957a59cac"
+        - name: ADV_HOST
+          value: "192.168.100.153"
+        - name: BROWSE_CONFIGS
+          value: "1"
         ports:
         - containerPort: 3030
         - containerPort: 9092
@@ -26,8 +33,10 @@ spec:
         - containerPort: 9582
         - containerPort: 9584
         - containerPort: 9585
-        env:
-        - name: EULA
-          value: "https://dl.lenses.stream/d/?id=a0b4a66b-d57d-421c-ab6a-692957a59cac"
-        - name: ADV_HOST
-          value: "192.168.100.153"
+        volumeMounts:
+          - name: kafka-lenses-data-volume
+            mountPath: "/data"
+      volumes:
+      - name: kafka-lenses-data-volume
+        persistentVolumeClaim:
+          claimName: kafka-lenses-data-volume-claim
