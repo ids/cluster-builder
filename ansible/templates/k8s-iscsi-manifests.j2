@@ -18,7 +18,7 @@ parameters:
   volumeGroup: {{ targetd_server_volume_group }}
 
 # this is a comma separated list of initiators that will be give access to the created volumes, they must correspond to what you have configured in your nodes.
-  initiators: {% for host in groups['k8s_workers'] %}{{ hostvars[host].initiator_name }}{% if not loop.last %},{% endif %}{% endfor %}
+  initiators: {% for host in groups['vmware_vms'] %}{{ hostvars[host].initiator_name }}{% if not loop.last %},{% endif %}{% endfor %}
   
 # whether or not to use chap authentication for discovery operations  
 #  chapAuthDiscovery: "true"
