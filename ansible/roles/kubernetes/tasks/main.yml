@@ -2,13 +2,13 @@
   include: defaults.yml
   run_once: true
 
-- name: remove the updated docker-ce
+- name: remove any updated docker-ce if it exists
   yum:
     name: docker-ce
     state: absent
   when: cluster_type != "fedora-k8s"
 
-- name: remove any existing daemon.json
+- name: remove any existing daemon.json custom docker configuration
   shell: rm /etc/docker/daemon.json
   args:
     warn: false
@@ -38,32 +38,6 @@
     name: firewalld
     state: stopped
     enabled: no
-
-- name: configure sysctl for ip4
-  lineinfile:
-    path: "/etc/sysctl.conf"
-    state: present
-    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
-    line: 'net.bridge.bridge-nf-call-iptables = 1'
-  
-- name: configure sysctlfor ip6
-  lineinfile:
-    path: "/etc/sysctl.conf"
-    state: present
-    regexp: '^net.bridge.bridge-nf-call-ip6tables =\s'
-    line: 'net.bridge.bridge-nf-call-ip6tables = 1'
-
-- name: configure sysctl for ip4
-  shell: sysctl net.bridge.bridge-nf-call-iptables=1
-
-#- name: configure sysctl forwarding ip4
-#  shell: sysctl net.ipv4.conf.all.forwarding=1
-    
-- name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
-  shell: sysctl -p /etc/sysctl.conf
-
-#- name: add iptables forwarding rule for modern docker
-#  shell: iptables -P FORWARD ACCEPT
 
 - name: turn swap off
   shell: swapoff -a
@@ -102,13 +76,6 @@
     state: present
   with_items:
     - { line: 'repo_gpgcheck=0' }
-
-#- name: Disable SELinux
-#  lineinfile:
-#    path: "/etc/sysconfig/selinux"
-#    state: present
-#    regexp: '^SELINUX'
-#    line: 'SELINUX=disabled'
 
 - name: disable SELinux
   shell: setenforce 0

@@ -1,6 +1,0 @@
----
-- name: start and enable TFTP daemon
-  service:
-    name: tftp
-    state: started
-    enabled: yes  

@@ -1,11 +1,7 @@
 Kubernetes iSCSI Dynamic Storage and the Targetd Storage Appliance
 ==================================================================
 
-The following diagram illustrates the approach to __persistent volume storage__ on  Kubernetes using iSCSI direct:
-
-![Kubernetes iSCSI Storage Strategy](images/coreos-iscsi-storage.png)
-
-The diagram illustrates two types of persistent volume storage:
+The current configuration uses two types of persistent volume storage:
 
 1. __Dynamic__ (for pre-production)
 2. __Static__ (for production)
@@ -80,11 +76,9 @@ Once the __hosts__ file has been prepared, deployment uses the familiar __cluste
 
 Which should result in a deployed __Targetd Server Appliance__ with __1 TB__ of thinly provisioned LVM storage to be allocated dynamically as K8s __PVCs__ are requested.
 
-## The iSCSI Provisioner and CoreOS iSCSI Configuration
+## The iSCSI Provisioner Configuration
 
-Out of the box Tectonic CoreOS does not ship with iSCSI support fully enabled.  Enabling iSCSI is a relatively simple matter of mapping the correct utilities into the __kubelet__ service container.  An ansible playbook has been created to take care of this task.
-
-Before beginning the CoreOS iSCSI configuration make sure to copy the __targetd__ configuration into the CoreOS cluster package hosts file:
+Make sure to copy the __targetd__ configuration into the `kubeadm` cluster package hosts file:
 
     targetd_server=192.168.1.205
     targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
@@ -93,31 +87,22 @@ Before beginning the CoreOS iSCSI configuration make sure to copy the __targetd_
     targetd_server_account_credentials=targetd-account
     targetd_server_account_username=admin
     targetd_server_account_password=ciao
-    targetd_server_namespace=default
 
 These same settings will be used to create the corresponding __ISCSI provisioner manifests__ that will bind the provisioner to the __Targetd Storage Appliance__.
 
-> __Note__ that the iSCSI configuration has been bundled into the deployment process and should happen automatically.  It can be manually re-applied via `coreos-init.yml` at any point, but should already be configured.  You can also re-run the playbooks below at any point to regenerate the artifacts.
+With the __Targetd Storage Appliance configuration__ values in our cluster configuration file we can run the __cluster-builder__ ansible script to configure k8s for iSCSI direct:
 
-Once the CoreOS cluster has been deployed via the [PXE method](README_CoreOS.md) we need to prep CoreOS for ansible management.  This makes use of an __ansible-galaxy__ [module](https://coreos.com/blog/managing-coreos-with-ansible.html) to bootstrap CoreOS with a lightweight version of __python__ to enable ansible modules.
+    ansible-playbook -i clusters/ids/core ansible/centos-iscsi.yml
 
-With the __Targetd Storage Appliance configuration__ values in our __CoreOS Cluster configuration file__ we can run the __cluster-builder__ ansible script to configure CoreOS for iSCSI direct:
-
-    ansible-playbook -i clusters/ids/core ansible/coreos-iscsi-setup.yml
-
-> There is also an alternative `ansible-playbook -i clusters/ids/core ansible/coreos-iscsi-script.yml` that generates a raw bash script to accomplish the same configuration.  This is now deprecated but can still be used to correct or troubleshoot the ansible script based installation.
-
-When the `coreos-iscsi-setup.yml` completes, there will be an __iscsi-manifests__ folder in your cluster package folder for the CoreOS cluster.
-
-__At this stage you must setup your `kubectl` configuration before proceeding - ensure you can connect to your CoreOS cluster__
+__At this stage you must setup your `kubectl` configuration before proceeding - ensure you can connect to your `kubeadm` cluster__
 
 We will then install the iSCSI Provisioner:
 
-    ./coreos-iscsi-secret.sh
+    ./iscsi-secret.sh
 
 This will create the secret credentials that the iSCSI provisioner will use to connect to the Targetd server.
 
-    kubectl apply -f coreos-iscsi.yml
+    kubectl apply -f iscsi.yml
 
 This will create the necessary roles, as well as install the __iscsi-provisioner__ deployment and the corresponding storage class.
 
@@ -154,15 +139,15 @@ The iSCSI provisioner is now ready to deploy iSCSI PVC volumes:
 
 And you can run a benchmark test job on the Targetd iSCSI volumes:
 
-        kubectl apply -f coreos-iscsi-bench-pvc.yml
+        kubectl apply -f iscsi-bench-pvc.yml
         (wait 10 secs)
         kubectl get pvc
         kubectl get pv
-        kubectl apply -f coreos-iscsi-bench-job.yml
+        kubectl apply -f iscsi-bench-job.yml
 
 > For better performance consider using Thickly provisioned VMware VMDK volumes.
 
-Once your pod is running and you see the the PVCs are bound, your CoreOS cluster is ready to use dynamic iSCSI PVC provisioning and static iSCSI PVC storage.
+Once your pod is running and you see the the PVCs are bound, your `kubeadm` cluster is ready to use dynamic iSCSI PVC provisioning and static iSCSI PVC storage.
 
 Enjoy :)
 
@@ -187,7 +172,7 @@ pvc-f6842a73-65de-11e8-bcca-000c298174b4   3Gi        RWO            Delete     
 
 If we launch our benchmarking utility job, we will see an `iscsi-benchmark-volume-claim` created with a corresponding PV, which will map to a dynamically allocated `pvc-` volume we can verify with `targetcli ls`.
 
-        kubectl apply -f coreos-iscsi-bench.yml
+        kubectl apply -f iscsi-bench.yml
 
 And
 
@@ -301,11 +286,9 @@ min/avg/max/mdev = 501 us / 112.2 ms / 1.1 s / 329.7 ms
 Benchmark complete... sleeping 300s (kill me anytime).
 ```
 
-> Thos are great numbers for an iSCSI volume hosted over 1GbE, showing near 2x improvement with the recent disk scheduler optimization of `elevator=deadline`.
-
 Now we will do as suggested, and kill (remove) our benchmark job:
 
-        kubectl delete -f coreos-iscsi-bench.yml
+        kubectl delete -f iscsi-bench.yml
 
 This will also remove the 3Gi PVC volume used for the test, which we can verify with `targetcli ls`:
 
@@ -359,7 +342,7 @@ Create a new storage class that uses the `vg-targetd-thick` pool (it is easiest 
         volumeGroup: vg-targetd-thick
 
         # this is a comma separated list of initiators that will be give access to the created volumes, they must correspond to what you have configured in your nodes.
-        initiators: iqn.2016-04.com.coreos.iscsi:1459208749854afebb99c5953e7b2c36,iqn.2016-04.com.coreos.iscsi:21dfca155e2940b69824a35fc98ab4be,iqn.2016-04.com.coreos.iscsi:b4c735d4d7f545d4907b966947218be5,iqn.2016-04.com.coreos.iscsi:3805f9ad51fc40aca73e57c6787dab2e,iqn.2016-04.com.coreos.iscsi:4df8a3d976494f56b0405f3a1edcbdb4,iqn.2016-04.com.coreos.iscsi:95a1744390d641fe93da94a35fde654c,iqn.2016-04.com.coreos.iscsi:39839a9f9d8d480a89107b13cbce9eb1,iqn.2016-04.com.coreos.iscsi:6938c01c1b274a40948380063255f274
+        initiators: iqn.2016-04.com.iscsi:1459208749854afebb99c5953e7b2c36,iqn.2016-04.com.iscsi:21dfca155e2940b69824a35fc98ab4be,iqn.2016-04.com.iscsi:b4c735d4d7f545d4907b966947218be5,iqn.2016-04.com.iscsi:3805f9ad51fc40aca73e57c6787dab2e,iqn.2016-04.com.iscsi:4df8a3d976494f56b0405f3a1edcbdb4,iqn.2016-04.com.iscsi:95a1744390d641fe93da94a35fde654c,iqn.2016-04.com.iscsi:39839a9f9d8d480a89107b13cbce9eb1,iqn.2016-04.com.iscsi:6938c01c1b274a40948380063255f274
 
         ---
 

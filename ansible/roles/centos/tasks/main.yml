@@ -5,3 +5,5 @@
 - name: configure chronyd
   include: chronyd.yml
 
+- name: configure kernel parameters
+  include: sysctl.yml

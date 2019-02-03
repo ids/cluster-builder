@@ -1,7 +1,7 @@
 Cluster Builder
 ===============
 
-[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/), [Tectonic CoreOS](https://coreos.com) and [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
+[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
@@ -40,14 +40,14 @@ Designed to handle ~all~ most of the complexity associated with on-prem deployme
 * CentOS 7 Docker CE
 * CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
-* CoreOS Tectonic Kubernetes (see see the [CoreOS Readme](docs/README_CoreOS.md))
 * CentOS 7.6 Kubernetes (Stock `kubeadm`)
 * Fedora 29 Kubernetes (Stock `kubeadm`)
 
-> The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Tectonic CoreOS, while a once great Kubernetes, has now been _assimilated_ into _OpenShift_, and with all the M&As around those products, the future is a tangled web.  Meanwhile, the stock `kubeadm` based clusters are getting quite stable and reliable.
+> The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Stock `kubeadm` clusters are quite stable and reliable when properly configured.
 
 ## Deployment Options
-There are currently two types of deployment, __local machine__ and remote __ESXI__ hypervisor (or vSphere):
+
+There are two types of deployment: __local machine__ and remote __ESXI__ hypervisor (or vSphere).
 
 Local deployments are supported for:
 
@@ -55,9 +55,10 @@ Local deployments are supported for:
 * VMware Workstation Pro 12+ for Windows
 * Vmware Workstation Pro 12+ for Linux
 
-and for production usage:
+Production usage targets:
 
-* VMware ESXi (vSphere)
+* VMware ESXi (direct)
+* VMware vSphere
 
 > __Note__ that __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
 
@@ -79,41 +80,19 @@ There are two maintained `kubeadm` built Kubernetes variants:
 * centos-k8s
 * fedora-k8s
 
-__centos-k8s__ and __fedora-k8s__ are `kubeadm` build __Kubernetes__ clusters (1.12+) that come pre-configured with common options:
+These `kubeadm` __Kubernetes__ cluster builds come pre-configured with a core toolset rivaling the latest cloud provider offerings:
 
 * [Canal/Flannel](https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
 * [Calico](https://www.projectcalico.org/) CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 * [MetalLB](https://metallb.universe.tf/) the on-premise load balancer
 * NGINX or Traefik for ingress and inbound traffic routing
+* [Knative](https://cloud.google.com/knative/) serverless platform integration
 * The Kubernetes Dashboard w/ Heapster integration and dashboard graphics (soon to support Metrics Server)
 * iSCSI Provisioner integration and with an external Targetd Storage Appliance VM for PVC storage
 
-> The __CentOS7 K8s__ cluster has been load tested and perform  near the performance of CoreOS w/ Canal CNI and with similar stability, and > 30% faster then CoreOS w/ Calico CNI networking.
-
-```
-# CentOS 7.6 - Dec 21, 2018
-$ uname -ra
-Linux k8s-m1 3.10.0-957.1.3.el7.x86_64 #1 SMP Thu Nov 29 14:49:43 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-```
+> The __CentOS7 K8s__ cluster has been load tested to perform near the performance of Tectonic CoreOS w/ Canal CNI and with similar stability.  Recent builds out perform past CoreOS benchmarks.
 
 The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 4.x kernel.
-
-```
-# Fedora 29 - Dec 1, 2018
-$ uname -ra
-Linux k8s-w5 4.18.10-200.fc28.x86_64 #1 SMP Wed Sep 26 09:48:36 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-```
-
-#### Tectonic CoreOS : Deprecated
-
-The future of __Tectonic CoreOS__ in the form pre-RedHat does not exist.  The jury is still out on whether the _OpenShift_ variant is going to be worth all the customizations and quirks of _OpenShift_.  It's a lot of extra stuff.  And __CentOS 7.6__ with `kubeadm` is testing as a solid, stable onpremise K8s.
-
-There remains two special deployment builds in support of the old __Tectonic CoreOS__:
-
-* coreos-provisioner
-* coreos-pxe
-
-For more information on these [see the CoreOS Readme](docs/README_CoreOS.md)
 
 ### Extras
 
@@ -134,7 +113,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible 2.3+ `brew install/upgrade ansible`
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
-* __kubectl__ 1.9+ (Kubernetes and CoreOS Only - `brew install/upgrade kubernetes-cli`)
+* __kubectl__ 1.12+ (Kubernetes - `brew install/upgrade kubernetes-cli`)
 * Docker for Mac or __docker-ce__ (Swarm only)
 * Python `pip`
 
@@ -506,7 +485,7 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
 
-The __cluster-builder__ CoreOS deployment is paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ to Kubernetes deployments using the __open-iscsi__ platform.
+The __cluster-builder__ `kubeadm` Kubernetes deployment can be paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ using the __open-iscsi__ platform.
 
 For details see the [Kubernetes iSCSI Storage Guide](docs/kubernetes-iscsi-storage.md)
 
@@ -703,14 +682,9 @@ __DC/OS__: 1.11 (or latest)
 
 * centos-dcos
 
-__Tectonic CoreOS__: v1.9.6 (or latest)
-
-* coreos-provisioner
-* coreos-pxe
-
 __Stock Kubernetes__: v1.12.x, v1.13.x
 
-* coreos-k8s
+* centos-k8s
 * fedora-k8s
 
 ### CentOS Based Clusters
@@ -722,7 +696,7 @@ __Stock Kubernetes__: v1.12.x, v1.13.x
 * The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all Swarm based cluster-builder VMs.
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
 * Deployments can include configurable options for log shipping to ELK, using logstash.  
-* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring for Docker Swarm.  Tectonic CoreOS has built in Prometheus/Grafana integrations for Kubernetes that are quite a bit more advanced then the Swarm implementation.
+* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring for Docker Swarm.  Heapster provides metrics to the Kubernetes Dashboard, though additional metric capture platforms can be added as required.
 * Remote API and TLS certificates are installed and configured on Docker CE deployments.
 
-> Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented here and available for review.
+> Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented within the _IaC_ codebase.
