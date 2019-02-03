@@ -33,13 +33,13 @@ spec:
         - containerPort: 9582
         - containerPort: 9584
         - containerPort: 9585
-      volumeMounts:
+        volumeMounts:
           - mountPath: /data
             name: lenses-data-volume
-        volumes:
-        - name: lenses-data-volume
-          hostPath:
-            # directory location on host
-            path: /data/lenses
-            # this field is optional
-            type: Directory
+      volumes:
+      - name: lenses-data-volume
+        hostPath:
+          # directory location on host
+          path: /data/lenses
+          # this field is optional
+          type: Directory
