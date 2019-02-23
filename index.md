@@ -92,7 +92,7 @@ window.onload = function() {
 
 <style>
 
-#header-wrap {
+#header_wrap {
   background: linear-gradient(to top, #49656B, #002B36);
 }
 
