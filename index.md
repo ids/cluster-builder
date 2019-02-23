@@ -95,11 +95,11 @@ window.onload = function() {
 <style>
 
 #header_wrap {
-  background: linear-gradient(to top, #004a5d, #002B36);
+  background: linear-gradient(to top, #002B36, #004a5d);
 }
 
 #footer_wrap {
-  background: linear-gradient(to top, #004a5d, #002B36);
+  background-color: #002B36;
 }
 
 #main_content_wrap { 
