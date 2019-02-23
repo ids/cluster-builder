@@ -41,6 +41,10 @@
       run_once: true
       when: targetd_server is defined 
 
+    - name: waiting for iscsi-provisioner to finish starting up
+      pause:
+        seconds: 30
+
     - name: verify the storage class 
       local_action:
         module: shell
