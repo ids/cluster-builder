@@ -100,6 +100,9 @@ window.onload = function() {
   background: linear-gradient(to top, #004a5d, #002B36);
 }
 
+#main_content_wrap { 
+  background-color: #fff;
+}
 #title-flash {
   font-weight: 200;
   font-size: 1.5em;
