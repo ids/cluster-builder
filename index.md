@@ -131,6 +131,6 @@ window.onload = function() {
 }
 
 .asciicast {
-  height: 500px;
+  max-height: 511px;
 }
 </style>
