@@ -130,4 +130,7 @@ window.onload = function() {
   margin-bottom: 30px;
 }
 
+.asciicast {
+  height: 500px;
+}
 </style>
