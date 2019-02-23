@@ -6,7 +6,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
 
 > One command... and the cluster is deployed!
 
-<script id="asciicast-AsUInfjr7c1hWgI5SmodVtd59" src="https://asciinema.org/a/AsUInfjr7c1hWgI5SmodVtd59.js" async data-autoplay="true" data-rows="80" data-theme="monokai" data-size="small" data-speed="10"></script>
+<script id="asciicast-AsUInfjr7c1hWgI5SmodVtd59" src="https://asciinema.org/a/AsUInfjr7c1hWgI5SmodVtd59.js" async data-autoplay="true" data-rows="70" data-theme="monokai" data-size="small" data-speed="10"></script>
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -57,8 +57,6 @@ window.onload = function() {
       $("#title-cluster-type").html(cluster);
       $("#title-cluster-type").fadeIn();
     });
-
-    $(".asciicast").height("511px");
   }
 
   function swapEnv() {
