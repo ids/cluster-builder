@@ -92,6 +92,10 @@ window.onload = function() {
 
 <style>
 
+#header-wrap {
+  background: linear-gradient(to top, #49656B, #002B36);
+}
+
 #title-flash {
   font-weight: 200;
   font-size: 1.5em;
