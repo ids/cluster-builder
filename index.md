@@ -32,10 +32,10 @@ __Cluster Builder__ can also deploy associated __Targetd Storage Appliance__ and
 __Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter components of a cost optimized _Hybrid Cloud strategy_. It's __fully open__, __forkable__ and __hackable__.  _Why start from scratch?_
 
 ---
-<div class="center">
+<div class="center" style="margin-left: -20px;">
 <img style="width: 100px" src="/assets/images/cbLogo2-100.png" >
 </div>
-<div class="center">
+<div class="center" style="margin-left: -20px;">
 <a id="try-cb-link" href="https://github.com/ids/cluster-builder">Try Cluster Builder</a>
 </div>
 ---
