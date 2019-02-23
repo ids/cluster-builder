@@ -93,7 +93,11 @@ window.onload = function() {
 <style>
 
 #header_wrap {
-  background: linear-gradient(to top, #49656B, #002B36);
+  background: linear-gradient(to top, #004a5d, #002B36);
+}
+
+#footer_wrap {
+  background: linear-gradient(to top, #004a5d, #002B36);
 }
 
 #title-flash {
