@@ -57,6 +57,8 @@ window.onload = function() {
       $("#title-cluster-type").html(cluster);
       $("#title-cluster-type").fadeIn();
     });
+
+    $(".asciicast").height("511px");
   }
 
   function swapEnv() {
