@@ -7,7 +7,7 @@ Cluster Builder
 
 ![cluster-builder Overview](docs/images/cluster-builder-overview.png)
 
-__Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license.  
+__Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
 
 > It will also work with VMware's commercially supported _vSphere_ suite, making it great for both production and non-production environments.  There is no cost barrier to using cluster-builder.
 
