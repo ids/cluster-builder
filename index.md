@@ -34,6 +34,8 @@ __Cluster Builder__ utilizes _VMware_ and _Kubernetes_ as the on-premise datacen
 ---
 <div class="center">
 <img style="width: 100px" src="/assets/images/cbLogo2-100.png" >
+</div>
+<div class="center">
 <a id="try-cb-link" href="https://github.com/ids/cluster-builder">Try Cluster Builder</a>
 </div>
 ---
