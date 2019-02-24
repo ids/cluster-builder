@@ -57,12 +57,16 @@
     pkg=iscsi-initiator-utils 
     state=present
   when: cluster_type != "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: install iSCSI utils for Fedora
   dnf: > 
     pkg=iscsi-initiator-utils 
     state=present
   when: cluster_type == "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid

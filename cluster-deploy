@@ -15,9 +15,7 @@ function check_docker_license () {
 
 function esxi_deploy () {
   
-  echo ""
-  echo "---"
-  echo 
+  echo
   echo "Cluster node password(s) will be changed from their initial default values at the end of the deployment."
   echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
   echo
