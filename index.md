@@ -146,9 +146,6 @@ window.onload = function() {
 
 #main_content {
   font-size: 1.2em;
-  font-weight: 300;
-  margin-top: 30px;
-  margin-bottom: 30px;
 }
 
 .asciicast {
