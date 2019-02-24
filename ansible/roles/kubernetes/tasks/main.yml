@@ -20,12 +20,16 @@
     name: docker
     state: present
   when: cluster_type != "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: install base distro docker for Fedora
   dnf:
     name: docker
     state: present
   when: cluster_type == "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: start docker daemon
   service:

@@ -39,6 +39,8 @@ function esxi_deploy () {
     else
       CB_NODE_ROOT_PASSWORD=$NEW_PASSWORD
     fi 
+  else
+    echo "Using cluster node root password found in package .passwords"
   fi
   PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ROOT_PASSWORD}')"
   TARGET_ROOT_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
@@ -59,6 +61,8 @@ function esxi_deploy () {
       else
         CB_NODE_ADMIN_PASSWORD=$NEW_PASSWORD
       fi 
+    else
+      echo "Using cluster node ${REMOTE_USER} password found in package .passwords"
     fi
     PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ADMIN_PASSWORD}')"
     TARGET_REMOTE_USER_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
@@ -243,7 +247,7 @@ if [ "$VMWARE_TARGET" == "esxi" ]; then
     read -s -p "Enter ESXi root password for ovftool: " OVF_PASSWORD
     CB_ESXI_USER_PASSWORD=$OVF_PASSWORD
   else
-    echo "Using supplied ESXI user password for ovftool."
+    echo "Using ESXI root password for ovftool found in package .passwords"
   fi
 fi
 
