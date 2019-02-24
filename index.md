@@ -2,7 +2,7 @@
 title:  Cluster Builder
 ---
 
-With freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of fleets of container orchestration cluster VMs to vSphere/ESXi hypervisors as well as VMware Workstation Pro and VMware Fusion Pro local environments.
+With freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of fleets of container orchestration cluster VMs to vSphere/ESXi hypervisors as well as VMware Workstation/Fusion Pro local environments.
 
 > One command... and the cluster is deployed!
 
