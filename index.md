@@ -6,7 +6,7 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 
 > One command... and the cluster is deployed!
 
-<script id="asciicast-KDxAdHMIXu9dgvABAPun4Vp5l" src="https://asciinema.org/a/KDxAdHMIXu9dgvABAPun4Vp5l.js" async data-autoplay="true" data-rows="41" data-theme="solarized-dark" data-size="small" data-speed="15"></script>
+<script id="asciicast-qybO3AQfdym2cxKpkcPnSF8lX" src="https://asciinema.org/a/qybO3AQfdym2cxKpkcPnSF8lX.js"  async data-autoplay="true" data-rows="41" data-theme="solarized-dark" data-size="small" data-speed="5"></script>
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
