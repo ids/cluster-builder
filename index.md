@@ -135,11 +135,11 @@ window.onload = function() {
 .marketing-hype {
   color: #787977;
   font-weight: 400;
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
 #main_content p {
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 300;
   margin-top: 30px;
   margin-bottom: 30px;
