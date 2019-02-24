@@ -73,6 +73,10 @@ function esxi_deploy () {
 
   echo "Finishing up ESXi VM Configuration..."
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  if [ $? -ne 0 ]; then
+   echo "There was a problem in the ESXi deployment finalization script"
+   exit 1
+  fi
   
   echo "Assigning VM static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
