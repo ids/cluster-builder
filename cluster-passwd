@@ -22,18 +22,18 @@ if [ -z $REMOTE_USER ]; then
   REMOTE_USER=root
 fi 
 
-echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-sudo -H pip install passlib
-
 if [ -z $TARGET_USER ]; then 
   read -p "Enter user: " TARGET_USER
 fi 
 
 if [ -z $TARGET_PASSWORD_HASH ]; then 
+  echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
+  sudo -H pip install passlib
+
   echo
-  read -s -p "Enter NEW password: " NEW_PASSWORD
+  read -s -p "Enter NEW ${TARGET_USER} password: " NEW_PASSWORD
   echo
-  read -s -p "Confirm NEW password: " CONFIRM_PASSWORD
+  read -s -p "Confirm NEW ${TARGET_USER} password: " CONFIRM_PASSWORD
   echo
 
   if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
