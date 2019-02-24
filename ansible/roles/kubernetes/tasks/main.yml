@@ -104,10 +104,6 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: wait for CoreDNS and CNI to be healthy
-  pause:
-    minutes: "{{ k8s_cni_wait_min }}"
-
 - name: display cluster master node status
   shell: kubectl get nodes
   register: final_nodes_out
@@ -145,10 +141,6 @@
   include: kubernetes-dashboard.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
-
-- name: wait for the worker nodes to connect to the Master control plane and initialize
-  pause:
-    minutes: "{{ k8s_worker_wait_min }}"
     
 - name: configure Calico CNI Network Policy 
   include: cni-calico-policy.yml

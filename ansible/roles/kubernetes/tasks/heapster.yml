@@ -28,6 +28,6 @@
 
 - debug: msg="{{ heap_out.stdout_lines }}"
 
-- name: wait for the heapster service to initialize
+- name: wait for the heapster service to initialize and gather 1m of data
   pause:
     minutes: 1

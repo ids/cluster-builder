@@ -4,6 +4,7 @@ Release Notes
 v19.02
 ------
 
+* Streamlined the ESXi deployment scripts by reducing the arbitrary wait times and improving unattended execution performance.
 * Fixed latest stable defaults for __CentOS 7__ `kubeadm` Kubernetes:
   * __CentOS 7.6 1810__ w/ updates
   * Kubernetes - __v1.13.3__
