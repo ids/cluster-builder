@@ -132,6 +132,38 @@ function pxe_matchbox_deploy () {
 
 function esxi_deploy () {
   
+  echo
+  read -s -p "Enter the new node root password: " NEW_PASSWORD
+  echo
+  read -s -p "Confirm NEW password: " CONFIRM_PASSWORD
+  echo
+
+  if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+    echo
+    echo "** Passwords do not match!"
+    exit
+  else
+    PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${NEW_PASSWORD}')"
+    TARGET_ROOT_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+  fi
+
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    echo
+    read -s -p "Enter the new node ${REMOTE_USER} password: " NEW_PASSWORD
+    echo
+    read -s -p "Confirm NEW password: " CONFIRM_PASSWORD
+    echo
+
+    if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+      echo
+      echo "** Passwords do not match!"
+      exit
+    else
+      PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${NEW_PASSWORD}')"
+      TARGET_REMOTE_USER_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+    fi
+  fi 
+
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
@@ -174,11 +206,11 @@ function esxi_deploy () {
   fi
 
   echo "Change the initial ROOT password on VM Nodes..."
-  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+  bash cluster-passwd $CLUSTER_PKG_FOLDER root $TARGET_ROOT_PASSWORD_HASH
 
   if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
     echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
-    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER $TARGET_REMOTE_USER_PASSWORD_HASH
   fi 
 
   if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
