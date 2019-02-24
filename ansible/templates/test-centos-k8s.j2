@@ -2,10 +2,9 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-sleep 10s
 echo
 kubectl --kubeconfig $DIR/kube-config get nodes
 echo
-sleep 5s
+sleep 2s
 kubectl --kubeconfig $DIR/kube-config get pods --all-namespaces
 echo
