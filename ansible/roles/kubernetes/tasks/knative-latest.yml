@@ -21,7 +21,3 @@
 
 - debug: msg="{{ knative_out.stdout_lines }}"
   when: k8s_metallb_address_range is defined 
-
-- name: wait for Knative installation to complete
-  pause:
-    minutes: "{{ k8s_knative_wait_min }}"

@@ -20,12 +20,16 @@
     name: docker
     state: present
   when: cluster_type != "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: install base distro docker for Fedora
   dnf:
     name: docker
     state: present
   when: cluster_type == "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: start docker daemon
   service:
@@ -53,12 +57,16 @@
     pkg=iscsi-initiator-utils 
     state=present
   when: cluster_type != "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: install iSCSI utils for Fedora
   dnf: > 
     pkg=iscsi-initiator-utils 
     state=present
   when: cluster_type == "fedora-k8s"
+  retries: 10
+  delay: 5
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
@@ -104,10 +112,6 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: wait for CoreDNS and CNI to be healthy
-  pause:
-    minutes: "{{ k8s_cni_wait_min }}"
-
 - name: display cluster master node status
   shell: kubectl get nodes
   register: final_nodes_out
@@ -145,10 +149,6 @@
   include: kubernetes-dashboard.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
-
-- name: wait for the worker nodes to connect to the Master control plane and initialize
-  pause:
-    minutes: "{{ k8s_worker_wait_min }}"
     
 - name: configure Calico CNI Network Policy 
   include: cni-calico-policy.yml

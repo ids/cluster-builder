@@ -20,6 +20,14 @@ OVFTOOL_CMD=ovftool.exe
 OVFTOOL_CMD=ovftool
 {% endif %}
 
+{% if ovftool_parallel|bool == True %}
+  echo
+  echo "Running all ovftool deployments in parallel..." 
+  echo
+  echo "> NOTE: the console output is going to get scrambled, but it will be much faster!"
+  echo
+{% endif %}
+
 {% for host in groups['vmware_vms'] %}
   {% if hostvars[host].vcenter_server is defined  %}
 

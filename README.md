@@ -7,13 +7,11 @@ Cluster Builder
 
 ![cluster-builder Overview](docs/images/cluster-builder-overview.png)
 
-__Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license.  However it is also designed to work with VMware's commercially supported _vSphere_ suite, making it great for production and non-production environments alike.  There is no cost barrier to using cluster-builder.
+__Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
 
-__Cluster Builder__ is a _Packer and Ansible_ based __infrastructure as codebase__ that can deploy _identical cluster VM images to both local development and production VMware environments_, supporting both _operations_ and _development_ team workflows.  This enables advanced local stack development, as well as meta infrastructure orchestration cluster development.  Clusters can be deployed and re-deployed locally, _and_ into production, identically, _in minutes!_
+> It will also work with VMware's commercially supported _vSphere_ suite, making it great for both production and non-production environments.  There is no cost barrier to using cluster-builder.
 
-__Cluster Builder__ follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy even at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this single re-usable toolset can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the various cluster definition packages.
-
-Designed to handle ~all~ most of the complexity associated with on-prem deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
+Designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)

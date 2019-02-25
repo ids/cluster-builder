@@ -41,10 +41,6 @@
 - debug: msg="{{ istio_out.stdout_lines }}"
   when: k8s_istio_tls|bool != true 
 
-- name: wait for the Istio 1.0.4 installation to complete
-  pause:
-    minutes: "{{ k8s_istio_wait_min }}"
-
 - name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
   shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml
   register: flex_out

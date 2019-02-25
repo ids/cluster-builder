@@ -6,7 +6,7 @@ apiServerCertSANs:
   - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
 {% for host in groups['k8s_masters'] %}
-  - "{{ hostvars[host].inventory_hostname }}"
+  - "{{ hostvars[host].node_hostname }}"
 {% endfor %}
   - "127.0.0.1"
   - "10.96.0.1"
@@ -24,11 +24,11 @@ etcd:
   local:
     dataDir: "/var/lib/etcd"    
   extraArgs:
-    listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].inventory_hostname }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
+    listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].node_hostname }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
   serverCertSANs:
     - "{{ k8s_advertise_addr }}"  
 {% for host in groups['k8s_masters'] %}
-    - "{{ hostvars[host].inventory_hostname }}"
+    - "{{ hostvars[host].node_hostname }}"
 {% endfor %}
   peerCertSANs:
 {% for host in groups['k8s_masters'] %}

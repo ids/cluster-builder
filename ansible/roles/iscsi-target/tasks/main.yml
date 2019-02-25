@@ -5,4 +5,6 @@
     state=present
   with_items:
    - scsi-target-utils
+  retries: 10
+  delay: 5
 

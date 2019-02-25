@@ -15,4 +15,5 @@ terraform.tfstate
 terraform.tfstate.backup
 
 nohup.out
+.passwords
 

@@ -16,3 +16,15 @@
 
 - debug: msg="{{ calico_mesh_out.stdout_lines }}"
   when: k8s_network_cni == 'calico-policy'
+
+- name: give the Istio deployments a few seconds to spin up
+  pause:
+    seconds: 30
+
+- name: wait for the enormous Istio installation to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: inventory_hostname == groups['k8s_masters'][0]

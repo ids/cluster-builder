@@ -2,11 +2,25 @@
 
 ESXi deployment assumes that you have SSH enabled, and that your operator **id_rsa.pub** has been registered in the ESXi server's authorized_keys.
 
-> **Note**: ESXi deployment uses static IP addresses auto-assigned during the deployment process.
+> **NOTE**: ESXi deployment uses static IP addresses auto-assigned during the deployment process.
 
 Once deployed to ESXI, the VMs are started to generate their MAC addresses and fetch temporary DHCP IP addresses.  These are then used to create some BASH scripts that will configure the VMs with static IPs, as per the inventory file.
 
 At this stage all of the VMs have been deployed and **should be running**.  They should also have their correct static IPs.
+
+#### Using a .passwords File
+
+For ESXi deployment you can place a `.passwords` file in the cluster definition package folder to save having to type in the ESXi user (usually root) password for `ovftool` deployment, or the node passwords, during each run of the deployment script.
+
+The `.passwords` file should can contain the following:
+
+```
+export CB_ESXI_USER_PASSWORD=<password for ovftool deployment to ESXi hypervisors or vSphere>
+export CB_NODE_ROOT_PASSWORD=<strong plain text password>
+export CB_NODE_ADMIN_PASSWORD=<strong plain text password>
+```
+
+If a `.passwords` file is not used the script will prompt for the values.
 
 ---
 ### ESXi Preparation

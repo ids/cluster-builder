@@ -2,6 +2,7 @@
 
 INVENTORY_FILE=$1
 TARGET_USER=$2
+TARGET_PASSWORD_HASH=$3
 
 if [ -z INVENTORY_FILE ]; then
   read -s "Enter the target cluster folder: " INVENTORY_FILE
@@ -21,28 +22,31 @@ if [ -z $REMOTE_USER ]; then
   REMOTE_USER=root
 fi 
 
-echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-sudo -H pip install passlib
-
 if [ -z $TARGET_USER ]; then 
   read -p "Enter user: " TARGET_USER
 fi 
 
-echo
-read -s -p "Enter NEW password: " NEW_PASSWORD
-echo
-read -s -p "Confirm NEW password: " CONFIRM_PASSWORD
-echo
+if [ -z $TARGET_PASSWORD_HASH ]; then 
+  echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
+  sudo -H pip install passlib
 
-if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
   echo
-  echo "** Passwords do not match!  Unable to update password."
+  read -s -p "Enter NEW ${TARGET_USER} password: " NEW_PASSWORD
   echo
-else
-  PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${NEW_PASSWORD}')"
-  TARGET_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+  read -s -p "Confirm NEW ${TARGET_USER} password: " CONFIRM_PASSWORD
+  echo
 
-  echo "Changing cluster password for ${TARGET_USER}..."
-  ansible-playbook -i $INVENTORY_FILE ansible/change-password.yml -u $REMOTE_USER --extra-vars="remote_user=${REMOTE_USER} target_user=${TARGET_USER} target_password_hash='${TARGET_PASSWORD_HASH}'"
-fi 
+  if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+    echo
+    echo "** Passwords do not match!  Unable to update password."
+    echo
+    exit 1
+  else
+    PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${NEW_PASSWORD}')"
+    TARGET_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+  fi 
+fi
+
+echo "Changing cluster password for ${TARGET_USER}..."
+ansible-playbook -i $INVENTORY_FILE ansible/change-password.yml -u $REMOTE_USER --extra-vars="remote_user=${REMOTE_USER} target_user=${TARGET_USER} target_password_hash='${TARGET_PASSWORD_HASH}'"
 

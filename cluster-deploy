@@ -13,142 +13,77 @@ function check_docker_license () {
   fi
 }
 
-function pxe_matchbox_deploy () {
-
-  SERVER_WAIT=30s
-
-  if hash terraform >/dev/null; then
-
-    if [ -z $TECTONIC_HOME ]; then
-      echo "TECTONIC_HOME is not set! It must be set to the root of the tectonic-installer folder."
-      exit 1
-    fi
-
-    echo
-    echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
-    sudo date
-
-    read -s -p "Enter Tectonic Admin password: " TECTONIC_PASSWORD
-
-    echo "Building cluster: ${CLUSTER_TYPE_NAME}"
-
-    if ps -p $SSH_AGENT_PID > /dev/null
-    then
-      echo "ssh-agent is already running"
-      # Do something knowing the pid exists, i.e. the process with $PID is running
-    else
-      echo "Start ssh-agent for Terraform"
-      eval `ssh-agent -s`
-    fi
-    echo "Add id_rsa credentials for Terraform ssh-agent"
-    ssh-add ~/.ssh/id_rsa
-
-    if [ "$VMWARE_TARGET" == "esxi" ]; then
-      ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-      if [ $? -ne 0 ]; then
-      echo "There is a problem with the ESXi init-pre script"
-      exit 1
-      fi
-
-      bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
-      if [ $? -ne 0 ]; then
-        echo "There was a problem deploying the VMs using ovftool"
-        exit 1
-      fi
-
-      echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up be assigned MAC addresses..."
-      sleep $SERVER_WAIT
-
-      ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
-      if [ $? -ne 0 ]; then
-        echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
-        exit 1
-      fi      
-    else 
-      ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE-fusion.yml  --extra-vars="ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER} tectonic_admin_password=$TECTONIC_PASSWORD"
-      if [ $? -ne 0 ]; then
-        echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
-        exit 1
-      fi
-    fi
-
-    rm -rf .terraform
-    rm -rf terraform.tf*
-    rm -rf generated
-    terraform init ${TECTONIC_HOME}/platforms/metal
-    if [ $? -ne 0 ]; then
-      echo "FAIL: Unable to initialize Tectonic Terraform!"
-      exit 1
-    fi
-    
-    terraform plan -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal
-
-    echo "**************************************************************************************"
-    echo "**************************************************************************************"
-    echo " After 'apply' while the terraform is waiting to update the etcd secrets on the controller"
-    echo " Open a new tab and start power up the VMS... but only after you see the following begin"
-    echo 
-    echo " data.archive_file.assets: Refreshing state..."
-    echo " null_resource.etcd_secrets: Still creating... (10s elapsed)"
-    echo
-    echo " $ bash cluster-control ${CLUSTER_PKG_FOLDER} start"
-    echo 
-    echo " (or start the VMs manually, it doesn't matter, terraform will wait)"
-    echo
-    echo " To restart the terraform:"
-    echo " $ terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal"
-    echo "**************************************************************************************"
-    echo "**************************************************************************************"
-    echo 
-    read -p "Press [Enter] to apply the plan, or [Ctrl-C] to cancel..."
-    if [ $? -ne 0 ]; then
-      echo "FAIL: ${CLUSTER_TYPE_NAME} creation cancelled!"
-      exit 1
-    fi    
-
-    terraform apply -var-file=clusters/${CLUSTER_PKG_FOLDER}/terraform.tfvars ${TECTONIC_HOME}/platforms/metal
-
-    echo "Copying generated assets into ${CLUSTER_PKG_FOLDER}/assets..."
-    mkdir -p clusters/${CLUSTER_PKG_FOLDER}/assets 
-    cp -r ./generated/* clusters/${CLUSTER_PKG_FOLDER}/assets/
-
-    ansible-playbook -i $INVENTORY_FILE ansible/coreos-ready-check.yml
-
-    echo "Initializing CoreOS nodes to specific configuration state..."
-    ansible-playbook -i $INVENTORY_FILE ansible/coreos-init.yml
-    if [ $? -ne 0 ]; then
-      echo "FAIL: Unable to initialize Tectonic CoreOS cluster!"
-      exit 1
-    else
-      echo
-      echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
-    fi
-  else
-   echo "Tectonic Terraform installer needs to be installed and configured in PATH!"
-   exit 1
-  fi
-
-}
-
 function esxi_deploy () {
   
+  echo
+  echo "Cluster node password(s) will be changed from their initial default values at the end of the deployment."
+  echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
+  echo
+  echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
+  sudo -H pip install passlib
+
+  if [ -z $CB_NODE_ROOT_PASSWORD ]; then
+    echo
+    echo "Note that you can also provide the node ROOT password by creating a .passwords ENV file in the cluster package folder with the export CB_NODE_ROOT_PASSWORD"
+    echo
+    read -s -p "Enter the new Cluster node root password: " NEW_PASSWORD
+    echo
+    read -s -p "Confirm NEW root password: " CONFIRM_PASSWORD
+    echo
+    if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+      echo
+      echo "** Passwords do not match!"
+      exit 1
+    else
+      CB_NODE_ROOT_PASSWORD=$NEW_PASSWORD
+    fi 
+  else
+    echo "Using cluster node root password found in package .passwords"
+  fi
+  PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ROOT_PASSWORD}')"
+  TARGET_ROOT_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+  
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+    if [ -z $CB_NODE_ADMIN_PASSWORD ]; then
+      echo
+      echo "Note that you can also provide the node ADMIN password by creating a .passwords ENV file in the cluster package folder  with the export CB_NODE_ADMIN_PASSWORD"
+      echo
+      read -s -p "Enter the new Cluster node ${REMOTE_USER} password: " NEW_PASSWORD
+      echo
+      read -s -p "Confirm NEW ${REMOTE_USER} password: " CONFIRM_PASSWORD
+      echo
+      if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
+        echo
+        echo "** Passwords do not match!"
+        exit 1
+      else
+        CB_NODE_ADMIN_PASSWORD=$NEW_PASSWORD
+      fi 
+    else
+      echo "Using cluster node ${REMOTE_USER} password found in package .passwords"
+    fi
+    PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ADMIN_PASSWORD}')"
+    TARGET_REMOTE_USER_PASSWORD_HASH=`python -c "${PYTHON_CMD}"`
+  fi 
+
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
    exit 1
   fi
 
-  bash $TEMP_SCRIPT_PATH/esxi-create-vms $OVF_PASSWORD
+  bash $TEMP_SCRIPT_PATH/esxi-create-vms $CB_ESXI_USER_PASSWORD
   if [ $? -ne 0 ]; then
     echo "There was a problem deploying the VMs using ovftool"
     exit 1
   fi
 
-  echo "Waiting ${SERVER_WAIT} to give the VMs time to spin up and get their temporary DHCP addresses..."
-  sleep $SERVER_WAIT
-
   echo "Finishing up ESXi VM Configuration..."
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  if [ $? -ne 0 ]; then
+   echo "There was a problem in the ESXi deployment finalization script"
+   exit 1
+  fi
   
   echo "Assigning VM static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
@@ -174,11 +109,11 @@ function esxi_deploy () {
   fi
 
   echo "Change the initial ROOT password on VM Nodes..."
-  bash cluster-passwd $CLUSTER_PKG_FOLDER root
+  bash cluster-passwd $CLUSTER_PKG_FOLDER root $TARGET_ROOT_PASSWORD_HASH
 
-  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
+  if [ "$REMOTE_USER" != "root" ] && [ ! -z "${REMOTE_USER}" ]; then 
     echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
-    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER
+    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER $TARGET_REMOTE_USER_PASSWORD_HASH
   fi 
 
   if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
@@ -225,7 +160,7 @@ elif [[ $PLATFORM == *"Darwin"* ]]; then
   VMWARE_APP="VMware Fusion"
 fi
 
-if [ -z INVENTORY_FILE ]; then
+if [ -z "${INVENTORY_FILE}" ]; then
   read -s "Enter the target cluster folder: " INVENTORY_FILE
 fi
 
@@ -244,6 +179,8 @@ REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | 
 
 CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
 CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
+
+source clusters/$CLUSTER_PKG_FOLDER/.passwords
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
 
@@ -274,19 +211,6 @@ elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
   CLUSTER_TYPE_NAME='RHEL Swarm'
   OVA_BUILD_TYPE=rhel7
   REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'coreos-provisioner' ]; then
-  CLUSTER_NAME="n/a"
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-centos-provisioner-x86_64.ova
-  CLUSTER_TYPE_NAME='CoreOS Provisioner'
-  OVA_BUILD_TYPE=coreos-provisioner
-  SERVER_WAIT=90s
-  REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'coreos-pxe' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/coreos-pxe-node.ova
-  CLUSTER_TYPE_NAME='CoreOS Tectonic'
-  OVA_BUILD_TYPE=coreos-pxe
-  SERVER_WAIT=90s
-  REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'targetd-server' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/targetd-server-x86_64.ova
   CLUSTER_TYPE_NAME='Targetd iSCSI Storage Appliance'
@@ -314,7 +238,15 @@ echo "***"
 echo
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
-  read -s -p "Enter ESXi password for ovftool: " OVF_PASSWORD
+  if [ -z $CB_ESXI_USER_PASSWORD ]; then
+    echo "The ESXi user password is used by ovftool to deploy OVA node images to ESXi hypervisors."
+    echo "You can also provide this by creating a .passwords ENV file in the cluster package folder with the export CB_EXSI_ROOT_PASSWORD"
+    echo 
+    read -s -p "Enter ESXi root password for ovftool: " OVF_PASSWORD
+    CB_ESXI_USER_PASSWORD=$OVF_PASSWORD
+  else
+    echo "Using ESXI root password for ovftool found in package .passwords"
+  fi
 fi
 
 START_TIME=$SECONDS
@@ -334,14 +266,10 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
   exit 1
 fi
 
-if [ "$CLUSTER_TYPE" == "coreos-pxe" ]; then
-  pxe_matchbox_deploy
-else
-  if [ "$VMWARE_TARGET" == "esxi" ]; then
-    esxi_deploy
-  elif [ "$VMWARE_TARGET" == "fusion" ]; then
-    fusion_deploy
-  fi
+if [ "$VMWARE_TARGET" == "esxi" ]; then
+  esxi_deploy
+elif [ "$VMWARE_TARGET" == "fusion" ]; then
+  fusion_deploy
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
