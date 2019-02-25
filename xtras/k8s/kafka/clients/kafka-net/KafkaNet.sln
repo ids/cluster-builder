@@ -5,14 +5,6 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaNet", "KafkaNet\KafkaNet.csproj", "{07A58F9B-E58C-4B2F-94AE-700950BC5776}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen", "confluent-kafka-dotnet\src\ConfigGen\ConfigGen.csproj", "{0A063913-7240-45F4-8A09-4D50BE6D2213}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka", "confluent-kafka-dotnet\src\Confluent.Kafka\Confluent.Kafka.csproj", "{30ED820E-02EA-4E8B-A248-98D2C682B33F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.Kafka.Avro", "confluent-kafka-dotnet\src\Confluent.Kafka.Avro\Confluent.Kafka.Avro.csproj", "{489C04D4-6B92-47C5-9B2C-6034B238DC03}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Confluent.SchemaRegistry", "confluent-kafka-dotnet\src\Confluent.SchemaRegistry\Confluent.SchemaRegistry.csproj", "{180112CA-4628-4BD9-8CFC-327B00578C11}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,22 +15,6 @@ Global
 		{07A58F9B-E58C-4B2F-94AE-700950BC5776}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07A58F9B-E58C-4B2F-94AE-700950BC5776}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07A58F9B-E58C-4B2F-94AE-700950BC5776}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A063913-7240-45F4-8A09-4D50BE6D2213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A063913-7240-45F4-8A09-4D50BE6D2213}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A063913-7240-45F4-8A09-4D50BE6D2213}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A063913-7240-45F4-8A09-4D50BE6D2213}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30ED820E-02EA-4E8B-A248-98D2C682B33F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30ED820E-02EA-4E8B-A248-98D2C682B33F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30ED820E-02EA-4E8B-A248-98D2C682B33F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30ED820E-02EA-4E8B-A248-98D2C682B33F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{489C04D4-6B92-47C5-9B2C-6034B238DC03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{489C04D4-6B92-47C5-9B2C-6034B238DC03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{489C04D4-6B92-47C5-9B2C-6034B238DC03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{489C04D4-6B92-47C5-9B2C-6034B238DC03}.Release|Any CPU.Build.0 = Release|Any CPU
-		{180112CA-4628-4BD9-8CFC-327B00578C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{180112CA-4628-4BD9-8CFC-327B00578C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{180112CA-4628-4BD9-8CFC-327B00578C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{180112CA-4628-4BD9-8CFC-327B00578C11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
