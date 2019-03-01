@@ -59,6 +59,8 @@
   when: cluster_type != "fedora-k8s"
   retries: 10
   delay: 5
+  register: result
+  until: result.rc == 0
 
 - name: install iSCSI utils for Fedora
   dnf: > 
@@ -67,6 +69,8 @@
   when: cluster_type == "fedora-k8s"
   retries: 10
   delay: 5
+  register: result
+  until: result.rc == 0
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
