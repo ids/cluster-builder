@@ -22,16 +22,14 @@ Designed to handle ~all~ most of the complexity associated with on-premise deplo
 7. [Cluster Builder Usage](#cluster-builder-usage)
 8. [Deploying a Cluster](#deploying-a-cluster)
 9. [Change Cluster Password](#change-cluster-password)
-10. [Patching a Cluster](#patching-a-cluster)
-11. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
-12. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-13. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-17. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-18. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
-19. [System Profile](#system-profile)
+10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+12. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+13. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+14. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
+17. [System Profile](#system-profile)
 
 ## Supported Clusters
 
@@ -428,25 +426,6 @@ Eg.
 	bash cluster-passwd eg/esxi-swarm admin
 
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
-
-## Patching a Cluster
-To update the nodes on a deployed cluster, use **cluster-update**:
-
-	$ bash cluster-deploy <inventory-package | cluster-name>
-
-__Eg.__
-
-	$ bash cluster-deploy eg/esxi-swarm
-
-## Adding a Node to a Cluster
-To add a new node to an existing cluster, update the original hosts file with the new node.
-Then use **cluster-add**:
-
-	$ bash cluster-add <inventory-package | cluster-name>
-
-__Eg.__
-
-	$ bash cluster-add esxi-rhel-swarm
 
 ## Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.

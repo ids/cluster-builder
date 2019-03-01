@@ -3,7 +3,7 @@
     {
       "type": "vmware-iso",
       "iso_urls": [
-        "./iso/en_windows_server_2019_x64_dvd_4cb967d8.iso"
+        "./iso/17763.253.190108-0006.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso"
       ],
       "iso_checksum_type": "none",
       "headless": false,

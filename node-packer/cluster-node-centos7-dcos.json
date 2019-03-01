@@ -51,7 +51,7 @@
       ],
       "boot_wait": "10s",
       "disk_size": 256000,
-      "guest_os_type": "centos-64",
+      "guest_os_type": "rhel7-64",
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
