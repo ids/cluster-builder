@@ -3,6 +3,10 @@
   args:
     warn: false
   become: true
+  retries: 10
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
   
 - name: install K8s (CentOS)
   shell: "yum -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
@@ -10,6 +14,9 @@
     warn: false
   register: k8s_install
   when: cluster_type != "fedora-k8s"
+  retries: 10
+  delay: 5
+  until: k8s_install.rc is defined and k8s_install.rc == 0
 
 - debug: msg="{{ k8s_install.stdout_lines }}"
   when: cluster_type != "fedora-k8s"
@@ -20,6 +27,9 @@
     warn: false
   register: k8s_install
   when: cluster_type == "fedora-k8s"
+  retries: 10
+  delay: 5
+  until: k8s_install.rc is defined and k8s_install.rc == 0
 
 - debug: msg="{{ k8s_install.stdout_lines }}"
   when: cluster_type == "fedora-k8s"

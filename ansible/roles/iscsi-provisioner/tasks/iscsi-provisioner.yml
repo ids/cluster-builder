@@ -15,6 +15,10 @@
       initiator_name: "{{ vm_initiator_code.stdout }}"
     when: targetd_server is defined 
 
+  - debug: msg="{{ initiator_name }}"
+
+  - debug: msg="{{ vm_initiator_code.stdout }}"
+  
   - name: assign default storage class name
     set_fact:
       targetd_server_storage_class: "iscsi-targetd-vg-targetd"

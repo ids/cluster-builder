@@ -17,3 +17,35 @@
   retries: 100
   delay: 10    
   when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install the latest version of Knative eventing
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f https://github.com/knative/eventing/releases/download/v0.4.0/release.yaml"
+  become: false
+  run_once: true
+  ignore_errors: true
+  register: knative_event_out
+
+- debug: msg="{{ knative_event_out.stdout_lines }}"
+  run_once: true
+
+- name: install the latest Knative event sources
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f https://github.com/knative/eventing-sources/releases/download/v0.4.0/release.yaml"
+  become: false
+  run_once: true
+  ignore_errors: true
+  register: knative_source_out
+
+- debug: msg="{{ knative_source_out.stdout_lines }}"
+  run_once: true
+
+- name: wait for the Knative eventing nstallation to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: inventory_hostname == groups['k8s_masters'][0]
