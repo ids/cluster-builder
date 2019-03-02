@@ -121,7 +121,7 @@ function esxi_deploy () {
   fi
 
   echo
-  echo -e "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
 function fusion_deploy () {
@@ -148,7 +148,7 @@ function fusion_deploy () {
   fi 
 
   echo
-  echo -e "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
 
 }
 
@@ -275,7 +275,7 @@ elif [ "$VMWARE_TARGET" == "fusion" ]; then
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo -e "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo
 
 
