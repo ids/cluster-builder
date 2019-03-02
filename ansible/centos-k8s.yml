@@ -79,10 +79,10 @@
       shell: kubectl apply -f https://github.com/fission/fission/releases/download/1.0.0/fission-all-1.0.0.yaml
       become: true 
       register: fission_out
-      when: inventory_hostname == groups['k8s_masters'][0]
+      when: inventory_hostname == groups['k8s_masters'][0] and (k8s_install_fission|bool == true) 
 
     - debug: msg="{{ fission_out.stdout_lines }}"
-      when: inventory_hostname == groups['k8s_masters'][0]
+      when: inventory_hostname == groups['k8s_masters'][0] and (k8s_install_fission|bool == true) 
 
     - name: wait for Fission installation to complete
       shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
@@ -91,7 +91,7 @@
       retries: 100
       delay: 10   
       become: true 
-      when: inventory_hostname == groups['k8s_masters'][0]
+      when: inventory_hostname == groups['k8s_masters'][0] and (k8s_install_fission|bool == true) 
 
     - name: generate the client test script
       local_action:
