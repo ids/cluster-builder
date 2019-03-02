@@ -31,7 +31,7 @@
       module: template
       src: templates/k8s-iscsi-manifests.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi.yml
-      mode: 0766
+      mode: 0755
     become: false
     when: targetd_server is defined
 
@@ -40,7 +40,7 @@
       module: template
       src: templates/k8s-iscsi-bench-pvc-yml.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-bench-pvc.yml
-      mode: 0766
+      mode: 0755
     become: false
     run_once: true
     when: targetd_server is defined 
@@ -50,7 +50,7 @@
       module: template
       src: templates/k8s-iscsi-bench-job-yml.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-bench-job.yml
-      mode: 0766
+      mode: 0755
     become: false
     run_once: true
     when: targetd_server is defined 
@@ -60,7 +60,7 @@
       module: template
       src: templates/k8s-iscsi-secret.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-secret.sh
-      mode: 0766
+      mode: 0755
     become: false    
     when: targetd_server is defined 
 
