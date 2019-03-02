@@ -97,15 +97,6 @@
 - debug: msg="install istio version -> {{ k8s_istio_version }}"
   run_once: true
 
-- name: set k8s_install_fission default
-  set_fact:
-    k8s_install_fission: false
-  run_once: true
-  when: k8s_install_fission is undefined
-
-- debug: msg="install fission -> {{ k8s_install_fission }}"
-  run_once: true
-
 - name: set k8s_cluster_cidr default for Canal CNI
   set_fact:
     k8s_cluster_cidr: 10.244.0.0/16

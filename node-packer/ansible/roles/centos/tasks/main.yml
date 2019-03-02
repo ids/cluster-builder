@@ -34,7 +34,7 @@
 - name: Make sure the RTC is not local
   command: timedatectl set-local-rtc 0
 
-- name: Stop Chronyd
+- name: stop chronyd
   become: true
   command: systemctl stop chronyd
 
@@ -42,7 +42,7 @@
   become: true
   command: chronyd -q 'pool ca.pool.ntp.org iburst'
 
-- name: Start Chronyd
+- name: Start chronyd
   become: true
   command: systemctl start chronyd
 

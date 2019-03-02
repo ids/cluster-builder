@@ -62,6 +62,19 @@
       run_once: true
       when: targetd_server is defined 
 
+    - name: make targetd the default storage class 
+      local_action:
+        module: shell
+        _raw_params: "kubectl patch storageclass {{ targetd_server_storage_class }} -p '{'metadata': {'annotations':{'storageclass.kubernetes.io/is-default-class':'true'}}}'"
+      become: false
+      run_once: true
+      register: iscsi_scv_cmd
+      when: targetd_server is defined 
+
+    - debug: msg="{{ iscsi_scv_cmd.stdout_lines }}"
+      run_once: true
+      when: targetd_server is defined 
+
     - name: verify the iscsi-provisioner pod
       local_action:
         module: shell
@@ -74,24 +87,6 @@
     - debug: msg="{{ iscsi_podv_cmd.stdout_lines }}"
       run_once: true
       when: targetd_server is defined 
-
-    - name: install Fission serverless platform
-      shell: kubectl apply -f https://github.com/fission/fission/releases/download/1.0.0/fission-all-1.0.0.yaml
-      become: true 
-      register: fission_out
-      when: inventory_hostname == groups['k8s_masters'][0] and (k8s_install_fission|bool == true) 
-
-    - debug: msg="{{ fission_out.stdout_lines }}"
-      when: inventory_hostname == groups['k8s_masters'][0] and (k8s_install_fission|bool == true) 
-
-    - name: wait for Fission installation to complete
-      shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
-      register: pending_pods
-      until: "pending_pods.stdout == '0'"
-      retries: 100
-      delay: 10   
-      become: true 
-      when: inventory_hostname == groups['k8s_masters'][0] and (k8s_install_fission|bool == true) 
 
     - name: generate the client test script
       local_action:
