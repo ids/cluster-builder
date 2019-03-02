@@ -1,3 +1,6 @@
+- name: modprobe
+  shell: modprobe br_netfilter
+
 - name: configure iptables bridge for ip4
   shell: sysctl -w net.bridge.bridge-nf-call-iptables=1
   

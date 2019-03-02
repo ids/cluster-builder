@@ -21,7 +21,9 @@
     state: present
   when: cluster_type != "fedora-k8s"
   retries: 10
-  delay: 5
+  delay: 10
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: install base distro docker for Fedora
   dnf:
@@ -29,7 +31,9 @@
     state: present
   when: cluster_type == "fedora-k8s"
   retries: 10
-  delay: 5
+  delay: 10
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: start docker daemon
   service:
@@ -89,8 +93,9 @@
   with_items:
     - { line: 'repo_gpgcheck=0' }
 
-- name: disable SELinux
+- name: verify SELinux is disabled
   shell: setenforce 0
+  ignore_errors: true
   when: cluster_type != "fedora-k8s"
 
 - name: install Kubernetes on all the nodes
