@@ -175,11 +175,6 @@
   when: (k8s_install_knative_lite|bool == true) and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
-- name: configure Fission
-  include: fision.yml
-  when: (k8s_install_fission|bool == true) and 'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]
-
 - name: display cluster worker node status
   shell: kubectl get nodes
   register: final_nodes_out
