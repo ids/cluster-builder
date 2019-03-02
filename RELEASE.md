@@ -7,7 +7,7 @@ v19.02
 * Streamlined the ESXi deployment scripts by reducing the arbitrary wait times and improving unattended execution performance.
 * Fixed latest stable defaults for __CentOS 7__ `kubeadm` Kubernetes:
   * __CentOS 7.6 1810__ w/ updates
-  * Kubernetes - __v1.13.3__
+  * Kubernetes - __v1.13.4__
   * Canal CNI w/ Network Policy - __v3.5__
   * MetalLB Native Load Balancer - __v0.73__
   * NGINX Ingress Controller - __v0.21__
@@ -18,6 +18,11 @@ v19.02
 * Set base `node-packer` __CentOS__ ova to use base distro docker version by default, as this is preferred by __k8s__ and __DC/OS__.
 * Removed last remnants of Tectonic CoreOS and updated documentation accordingly.
 * Added __CentOS__ kernel parameter tuning for network performance on nodes.
+* Added durability and retry logic to many of the ansible deployment tasks, and replaced hard VM restarts with soft as the `vim-cmd power.off` was causing periodic corruption.
+
+#### Known Issues
+
+> `macOS mojave` and `VMware Fusion 10 and 11` have had issues with `packer` and DHCP assignment, as well as periodic crashes of `vmrun`, and a variety of other instability issues not usually common in the pre-Cook era.  `cluster-builder` has attempted to compensate where possible. Mileage may vary until _Apple_ settles down and plays nice.  In contrast, __Windows WSL__ has become as stable a deployment platform as the __Cluster Control Station__ CentOS 7.6 VM, with neither platform exhibiting the `macOS` issues. Though _Microsoft_, not wanting to be outdone by _Apple_, and really the original anti-competitor, is clearly using the _Device Credential Guard_ debacle to annoy anyone who doesn't want the crappy _Hyper-V_ forced upon them.  But if you can run the guantlet, __Windows WSL__ is actually a stable __cluster-builder__ platform.
 
 v18.12
 ------
