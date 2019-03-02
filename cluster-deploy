@@ -15,7 +15,6 @@ function check_docker_license () {
 
 function esxi_deploy () {
   
-  echo
   echo "Cluster node password(s) will be changed from their initial default values at the end of the deployment."
   echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
   echo
@@ -256,7 +255,6 @@ fi
 START_TIME=$SECONDS
 
 if [ ! -f $OVA_TEMPLATE_FILE ]; then
-  echo
   echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
   echo "Attempting to build: ${OVA_BUILD_TYPE}"
   cd node-packer
@@ -265,7 +263,6 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
 fi
 
 if [ ! -f $OVA_TEMPLATE_FILE ]; then
-  echo
   echo "Unable to build template ova: ${OVA_BUILD_TYPE}"
   exit 1
 fi
