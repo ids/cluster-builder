@@ -46,7 +46,7 @@
 - name: turn swap off
   shell: swapoff -a
 
-- name: remove Swap from fstab
+- name: remove swap from fstab
   lineinfile:
     path: /etc/fstab
     state: absent

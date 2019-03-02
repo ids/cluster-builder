@@ -121,6 +121,7 @@ function esxi_deploy () {
   fi
 
   echo
+  echo -e "${TC}------------------------------------------------------------${NC}"
   echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
@@ -148,6 +149,7 @@ function fusion_deploy () {
   fi 
 
   echo
+  echo -e "${TC}------------------------------------------------------------${NC}"
   echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
 
 }
@@ -228,7 +230,7 @@ if [ "$TERM" == "xterm-256color" ]; then
 fi 
 
 echo
-echo -e "\xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5"
+echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
 echo
 echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
 echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
@@ -236,7 +238,7 @@ echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
 echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
 echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
 echo
-echo -e "\xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5"
+echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
 echo
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
@@ -276,6 +278,7 @@ fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
 echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
 
