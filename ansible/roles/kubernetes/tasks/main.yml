@@ -57,7 +57,7 @@
     pkg=iscsi-initiator-utils 
     state=present
   when: cluster_type != "fedora-k8s"
-  retries: 10
+  retries: 50
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
@@ -67,7 +67,7 @@
     pkg=iscsi-initiator-utils 
     state=present
   when: cluster_type == "fedora-k8s"
-  retries: 10
+  retries: 50
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
