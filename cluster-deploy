@@ -38,7 +38,7 @@ function esxi_deploy () {
       CB_NODE_ROOT_PASSWORD=$NEW_PASSWORD
     fi 
   else
-    echo "Using cluster node root password found in package .passwords"
+    echo -e "Using cluster node root password found in package .passwords"
   fi
   PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ROOT_PASSWORD}')"
   TARGET_ROOT_PASSWORD_HASH=`sudo python -c "${PYTHON_CMD}"`
@@ -60,7 +60,7 @@ function esxi_deploy () {
         CB_NODE_ADMIN_PASSWORD=$NEW_PASSWORD
       fi 
     else
-      echo "Using cluster node ${REMOTE_USER} password found in package .passwords"
+      echo -e "Using cluster node ${REMOTE_USER} password found in package .passwords"
     fi
     PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ADMIN_PASSWORD}')"
     TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python -c "${PYTHON_CMD}"`
@@ -85,7 +85,7 @@ function esxi_deploy () {
    exit 1
   fi
   
-  echo "Assigning VM static IPs"
+  echo -e "Assigning VM static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
 
   echo "Waiting for the VMs to come up with their permanent IPs..."
@@ -101,7 +101,7 @@ function esxi_deploy () {
   
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
 
-  echo "Building cluster: ${CLUSTER_TYPE_NAME}"
+  echo -e "Building cluster: ${CLUSTER_TYPE_NAME}"
   ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
     echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
@@ -121,7 +121,7 @@ function esxi_deploy () {
   fi
 
   echo
-  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo -e "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
 function fusion_deploy () {
@@ -148,7 +148,7 @@ function fusion_deploy () {
   fi 
 
   echo
-  echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
+  echo -e "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
 
 }
 
@@ -228,13 +228,15 @@ if [ "$TERM" == "xterm-256color" ]; then
 fi 
 
 echo
-echo "***"
+echo -e "\xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5"
+echo
 echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
 echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
 echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
 echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
 echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
-echo "***"
+echo
+echo -e "\xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5  \xF0\x9F\x96\xA5"
 echo
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
@@ -245,7 +247,7 @@ if [ "$VMWARE_TARGET" == "esxi" ]; then
     read -s -p "Enter ESXi root password for ovftool: " OVF_PASSWORD
     CB_ESXI_USER_PASSWORD=$OVF_PASSWORD
   else
-    echo "Using ESXI root password for ovftool found in package .passwords"
+    echo -e "Using ESXI root password for ovftool found in package .passwords"
   fi
 fi
 
@@ -273,7 +275,7 @@ elif [ "$VMWARE_TARGET" == "fusion" ]; then
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo -e "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo
 
 

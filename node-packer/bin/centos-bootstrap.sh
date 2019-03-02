@@ -39,4 +39,4 @@ echo '>>> Upgrading python cryptography library'
 pip install --upgrade cryptography
 
 echo '>>> Installing Ansible'
-pip install ansible==2.4.1
+pip install ansible

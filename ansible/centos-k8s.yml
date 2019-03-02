@@ -62,19 +62,6 @@
       run_once: true
       when: targetd_server is defined 
 
-    - name: make targetd the default storage class 
-      local_action:
-        module: shell
-        _raw_params: "kubectl patch storageclass {{ targetd_server_storage_class }} -p '{'metadata': {'annotations':{'storageclass.kubernetes.io/is-default-class':'true'}}}'"
-      become: false
-      run_once: true
-      register: iscsi_scv_cmd
-      when: targetd_server is defined 
-
-    - debug: msg="{{ iscsi_scv_cmd.stdout_lines }}"
-      run_once: true
-      when: targetd_server is defined 
-
     - name: verify the iscsi-provisioner pod
       local_action:
         module: shell

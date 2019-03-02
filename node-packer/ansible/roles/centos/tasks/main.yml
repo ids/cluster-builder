@@ -14,6 +14,13 @@
     name=*
     state=latest
 
+- name: find kernel version
+  command: uname -r
+  changed_when: false
+  register: kernel_version
+
+- debug: msg="CentOS upgraded to {{ kernel_version.stdout }}"
+
 - name: Install packages required 
   yum: >
     name={{item}}
@@ -38,20 +45,13 @@
   become: true
   command: systemctl stop chronyd
 
-- name: Force one time clock set
+- name: force one time clock set
   become: true
   command: chronyd -q 'pool ca.pool.ntp.org iburst'
 
-- name: Start chronyd
+- name: start chronyd
   become: true
   command: systemctl start chronyd
-
-- name: Find kernel version
-  command: uname -r
-  changed_when: false
-  register: kernel_version
-
-- debug: msg="CentOS upgraded to {{ kernel_version.stdout }}"
 
 #- name: Enable OverlayFS
 #  copy: >
@@ -63,7 +63,7 @@
 # So just disable kdump (bonus: frees up active memory).
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/s2-kdump-configuration-cli.html
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Kernel_Crash_Dump_Guide/sect-kdump-config-cli.html
-- name: Disable kdump
+- name: disable kdump
   service:
     name: kdump
     state: stopped
