@@ -174,7 +174,7 @@ __Windows Setup Notes__
 
 Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
 
-#### Cluster Builder Control
+#### Cluster Builder Control Box (Jump Box & Management Station)
 
 The [Cluster Builder Control Box](https://github.com/ids/cluster-builder-control) is also an alternative.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
 
