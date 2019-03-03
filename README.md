@@ -7,30 +7,30 @@ Cluster Builder
 
 ## Usage Scenarios
 
-__cluster-builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
+__Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
 
 > It will also work with VMware's commercially supported _vSphere_ suite, making it great for both production and non-production environments.  There is no cost barrier to using cluster-builder.
 
 ### Desktop Micro-Service and Orchestration Development
 
-__cluster-builder__ enables both local and remote deployment, leveraging the same toolset to deploy identical cluster images to all environments.
+__Cluster Builder__ enables both local and remote deployment, leveraging the same toolset to deploy identical cluster images to all environments.
 
 ![cluster-builder Desktop Usage](docs/images/cluster-builder-desktop-usage.png)
 
 ### Enterprise Hybrid-Cloud On-Premise Deployment
 
-__cluster-builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__, __DC/OS__ and __Docker Swarm__ clusters.
+__Cluster Builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__, __DC/OS__ and __Docker Swarm__ clusters.
 
 ![cluster-builder Enterprise Usage](docs/images/cluster-builder-enterprise-usage.png)
 
 > Emphasis is on __Kubernetes__ now that __Kubernetes__ has won the container orchestration wars.
 
-> See [here](docs/images/cluster-builder-overview.png) for a diagramtic depiction of the __cluster-builder__ components.
+> See [here](docs/images/cluster-builder-overview.png) for a diagramtic depiction of the __Cluster Builder__ components.
 
 
 ## Usage Guide
 
-__cluster-builder__ is designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
+__Cluster Builder__ is designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
@@ -75,7 +75,7 @@ Production usage targets:
 * VMware ESXi (direct)
 * VMware vSphere
 
-> __Note__ that __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
+> __Note__ that __DRS__ must be turned __off__ when deploying with __Cluster Builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __Cluster Builder__ deployments.  Free ESXi will do nicely.
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
@@ -111,7 +111,7 @@ The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentatio
 
 #### Extras
 
-__cluster-builder__ can also deploy a special __Targetd Storage Appliance__ to supply persistent volume storage to Kubernetes clusters.
+__Cluster Builder__ can also deploy a special __Targetd Storage Appliance__ to supply persistent volume storage to Kubernetes clusters.
 
 * targetd-server
 
@@ -405,7 +405,7 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 
 ### Cluster Builder Usage
 
-The __cluster-builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages which are kept in the __clusters__ folder.
+The __Cluster Builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages which are kept in the __clusters__ folder.
 
 It is recommended that an organization establish a base folder git repository within the __clusters__ folder to store their cluster definition packages.  Anything kept in __clusters__ will be ignored by the parent cluster-builder git repository.
 
@@ -418,7 +418,7 @@ cluster-builder
    |_ swarm-dev   # a cluster definition package in the organization repo
     |_ hosts      # the cluster inventory hosts file
 ```
-All resulting artifacts from __cluster-builder__ are then stored within the cluster definition package.
+All resulting artifacts from __Cluster Builder__ are then stored within the cluster definition package.
 
 ### Deploying a Cluster
 To deploy a cluster use **cluster-deploy**:
@@ -481,7 +481,7 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
 
-The __cluster-builder__ `kubeadm` Kubernetes deployment can be paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ using the __open-iscsi__ platform.
+The __Cluster Builder__ `kubeadm` Kubernetes deployment can be paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ using the __open-iscsi__ platform.
 
 For details see the [Kubernetes iSCSI Storage Guide](docs/kubernetes-iscsi-storage.md)
 
@@ -641,7 +641,7 @@ A sample application stack has been included with cluster-builder that can be us
 
 It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster__ paired with a __Drupal 7__ web front-end, which accesses the database through either a dedicated __HA Proxy__ (legacy mode), or via an internal native k8s load balanced service.
 
-For guidance on generating the manifests for your __cluster-builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
+For guidance on generating the manifests for your __Cluster Builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
 
 ### Swarm Prometheus Monitoring
 
