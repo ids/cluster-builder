@@ -5,13 +5,11 @@ Cluster Builder
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
-![cluster-builder Overview](docs/images/cluster-builder-overview.png)
+## Usage Scenarios
 
 __cluster-builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
 
 > It will also work with VMware's commercially supported _vSphere_ suite, making it great for both production and non-production environments.  There is no cost barrier to using cluster-builder.
-
-## Usage Scenarios
 
 ### Desktop Micro-Service and Orchestration Development
 
@@ -26,6 +24,9 @@ __cluster-builder__ provides a production grade on-premise deployment and operat
 ![cluster-builder Enterprise Usage](docs/images/cluster-builder-enterprise-usage.png)
 
 > Emphasis is on __Kubernetes__ now that __Kubernetes__ has won the container orchestration wars.
+
+> See [here](docs/images/cluster-builder-overview.png) for a diagramtic depiction of the __cluster-builder__ components.
+
 
 ## Usage Guide
 
