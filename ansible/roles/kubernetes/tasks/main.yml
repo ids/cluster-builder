@@ -175,10 +175,58 @@
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
 
-- name: configure Knative
-  include: knative.yml
-  when: (k8s_install_knative_lite|bool == true) and 'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]
+- name: install Knative latest
+  include: "knative-latest.yml"
+  when: k8s_knative_version == "latest" and inventory_hostname == groups['k8s_masters'][0]
+
+- name: install specific Knative version {{ k8s_knative_version }}
+  include: "knative-version.yml"
+  when: k8s_knative_version != "latest" and inventory_hostname == groups['k8s_masters'][0]
+
+- name: give the Knative deployments a few seconds to spin up
+  pause:
+    seconds: 30
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: wait for the Knative installation to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install the latest version of Knative eventing
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f https://github.com/knative/eventing/releases/download/v0.4.0/release.yaml"
+  become: false
+  ignore_errors: true
+  register: knative_event_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_event_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install the latest Knative event sources
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f https://github.com/knative/eventing-sources/releases/download/v0.4.0/release.yaml"
+  become: false
+  ignore_errors: true
+  register: knative_source_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_source_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: wait for the Knative eventing nstallation to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: display cluster worker node status
   shell: kubectl get nodes

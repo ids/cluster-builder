@@ -1,7 +1,5 @@
 # Windows Setup
 
-__Note:__ At the present time only ESXi deployment is supported on the Windows Subsystem.
-
 ## On the Windows System
 
 It is assumed that all of the VMware Workstation core tools already resolve from the Windows CMD shell.

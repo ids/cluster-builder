@@ -7,11 +7,27 @@ Cluster Builder
 
 ![cluster-builder Overview](docs/images/cluster-builder-overview.png)
 
-__Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
+__cluster-builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
 
 > It will also work with VMware's commercially supported _vSphere_ suite, making it great for both production and non-production environments.  There is no cost barrier to using cluster-builder.
 
-Designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
+## Usage Scenarios
+
+### Desktop Micro-Service and Orchestration Development
+
+__cluster-builder__ enables both local and remote deployment, leveraging the same toolset to deploy identical cluster images to all environments.
+
+![cluster-builder Desktop Usage](docs/images/cluster-builder-desktop-usage.png)
+
+### Enterprise Hybrid-Cloud On-Premise Deployment
+
+__cluster-builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__, __DC/OS__ and __Docker Swarm__ clusters.
+
+![cluster-builder Enterprise Usage](docs/images/cluster-builder-enterprise-usage.png)
+
+> Emphasis is on __Kubernetes__ now that __Kubernetes__ has won the container orchestration wars.
+
+__cluster-builder__ is designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
