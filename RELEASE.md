@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+v19.02.1
+--------
+
+* Added durability and retry logic to many of the ansible deployment tasks, and replaced hard VM restarts with soft as the `vim-cmd power.off` was causing periodic corruption.
+* Pruned OVA templates, with numerous fixes.
+* Script cleanup, numerous fixes in stability of ESXi deployment.
+
 v19.02
 ------
 
@@ -18,7 +25,6 @@ v19.02
 * Set base `node-packer` __CentOS__ ova to use base distro docker version by default, as this is preferred by __k8s__ and __DC/OS__.
 * Removed last remnants of Tectonic CoreOS and updated documentation accordingly.
 * Added __CentOS__ kernel parameter tuning for network performance on nodes.
-* Added durability and retry logic to many of the ansible deployment tasks, and replaced hard VM restarts with soft as the `vim-cmd power.off` was causing periodic corruption.
 
 v18.12
 ------
