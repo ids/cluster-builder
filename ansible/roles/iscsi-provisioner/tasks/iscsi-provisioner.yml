@@ -10,11 +10,17 @@
     register: vm_initiator_code
     when: targetd_server is defined 
 
+  - debug: msg="{{ vm_initiator_code.stdout }}"
+    when: targetd_server is defined 
+
   - name: assign initiator fact 
     set_fact:
       initiator_name: "{{ vm_initiator_code.stdout }}"
     when: targetd_server is defined 
 
+  - debug: msg="{{ initiator_name }}"
+    when: targetd_server is defined 
+  
   - name: assign default storage class name
     set_fact:
       targetd_server_storage_class: "iscsi-targetd-vg-targetd"
@@ -25,16 +31,14 @@
       module: template
       src: templates/k8s-iscsi-manifests.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi.yml
-      mode: 0766
     become: false
-    when: targetd_server is defined 
+    when: targetd_server is defined
 
   - name: generate the iSCSI benchmark manifest
     local_action:
       module: template
       src: templates/k8s-iscsi-bench-pvc-yml.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-bench-pvc.yml
-      mode: 0766
     become: false
     run_once: true
     when: targetd_server is defined 
@@ -44,7 +48,6 @@
       module: template
       src: templates/k8s-iscsi-bench-job-yml.j2
       dest: ../clusters/{{ cluster_pkg_folder }}/iscsi-manifests/iscsi-bench-job.yml
-      mode: 0766
     become: false
     run_once: true
     when: targetd_server is defined 

@@ -41,7 +41,7 @@
         path: "{{ gen_script_folder }}"
         state: directory
 
-    - name: scan the VMS for the VM ID
+    - name: scan the VMs for the VM ID
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep " {{ inventory_hostname }} " | cut -d" " -f1
@@ -63,8 +63,12 @@
     - name: stop the VMs
       local_action:
         module: shell
-        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.shutdown {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
+      retries: 10
+      delay: 10
+      register: result
+      until: result.rc is defined and result.rc == 0
 
     - name: adjust the memSize value on the ESXi VM
       local_action:
@@ -90,7 +94,7 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "cp /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx"
       when: numvcpus is defined
 
-    - name: adjust the Primary interface network name
+    - name: adjust the primary interface network name
       local_action:
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} "sed '/ethernet0.networkName/s/.*/ethernet0.networkName\ =\ \"{{ esxi_net }}\"/' /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx > /vmfs/volumes/{{ esxi_ds }}/{{ inventory_hostname }}/{{ inventory_hostname }}.vmx-adjusted"
@@ -130,7 +134,7 @@
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/get.guest {{ vm_id.stdout }} | grep 'ipAddress = "{{ esxi_net_prefix }}' | sed -n 1p | cut -d '"' -f 2
       register: vm_temp_ip
       until: "vm_temp_ip.stdout is defined and vm_temp_ip.stdout != ''"
-      retries: 25
+      retries: 50
       delay: 10    
     
     - debug: msg="{{ vm_temp_ip.stdout }}"

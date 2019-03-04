@@ -1,6 +1,13 @@
+- name: modprobe
+  shell: modprobe br_netfilter
+
 - name: configure iptables bridge for ip4
   shell: sysctl -w net.bridge.bridge-nf-call-iptables=1
   
+## these settings were originally in support of Kafka
+## but something in the list caused intermitent kernel panics
+## requires diagnosis
+
 - name: disable ipv6
   shell: sysctl -w net.ipv6.conf.all.disable_ipv6=1
 
@@ -36,3 +43,6 @@
 
 - name: enable changes
   shell: sysctl -w net.ipv4.route.flush=1
+
+- name: reload sysctl
+  shell: sysctl -p

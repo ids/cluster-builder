@@ -1,13 +1,20 @@
 Release Notes
 =============
 
+v19.02.1
+--------
+
+* Added durability and retry logic to many of the ansible deployment tasks, and replaced hard VM restarts with soft as the `vim-cmd power.off` was causing periodic corruption.
+* Pruned OVA templates, with numerous fixes.
+* Script cleanup, numerous fixes in stability of ESXi deployment.
+
 v19.02
 ------
 
 * Streamlined the ESXi deployment scripts by reducing the arbitrary wait times and improving unattended execution performance.
 * Fixed latest stable defaults for __CentOS 7__ `kubeadm` Kubernetes:
   * __CentOS 7.6 1810__ w/ updates
-  * Kubernetes - __v1.13.3__
+  * Kubernetes - __v1.13.4__
   * Canal CNI w/ Network Policy - __v3.5__
   * MetalLB Native Load Balancer - __v0.73__
   * NGINX Ingress Controller - __v0.21__

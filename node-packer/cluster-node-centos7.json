@@ -28,12 +28,6 @@
       "inline": ["reboot"]
     },
     {
-      "type": "ansible-local",
-      "playbook_file": "ansible/docker.yml",
-      "playbook_dir": "ansible",
-      "extra_arguments": "-vvvvv"
-    },
-    {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "bin/zerodisk.sh"
@@ -56,7 +50,7 @@
       ],
       "boot_wait": "10s",
       "disk_size": 256000,
-      "guest_os_type": "centos-64",
+      "guest_os_type": "rhel7-64",
       "headless": true,
       "http_directory": "http",
       "iso_urls": [

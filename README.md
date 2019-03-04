@@ -5,13 +5,32 @@ Cluster Builder
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
-![cluster-builder Overview](docs/images/cluster-builder-overview.png)
+## Usage Scenarios
 
 __Cluster Builder__ is designed to work with the freely available VMware _ESXI Hypervisor_ and the free use license, as well as the professional desktop versions of VMware Worksation for Windows and Linux, and VMware Fusion for Mac.  It has been developed and tested on all platforms.
 
 > It will also work with VMware's commercially supported _vSphere_ suite, making it great for both production and non-production environments.  There is no cost barrier to using cluster-builder.
 
-Designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
+### Desktop Micro-Service and Orchestration Development
+
+__Cluster Builder__ enables both local and remote deployment, leveraging the same toolset to deploy identical cluster images to all environments.
+
+![cluster-builder Desktop Usage](docs/images/cluster-builder-desktop-usage.png)
+
+### Enterprise Hybrid-Cloud On-Premise Deployment
+
+__Cluster Builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__, __DC/OS__ and __Docker Swarm__ clusters.
+
+![cluster-builder Enterprise Usage](docs/images/cluster-builder-enterprise-usage.png)
+
+> Emphasis is on __Kubernetes__ now that __Kubernetes__ has won the container orchestration wars.
+
+> See [here](docs/images/cluster-builder-overview.png) for a diagramtic depiction of the __Cluster Builder__ components.
+
+
+## Usage Guide
+
+__Cluster Builder__ is designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
@@ -22,18 +41,16 @@ Designed to handle ~all~ most of the complexity associated with on-premise deplo
 7. [Cluster Builder Usage](#cluster-builder-usage)
 8. [Deploying a Cluster](#deploying-a-cluster)
 9. [Change Cluster Password](#change-cluster-password)
-10. [Patching a Cluster](#patching-a-cluster)
-11. [Adding a Node to a Cluster](#adding-a-node-to-a-cluster)
-12. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-13. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-17. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-18. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
-19. [System Profile](#system-profile)
+10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+12. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+13. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+14. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
+17. [System Profile](#system-profile)
 
-## Supported Clusters
+### Supported Clusters
 
 * CentOS 7 Docker CE
 * CentOS 7 DC/OS
@@ -43,7 +60,7 @@ Designed to handle ~all~ most of the complexity associated with on-premise deplo
 
 > The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Stock `kubeadm` clusters are quite stable and reliable when properly configured.
 
-## Deployment Options
+### Deployment Options
 
 There are two types of deployment: __local machine__ and remote __ESXI__ hypervisor (or vSphere).
 
@@ -58,20 +75,20 @@ Production usage targets:
 * VMware ESXi (direct)
 * VMware vSphere
 
-> __Note__ that __DRS__ must be turned __off__ when deploying with __cluster-builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __cluster-builder__ deployments.  Free ESXi will do nicely.
+> __Note__ that __DRS__ must be turned __off__ when deploying with __Cluster Builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __Cluster Builder__ deployments.  Free ESXi will do nicely.
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
 
-### Docker Swarm Cluster Types
+#### Docker Swarm Cluster Types
 
 * centos-swarm
 * rhel-swarm
 
-### DC/OS Cluster Types
+#### DC/OS Cluster Types
 
 * centos-dcos
 
-### Kubernetes Cluster Types
+#### Kubernetes Cluster Types
 
 There are two maintained `kubeadm` built Kubernetes variants:
 
@@ -92,9 +109,9 @@ These `kubeadm` __Kubernetes__ cluster builds come pre-configured with a core to
 
 The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 4.x kernel.
 
-### Extras
+#### Extras
 
-__cluster-builder__ can also deploy a special __Targetd Storage Appliance__ to supply persistent volume storage to Kubernetes clusters.
+__Cluster Builder__ can also deploy a special __Targetd Storage Appliance__ to supply persistent volume storage to Kubernetes clusters.
 
 * targetd-server
 
@@ -102,9 +119,9 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 
 > __Note__ it is best to deploy the __Targetd Storage Appliance__ prior to installing the Kubernetes cluster as the cluster deployment process will deploy and configure an __iscsi-provisioner__ deployment configured for the Targetd server when it already exists - and when the cluster _hosts_ file contains the necessary configuration information for the Targetd.
 
-## Setup and Environment Preparation
+### Setup and Environment Preparation
 
-### macOS / Linux
+#### macOS / Linux
 
 * VMware Fusion Pro 10+ / Workstation Pro 12+
 * VMware ESXi 6.5+ (optional)
@@ -132,7 +149,7 @@ __macOS Setup Notes__
 
 * The locally deployed examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created in Fusion Pro before attempting to deploy the fusion demos.
 
-### Windows
+#### Windows
 
 * VMware Workstation Pro 12+
 * VMware ESXi 6.5+ (optional)
@@ -157,9 +174,9 @@ __Windows Setup Notes__
 
 Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
 
-### Cluster Builder Control Station
+#### Cluster Builder Control Box (Jump Box & Management Station)
 
-The [Cluster Builder Control](https://github.com/ids/cluster-builder-control) is also an alternative.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
+The [Cluster Builder Control Box](https://github.com/ids/cluster-builder-control) is also an alternative.  It is a CentOS7 desktop with all the tools required for running **cluster-builder**.
 
 It can be used:
 
@@ -168,9 +185,9 @@ It can be used:
 
 It can even be built remotely directly on an ESXi server, which is the intended purpose.  For production deployments it can form the foundation for a control station that operates within the ESX environment and is used to centralize management of the clusters.
 
-For instructions see the [Cluster Builder Control](https://github.com/ids/cluster-builder-control) README.
+For instructions see the [Cluster Builder Control Box](https://github.com/ids/cluster-builder-control) README.
 
-### General Preparation
+#### General Preparation
 
 * For all cluster types ensure that the host names specified in the inventory file also resolve.  For ESXi deployments these should resolve via DNS.  For Fusion deployments you can use __/etc/hosts__ on the host, but DNS resolution still works best.
 
@@ -184,7 +201,7 @@ VMs for provisioning.
 __Note for Red Hat Deployments__
 The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
 
-## Cluster Definition Packages
+### Cluster Definition Packages
 
 Everything is based on the **Ansible inventory file**, which defines the cluster specifications. These are defined in **hosts** files located in a folder given the cluster name:
 
@@ -205,7 +222,7 @@ k8s-m1.idstudios.local ansible_host=192.168.1.220
 ``` 
 > The inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
 
-## General Cluster Configuration
+### General Cluster Configuration
 
 The following guides containe some specific setup information depending on the target deployment.
 
@@ -213,7 +230,7 @@ See the [Local Deployment Guide](docs/local_deployment_guide.md) for details abo
 
 See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about deploying to ESXi hypervisor(s).
 
-## Kubernetes KubeAdm Configuration
+### Kubernetes KubeAdm Configuration
 
 With respect to `centos-k8s` and `fedora-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
 
@@ -278,13 +295,13 @@ The __k8s_workloads_on_master__ setting removes all taints on the master node th
 
 The __k8s_XXX_wait_min__ settings allow control of various pauses during the cluster deployment.  The wait times will vary depending on your environment, and if deployments proceed too soon the PODS will not come up properly.  Adjust these values as required.  Larger clusters will require longer wait times.
 
-### Working KubeAdm Formulas
+#### Working KubeAdm Formulas
 
 The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.  
 
 For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s-single/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
 
-#### Formula: Targetd Storage Appliance
+##### Formula: Targetd Storage Appliance
 
 The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
 
@@ -302,7 +319,7 @@ Adjust the settings to suit your environment, and then simply copy the settings 
 
 See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and [ESXi deployment](clusters/eg/targetd-server/hosts).
 
-#### Formula: Basic Kubernetes (Stable)
+##### Formula: Basic Kubernetes (Stable)
 
 A stable foundation to build on:
 
@@ -324,7 +341,7 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-#### Formula: Complete Kubernetes (Stable)
+##### Formula: Complete Kubernetes (Stable)
 
 A complete platform with service mesh and serverless.
 
@@ -358,7 +375,7 @@ See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ES
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
 
-#### Formula: Calico Policy Kubernetes (Experimental)
+##### Formula: Calico Policy Kubernetes (Experimental)
 
 Not fully tested, but the `calico-policy` CNI variant comes up clean.
 
@@ -373,22 +390,22 @@ k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 ```
 
-### VMware Fusion/Workstation Complete Examples
+#### VMware Fusion/Workstation Complete Examples
 
 * [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 
 
-### VMware ESXi Examples
+#### VMware ESXi Examples
 
 * [Kubernetes 1.13 w/ Knative on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 
-## Cluster Builder Usage
+### Cluster Builder Usage
 
-The __cluster-builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages which are kept in the __clusters__ folder.
+The __Cluster Builder__ project is designed as a generic toolset for deployment.  All user specific configuration information is stored in the cluster definition packages which are kept in the __clusters__ folder.
 
 It is recommended that an organization establish a base folder git repository within the __clusters__ folder to store their cluster definition packages.  Anything kept in __clusters__ will be ignored by the parent cluster-builder git repository.
 
@@ -401,9 +418,9 @@ cluster-builder
    |_ swarm-dev   # a cluster definition package in the organization repo
     |_ hosts      # the cluster inventory hosts file
 ```
-All resulting artifacts from __cluster-builder__ are then stored within the cluster definition package.
+All resulting artifacts from __Cluster Builder__ are then stored within the cluster definition package.
 
-## Deploying a Cluster
+### Deploying a Cluster
 To deploy a cluster use **cluster-deploy**:
 
 	$ bash cluster-deploy <inventory-package | cluster-name>
@@ -412,7 +429,7 @@ Eg.
 
 	$ bash cluster-deploy eg/demo-swarm
 
-## Change Cluster Password
+### Change Cluster Password
 Change password is now integrated into the cluster deployment process.
 
 For __CentOS__ deployments, both the __root__ and __admin__ passwords are prompted for change at the end of the cluster deployment.
@@ -429,26 +446,7 @@ Eg.
 
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
 
-## Patching a Cluster
-To update the nodes on a deployed cluster, use **cluster-update**:
-
-	$ bash cluster-deploy <inventory-package | cluster-name>
-
-__Eg.__
-
-	$ bash cluster-deploy eg/esxi-swarm
-
-## Adding a Node to a Cluster
-To add a new node to an existing cluster, update the original hosts file with the new node.
-Then use **cluster-add**:
-
-	$ bash cluster-add <inventory-package | cluster-name>
-
-__Eg.__
-
-	$ bash cluster-add esxi-rhel-swarm
-
-## Controlling Cluster VM Nodes
+### Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.
 
 Use **cluster-control**:
@@ -460,7 +458,7 @@ __Eg.__
 	$ bash cluster-control eg/demo-swarm suspend
 
 
-## VMware Docker Storage Volume Driver Plugin
+### VMware Docker Storage Volume Driver Plugin
 
 In order to make use of the VMware Volume Driver Plugin (vDVS) for persistent data volume management the VIB must be installed on all of the ESX servers used for the cluster.
 
@@ -479,15 +477,15 @@ The plugin is automatically installed as part of the cluster-builder swarm provi
 
 	docker plugin install --grant-all-permissions --alias vsphere vmware/docker-volume-vsphere:latest
 
-## Kubernetes iSCSI Provisioner and Targetd Storage Appliance
+### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
 
-The __cluster-builder__ `kubeadm` Kubernetes deployment can be paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ using the __open-iscsi__ platform.
+The __Cluster Builder__ `kubeadm` Kubernetes deployment can be paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ using the __open-iscsi__ platform.
 
 For details see the [Kubernetes iSCSI Storage Guide](docs/kubernetes-iscsi-storage.md)
 
-## Host Mounted NFS Storage
+### Host Mounted NFS Storage
 
 Place the following file in the cluster definition package folder:
 
@@ -522,15 +520,15 @@ __Eg.__
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
-## Kubernetes CI Job Service Accounts
+### Kubernetes CI Job Service Accounts
 
 Kubernetes RBAC and service accounts offer a popular model for granting controlled access to CI/CD processes.  It involves creating a `ClusterRole` with the necessary object/verb permission ACLs, and then associating it via `ClusterRoleBinding` to a Kubernetes __service account__, authenticated via an __access token__, stored as a `Secret`.
 
-### Step 1 - Create the Service Account
+#### Step 1 - Create the Service Account
 
 	kubectl create serviceaccount ci-runner
 
-### Step 2 - Get the Service Account Secret Tokens & Build Kube Config
+#### Step 2 - Get the Service Account Secret Tokens & Build Kube Config
 
   kubectl get secrets
   kubectl describe secret ci-runner-<hash>
@@ -562,7 +560,7 @@ users:
 
 Save this as `ci-runner-kube-config`.
 
-### Step 3 - Switch to Service Account Context and Verify No Access to Namespace
+#### Step 3 - Switch to Service Account Context and Verify No Access to Namespace
 
 ```
 kubectl --kubeconfig ci-runner-kube-config config use-context k8s-01-runner
@@ -570,7 +568,7 @@ kubectl --kubeconfig ci-runner-kube-config get pods
 ```
 You will see a message indicating that the ci-runner service account does not have access.
 
-### Step 4 - Create ClusterRole and ClusterRoleBinding to Grant Access to Namespace
+#### Step 4 - Create ClusterRole and ClusterRoleBinding to Grant Access to Namespace
 
 ```
 apiVersion: rbac.authorization.k8s.io/v1
@@ -614,7 +612,7 @@ rules:
 
 Which grants full access to the service account namespace (in this case _default_).
 
-### Step 5 - Base64 the Service Account kube-config into a Gitlab CI/CD Secret
+#### Step 5 - Base64 the Service Account kube-config into a Gitlab CI/CD Secret
 
 	cat ci-runner-kube-config | base64 | pbcopy
 
@@ -637,15 +635,15 @@ deploy:
 	- master
 ```
 
-## Kubernetes Load Testing Sample Stack
+### Kubernetes Load Testing Sample Stack
 
 A sample application stack has been included with cluster-builder that can be used to perform basic performance and load testing on deployed Kubernetes clusters.
 
 It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster__ paired with a __Drupal 7__ web front-end, which accesses the database through either a dedicated __HA Proxy__ (legacy mode), or via an internal native k8s load balanced service.
 
-For guidance on generating the manifests for your __cluster-builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
+For guidance on generating the manifests for your __Cluster Builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
 
-## Swarm Prometheus Monitoring
+### Swarm Prometheus Monitoring
 
 Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS Swarms, with metrics enabled by default.
 
@@ -665,11 +663,11 @@ Grafana at: http://<cluster node>:3000
 
 > TODO: These need to be TLS secured and made production ready
 
-## System Profile
+### System Profile
 
 A general overview of the highlights:
 
-### Docker Versions
+#### Docker Versions
 
 __Docker CE:__ 17.09.1-ce (or later)
 
@@ -685,7 +683,7 @@ __Stock Kubernetes__: v1.12.x, v1.13.x
 * centos-k8s
 * fedora-k8s
 
-### CentOS Based Clusters
+#### CentOS Based Clusters
 
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
 * CentOS base VM image is a fully functioning and ready worker node.

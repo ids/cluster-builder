@@ -7,11 +7,11 @@
     dest: /etc/chrony.conf
   run_once: true
 
-- name: enable Chrony
+- name: enable chrony
   shell: systemctl enable chronyd
   become: true
 
-- name: start Chrony
+- name: start chrony
   shell: systemctl start chronyd
   become: true
 
@@ -19,7 +19,7 @@
   shell: timedatectl set-ntp true
   become: true
 
-- name: verify Chrony Sources
+- name: verify chrony sources
   shell: chronyc sources
   register: chrony_out
 
