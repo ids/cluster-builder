@@ -1,0 +1,1 @@
+This manifest has been updated to use the __targetd storage appliance__ for PVCs.
