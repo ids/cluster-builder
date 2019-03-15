@@ -33,3 +33,4 @@
 
 - debug: msg="{{ k8s_install.stdout_lines }}"
   when: cluster_type == "fedora-k8s"
+  

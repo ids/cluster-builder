@@ -5,6 +5,10 @@
     enabled: yes
   become: true
 
+- name: give the kubelet few seconds to spin up
+  pause:
+    seconds: 15
+  
 - name: set k8s_cluster_token default
   set_fact:
     k8s_cluster_token: "9aeb42.99b7540a5833866a"
