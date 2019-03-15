@@ -1,1 +1,0 @@
-kubectl patch deployment -n=kube-system coredns -p '{"spec": {"template": {"spec":{"containers":[{"image":"k8s.gcr.io/coredns:1.2.2", "name":"coredns","resources":{"limits":{"memory":"512Mi"},"requests":{"cpu":"100m","memory":"70Mi"}}}]}}}}' 
