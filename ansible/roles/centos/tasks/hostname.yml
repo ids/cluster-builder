@@ -2,7 +2,7 @@
 ---
 - name: set hostname.
   become: yes
-  shell: hostnamectl set-hostname {{ inventory_hostname }}
+  shell: hostnamectl set-hostname {{ node_fqdn }}
 
 #- name: backup hosts file.
 #  become: yes

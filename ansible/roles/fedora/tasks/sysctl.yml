@@ -1,48 +1,85 @@
 - name: modprobe
   shell: modprobe br_netfilter
 
-- name: configure iptables bridge for ip4
-  shell: sysctl -w net.bridge.bridge-nf-call-iptables=1
-  
-## these settings were originally in support of Kafka
-## but something in the list caused intermitent kernel panics
-## requires diagnosis
+- name: configure sysctl for ip4
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
+    line: 'net.bridge.bridge-nf-call-iptables = 1'      
 
 - name: disable ipv6
-  shell: sysctl -w net.ipv6.conf.all.disable_ipv6=1
-
-- name: disable ipv6
-  shell: sysctl -w net.ipv6.conf.default.disable_ipv6=1
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv6.conf.all.disable_ipv6\s'
+    line: 'net.ipv6.conf.all.disable_ipv6 = 1'
 
 - name: increase network send buffer - 128k
-  shell: sysctl -w net.core.wmem_default=131072
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.wmem_default\s'
+    line: 'net.core.wmem_default=131072'
   
 - name: increase network receive buffer - 128k
-  shell: sysctl -w net.core.rmem_default=131072
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.rmem_default\s'
+    line: 'net.core.rmem_default=131072'
 
 - name: increase network send buffer max size - 2MB
-  shell: sysctl -w net.core.wmem_max=2097152
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.wmem_max\s'
+    line: 'net.core.wmem_max=2097152'
 
 - name: increase network receive buffer max size - 2MB
-  shell: sysctl -w net.core.rmem_max=2097152
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.rmem_max\s'
+    line: 'net.core.rmem_max=2097152'
 
 - name: configure network TCP send buffer - 4k 64k 2MiB
-  shell: sysctl -w net.ipv4.tcp_wmem='4096 65536 2048000'
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_wmem\s'
+    line: "net.ipv4.tcp_wmem='4096 65536 2048000'"
 
 - name: configure network TCP send buffer - 4k 64k 2MiB
-  shell: sysctl -w net.ipv4.tcp_rmem='4096 65536 2048000'
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_rmem\s'
+    line: "net.ipv4.tcp_rmem='4096 65536 2048000'"
 
 - name: enable TCP window scaling 
-  shell: sysctl -w net.ipv4.tcp_window_scaling=1
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_window_scaling\s'
+    line: 'net.ipv4.tcp_window_scaling=1'
 
 - name: increase TCP window backlog 
-  shell: sysctl -w net.ipv4.tcp_max_syn_backlog=2048
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_max_syn_backlog\s'
+    line: 'net.ipv4.tcp_max_syn_backlog=2048'
 
 - name: increase TCP window backlog 
-  shell: sysctl -w net.core.netdev_max_backlog=2048
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.netdev_max_backlog\s'
+    line: 'net.core.netdev_max_backlog=2048'
 
 - name: enable changes
   shell: sysctl -w net.ipv4.route.flush=1
 
-- name: reload sysctl
-  shell: sysctl -p
+- name: attempt to reconfigure sysctl
+  shell: sysctl -p /etc/sysctl.conf

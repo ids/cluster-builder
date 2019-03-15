@@ -65,13 +65,20 @@
 
 - name: determine FQDN node name
   set_fact:
+    node_fqdn: "{{ inventory_hostname | replace('.' + network_dn, '') + '.' + network_dn}}"
+  when: network_dn is defined
+
+- name: calculated FQDN node host name
+  debug: var=node_fqdn
+  when: network_dn is defined
+
+- name: determine simple node name
+  set_fact:
     node_hostname: "{{ inventory_hostname | replace('.' + network_dn, '') }}"
-  run_once: true
   when: network_dn is defined
 
 - name: calculated simple node host name
   debug: var=node_hostname
-  run_once: true
   when: network_dn is defined
 
 - name: set default platform to linux

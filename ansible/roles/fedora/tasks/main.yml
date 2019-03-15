@@ -9,4 +9,13 @@
   include: sysctl.yml
 
 - name: reboot nodes
-  reboot:
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+  
+- name: wait for nodes to come back online
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300

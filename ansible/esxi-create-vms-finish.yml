@@ -63,9 +63,9 @@
     - name: stop the VMs
       local_action:
         module: shell
-        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.shutdown {{ vm_id.stdout }} 
+        _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
-      retries: 10
+      retries: 30
       delay: 10
       register: result
       until: result.rc is defined and result.rc == 0
@@ -117,6 +117,10 @@
         module: shell
         _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
       when: vm_id.stdout is defined
+      retries: 30
+      delay: 10
+      register: result
+      until: result.rc is defined and result.rc == 0
 
     - name: delete the adjusted vmx file
       local_action:
