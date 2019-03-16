@@ -4,20 +4,3 @@
 
 - name: configure chronyd
   include: chronyd.yml
-
-# moved kernel params into node-packer phase
-#
-#- name: configure kernel parameters
-#  include: sysctl.yml
-
-#- name: reboot nodes
-#  shell: "sleep 5 && reboot"
-#  async: 1
-#  poll: 0
-  
-#- name: wait for nodes to come back online
-#  wait_for_connection:
-#    connect_timeout: 20
-#    sleep: 5
-#    delay: 5
-#   timeout: 300
