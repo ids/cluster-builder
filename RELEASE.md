@@ -4,9 +4,13 @@ Release Notes
 v19.02.1
 --------
 
-* Added durability and retry logic to many of the ansible deployment tasks, and replaced hard VM restarts with soft as the `vim-cmd power.off` was causing periodic corruption.
-* Pruned OVA templates, with numerous fixes.
+> Please rebuild all OVA template images.
+
+* Added durability and retry logic to many of the ansible deployment tasks, and replaced several hard VM restarts with soft.
+* Pruned OVA templates, with numerous fixes, re-instating firmware for increased disk stability in vmware.
 * Script cleanup, numerous fixes in stability of ESXi deployment.
+* Working __fedora-k8s 1.13.4__ cluster wih __Knative 0.30__.  Surprisingly stable for _fedora_ and the __4.20__ kernel is a bit less dated.
+* Added __protected=true|false__ option to cluster hosts file that guards against __cluster-control destroy__ or __cluster-deploy__ re-deployment to prevent accidental destruction of a deployed cluster.
 
 v19.02
 ------

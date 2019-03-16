@@ -93,6 +93,14 @@ VMs are provisioned based on the **[vmware_vms]** group attributes.
 
 **vmware_target**: _esxi_
 
+__ovftool_parallel=true__: When set on ESXI deployments it will cause the ovftool processes to run in parallel in the background, resulting in as much as 20% performance increase in some environments. 
+
+> Note that at the present time running ovftool in parallel will scramble the output to the console - but this won't affect the outcome.
+
+__overwrite_existing_vms=true__: When set to `true` the __ovftool__ will delete any existing VMs as part of the deployment.
+
+__protected=true__: When set to `true` __cluster-builder__ will not allow destruction or re-deployment of the cluster.  This should be set for all deployed clusters where destruction would be disruptive, especially __production__ environments.
+
 #### Networking Options
 
 __network_dns__: DNS entry for the primary interface
@@ -134,7 +142,3 @@ __docker_daemon_dns_override__: (optional)  By default, cluster-builder will use
 		docker_daemon_dns_override='"192.168.1.1", "8.8.8.8"'
 
 > Note the single quotes wrapping the double quotes.
-
-__ovftool_parallel=true__: When set on ESXI deployments it will cause the ovftool processes to run in parallel in the background, resulting in as much as 20% performance increase in some environments. 
-
-> Note that at the present time running ovftool in parallel will scramble the output to the console - but this won't affect the outcome.
