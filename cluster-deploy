@@ -177,6 +177,18 @@ CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' 
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+
+if [ "$CLUSTER_PROTECTED" == "true" ]; then
+  echo
+  echo "Deploy Blocked!"
+  echo "Cluster Protected: deploy may not be used on clusters where protected=true" 
+  echo
+  echo "To redeploy the cluster ${CLUSTER_NAME} (destroying any existing), "
+  echo "remove this flag from the cluster hosts file."
+  echo
+  exit 1
+fi  
 
 CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
 CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
