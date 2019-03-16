@@ -1,0 +1,106 @@
+- name: modprobe
+  shell: modprobe br_netfilter
+
+- name: Adjust max file descriptors
+  lineinfile:
+    dest: /etc/sysctl.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regexp: '^fs.file-max', line: 'fs.file-max = 100000' }
+    
+- name: Adjust hard and soft limits
+  template:
+    src: templates/limits-conf.j2
+    dest: /etc/security/limits.conf
+    
+- name: configure sysctl for ip4
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
+    line: 'net.bridge.bridge-nf-call-iptables = 1'      
+
+- name: disable ipv6
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv6.conf.all.disable_ipv6\s'
+    line: 'net.ipv6.conf.all.disable_ipv6 = 1'
+
+- name: increase network send buffer - 128k
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.wmem_default\s'
+    line: 'net.core.wmem_default=131072'
+  
+- name: increase network receive buffer - 128k
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.rmem_default\s'
+    line: 'net.core.rmem_default=131072'
+
+- name: increase network send buffer max size - 2MB
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.wmem_max\s'
+    line: 'net.core.wmem_max=2097152'
+
+- name: increase network receive buffer max size - 2MB
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.rmem_max\s'
+    line: 'net.core.rmem_max=2097152'
+
+- name: configure network TCP send buffer - 4k 64k 2MiB
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_wmem\s'
+    line: "net.ipv4.tcp_wmem='4096 65536 2048000'"
+
+- name: configure network TCP send buffer - 4k 64k 2MiB
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_rmem\s'
+    line: "net.ipv4.tcp_rmem='4096 65536 2048000'"
+
+- name: enable TCP window scaling 
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_window_scaling\s'
+    line: 'net.ipv4.tcp_window_scaling=1'
+
+- name: increase TCP window backlog 
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.tcp_max_syn_backlog\s'
+    line: 'net.ipv4.tcp_max_syn_backlog=2048'
+
+- name: increase TCP window backlog 
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.core.netdev_max_backlog\s'
+    line: 'net.core.netdev_max_backlog=2048'
+
+- name: set reverse path filter
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.conf.all.rp_filter\s'
+    line: 'net.ipv4.conf.all.rp_filter=1'
+    
+- name: enable changes
+  shell: sysctl -w net.ipv4.route.flush=1
+
+- name: attempt to reconfigure sysctl
+  shell: sysctl -p /etc/sysctl.conf

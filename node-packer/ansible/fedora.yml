@@ -1,5 +1,5 @@
 ---
-# This playbook upgrades Centos7
+# This playbook upgrades Fedora
 
 - hosts: all
   gather_facts: no
@@ -8,5 +8,6 @@
   become_method: sudo
   roles:
   - role: fedora
+  - role: sysctl
   - role: fedora-ssh
   
