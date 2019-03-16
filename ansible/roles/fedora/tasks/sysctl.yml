@@ -78,6 +78,13 @@
     regexp: '^net.core.netdev_max_backlog\s'
     line: 'net.core.netdev_max_backlog=2048'
 
+- name: set reverse path filter
+  lineinfile:
+    path: "/etc/sysctl.conf"
+    state: present
+    regexp: '^net.ipv4.conf.all.rp_filter\s'
+    line: 'net.ipv4.conf.all.rp_filter=1'
+    
 - name: enable changes
   shell: sysctl -w net.ipv4.route.flush=1
 
