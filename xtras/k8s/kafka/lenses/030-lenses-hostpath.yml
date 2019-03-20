@@ -21,7 +21,7 @@ spec:
         - name: EULA
           value: "https://dl.lenses.stream/d/?id=a0b4a66b-d57d-421c-ab6a-692957a59cac"
         - name: ADV_HOST
-          value: "192.168.100.153"
+          value: "$KAFKA_IP"
         - name: BROWSE_CONFIGS
           value: "1"
         ports:
