@@ -37,15 +37,6 @@
 - debug: msg="{{ k8s_network_cni }}"
   run_once: true
 
-- name: set k8s_install_knative default
-  set_fact:
-    k8s_install_knative: false
-  run_once: true
-  when: k8s_install_knative is undefined
-
-- debug: msg="install knative -> {{ k8s_install_knative }}"
-  run_once: true
-
 - name: set k8s_knative_version default
   set_fact:
     k8s_knative_version: 0.3.0
@@ -53,15 +44,6 @@
   when: k8s_knative_version is undefined
 
 - debug: msg="install knative version -> {{ k8s_knative_version }}"
-  run_once: true
-
-- name: set k8s_knative_base_domain default
-  set_fact:
-    k8s_knative_base_domain: example.com
-  run_once: true
-  when: k8s_knative_base_domain is undefined
-
-- debug: msg="install knative base domain -> {{ k8s_knative_base_domain }}"
   run_once: true
 
 - name: set k8s_cluster_cidr default for Canal CNI

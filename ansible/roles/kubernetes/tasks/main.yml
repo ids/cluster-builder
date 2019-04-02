@@ -147,29 +147,6 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
     
-- name: configure Calico CNI Network Policy 
-  include: cni-calico-policy.yml
-  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]
-
-- name: give the Calico CNI time to reconcile
-  pause:
-    minutes: "{{ k8s_calico_policy_wait_min }}"
-  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]
-
-- name: install Knative 0.4.0
-  include: "knative-0.4.0.yml"
-  when: k8s_install_knative|bool == True 
-    and k8s_knative_version == "0.4.0" 
-    and inventory_hostname == groups['k8s_masters'][0]
-
-- name: install Knative 0.3.0
-  include: "knative-0.3.0.yml"
-  when: k8s_install_knative|bool == True 
-    and k8s_knative_version == "0.3.0" 
-    and inventory_hostname == groups['k8s_masters'][0]
-
 - name: display cluster worker node status
   shell: kubectl get nodes
   register: final_nodes_out

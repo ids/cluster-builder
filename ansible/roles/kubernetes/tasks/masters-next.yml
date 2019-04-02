@@ -53,11 +53,13 @@
   copy:
     dest: /root/master_join_cmd
     src: ../clusters/{{ cluster_pkg_folder }}/master_join_cmd
+    mode: 766
   become: true   
   when: k8s_version is search("1.14")
 
 - name: join other master to cluster
   shell: "/root/master_join_cmd"
+  become: true   
   register: master_join
   when: k8s_version is search("1.14")
 

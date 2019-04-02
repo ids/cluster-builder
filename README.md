@@ -47,7 +47,7 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 13. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 14. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
 15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-16. [Swarm Prometheus Monitoring](#swarm-prometheus-monitoring)
+16. [Knative and Istio](#knative-and-istio)
 17. [System Profile](#system-profile)
 
 ### Supported Clusters
@@ -240,7 +240,9 @@ This can be used to set a specific version of __1.12__ or __1.13__, or it can be
 
 	k8s_network_cni=calico-policy
 
-The __k8s_network_cni__ setting can be one of: __canal__, __calico__.  It defaults to __canal__.
+The __k8s_network_cni__ setting can be one of: __canal__ or __calico__.  It defaults to __canal__.
+
+> Only __canal__ supports network policy at the present time as __calico__ requires _Istio_ and is somewhat more complicated to stabilize.  Work is still underway on a __calico-policy__ variant.
 
 	k8s_metallb_address_range=192.168.1.180-192.168.1.190
 
@@ -255,10 +257,6 @@ The __k8s_ingress_controller__ setting can be one of: __nginx__, __traefik-nodep
 This defaults to __10.244.0.0/16__ for Canal and __192.168.0.0/16__ for Calico, but may conflict with your environment if this network is already in use.  Use __k8s_cluster_cidr__ to override.
 
 > As an example, my management network is `192.168.1.0/24`, and my local virtual network for VMware is `192.168.100.0/24`.  Therefore the default for _Calico_ will not work and many of the pods would not start due to network address conflict.
-
-	k8s_install_knative=true/false
-
-The __k8s_install_knative__ setting determines whether __Knative Lite__ is installed.  At the present time the full __Knative__ installation is under development.
 
 	k8s_control_plane_uri=k8s-admin.onprem.idstudios.io
 
@@ -278,12 +276,11 @@ The __k8s_workloads_on_master__ setting removes all taints on the master node th
 
 	k8s_coredns_loop_check_disable=true
 
-(optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__ or __calico-policy__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
+(optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
 
 	k8s_cni_wait_min=7
 	k8s_worker_wait_min=7
 	k8s_calico_node_wait_min=3
-	k8s_knative_wait_min=5
 
 The __k8s_XXX_wait_min__ settings allow control of various pauses during the cluster deployment.  The wait times will vary depending on your environment, and if deployments proceed too soon the PODS will not come up properly.  Adjust these values as required.  Larger clusters will require longer wait times.
 
@@ -316,7 +313,7 @@ See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and
 A stable foundation to build on:
 
 * __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm` __1.13.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin w/ Network Policy
+* `kubeadm` __1.13.x__ or __1.14.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin w/ Network Policy
 * __MetalLB (0.7.3)__ baremetal load balancer
 * __NGINX Ingress Controller (0.21)__
 * __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
@@ -327,33 +324,6 @@ A stable foundation to build on:
 k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
-k8s_control_plane_uri=k8s-admin.demo.idstudios.io
-k8s_advertise_addr=192.168.100.200
-k8s_ingress_url=k8s-ingress.demo.idstudios.io
-k8s_cluster_token=9aeb42.99b7540a5833866a
-```
-
-##### Formula: Complete Kubernetes (Stable)
-
-A complete platform with service mesh and serverless.
-
-The following tested __Canal__ based cluster configuration contains the following components:
-
-* __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm` __1.13.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin
-* __MetalLB (0.7.3)__ baremetal load balancer
-* __NGINX Ingress Controller (0.21)__
-* __Knative lite (0.3.0)__ Kubernetes serverless add-on
-* __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
-
-(As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
-
-```
-k8s_version=1.13.*
-k8s_metallb_address_range=192.168.100.150-192.168.100.169
-k8s_network_cni=canal
-k8s_install_knative=true
-k8s_knative_version=0.3.0
 k8s_control_plane_uri=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
 k8s_ingress_url=k8s-ingress.demo.idstudios.io
@@ -381,14 +351,14 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 
 #### VMware Fusion/Workstation Complete Examples
 
-* [Kubernetes 1.13  w/ Knative (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
+* [Kubernetes 1.13 (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 
 
 #### VMware ESXi Examples
 
-* [Kubernetes 1.13 w/ Knative on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
+* [Kubernetes 1.13 on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 
@@ -632,25 +602,35 @@ It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster
 
 For guidance on generating the manifests for your __Cluster Builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
 
-### Swarm Prometheus Monitoring
+### Knative and Istio
 
-Currently, __cAdvisor__ and __node-exporter__ are installed on CentOS Swarms, with metrics enabled by default.
+Once inline to cluster-builder, _Istio_ and _Knative_ deployments have been moved into their own ansible playbooks to keep the cluster deployment clean.
 
-When the following is added to a cluster package hosts file:
+Versions are specified using the following:
 
-docker_prometheus_server=<ansible inventory hostname>
+		k8s_knative_version=0.2.3 | 0.3.0 | 0.4.0
 
-__Eg.__
+and 
 
-	docker_prometheus_server=swarm-m1
+		k8s_istio_version=1.0.1 | 1.0.2 | 1.0.4 | latest
 
-Prometheus and Grafana containers will be installed on the specified node.
+> _Istio_ version is overridden by _Knative_ as it requires specific istio versions.
 
-Promethus can then be reached at: http://<cluster node>:9090
+The playbooks can be executed:
 
-Grafana at: http://<cluster node>:3000
+```
+$ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/istio.yml
+```
 
-> TODO: These need to be TLS secured and made production ready
+and/or
+
+```
+$ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/knative.yml
+```
+
+> Do not install _istio_ if you are planning to install _Knative_ as the correct version will be installed for the platform.
+
+> Experience has called into question the value of _Knative_ for on-premise deployments.  While cost containment benefits of serverless are evident in the cloud pricing model, the overhead of complexity in requiring _Istio_ in support of _Knative_ tips the value proposition over.  Should _Knative_ be built into the platform in the future the merit of serverless may emerge, but at present, simple standard containerized services appear to nullify the value of serverless in on-premise deployments with orders of magnitude less complexity to manage at the cluster level.
 
 ### System Profile
 

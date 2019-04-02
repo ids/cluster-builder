@@ -36,3 +36,14 @@
   
 - debug: msg="{{ calico_out.stdout_lines }}"
   
+- name: configure Calico CNI Network Policy 
+  include: cni-calico-policy.yml
+  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+
+- name: give the Calico CNI time to reconcile
+  pause:
+    minutes: "{{ k8s_calico_policy_wait_min }}"
+  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+
