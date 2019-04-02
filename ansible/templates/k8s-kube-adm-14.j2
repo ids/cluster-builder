@@ -27,7 +27,7 @@ apiServer:
   - "{{ hostvars[host].node_fqdn }}"
 {% endfor %}
 {% for host in groups['k8s_masters'] %}
-  - "{{ hostvars[host].ansible_host }}"
+  - "{{ hostvars[host].node_fqdn }}"
 {% endfor %}
   - "127.0.0.1"
   - "10.96.0.1"

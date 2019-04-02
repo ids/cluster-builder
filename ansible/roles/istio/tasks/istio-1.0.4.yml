@@ -1,0 +1,48 @@
+- name: copy up the manifest for Istio 1.0.4 CRDS
+  copy:
+    src: ../xtras/k8s/istio/1.0.4/istio-crds.yml
+    dest: /tmp/istio-crds.yml
+    mode: 0766   
+  become: true   
+
+- name: copy up the manifest for Istio 1.0.4 no TLS
+  copy:
+    src: ../xtras/k8s/istio/1.0.4/istio-demo.yml
+    dest: /tmp/istio-demo.yml
+    mode: 0766   
+  become: true   
+
+- name: copy up the manifest for Istio 1.0.4 no TLS
+  copy:
+    src: ../xtras/k8s/istio/1.0.4/istio-demo-auth.yml
+    dest: /tmp/istio-demo-auth.yml
+    mode: 0766   
+  become: true   
+
+- name: install Istio lite 1.0.4 CRDs
+  shell: kubectl apply -f /tmp/istio-crds.yml
+  register: istio_crd_out
+
+- debug: msg="{{ istio_crd_out.stdout_lines }}"
+
+- name: install Istio 1.0.4 (w/ TLS)
+  shell: kubectl apply -f /tmp/istio-demo-auth.yml
+  register: istio_out
+  when: k8s_istio_tls|bool == true 
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+  when: k8s_istio_tls|bool == true 
+
+- name: install Istio 1.0.4 (no TLS)
+  shell: kubectl apply -f /tmp/istio-demo.yml
+  register: istio_out
+  when: k8s_istio_tls|bool != true 
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+  when: k8s_istio_tls|bool != true 
+
+- name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
+  shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml
+  register: flex_out
+
+- debug: msg="{{ flex_out.stdout_lines }}"
