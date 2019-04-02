@@ -8,8 +8,8 @@ v19.04 beta
 * Removed support for __1.12__ as this is now approaching EOL.
 * Removed __calico-policy__ until a working version can be completed.
 * Moved custom __Istio__  and __Knative__ deployments into standalone ansible playbooks to reduce the complexity and dependency matrix in cluster deployment. __Knative__ now installs the correct __istio__ for the version.
-* Tested and validated multi-master HA configuration using the __1.14__ join mechanism for additional controller/master nodes on __centos-k8s__ and __fedora_k8s__ deployments.
-* Added durability and retry logic to mitigate `vmrun` SSL issue on macOS.
+* Tested and validated multi-master HA configuration using the __1.14__ join mechanism for additional controller/master nodes on __centos-k8s__ and __fedora_k8s__ deployments.  With __1.14__ HA deployments are now fully supported with __cluster-builder__.
+* Added durability and retry logic to mitigate `vmrun` instability issues on macOS with Fusion 11+.
 
 v19.03
 ------

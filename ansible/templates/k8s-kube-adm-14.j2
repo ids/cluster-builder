@@ -31,7 +31,6 @@ apiServer:
 {% endfor %}
   - "127.0.0.1"
   - "10.96.0.1"
-  - "{{ k8s_advertise_addr }}"
   - "{{ k8s_control_plane_uri }}"
   timeoutForControlPlane: 4m0s
 certificatesDir: /etc/kubernetes/pki
