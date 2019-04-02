@@ -64,6 +64,8 @@
       _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx
     ignore_errors: true
     when: platform == "linux" or platform == "darwin"
+    retries: 5
+    delay: 5
 
   - name: calculate windows path using wslpath.
     local_action:
@@ -123,6 +125,10 @@
       _raw_params: vmrun start {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     become: false
     when: platform == "linux" or platform == "darwin"
+    retries: 5
+    delay: 5
+    register: result
+    until: result.rc is defined and result.rc == 0
 
   - name: start the VMs to get the generated MAC addresses on Windows
     local_action:
@@ -133,7 +139,7 @@
 
   - name: waiting for VMs to generate MAC addresses
     pause:
-      seconds: 60
+      seconds: 5
     
   - name: scan the VMX files for the mac addresses
     local_action:
@@ -172,6 +178,10 @@
       module: shell
       _raw_params: vmrun stop {{ fusion_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: platform == "linux" or platform == "darwin"
+    retries: 5
+    delay: 5
+    register: result
+    until: result.rc is defined and result.rc == 0
 
   - name: stop the VMs on Windows
     local_action:
@@ -360,6 +370,10 @@
       module: shell
       _raw_params: vmrun start {{ fusion_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: platform == "darwin" or platform == "linux"
+    retries: 5
+    delay: 5
+    register: result
+    until: result.rc is defined and result.rc == 0
 
   - name: start the VMs on Windows
     local_action:

@@ -178,6 +178,7 @@ VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+K8S_VERSION=`sed -n '/^k8s_version=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
 if [ "$CLUSTER_PROTECTED" == "true" ]; then
   echo
@@ -248,6 +249,9 @@ echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
 echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
 echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
 echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
+if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
+echo -e " K8s Version     : ${TC}${K8S_VERSION}${NC}"
+fi
 echo
 echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
 echo

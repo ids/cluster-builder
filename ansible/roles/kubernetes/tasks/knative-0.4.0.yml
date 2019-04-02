@@ -1,0 +1,103 @@
+- name: install Knative Istio CRDS 
+  shell: "kubectl apply --filename https://github.com/knative/serving/releases/download/v0.4.0/istio-crds.yaml"
+  register: istio_crds_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ istio_crds_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative Istio 
+  shell: "kubectl apply --filename https://github.com/knative/serving/releases/download/v0.4.0/istio.yaml"
+  register: istio_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ istio_out.stdout_lines }}"
+
+- name: label default namespace for Isitio
+  shell: "kubectl label namespace default istio-injection=enabled"
+  register: label_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ label_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: give the Istio deployment a few seconds to spin up
+  pause:
+    seconds: 30
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: wait for the Istio deployment to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative 0.4.0 Serving
+  shell: |
+    kubectl apply --filename https://github.com/knative/serving/releases/download/v0.4.0/serving.yaml 
+  register: knative_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative 0.4.0 Build
+  shell: |
+    kubectl apply --filename https://github.com/knative/build/releases/download/v0.4.0/build.yaml 
+  register: knative_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative 0.4.0 Eventing
+  shell: |
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.4.0/release.yaml 
+  register: knative_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative 0.4.0 Eventing Sources
+  shell: |
+    kubectl apply --filename https://github.com/knative/eventing-sources/releases/download/v0.4.0/release.yaml 
+  register: knative_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative 0.4.0 Monitoring
+  shell: |
+    kubectl apply --filename https://github.com/knative/serving/releases/download/v0.4.0/monitoring.yaml 
+  register: knative_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: install Knative 0.4.0 Serving ClusterRole
+  shell: |
+    kubectl apply --filename https://raw.githubusercontent.com/knative/serving/v0.4.0/third_party/config/build/clusterrole.yaml
+  register: knative_out
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ knative_out.stdout_lines }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: give the Knative deployment a few seconds to spin up
+  pause:
+    seconds: 30
+  when: inventory_hostname == groups['k8s_masters'][0]
+
+- name: wait for the Knative deployment to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: inventory_hostname == groups['k8s_masters'][0]
+

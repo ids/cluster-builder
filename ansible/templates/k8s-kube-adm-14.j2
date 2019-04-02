@@ -1,73 +1,58 @@
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: InitConfiguration
 bootstrapTokens:
-- token: "{{ k8s_cluster_token }}"
-  description: "kubeadm bootstrap token"
-  ttl: "24h"
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: "{{ k8s_cluster_token }}"
+  ttl: 24h0m0s
   usages:
   - signing
   - authentication
-  groups:
-  - system:bootstrappers:kubeadm:default-node-token
-nodeRegistration:
-  criSocket: "/var/run/dockershim.sock"
-  taints:
-  - key: "kubeadmNode"
-    value: "master"
-    effect: "NoSchedule"
-  kubeletExtraArgs:
-    cgroupDriver: "cgroupfs"
 localAPIEndpoint:
-  advertiseAddress: "{{ k8s_advertise_addr }}"
+  advertiseAddress: {{ k8s_advertise_addr }}
   bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: {{ node_fqdn }}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-clusterName: "{{ cluster_name }}"
-etcd:
-  local:
-    imageRepository: "k8s.gcr.io"
-    imageTag: "3.2.24"
-    dataDir: "/var/lib/etcd"    
-    extraArgs:
-      listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].inventory_hostname }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
-    serverCertSANs:
-    - "{{ k8s_advertise_addr }}"  
-  {% for host in groups['k8s_masters'] %}
-  - "{{ hostvars[host].inventory_hostname }}"
-  {% endfor %}
-  peerCertSANs:
-  {% for host in groups['k8s_masters'] %}
-  - "{{ hostvars[host].ansible_host }}"
-  {% endfor %}
-kubernetesVersion: "v1.14.0"
 apiServer:
-  extraArgs:
-    authorization-mode: "Node,RBAC"
   certSANs:
+  - "{{ k8s_advertise_addr }}"  
 {% for host in groups['k8s_masters'] %}
-- "{{ hostvars[host].ansible_host }}"
+  - "{{ hostvars[host].node_fqdn }}"
+{% endfor %}
+{% for host in groups['k8s_masters'] %}
+  - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
   - "127.0.0.1"
-{% for host in groups['k8s_masters'] %}
-- "{{ hostvars[host].inventory_hostname }}"
-{% endfor %}
   - "10.96.0.1"
-  - "{{ k8s_admin_url }}"
-  timeoutForControlPlane: 10m0s
-imageRepository: "k8s.gcr.io"
-useHyperKubeImage: false
+  - "{{ k8s_advertise_addr }}"
+  - "{{ k8s_control_plane_uri }}"
+  timeoutForControlPlane: 4m0s
+certificatesDir: /etc/kubernetes/pki
+clusterName: "{{ cluster_name }}"
+controlPlaneEndpoint: "{{ k8s_control_plane_uri }}:6443"
+controllerManager: {}
+dns:
+  type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+imageRepository: k8s.gcr.io
+kubernetesVersion: stable
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ k8s_cluster_cidr }}
-scheduler:
-  extraArgs:
-    address: "{{ k8s_advertise_addr }}"
-certificatesDir: "/etc/kubernetes/pki"
+  serviceSubnet: 10.96.0.0/12
+scheduler: {}
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
-# kube-proxy specific options here
 bindAddress: 0.0.0.0
 clientConnection:
   acceptContentTypes: ""
@@ -75,7 +60,7 @@ clientConnection:
   contentType: application/vnd.kubernetes.protobuf
   kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
   qps: 5
-clusterCIDR: {{ k8s_cluster_cidr }}
+clusterCIDR: "{{ k8s_cluster_cidr }}"
 configSyncPeriod: 15m0s
 conntrack:
   max: null
@@ -98,3 +83,5 @@ ipvs:
 metricsBindAddress: 127.0.0.1:10249
 resourceContainer: /kube-proxy
 udpIdleTimeout: 250ms
+nodePortAddresses: null
+

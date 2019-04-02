@@ -1,25 +1,8 @@
-- name: start kubelet on the first master
-  service:
-    name: kubelet
-    state: started
-    enabled: yes
-  become: true
-
-- name: give the kubelet few seconds to spin up
-  pause:
-    seconds: 15
-  
 - name: set k8s_cluster_token default
   set_fact:
     k8s_cluster_token: "9aeb42.99b7540a5833866a"
   run_once: true
   when: k8s_cluster_token is undefined
-
-- name: generate the kubeadm 1.12 yaml configuration
-  template:
-    src: templates/k8s-kube-adm-12.j2
-    dest: /root/kube-adm.yml
-  when: k8s_version is search("1.12")
 
 - name: generate the kubeadm 1.13 yaml configuration
   template:
@@ -33,11 +16,19 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.14")
 
-- name: initialize cluster on first master
+- name: initialize cluster on first master pre 1.14
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
   ignore_errors: false
+  when: k8s_version is search("1.13") 
+
+- name: initialize cluster on first master 1.14+
+  shell: "kubeadm init --config kube-adm.yml --experimental-upload-certs > /tmp/kube-status"
+  args:
+    chdir: /root
+  ignore_errors: false
+  when: k8s_version is search("1.14") 
 
 - name: register cluster status
   shell: "cat /tmp/kube-status"
@@ -46,15 +37,44 @@
 - name: kubeadm output
   debug: msg="{{ kubeadm_out.stdout_lines }}"
 
-- name: get join command
+- name: get worker join command pre 1.14
   shell: "cat /tmp/kube-status | sed -n '/discovery-token-ca-cert-hash/,$p' "
   register: kubeadm_join_cmd
+  when: k8s_version is search("1.13")
 
-- name: kubeadm join command
+- name: kubeadm worker join command
   debug: msg="{{ kubeadm_join_cmd.stdout }}"
+  when: k8s_version is search("1.13")
 
-- name: export join command to /root/join_cmd
+- name: export worker join command to /root/join_cmd
   shell: "echo '{{ kubeadm_join_cmd.stdout }}' > /root/join_cmd "
+  when: k8s_version is search("1.13") 
+
+- name: get master join command 1.14+
+  shell: "cat /tmp/kube-status | awk '/control-plane node/ {for(i=1; i<=5; i++) {getline; print}}' | tr -d '\n' | xargs "
+  register: kubeadm_master_join_cmd
+  when: k8s_version is search("1.14") 
+
+- name: kubeadm master join command
+  debug: msg="{{ kubeadm_master_join_cmd.stdout }}"
+  when: k8s_version is search("1.14") 
+
+- name: get worker join command 1.14+
+  shell: "cat /tmp/kube-status | awk '/worker node/{y=1;next}y' | tr -d '\n' | xargs "
+  register: kubeadm_join_cmd
+  when: k8s_version is search("1.14") 
+
+- name: kubeadm worker join command
+  debug: msg="{{ kubeadm_join_cmd.stdout }}"
+  when: k8s_version is search("1.14") 
+
+- name: export worker join command to /root/join_cmd
+  shell: "echo '{{ kubeadm_join_cmd.stdout }}' > /root/join_cmd "
+  when: k8s_version is search("1.14") 
+
+- name: export master join command to /root/join_cmd
+  shell: "echo '{{ kubeadm_master_join_cmd.stdout }}' > /root/master_join_cmd "
+  when: k8s_version is search("1.14")
 
 - name: setup kubectl configuration
   shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
@@ -65,6 +85,14 @@
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
   become: true   
+
+- name: fetch the master_join_cmd file
+  fetch:
+    src: /root/master_join_cmd
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+  become: true   
+  when: k8s_version is search("1.14") 
 
 - name: fetch the kube-adm.yml from the first master
   fetch:
@@ -118,7 +146,6 @@
 #  register: calico_out
 
 #- debug: msg="{{ calico_out.stdout_lines }}"
-
 
 - name: generate the master account
   template:

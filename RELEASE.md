@@ -1,6 +1,15 @@
 Release Notes
 =============
 
+v19.04 beta
+-----------
+
+* Updated and verified __Kubernetes 1.14__.
+* Removed support for __1.12__.
+* Removed __calico-policy__ until a working version can be completed.
+* Removed custom __istio__ deployment to reduce complexity and dependency matrix. __Knative__ now installs the correct __istio__ for the version.
+* Added durability and retry logic to mitigate `vmrun` SSL issue on macOS.
+
 v19.03
 ------
 
@@ -22,7 +31,6 @@ v19.02
   * Canal CNI w/ Network Policy - __v3.5__
   * MetalLB Native Load Balancer - __v0.73__
   * NGINX Ingress Controller - __v0.21__
-  * Istio Service Mesh - __v1.0.2__
   * Knative Serverless Platform - __v0.3.0__
 * Updated examples and readme to reflect new stable formula.
 * Added experimental __Kafka__ manifests in `xtras`

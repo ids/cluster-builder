@@ -10,13 +10,14 @@ apiServerCertSANs:
 {% endfor %}
   - "127.0.0.1"
   - "10.96.0.1"
-  - "{{ k8s_admin_url }}"
+  - "{{ k8s_advertise_addr }}"
+  - "{{ k8s_control_plane_uri }}"
 auditPolicy:
   logDir: /var/log/kubernetes/audit
   logMaxAge: 2
   path: ""
 certificatesDir: /etc/kubernetes/pki
-controlPlaneEndpoint: "{{ k8s_advertise_addr }}:6443"
+controlPlaneEndpoint: "{{ k8s_control_plane_uri }}:6443"
 apiServerExtraArgs:
   authorization-mode: "Node,RBAC"
 etcd:

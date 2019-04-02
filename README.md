@@ -98,7 +98,6 @@ There are two maintained `kubeadm` built Kubernetes variants:
 These `kubeadm` __Kubernetes__ cluster builds come pre-configured with a core toolset rivaling the latest cloud provider offerings:
 
 * [Canal/Flannel](https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
-* [Calico](https://www.projectcalico.org/) CNI network plugin with [Istio](https://istio.io/) and [Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
 * [MetalLB](https://metallb.universe.tf/) the on-premise load balancer
 * NGINX or Traefik for ingress and inbound traffic routing
 * [Knative](https://cloud.google.com/knative/) serverless platform integration
@@ -241,7 +240,7 @@ This can be used to set a specific version of __1.12__ or __1.13__, or it can be
 
 	k8s_network_cni=calico-policy
 
-The __k8s_network_cni__ setting can be one of: __canal__, __calico__ or __calico-policy__ (which includes Istio).  It defaults to __canal__.
+The __k8s_network_cni__ setting can be one of: __canal__, __calico__.  It defaults to __canal__.
 
 	k8s_metallb_address_range=192.168.1.180-192.168.1.190
 
@@ -255,20 +254,15 @@ The __k8s_ingress_controller__ setting can be one of: __nginx__, __traefik-nodep
 
 This defaults to __10.244.0.0/16__ for Canal and __192.168.0.0/16__ for Calico, but may conflict with your environment if this network is already in use.  Use __k8s_cluster_cidr__ to override.
 
-> As an example, my management network is `192.168.1.0/24`, and my local virtual network for VMware is `192.168.100.0/24`.  Therefore the default for _Calico_ will not work and many of the pods would not start due to network address conflict.  In this case `10.10.0.0/16` worked best and I was able to install `calico-policy` with Istio.
+> As an example, my management network is `192.168.1.0/24`, and my local virtual network for VMware is `192.168.100.0/24`.  Therefore the default for _Calico_ will not work and many of the pods would not start due to network address conflict.
 
-	k8s_install_istio=true/false
-	k8s_istio_version=1.0.2/latest/knative # latest or knative are recommended
+	k8s_install_knative=true/false
 
-The __k8s_install_istio__ setting determines whether __Istio__ is installed.  It works with both _Canal_ and _Calico_ CNIs, but _Calico_ depends on it for network policy, so when `calico-policy` is selected __Istio__ will be installed and this setting will be `true` .__k8s_istio_version__ allows the version to be tailored, as _Knative_ works with a specific version which is referenced as `knative`.
+The __k8s_install_knative__ setting determines whether __Knative Lite__ is installed.  At the present time the full __Knative__ installation is under development.
 
-	k8s_install_knative_lite=true/false
+	k8s_control_plane_uri=k8s-admin.onprem.idstudios.io
 
-The __k8s_install_knative_lite__ setting determines whether __Knative Lite__ is installed.  At the present time the full __Knative__ installation is under development.
-
-	k8s_admin_url=k8s-admin.onprem.idstudios.io
-
-The __k8s_admin_url__ setting should be either a load balancer or round-robin DNS configuration that resolves to all of the __master__ nodes.
+The __k8s_control_plane_uri__ setting should be either a load balancer or round-robin DNS configuration that resolves to all of the __master__ nodes.
 
 	k8s_ingress_url=k8s-ingress.onprem.idstudios.io
 
@@ -288,9 +282,7 @@ The __k8s_workloads_on_master__ setting removes all taints on the master node th
 
 	k8s_cni_wait_min=7
 	k8s_worker_wait_min=7
-	k8s_calico_policy_wait_min=5
 	k8s_calico_node_wait_min=3
-	k8s_istio_wait_min=7
 	k8s_knative_wait_min=5
 
 The __k8s_XXX_wait_min__ settings allow control of various pauses during the cluster deployment.  The wait times will vary depending on your environment, and if deployments proceed too soon the PODS will not come up properly.  Adjust these values as required.  Larger clusters will require longer wait times.
@@ -335,7 +327,7 @@ A stable foundation to build on:
 k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
-k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_control_plane_uri=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
 k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
@@ -349,7 +341,6 @@ The following tested __Canal__ based cluster configuration contains the followin
 
 * __CentOS 7.6 (1810)__ minimal OS node
 * `kubeadm` __1.13.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin
-* __Istio (1.0.2)__ service mesh
 * __MetalLB (0.7.3)__ baremetal load balancer
 * __NGINX Ingress Controller (0.21)__
 * __Knative lite (0.3.0)__ Kubernetes serverless add-on
@@ -361,11 +352,9 @@ The following tested __Canal__ based cluster configuration contains the followin
 k8s_version=1.13.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
-k8s_install_istio=true
-k8s_istio_version=1.0.2
-k8s_install_knative_lite=true
+k8s_install_knative=true
 k8s_knative_version=0.3.0
-k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_control_plane_uri=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
 k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
@@ -384,7 +373,7 @@ k8s_version=1.13.*
 k8s_metallb_address_range=192.168.1.80-192.168.1.95
 k8s_network_cni=calico-policy
 k8s_cluster_cidr=10.10.0.0/16
-k8s_admin_url=k8s-admin.demo.idstudios.io
+k8s_control_plane_uri=k8s-admin.demo.idstudios.io
 k8s_advertise_addr=192.168.100.200
 k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a

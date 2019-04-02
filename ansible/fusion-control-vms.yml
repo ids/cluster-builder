@@ -10,6 +10,10 @@
       module: shell
       _raw_params: vmrun {{ vm_action }} {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     when: vm_action != 'destroy' and platform != "windows"
+    retries: 5
+    delay: 5
+    register: result
+    until: result.rc is defined and result.rc == 0
 
   - name: start/stop/suspend the VMs 
     local_action:
@@ -23,7 +27,11 @@
       _raw_params: vmrun stop {{ fusion_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
     ignore_errors: true
     when: vm_action == 'destroy' and platform != "windows"
-  
+    retries: 5
+    delay: 5
+    register: result
+    until: result.rc is defined and result.rc == 0
+ 
   - name: destroy the VMs on macOS/Linux
     local_action:
       module: shell

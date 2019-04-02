@@ -15,6 +15,7 @@
     - front-proxy-ca.key  
     - front-proxy-client.key  
     - sa.pub
+  when: k8s_version is search("1.13")
 
 - name: copy the PKI certs to the other masters
   copy:
@@ -28,23 +29,38 @@
     - ca.crt  
     - front-proxy-ca.crt  
     - front-proxy-client.crt  
+  when: k8s_version is search("1.13")
 
-- name: copy the kube-adm.yml to the other masters
-  copy:
+- name: generate the kubeadm 1.13 yaml configuration
+  template:
+    src: templates/k8s-kube-adm-13.j2
     dest: /root/kube-adm.yml
-    src: ../clusters/{{ cluster_pkg_folder }}/kube-adm.yml
-  become: true   
+  when: k8s_version is search("1.13")
 
-- name: start kubelet on other master nodes
-  service:
-    name: kubelet
-    state: started
-    enabled: yes
-  become: true
-
-- name: initialize cluster on other master nodes
-  shell: "kubeadm init --config kube-adm.yml"
+- name: join other master pre 1.14
+  shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
-  register: kubeadm_out
-  ignore_errors: true
+  ignore_errors: false
+  register: master_join
+  when: k8s_version is search("1.13") 
+
+- name: master join result
+  debug: msg="{{ master_join.stdout_lines }}"
+  when: k8s_version is search("1.13")
+
+- name: copy the master_join_cmd to the other masters
+  copy:
+    dest: /root/master_join_cmd
+    src: ../clusters/{{ cluster_pkg_folder }}/master_join_cmd
+  become: true   
+  when: k8s_version is search("1.14")
+
+- name: join other master to cluster
+  shell: "/root/master_join_cmd"
+  register: master_join
+  when: k8s_version is search("1.14")
+
+- name: master join result
+  debug: msg="{{ master_join.stdout_lines }}"
+  when: k8s_version is search("1.14")
