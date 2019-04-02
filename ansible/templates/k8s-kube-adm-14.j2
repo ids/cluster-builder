@@ -30,11 +30,11 @@ etcd:
     imageTag: "3.2.24"
     dataDir: "/var/lib/etcd"    
     extraArgs:
-      listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].inventory_hostname }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
+      listen-client-urls: {% for host in groups['k8s_masters'] %}"http://{{ hostvars[host].node_fqdn }}:2379"{% if not loop.last %},{% endif %}{% endfor %} 
     serverCertSANs:
     - "{{ k8s_advertise_addr }}"  
   {% for host in groups['k8s_masters'] %}
-  - "{{ hostvars[host].inventory_hostname }}"
+  - "{{ hostvars[host].node_fqdn }}"
   {% endfor %}
   peerCertSANs:
   {% for host in groups['k8s_masters'] %}
@@ -50,7 +50,7 @@ apiServer:
 {% endfor %}
   - "127.0.0.1"
 {% for host in groups['k8s_masters'] %}
-- "{{ hostvars[host].inventory_hostname }}"
+- "{{ hostvars[host].node_fqdn }}"
 {% endfor %}
   - "10.96.0.1"
   - "{{ k8s_admin_url }}"

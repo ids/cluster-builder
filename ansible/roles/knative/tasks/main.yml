@@ -1,0 +1,21 @@
+- name: install Knative latest
+  include: "knative-latest.yml"
+  when: (k8s_install_knative_lite|bool == True) and k8s_knative_version == "latest" and inventory_hostname == groups['k8s_masters'][0]
+
+- name: install specific Knative version {{ k8s_knative_version }}
+  include: "knative-version.yml"
+  when: (k8s_install_knative_lite|bool == True) and k8s_knative_version != "latest" and inventory_hostname == groups['k8s_masters'][0]
+
+- name: give the Knative deployments a few seconds to spin up
+  pause:
+    seconds: 30
+  when: (k8s_install_knative_lite|bool == True) and inventory_hostname == groups['k8s_masters'][0]
+
+- name: wait for the Knative installation to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 100
+  delay: 10    
+  when: (k8s_install_knative_lite|bool == True) and inventory_hostname == groups['k8s_masters'][0]
+  
