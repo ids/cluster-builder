@@ -219,9 +219,9 @@ Eg.
 
 ```
 clusters
-	| acme
-			| demo-k8s
-					| hosts
+  | acme
+	  | demo-k8s
+		  | hosts
 ```
 The following command would then deploy the cluster:
 
