@@ -207,8 +207,8 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 Eg. In the **clusters/eg** folder there is:
 
 ```
-demo-k8ss
-	|_ hosts
+demo-k8s
+  |_ hosts
 ```
 
 Sample cluster packages are located in the **clusters/eg** folder and can be copied into your own **clusters/org** folder and customized according to your infrastructure and networks.
@@ -219,8 +219,8 @@ Eg.
 
 ```
 clusters
-  | acme
-	  | demo-k8s
+  |_ acme
+	  |_ demo-k8s
 		  | hosts
 ```
 The following command would then deploy the cluster:
