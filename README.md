@@ -608,13 +608,18 @@ Once inline to cluster-builder, _Istio_ and _Knative_ deployments have been move
 
 Versions are specified using the following:
 
-		k8s_knative_version=0.2.3 | 0.3.0 | 0.4.0
+		k8s_knative_version= 0.3.0 | 0.4.0
+		k8s_knative_install_monitoring= true | false
 
 and 
 
 		k8s_istio_version=1.0.1 | 1.0.2 | 1.0.4 | latest
 
-> _Istio_ version is overridden by _Knative_ as it requires specific istio versions.
+__Defaults:__
+
+		k8s_knative_version=0.3.0
+		k8s_knative_install_monitoring=false
+		k8s_istio_version=1.0.2
 
 The playbooks can be executed:
 
@@ -628,7 +633,7 @@ and/or
 $ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/knative.yml
 ```
 
-> Do not install _istio_ if you are planning to install _Knative_ as the correct version will be installed for the platform.
+> __Knative 0.3.0 and 0.4.0__ work best with __Istio 1.0.1 or 1.0.2__ at the present time.  Install __Istio__ first.
 
 > Experience has called into question the value of _Knative_ for on-premise deployments.  While cost containment benefits of serverless are evident in the cloud pricing model, the overhead of complexity in requiring _Istio_ in support of _Knative_ tips the value proposition over.  Should _Knative_ be built into the platform in the future the merit of serverless may emerge, but at present, simple standard containerized services appear to nullify the value of serverless in on-premise deployments with orders of magnitude less complexity to manage at the cluster level.
 

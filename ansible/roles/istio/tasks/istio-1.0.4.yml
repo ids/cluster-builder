@@ -28,18 +28,8 @@
 - name: install Istio 1.0.4 (w/ TLS)
   shell: kubectl apply -f /tmp/istio-demo-auth.yml
   register: istio_out
-  when: k8s_istio_tls|bool == true 
 
 - debug: msg="{{ istio_out.stdout_lines }}"
-  when: k8s_istio_tls|bool == true 
-
-- name: install Istio 1.0.4 (no TLS)
-  shell: kubectl apply -f /tmp/istio-demo.yml
-  register: istio_out
-  when: k8s_istio_tls|bool != true 
-
-- debug: msg="{{ istio_out.stdout_lines }}"
-  when: k8s_istio_tls|bool != true 
 
 - name: install FlexVolume daemonset into istio-system (needed for sidecar injection)
   shell: kubectl -n istio-system apply -f https://raw.githubusercontent.com/projectcalico/pod2daemon/master/nodeagent/nodeagent.yaml

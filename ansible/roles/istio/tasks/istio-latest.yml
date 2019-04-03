@@ -12,18 +12,8 @@
 - name: install latest Istio for Calico authentication (w/ TLS)
   shell: kubectl apply -f /tmp/istio*/install/kubernetes/istio-demo-auth.yaml
   register: istio_out
-  when: k8s_istio_tls|bool == true 
 
 - debug: msg="{{ istio_out.stdout_lines }}"
-  when: k8s_istio_tls|bool == true 
-
-- name: install latest Istio for Calico authentication (no TLS)
-  shell: kubectl apply -f /tmp/istio*/install/kubernetes/istio-demo.yaml
-  register: istio_out
-  when: k8s_istio_tls|bool != true 
-
-- debug: msg="{{ istio_out.stdout_lines }}"
-  when: k8s_istio_tls|bool != true 
 
 - name: clean up Istio download
   shell: rm -rf istio*

@@ -1,31 +1,22 @@
-- name: install Knative latest
-  include: "knative-latest.yml"
-  when: k8s_knative_version == "latest" and inventory_hostname == groups['k8s_masters'][0]
+- name: set k8s_knative_version default
+  set_fact:
+    k8s_knative_version: 0.3.0
+  when: k8s_knative_version is undefined and inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="knative version to install -> {{ k8s_knative_version }}"
+
+- name: set k8s_knative_install_monitoring default
+  set_fact:
+    k8s_knative_install_monitoring: false
+  when: k8s_knative_install_monitoring is undefined and inventory_hostname == groups['k8s_masters'][0]
+  
+- debug: msg="knative install monitoring -> {{ k8s_knative_install_monitoring }}"
+  when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: install Knative 0.4.0
   include: "knative-0.4.0.yml"
-  when: k8s_knative_version == "0.4.0" 
-    and inventory_hostname == groups['k8s_masters'][0]
+  when: k8s_knative_version == "0.4.0" and inventory_hostname == groups['k8s_masters'][0]
 
 - name: install Knative 0.3.0
   include: "knative-0.3.0.yml"
-  when: k8s_knative_version == "0.3.0" 
-    and inventory_hostname == groups['k8s_masters'][0]
-
-- name: install specific Knative version {{ k8s_knative_version }}
-  include: "knative-version.yml"
-  when: k8s_knative_version != "latest" and inventory_hostname == groups['k8s_masters'][0]
-
-- name: give the Knative deployments a few seconds to spin up
-  pause:
-    seconds: 30
-  when: inventory_hostname == groups['k8s_masters'][0]
-
-- name: wait for the Knative installation to complete
-  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
-  register: pending_pods
-  until: "pending_pods.stdout == '0'"
-  retries: 100
-  delay: 10    
-  when: inventory_hostname == groups['k8s_masters'][0]
-  
+  when: k8s_knative_version == "0.3.0" and inventory_hostname == groups['k8s_masters'][0]
