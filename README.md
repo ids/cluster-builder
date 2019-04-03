@@ -127,7 +127,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible 2.3+ `brew install/upgrade ansible`
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
-* __kubectl__ 1.12+ (Kubernetes - `brew install/upgrade kubernetes-cli`)
+* __kubectl__ 1.13+ (Kubernetes - `brew install/upgrade kubernetes-cli`)
 * Docker for Mac or __docker-ce__ (Swarm only)
 * Python `pip`
 
@@ -207,11 +207,27 @@ Everything is based on the **Ansible inventory file**, which defines the cluster
 Eg. In the **clusters/eg** folder there is:
 
 ```
-demo-swarm
+demo-k8ss
 	|_ hosts
 ```
 
-Sample cluster packages are located in the **clusters/eg** folder and can be copied into the **clusters** folder.
+Sample cluster packages are located in the **clusters/eg** folder and can be copied into your own **clusters/org** folder and customized according to your infrastructure and networks.
+
+For a fictional organization __ACME__, the **acme** subfolder is created, and the desired cluster definition package (folder) copied:
+
+Eg.
+
+```
+clusters
+	| acme
+			| demo-k8s
+					| hosts
+```
+The following command would then deploy the cluster:
+
+```
+$ bash cluster-deploy acme/demo-k8s
+```
 
 > __Note__ that for all the cluster definition package examples you will need to ensure that the network specified, and DNS names used resolve correctly to the _IP Addresses_ specified in the __hosts__ files.
 > Eg.  
@@ -219,7 +235,9 @@ Sample cluster packages are located in the **clusters/eg** folder and can be cop
 [k8s_masters]
 k8s-m1.idstudios.local ansible_host=192.168.1.220
 ``` 
-> The inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
+> In the example, the inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
+
+> The **demo** series of local deployments use DNS names hosted by __idstudios.io__, which resolve to local private network addresses.  These domain names can be used for local deployments if the subnet/addressing is also used sin your local environments.
 
 ### General Cluster Configuration
 
@@ -233,10 +251,10 @@ See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about
 
 With respect to `centos-k8s` and `fedora-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
 
-	k8s_version=1.12.*
+	k8s_version=1.14.*
 
 The __k8s_version__ setting controls what version of the kubernetes binaries are installed on the nodes.  
-This can be used to set a specific version of __1.12__ or __1.13__, or it can be set to the latest patch release in the series using the __*__ wildcard.
+This can be used to set a specific version of __1.13__ or __1.14__, or it can be set to the latest patch release in the series using the __*__ wildcard.
 
 	k8s_network_cni=calico-policy
 
@@ -321,7 +339,7 @@ A stable foundation to build on:
 (As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
 
 ```
-k8s_version=1.13.*
+k8s_version=1.14.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_control_plane_uri=k8s-admin.demo.idstudios.io
@@ -334,31 +352,15 @@ See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ES
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
 
-##### Formula: Calico Policy Kubernetes (Experimental)
-
-Not fully tested, but the `calico-policy` CNI variant comes up clean.
-
-```
-k8s_version=1.13.*
-k8s_metallb_address_range=192.168.1.80-192.168.1.95
-k8s_network_cni=calico-policy
-k8s_cluster_cidr=10.10.0.0/16
-k8s_control_plane_uri=k8s-admin.demo.idstudios.io
-k8s_advertise_addr=192.168.100.200
-k8s_ingress_url=k8s-ingress.demo.idstudios.io
-k8s_cluster_token=9aeb42.99b7540a5833866a
-```
-
 #### VMware Fusion/Workstation Complete Examples
 
-* [Kubernetes 1.13 (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
+* [Kubernetes 1.14 (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
 * [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 
-
 #### VMware ESXi Examples
 
-* [Kubernetes 1.13 on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
+* [Kubernetes 1.14 on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
 * [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 
@@ -652,7 +654,7 @@ __DC/OS__: 1.11 (or latest)
 
 * centos-dcos
 
-__Stock Kubernetes__: v1.12.x, v1.13.x
+__Stock Kubernetes__: v1.13.x, v1.14.x
 
 * centos-k8s
 * fedora-k8s

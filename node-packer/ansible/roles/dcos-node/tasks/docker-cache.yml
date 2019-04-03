@@ -1,9 +1,6 @@
 ---
 # Cache Docker images for use by the bootstrap machine to speed up install
 
-- name: Install Docker-Py
-  pip: name=docker-py 
-
 - name: Cache jplock/zookeeper docker image
   docker:
     name: zookeeper
