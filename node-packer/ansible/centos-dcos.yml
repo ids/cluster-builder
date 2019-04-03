@@ -7,8 +7,8 @@
   become_user: root
   become_method: sudo
   roles:
-  - role: centos-dcos
-  - role: centos-dcos-ssh
+  - role: centos
+  - role: centos-ssh
+  - role: sysctl
   - role: dcos-node
-  - role: debug
   

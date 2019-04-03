@@ -53,11 +53,6 @@
   become: true
   command: systemctl start chronyd
 
-#- name: Enable OverlayFS
-#  copy: >
-#    content=overlay
-#    dest=/etc/modules-load.d/overlay.conf
-
 # kdump's default config will not work on machines with less than 2GB memory.
 # But machine memory is configurable at runtime.
 # So just disable kdump (bonus: frees up active memory).
@@ -69,3 +64,11 @@
     state: stopped
     enabled: no
 
+- name: Add elevator=deadline to boot to improve I/O performance on VMware ESXi
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: "{{ item.regx }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regx: "GRUB_CMDLINE_LINUX=", line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=system/root rd.lvm.lv=system/swap rhgb quiet elevator=deadline"' }

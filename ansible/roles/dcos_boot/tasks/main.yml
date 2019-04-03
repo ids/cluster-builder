@@ -36,19 +36,9 @@
 
 - debug: msg="{{ config_output.stdout }}"
 
-- name: launch NGINX config service to host the boot config
-  docker_container:
-    name: dcos-boot-config
-    image: nginx
-    state: started
-    volumes:
-      - /home/admin/dcos/genconf/serve:/usr/share/nginx/html:ro
-    ports:
-     - "{{ dcos_boot_server_port }}:80"
-
-#- name: Launch NGINX config service to host the boot config
-#  shell: docker run -d --name dcos-boot-config -p {{ dcos_boot_server_port }}:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx
-#  args:
-#    chdir: /home/admin/dcos
+- name: Launch NGINX config service to host the boot config
+  shell: docker run -d --name dcos-boot-config -p {{ dcos_boot_server_port }}:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx
+  args:
+    chdir: /home/admin/dcos
 
   
