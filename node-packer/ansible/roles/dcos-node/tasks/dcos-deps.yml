@@ -16,6 +16,7 @@
    - nano
    - unzip
    - nfs-utils
+   - net-tools
    - ipset
    - device-mapper-persistent-data 
    - lvm2

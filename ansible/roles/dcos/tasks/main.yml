@@ -1,4 +1,9 @@
 ---
+- name: install net-tools
+  yum: >
+    name=net-tools
+    state=latest
+
 - name: ensure tmp location exists 
   file:
     path: /tmp/dcos
