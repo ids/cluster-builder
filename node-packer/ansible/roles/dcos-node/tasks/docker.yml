@@ -1,22 +1,8 @@
 ---
-- name: Yum add Docker CE repo
-  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-
-- name: Yum update packages
-  shell: yum makecache fast
-
-- name: Install Version Lock
+- name: Install Distro Docker
   yum: >
-    name=yum-plugin-versionlock
+    name=docker
     state=present
-
-- name: Install Docker CE
-  yum: >
-    name=docker-ce-17.09.1.ce
-    state=present
-
-- name: Version lock Docker
-  shell: yum versionlock docker-ce-*
 
 - name: Stop Docker
   service:
@@ -35,16 +21,6 @@
     append: yes
   with_items:
   - docker
-
-- name: Ensures /etc/docker exists
-  file: 
-    path: /etc/docker/ 
-    state: directory
-
-- name: Configure the docker daemon.json 
-  template:
-    src: templates/docker-daemon-default.j2
-    dest: /etc/docker/daemon.json
 
 - name: Start Docker
   service:
