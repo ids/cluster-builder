@@ -398,7 +398,7 @@ Once a cluster has been deployed, all of the required and relevant artifacts for
 In the case of __Kubernetes__, a __kube-config__ file will be located in the cluster package folder.  The cluster can then be managed using this configuration file:
 
 ```
-$ kubectl --kubeconfig <cluster pkg folder path>/kube-config get nodes --all-namespaces
+$ kubectl --kubeconfig <cluster pkg folder path>/kube-config get pods --all-namespaces
 ```
 
 Or the details in the `kube-config` file can be merged into your `~/.kube/config`.
