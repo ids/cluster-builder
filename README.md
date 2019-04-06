@@ -40,15 +40,17 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 6. [Kubernetes KubeAdm Configuration](#kubernetes-kubeadm-configuration)
 7. [Cluster Builder Usage](#cluster-builder-usage)
 8. [Deploying a Cluster](#deploying-a-cluster)
-9. [Change Cluster Password](#change-cluster-password)
-10. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-11. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-12. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-13. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-14. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-15. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-16. [Knative and Istio](#knative-and-istio)
-17. [System Profile](#system-profile)
+9. [Connecting to a Cluster](#connecting-to-a-cluster)
+10. [Kubernetes Dashboard](#kubernetes-dashboard)
+11. [Change Cluster Password](#change-cluster-password)
+12. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+13. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
+14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+17. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+18. [Knative and Istio](#knative-and-istio)
+19. [System Profile](#system-profile)
 
 ### Supported Clusters
 
@@ -389,6 +391,33 @@ To deploy a cluster use **cluster-deploy**:
 Eg.
 
 	$ bash cluster-deploy eg/demo-swarm
+
+### Connecting to a Cluster
+Once a cluster has been deployed, all of the required and relevant artifacts for administering that cluster will be located in the cluster definition package folder.  Keep these safe (such as in a secure source control repository or vault).
+
+In the case of __Kubernetes__, a __kube-config__ file will be located in the cluster package folder.  The cluster can then be managed using this configuration file:
+
+```
+$ kubectl --kubeconfig <cluster pkg folder path>/kube-config get nodes --all-namespaces
+```
+
+Or the details in the `kube-config` file can be merged into your `~/.kube/config`.
+
+> You will also find all other artifacts used in the creation of the cluster, such as the `kube-adm.yml`, cluster certificates, and scripts to join additional master and worker nodes.
+
+### Kubernetes Dashboard
+Connecting to the __Kubernetes Dashboard__ follows the standard process:
+
+```
+kubectl --kubeconfig <cluster pkg folder path>/kube-config proxy
+```
+
+Then browse to the following url:
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+
+Choose the `token` option for authentication.  You can find the token required in the cluster package folder in a file called `web-ui-token`.  Paste the contents into the login dialog and you will be authenticated to the __Kubernetes Dashboard__ in the cluster-admin role.
+
+> Note the idle CPU and memory effeciency of the cluster in the heapster process resource allocation graphs.
 
 ### Change Cluster Password
 Change password is now integrated into the cluster deployment process.
