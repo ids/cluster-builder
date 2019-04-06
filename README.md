@@ -415,6 +415,8 @@ kubectl --kubeconfig <cluster pkg folder path>/kube-config proxy
 Then browse to the following url:
 http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
 
+> __Tip:__  Bookmark that!
+
 Choose the `token` option for authentication.  You can find the token required in the cluster package folder in a file called `web-ui-token`.  Paste the contents into the login dialog and you will be authenticated to the __Kubernetes Dashboard__ in the cluster-admin role.
 
 > Note the idle CPU and memory effeciency of the cluster in the heapster process resource allocation graphs.
