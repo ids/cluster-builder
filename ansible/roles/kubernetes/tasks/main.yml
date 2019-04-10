@@ -119,18 +119,22 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
-- name: remove the master taints
-  shell: kubectl taint nodes --all node.kubernetes.io/unschedulable:NoSchedule-
-  when: "'k8s_masters' in group_names
-    and k8s_workloads_on_master|bool == True
-    and inventory_hostname == groups['k8s_masters'][0]"
+- name: remove the master taints (1.14+)
+  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  become: true
+  when: "(k8s_workloads_on_master|bool == True) and inventory_hostname == groups['k8s_masters'][0]"
   ignore_errors: true
 
-- name: remove the master taints
+- name: remove the master taints (pre 1.14)
+  shell: kubectl taint nodes --all node.kubernetes.io/unschedulable:NoSchedule-
+  become: true
+  when: "(k8s_workloads_on_master|bool == True) and inventory_hostname == groups['k8s_masters'][0]"
+  ignore_errors: true
+
+- name: remove the master taints (legacy)
   shell:   kubectl taint nodes --all kubeadmNode-
-  when: "'k8s_masters' in group_names
-    and k8s_workloads_on_master|bool == True
-    and inventory_hostname == groups['k8s_masters'][0]"
+  become: true
+  when: "(k8s_workloads_on_master|bool == True) and inventory_hostname == groups['k8s_masters'][0]"
   ignore_errors: true
 
 - name: configure the Kubernetes workers
