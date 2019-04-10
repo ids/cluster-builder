@@ -194,7 +194,9 @@ fi
 CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
 CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
 
-source clusters/$CLUSTER_PKG_FOLDER/.passwords
+if [ -f clusters/$CLUSTER_PKG_FOLDER/.passwords ]; then
+  source clusters/$CLUSTER_PKG_FOLDER/.passwords
+fi
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
 
