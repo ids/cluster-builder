@@ -21,7 +21,14 @@
   args:
     chdir: /root
   ignore_errors: false
-  when: k8s_version is search("1.13") 
+  when: k8s_version is search("1.13") and cluster_type == 'centos-k8s'
+
+- name: initialize cluster on first master pre 1.14
+  shell: "kubeadm init --config kube-adm.yml --ignore-preflight-errors=SystemVerification > /tmp/kube-status"
+  args:
+    chdir: /root
+  ignore_errors: false
+  when: k8s_version is search("1.13") and cluster_type == 'fedora-k8s'
 
 - name: initialize cluster on first master 1.14+
   shell: "kubeadm init --config kube-adm.yml --experimental-upload-certs > /tmp/kube-status"
