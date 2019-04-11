@@ -12,6 +12,7 @@
   yum:
     name: docker
     state: present
+  when: cluster_type == "centos-k8s"
   retries: 10
   delay: 10
   register: result
