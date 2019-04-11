@@ -47,7 +47,6 @@ v18.12
 * Verified and tested __DC/OS 1.11__ local deployment on Windows and macOS. _Linux mileage may vary for some reason still under investigation_.
 * Verified and tested __Docker CE Swarm__ on CentOS deployment locally on Windows, Linux and macOS.
 * Verified and tested __CentOS 7.5 Vanilla Kubernetes 1.12__ deployment __locally on Windows, Linux and macOS__.  A solid up to date reference Kubernetes.  Early support for __1.13__.
-* Updated `fedora-k8s` to __Fedora 29__.
 * Updated all `CentOS 7` clusters from __7.5 (1804)__ to __7.6 (1810)__.  Rebuild __ova template__ images to upgrade.
 * Integrated [MetalLB](https://metallb.universe.tf/) into the __Vanilla Kubernetes__ configuration.
 * Added support for __Calico CNI Plugin w/ Istio and Network Policy__ for both __CentOS 7.5__ and __Fedora 29__. __k8s_network__cni__ allows selection of __canal__ (default), __calico__ and __calico-policy__ (whcih includes Istio and Network Policy).  Load tested and validated _Network Policy_ functionality on `centos-k8s` with __calico-policy__.  However, testing of __canal__ and __metal-lb__ shows a performance delta as compared to _Calico_ so as to make the overhead of _Istio_ a consideration.  Likely not worth it unless you plan on using _Istio_, and even then...
