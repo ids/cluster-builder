@@ -58,9 +58,7 @@
   until: result.rc is defined and result.rc == 0
 
 - name: install iSCSI utils for Fedora
-  dnf: > 
-    pkg=iscsi-initiator-utils 
-    state=present
+  shell: "dnf install -y iscsi-initiator-utils"
   when: cluster_type == "fedora-k8s"
   retries: 50
   delay: 5

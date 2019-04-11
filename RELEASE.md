@@ -4,11 +4,12 @@ Release Notes
 v19.04
 ------
 
-* Updated and verified __Kubernetes 1.14__.
+* Updated and verified __CentOS Kubernetes 1.14__.
 * Tested and validated multi-master HA configuration using the __1.14__ join mechanism for additional controller/master nodes on __centos-k8s__ and __fedora_k8s__ deployments.  With __1.14__ HA deployments are now fully supported with __cluster-builder__.
 * Removed support for __1.12__ as this is now approaching EOL.
 * Removed __calico-policy__ until a working version can be completed.
 * Moved custom __Istio__  and __Knative__ deployments into standalone ansible playbooks to reduce the complexity and dependency matrix in cluster deployment. __Knative__ now installs the required __Istio__ dependency.
+* __Fedora 29 1.13 and 1.14__ stable on the __5.x__ kernel series.
 * __CentOS 7.6__ __DC/OS 1.12__ and __Docker Swarm CE 17.12.1__ updated with fixes for deprecated ansible modules.
 * Added durability and retry logic to mitigate `vmrun` instability issues on macOS with Fusion 11+.
 
