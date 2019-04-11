@@ -58,7 +58,7 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 * CentOS 7 DC/OS
 * RedHat Enterprise 7 Docker CE
 * CentOS 7.6 Kubernetes (Stock `kubeadm`)
-* Fedora 28 Kubernetes (Stock `kubeadm`)
+* Fedora 29 Kubernetes (Stock `kubeadm`)
 
 > The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Stock `kubeadm` clusters are quite stable and reliable when properly configured.
 

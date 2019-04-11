@@ -25,7 +25,6 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "expect_disconnect": true,
       "script": "bin/zerodisk.sh"
     }
   ],
@@ -50,11 +49,11 @@
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
-        "iso/Fedora-Server-dvd-x86_64-29-1.2.iso",
-        "https://download.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/iso/Fedora-Server-dvd-x86_64-29-1.2.iso"
+        "iso/Fedora-Server-dvd-x86_64-28-1.1.iso",
+        "https://download.fedoraproject.org/pub/fedora/linux/releases/28/Server/x86_64/iso/Fedora-Server-dvd-x86_64-28-1.1.iso"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "129d131a55e5bd518f593f0eacdce095f7c795fe7ccbef1f3f6aeb2ff9f99f35",
+      "iso_checksum": "8d59a25052e05758c15fe9daa3bc472b5619791b442e752450bba7f1eeca9c1a",
       "ssh_username": "admin",
       "ssh_password": "TempPass2017",
       "ssh_port": 22,

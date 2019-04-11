@@ -63,7 +63,7 @@ v18.12
 v18.09
 ------
 
-* Updated `kubeadm` custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 28__ for Kubernetes 1.12 and updated the configuration format and Canal networking manifests.  Also removed the explicit `etcd` install in the scripts as `kubeadm` now handles creation of the KV store.
+* Updated `kubeadm` custom built Kubernetes variants for __CentOS 7.5__ and __Fedora 29__ for Kubernetes 1.12 and updated the configuration format and Canal networking manifests.  Also removed the explicit `etcd` install in the scripts as `kubeadm` now handles creation of the KV store.
 * Fixed `kubeadm` Kubernetes deployments to `1.12.1`.
 * Added `coreDNS` patch to increase available memory and correct the CrashLoopBackoff [issue mentioned here](https://github.com/kubernetes/kubeadm/issues/1037).
 * Verified and tested __DC/OS__.
