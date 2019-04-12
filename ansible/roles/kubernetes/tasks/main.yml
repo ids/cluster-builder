@@ -20,12 +20,13 @@
 
 - name: install base distro docker for Fedora
   shell: "dnf install -y docker"
+  args:
+    warn: false
   when: cluster_type == "fedora-k8s"
   retries: 10
   delay: 10
   register: result
   until: result.rc is defined and result.rc == 0
-  warn: false 
 
 - name: start docker daemon
   service:
@@ -60,13 +61,14 @@
 
 - name: install iSCSI utils for Fedora
   shell: "dnf install -y iscsi-initiator-utils"
+  args:
+    warn: false
   when: cluster_type == "fedora-k8s"
   retries: 50
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
-  warn: false 
-  
+ 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
 

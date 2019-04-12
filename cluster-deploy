@@ -121,7 +121,7 @@ function esxi_deploy () {
 
   echo
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: [${CLUSTER_NAME}] ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
 function fusion_deploy () {
@@ -149,7 +149,26 @@ function fusion_deploy () {
 
   echo
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${VMWARE_APP} [${CLUSTER_NAME}] ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
+
+}
+
+function cluster_info_display() {
+
+  echo
+  echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
+  echo
+  echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
+  echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
+  echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
+  echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
+  echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
+  if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
+  echo -e " K8s Version     : ${TC}${K8S_VERSION}${NC}"
+  fi
+  echo
+  echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
+  echo
 
 }
 
@@ -182,11 +201,11 @@ K8S_VERSION=`sed -n '/^k8s_version=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | 
 
 if [ "$CLUSTER_PROTECTED" == "true" ]; then
   echo
-  echo "Deploy Blocked!"
-  echo "Cluster Protected: deploy may not be used on clusters where protected=true" 
+  echo -e "${TC}Deployment Blocked!${NC}"
+  echo "The cluster has been marked protected=true" 
   echo
-  echo "To redeploy the cluster ${CLUSTER_NAME} (destroying any existing), "
-  echo "remove this flag from the cluster hosts file."
+  echo "To redeploy the cluster ${CLUSTER_NAME} (destroying any existing instance), "
+  echo "remove this flag from the ${CLUSTER_PKG_FOLDER}/hosts file."
   echo
   exit 1
 fi  
@@ -243,20 +262,7 @@ if [ "$TERM" == "xterm-256color" ]; then
   NC='\033[0m' # No Color
 fi 
 
-echo
-echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
-echo
-echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
-echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
-echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
-echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
-echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
-if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
-echo -e " K8s Version     : ${TC}${K8S_VERSION}${NC}"
-fi
-echo
-echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
-echo
+cluster_info_display
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   if [ -z $CB_ESXI_USER_PASSWORD ]; then
@@ -296,5 +302,23 @@ echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec"
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
+if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
 
+echo -e "The ${TC}kube-config${NC} file can be found at ${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
+echo 
+echo -e "${TC}kubectl --kubeconfig=${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces"
+echo 
+echo -e "To connect to the ${TC}Kubernetes Dashboard${NC}:"
+echo
+echo -e "${TC}kubectl --kubeconfig=${CLUSTER_PKG_FOLDER}/kube-config proxy"
+echo
+echo -e "Open a web browser to:${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
+echo
+echo -e "Authenticate using the token found in ${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
+echo
+echo -e "Enjoy your ${CLUSTER_TYPE_NAME}!"
+echo
+echo -e "${TC}------------------------------------------------------------${NC}"
+
+fi
   

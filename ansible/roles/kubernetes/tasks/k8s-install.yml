@@ -30,7 +30,6 @@
   retries: 50
   delay: 10
   until: k8s_install.rc is defined and k8s_install.rc == 0
-  warn: false
   
 - debug: msg="{{ k8s_install.stdout_lines }}"
   when: cluster_type == "fedora-k8s"
