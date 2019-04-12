@@ -119,7 +119,6 @@ function esxi_deploy () {
     bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
   fi
 
-  echo
   echo -e "${TC}------------------------------------------------------------${NC}"
   echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
@@ -147,7 +146,6 @@ function fusion_deploy () {
     bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
   fi 
 
-  echo
   echo -e "${TC}------------------------------------------------------------${NC}"
   echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
 
@@ -308,11 +306,11 @@ echo -e "The ${TC}kube-config${NC} file can be found at ${TC}${CLUSTER_PKG_FOLDE
 echo 
 echo -e "${TC}kubectl --kubeconfig=${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces${NC}"
 echo 
-echo -e "To connect to the ${TC}Kubernetes Dashboard${NC}:"
+echo -e "To connect to the Kubernetes Dashboard:"
 echo
 echo -e "${TC}kubectl --kubeconfig=${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
 echo
-echo -e "Open a web browser to:${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
+echo -e "Open a web browser to: ${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
 echo
 echo -e "Authenticate using the token found in ${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
 echo
