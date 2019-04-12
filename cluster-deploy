@@ -302,17 +302,17 @@ echo
 
 if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
 
-echo -e "The ${TC}kube-config${NC} file can be found at ${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
+echo -e "The ${TC}kube-config${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
 echo 
-echo -e "${TC}kubectl --kubeconfig=${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces${NC}"
+echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces${NC}"
 echo 
 echo -e "To connect to the Kubernetes Dashboard:"
 echo
-echo -e "${TC}kubectl --kubeconfig=${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
+echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
 echo
 echo -e "Open a web browser to: ${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
 echo
-echo -e "Authenticate using the token found in ${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
+echo -e "Authenticate using the token found in clusters/${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
 echo
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
 echo
