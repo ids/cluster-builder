@@ -41,13 +41,18 @@
       run_once: true
       when: targetd_server is defined 
 
+    - name: waiting for iscsi-provisioner storage class and provisioner manifests to spin up
+      pause:
+        seconds: 5
+      when: targetd_server is defined 
+
     - name: wait for the iscsi-provisioner installation to complete
       shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
       register: pending_pods
       until: "pending_pods.stdout == '0'"
       retries: 50
       delay: 10    
-      when: inventory_hostname == groups['k8s_masters'][0]
+      when: inventory_hostname == groups['k8s_masters'][0] and targetd_server is defined
 
     - name: verify the storage class 
       local_action:
