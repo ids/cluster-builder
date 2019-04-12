@@ -121,7 +121,7 @@ function esxi_deploy () {
 
   echo
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: [${CLUSTER_NAME}] ${CLUSTER_TYPE_NAME}!"
 }
 
 function fusion_deploy () {
@@ -149,7 +149,7 @@ function fusion_deploy () {
 
   echo
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${VMWARE_APP} [${CLUSTER_NAME}] ${CLUSTER_TYPE_NAME}!"
 
 }
 
