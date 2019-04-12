@@ -12,6 +12,7 @@ v19.04
 * __Fedora 29 1.13 and 1.14__ stable on the __5.x__ kernel series.
 * __CentOS 7.6__ __DC/OS 1.12__ and __Docker Swarm CE 17.12.1__ updated with fixes for deprecated ansible modules.
 * Added durability and retry logic to mitigate `vmrun` instability issues on macOS with Fusion 11+.
+* Added __kube-config__ and __web-ui-token__ instructions to the __cluster-deploy__ output for _Kubernetes_ deployments.
 
 v19.03
 ------
