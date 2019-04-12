@@ -20,8 +20,8 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 [cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following container orchestration clusters:
 
 * [Kubernetes](https://kubernetes.io/):
-  * _Vanilla K8s_ `kubeadm` CentOS 7.6
-  * _Vanilla K8s_ `kubeadm` Fedora  
+  * `kubeadm` _Vanilla K8s_ CentOS 7.6
+  * `kubeadm` _Vanilla K8s_ Fedora 29 (5.x kernel)  
 * [DC/OS](https://dcos.io/) on CentOS 7.6
 * [Docker Swarm CE (Community Edition)](https://docs.docker.com/engine/swarm/) on CentOS/RHEL 7.6.
 
