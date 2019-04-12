@@ -25,6 +25,7 @@
   delay: 10
   register: result
   until: result.rc is defined and result.rc == 0
+  warn: false 
 
 - name: start docker daemon
   service:
@@ -64,7 +65,8 @@
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
-
+  warn: false 
+  
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
 
