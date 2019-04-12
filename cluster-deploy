@@ -319,6 +319,7 @@ echo
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
 echo
 echo -e "${TC}------------------------------------------------------------${NC}"
+echo
 
 fi
   
