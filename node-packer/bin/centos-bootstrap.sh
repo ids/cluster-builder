@@ -38,14 +38,15 @@ which pip3
 pip3 --version
 
 pip3 install --upgrade pip
+pip --version
 
 # Avoid bug in default python cryptography library
 # [WARNING]: Optional dependency 'cryptography' raised an exception, falling back to 'Crypto'
 echo '>>> Upgrading python cryptography library'
-pip3 install --upgrade cryptography
+pip install --upgrade cryptography
 
 echo '>>> Installing Ansible'
-pip3 install ansible==2.7.8
+pip install ansible==2.7.8
 
 echo '>>> Ansible Should be Using Python3'
 ansible --version

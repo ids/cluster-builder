@@ -28,7 +28,7 @@ fi
 
 if [ -z $TARGET_PASSWORD_HASH ]; then 
   echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-  sudo -H pip3 install passlib
+  sudo -H pip install passlib
 
   echo
   read -s -p "Enter NEW ${TARGET_USER} password: " NEW_PASSWORD

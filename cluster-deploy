@@ -19,7 +19,7 @@ function esxi_deploy () {
   echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
   echo
   echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-  sudo -H pip3 install passlib
+  sudo -H pip install passlib
 
   if [ -z $CB_NODE_ROOT_PASSWORD ]; then
     echo
