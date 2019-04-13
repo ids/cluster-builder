@@ -21,11 +21,6 @@
       "script": "bin/centos-bootstrap.sh"
     },
     {
-      "type": "shell",
-      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/vmware-tools.sh"
-    },
-    {
       "type": "file",
       "source": "keys/authorized_keys",
       "destination": "/tmp/authorized_keys"
