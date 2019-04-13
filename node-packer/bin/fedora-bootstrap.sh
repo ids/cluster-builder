@@ -4,13 +4,17 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export PATH=/usr/local/bin:$PATH
+echo '>>> Installing pip (and dependencies)'
+dnf install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config open-vm-tools
 
-echo '>>> Installing general dependencies'
-dnf install -y libffi-devel openssl-devel gcc redhat-rpm-config open-vm-tools
+echo '>>> Upgrading pip'
+pip install --upgrade pip
+
+# Avoid bug in default python cryptography library
+# [WARNING]: Optional dependency 'cryptography' raised an exception, falling back to 'Crypto'
+echo '>>> Upgrading python cryptography library'
+pip install --upgrade cryptography
 
 echo '>>> Installing Ansible'
-dnf install -y ansible
-
-ln -s /usr/bin/python3 /usr/bin/python
+pip install ansible==2.7.8
 

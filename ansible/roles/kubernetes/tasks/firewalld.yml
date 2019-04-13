@@ -3,13 +3,14 @@
     src: templates/firewalld/k8s-master.j2
     dest: /etc/firewalld/services/k8s-master.xml
     mode: 644
-  when: inventory_hostname in groups['k8s-masters']
+  when: "'k8s_masters' in group_names"
 
 - name: Install the K8s Worker Firewall Service definition
   template:
     src: templates/firewalld/k8s-worker.j2
     dest: /etc/firewalld/services/k8s-worker.xml
     mode: 644
+  when: "'k8s_masters' in group_names"
 
 - name: Enable Firewalld
   service:
@@ -29,13 +30,13 @@
 - name: enable SSH firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
 
-- name: enable docker manager firewall rules
+- name: enable master firewall rules
   shell: firewall-cmd --zone=dmz --add-service=k8s-master --permanent
-  when: "inventory_hostname in groups['k8s_masters']"
+  when: "'k8s_masters' in group_names"
 
-- name: enable docker worker firewall rules
+- name: enable worker firewall rules
   shell: firewall-cmd --zone=dmz --add-k8s-worker --permanent
-  when: "inventory_hostname in groups['k8s_workers']"
+  when: "'k8s_workers' in group_names"
 
 - name: reload the firewalld rules
   shell: firewall-cmd --reload
