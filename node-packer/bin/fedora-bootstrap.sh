@@ -25,6 +25,3 @@ pip install --upgrade cryptography
 
 echo '>>> Installing Ansible'
 pip install ansible==2.7.8
-
-echo '>>> Ansible Should be Using Python3'
-ansible --version
