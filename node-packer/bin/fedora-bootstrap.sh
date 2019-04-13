@@ -11,3 +11,6 @@ dnf install -y libffi-devel openssl-devel gcc redhat-rpm-config open-vm-tools
 
 echo '>>> Installing Ansible'
 dnf install -y ansible
+
+ln -s /usr/bin/python3 /usr/bin/python
+

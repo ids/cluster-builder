@@ -32,8 +32,7 @@ The CentOS 7 VM is provisioned to be used as a DC/OS node but is also suitable f
 
 - Open VM Tools
 - Ansible (used for provisioning)
-  - Python 3.4+
-  - Pip3 8.1+
+  - Python / Pip
   - Ansible 2.3+
 - CentOS
   - Latest CentOS 7+ kernel & packages

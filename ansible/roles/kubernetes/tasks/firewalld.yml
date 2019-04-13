@@ -1,0 +1,47 @@
+- name: Install the K8s Master Firewall Service definition
+  template:
+    src: templates/firewalld/k8s-master.j2
+    dest: /etc/firewalld/services/k8s-master.xml
+    mode: 644
+  when: inventory_hostname in groups['k8s-masters']
+
+- name: Install the K8s Worker Firewall Service definition
+  template:
+    src: templates/firewalld/k8s-worker.j2
+    dest: /etc/firewalld/services/k8s-worker.xml
+    mode: 644
+
+- name: Enable Firewalld
+  service:
+    name: firewalld
+    state: restarted
+    enabled: yes  
+
+- name: set default firewalld Zone to DMZ
+  shell: firewall-cmd --set-default-zone=dmz
+
+- name: enable HTTP firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=http --permanent
+
+- name: enable HTTPS firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=https --permanent
+
+- name: enable SSH firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
+
+- name: enable docker manager firewall rules
+  shell: firewall-cmd --zone=dmz --add-service=k8s-master --permanent
+  when: "inventory_hostname in groups['k8s_masters']"
+
+- name: enable docker worker firewall rules
+  shell: firewall-cmd --zone=dmz --add-k8s-worker --permanent
+  when: "inventory_hostname in groups['k8s_workers']"
+
+- name: reload the firewalld rules
+  shell: firewall-cmd --reload
+
+- name: list the active firewalld rules
+  shell: firewall-cmd --list-all    
+  register: firewalld_rules
+
+- debug: msg="{{ firewalld_rules.stdout_lines }}"
