@@ -7,7 +7,7 @@ set -o pipefail
 export PATH=/usr/local/bin:$PATH
 
 echo '>>> Installing pip3 (and dependencies)'
-dnf install -y python36 python36-devel python36-setuptools python36-pip
+dnf install -y python3 python3-devel python3-pip
 dnf install -y libffi-devel openssl-devel gcc redhat-rpm-config open-vm-tools
 
 python3 --version
