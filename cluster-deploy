@@ -19,7 +19,7 @@ function esxi_deploy () {
   echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
   echo
   echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-  sudo -H pip install passlib
+  sudo -H pip3 install passlib
 
   if [ -z $CB_NODE_ROOT_PASSWORD ]; then
     echo
@@ -40,7 +40,7 @@ function esxi_deploy () {
     echo -e "Using cluster node root password found in package .passwords"
   fi
   PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ROOT_PASSWORD}')"
-  TARGET_ROOT_PASSWORD_HASH=`sudo python -c "${PYTHON_CMD}"`
+  TARGET_ROOT_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   
   if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
     if [ -z $CB_NODE_ADMIN_PASSWORD ]; then
@@ -62,7 +62,7 @@ function esxi_deploy () {
       echo -e "Using cluster node ${REMOTE_USER} password found in package .passwords"
     fi
     PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ADMIN_PASSWORD}')"
-    TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python -c "${PYTHON_CMD}"`
+    TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   fi 
 
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"

@@ -2,10 +2,10 @@
 Packer builds VMware cluster nodes in **CentOS 7** for use in DC/OS & Swarm Clusters.
 
 ## Requirements
-  - Packer 1.0.4+ (brew install/upgrade packer)
-  - VMware (Fusion Pro 8+/ Workstation Pro 12+)
+  - Packer 1.3.5+ (brew install/upgrade packer)
+  - VMware (Fusion Pro 10+/ Workstation Pro 14+)
   - VMware's [ovftool](https://my.vmware.com/web/vmware/details?downloadGroup=OVFTOOL420-OSS&productId=614)  in $PATH
-  - Ansible 2.3+ (brew install/upgrade ansible)
+  - Ansible 2.5+ (brew install/upgrade ansible)
 
 > Note: To save time you may want to seed the __iso__ folder with the respective iso files used in the creation of CentOS or RHEL based VMs.  Simply download them and place them in the __iso__ folder. Packer will download them on demand if they don't exist already in the folder.
 
@@ -28,12 +28,12 @@ This is post-processed using **ovftool** into a single file OVA template located
 
 ## Provisioning Summary
 ### CentOS 7
-The CentOS 7 VM is provisioned to be used as a DC/OS node but is also suitable for Docker Swarm.
+The CentOS 7 VM is provisioned to be used as a DC/OS node but is also suitable for Docker Swarm and Kubernetes.
 
 - Open VM Tools
 - Ansible (used for provisioning)
-  - Python 2.7+
-  - Pip 8.1+
+  - Python 3.4+
+  - Pip3 8.1+
   - Ansible 2.3+
 - CentOS
   - Latest CentOS 7+ kernel & packages

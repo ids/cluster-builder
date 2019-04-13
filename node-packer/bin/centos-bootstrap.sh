@@ -27,16 +27,25 @@ yum makecache fast
 echo '>>> Cleaning yum cache'
 yum clean all
 
-echo '>>> Installing pip (and dependencies)'
-yum install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config
+export PATH=/usr/local/bin:$PATH
 
-echo '>>> Upgrading pip'
-pip install --upgrade pip
+echo '>>> Installing pip3 (and dependencies)'
+yum install -y python36 python36-devel python36-setuptools python36-pip
+yum install -y libffi-devel openssl-devel gcc redhat-rpm-config
+
+python3 --version
+which pip3
+pip3 --version
+
+pip3 install --upgrade pip
 
 # Avoid bug in default python cryptography library
 # [WARNING]: Optional dependency 'cryptography' raised an exception, falling back to 'Crypto'
 echo '>>> Upgrading python cryptography library'
-pip install --upgrade cryptography
+pip3 install --upgrade cryptography
 
 echo '>>> Installing Ansible'
-pip install ansible==2.7.8
+pip3 install ansible==2.7.8
+
+echo '>>> Ansible Should be Using Python3'
+ansible --version
