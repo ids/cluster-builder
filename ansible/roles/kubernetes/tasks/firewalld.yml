@@ -56,15 +56,6 @@
   shell: firewall-cmd --zone=dmz --add-service=k8s-worker --permanent
   when: "'k8s_workers' in group_names"
 
-- name: enable firewalld vxlan port for flanneld
-  firewalld:
-    immediate: true
-    port: 8472/udp
-    permanent: true
-    state: enabled
-  # in case this is also a node where firewalld turned off
-  ignore_errors: yes
-
   # unfortunately, the ansible firewalld module doesn't support direct rules so
   # we have to manually invoke firewall-cmd
 - name: open flanneld subnet traffic
@@ -90,15 +81,6 @@
            -o flannel.1 -j ACCEPT -m comment --comment "flannel subnet"
   # in case this is also a node where firewalld turned off
   ignore_errors: yes
-
-- name: enable firewalld port for the cadvisor
-  firewalld:
-    immediate: true
-    port: 4194/tcp
-    permanent: true
-    state: enabled
-  ignore_errors: yes
-  when: open_cadvisor_port
 
 # this is needed if the kube-proxy is running in userspace mode
 - name: open redirected service traffic
