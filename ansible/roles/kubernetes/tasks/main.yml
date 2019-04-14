@@ -34,15 +34,15 @@
     state: started
     enabled: yes
 
-- name: configure firewalld for kubernetes
-  include: firewalld.yml
-  run_once: true
+#- name: configure firewalld for kubernetes
+#  include: firewalld.yml
+#  run_once: true
 
-#- name: disable firewalld 
-#  service:
-#    name: firewalld
-#    state: stopped
-#    enabled: no
+- name: disable firewalld 
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
 
 - name: turn swap off
   shell: swapoff -a

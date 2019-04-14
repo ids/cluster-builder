@@ -12,6 +12,12 @@
     mode: 644
   when: "'k8s_workers' in group_names"
 
+- name: Install the iSCSI Service definition
+  template:
+    src: templates/firewalld/iscsi.j2
+    dest: /etc/firewalld/services/iscsi.xml
+    mode: 644
+
 - name: Enable Firewalld
   service:
     name: firewalld
@@ -29,6 +35,18 @@
 
 - name: enable SSH firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
+
+#- name: enable NFS firewalld rule
+#  shell: firewall-cmd --zone=dmz --add-service=nfs --permanent
+
+#- name: enable Mountd firewalld rule
+#  shell: firewall-cmd --zone=dmz --add-service=mountd --permanent
+
+#- name: enable RPC Bind firewalld rule
+#  shell: firewall-cmd --zone=dmz --add-service=rpc-bind --permanent
+
+#- name: enable iSCSI firewalld rule
+#  shell: firewall-cmd --zone=dmz --add-service=iscsi --permanent
 
 - name: enable master firewall rules
   shell: firewall-cmd --zone=dmz --add-service=k8s-master --permanent
