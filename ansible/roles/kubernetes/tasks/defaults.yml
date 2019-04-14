@@ -1,6 +1,6 @@
 - name: set k8s_version default
   set_fact:
-    k8s_version: 1.13.*
+    k8s_version: 1.14.*
   run_once: true
   when: k8s_version is undefined
 
@@ -9,19 +9,19 @@
 
 - name: set k8s_semantic_version default for 1.14
   set_fact:
-    k8s_semantic_version: 1.14.0
+    k8s_semantic_version: 1.14.1
   run_once: true
   when: k8s_version == "1.14.*"
 
 - name: set k8s_semantic_version default for 1.13
   set_fact:
-    k8s_semantic_version: 1.13.4
+    k8s_semantic_version: 1.13.5
   run_once: true
   when: k8s_version == "1.13.*"
 
 - name: set k8s_semantic_version default
   set_fact:
-    k8s_semantic_version: 1.13.4
+    k8s_semantic_version: 1.13.5
   run_once: true
   when: k8s_semantic_version is undefined
 
