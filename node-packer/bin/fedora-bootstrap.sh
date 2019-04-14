@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 echo '>>> Installing pip (and dependencies)'
-dnf install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config open-vm-tools libselinux-python
+dnf install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config open-vm-tools
 
 echo '>>> Upgrading pip'
 pip install --upgrade pip

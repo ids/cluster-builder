@@ -28,7 +28,7 @@ echo '>>> Cleaning yum cache'
 yum clean all
 
 echo '>>> Installing pip (and dependencies)'
-yum install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config
+yum install -y python-devel libffi-devel openssl-devel gcc python-pip redhat-rpm-config open-vm-tools
 
 echo '>>> Upgrading pip'
 pip install --upgrade pip
