@@ -10,7 +10,7 @@
     src: templates/firewalld/k8s-worker.j2
     dest: /etc/firewalld/services/k8s-worker.xml
     mode: 644
-  when: "'k8s_masters' in group_names"
+  when: "'k8s_workers' in group_names"
 
 - name: Enable Firewalld
   service:
