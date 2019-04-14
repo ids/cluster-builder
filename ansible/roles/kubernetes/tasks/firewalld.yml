@@ -35,7 +35,7 @@
   when: "'k8s_masters' in group_names"
 
 - name: enable worker firewall rules
-  shell: firewall-cmd --zone=dmz --add-k8s-worker --permanent
+  shell: firewall-cmd --zone=dmz --add-service=k8s-worker --permanent
   when: "'k8s_workers' in group_names"
 
 - name: reload the firewalld rules
