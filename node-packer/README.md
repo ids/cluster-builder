@@ -11,6 +11,9 @@ Packer builds VMware cluster nodes in **CentOS 7** for use in DC/OS & Swarm Clus
 
 [CentOS7 ISO Download](http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso)
 
+
+[Fedora 29 ISO Download](https://download.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/iso/Fedora-Server-dvd-x86_64-29-1.2.iso)
+
 ## Usage
 > Make sure to create **keys/authorized_keys** before you run build.  This is installed in the **root** account of the vm.  Provisioning scripts that use this image are based on passwordless ssh.
 
@@ -20,36 +23,10 @@ To build the vmx and ova node image use the wrapper script and specify the type:
 
     bash build [centos7]
 
-
 ## Output
-The builder creates a VMX in the respective **output_**<centos7>**_vmx** folder.
+The builder creates a VMX in the respective **output_**<image>**_vmx** folder .
 
 This is post-processed using **ovftool** into a single file OVA template located in the **output_ova** folder.
-
-## Provisioning Summary
-### CentOS 7
-The CentOS 7 VM is provisioned to be used as a DC/OS node but is also suitable for Docker Swarm.
-
-- Open VM Tools
-- Ansible (used for provisioning)
-  - Python 2.7+
-  - Pip 8.1+
-  - Ansible 2.3+
-- CentOS
-  - Latest CentOS 7+ kernel & packages
-  - Enable Overlay file system
-  - Disable kdump
-- DC/OS / Swarm Node Dependencies
-  - Docker 17.05 w/ OverlayFS
-  - curl, bash, ping, tar, xz, unzip, ipset
-  - Disable firewalld
-  - Disable IPv6
-  - Cache docker images: nginx, zookeeper, registry
-- Debug
-  - jq
-  - probe
-  - net-utils
-- Zero out free space to improve image compression
 
 ## Networking
 Default approach is to use DHCP to reserve addresses by MAC, and then statically assign IPs as needed. The OVA template has the primary NIC set for DHCP on boot.
@@ -63,9 +40,6 @@ These OVA images are the first stage of a deployment workflow:
 
 1] Generate OVA cluster templates with Packer (this stage)
 2] Use **Ansible** to deploy your VM instances and configure your cluster
-
-> See https://github.com/ids/cluster-builder.
-
 3] Continue to use **Ansible** to manage and maintain your cluster.
 
 > The combination of Git + Packer + Ansible should ensure that all configuration is documented and repeatable, with no manual or ad-hoc configuration.
