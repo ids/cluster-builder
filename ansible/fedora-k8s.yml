@@ -79,3 +79,12 @@
     - debug: msg="{{ iscsi_podv_cmd.stdout_lines }}"
       run_once: true
       when: targetd_server is defined 
+
+    - name: generate the client test script
+      local_action:
+        module: template
+        src: templates/test-{{ cluster_type }}.j2
+        dest: ../clusters/{{ cluster_pkg_folder }}/test-cluster
+        mode: 0766
+      become: false
+      run_once: true
