@@ -1,24 +1,24 @@
-- name: Install the K8s Master Firewall Service definition
+- name: install the K8s Master Firewall Service definition
   template:
     src: templates/firewalld/k8s-master.j2
     dest: /etc/firewalld/services/k8s-master.xml
     mode: 644
   when: "'k8s_masters' in group_names"
 
-- name: Install the K8s Worker Firewall Service definition
+- name: install the K8s Worker Firewall Service definition
   template:
     src: templates/firewalld/k8s-worker.j2
     dest: /etc/firewalld/services/k8s-worker.xml
     mode: 644
   when: "'k8s_workers' in group_names"
 
-- name: Install the iSCSI Service definition
+- name: install the iSCSI Service definition
   template:
     src: templates/firewalld/iscsi.j2
     dest: /etc/firewalld/services/iscsi.xml
     mode: 644
 
-- name: Enable Firewalld
+- name: enable firewalld
   service:
     name: firewalld
     state: restarted
@@ -36,17 +36,17 @@
 - name: enable SSH firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
 
-#- name: enable NFS firewalld rule
-#  shell: firewall-cmd --zone=dmz --add-service=nfs --permanent
+- name: enable NFS firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=nfs --permanent
 
-#- name: enable Mountd firewalld rule
-#  shell: firewall-cmd --zone=dmz --add-service=mountd --permanent
+- name: enable Mountd firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=mountd --permanent
 
-#- name: enable RPC Bind firewalld rule
-#  shell: firewall-cmd --zone=dmz --add-service=rpc-bind --permanent
+- name: enable RPC Bind firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=rpc-bind --permanent
 
-#- name: enable iSCSI firewalld rule
-#  shell: firewall-cmd --zone=dmz --add-service=iscsi --permanent
+- name: enable iSCSI firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=iscsi --permanent
 
 - name: enable master firewall rules
   shell: firewall-cmd --zone=dmz --add-service=k8s-master --permanent
@@ -56,6 +56,73 @@
   shell: firewall-cmd --zone=dmz --add-service=k8s-worker --permanent
   when: "'k8s_workers' in group_names"
 
+- name: enable firewalld vxlan port for flanneld
+  firewalld:
+    immediate: true
+    port: 8472/udp
+    permanent: true
+    state: enabled
+  # in case this is also a node where firewalld turned off
+  ignore_errors: yes
+
+  # unfortunately, the ansible firewalld module doesn't support direct rules so
+  # we have to manually invoke firewall-cmd
+- name: open flanneld subnet traffic
+  command: /bin/firewall-cmd --direct --add-rule ipv4 filter FORWARD 1
+           -i flannel.1 -j ACCEPT -m comment --comment "flannel subnet"
+  # in case this is also a node where firewalld turned off
+  ignore_errors: yes
+
+- name: save flanneld subnet traffic
+  command: /bin/firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 1
+           -i flannel.1 -j ACCEPT -m comment --comment "flannel subnet"
+  # in case this is also a node where firewalld turned off
+  ignore_errors: yes
+
+- name: open flanneld to DNAT'ed traffic
+  command: /bin/firewall-cmd --direct --add-rule ipv4 filter FORWARD 1
+           -o flannel.1 -j ACCEPT -m comment --comment "flannel subnet"
+  # in case this is also a node where firewalld turned off
+  ignore_errors: yes
+
+- name: save flanneld to DNAT'ed traffic
+  command: /bin/firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 1
+           -o flannel.1 -j ACCEPT -m comment --comment "flannel subnet"
+  # in case this is also a node where firewalld turned off
+  ignore_errors: yes
+
+- name: enable firewalld port for the cadvisor
+  firewalld:
+    immediate: true
+    port: 4194/tcp
+    permanent: true
+    state: enabled
+  ignore_errors: yes
+  when: open_cadvisor_port
+
+# this is needed if the kube-proxy is running in userspace mode
+- name: open redirected service traffic
+  command: /bin/firewall-cmd --direct --add-rule ipv4 filter INPUT 1
+           -i docker0 -j ACCEPT -m comment --comment "kube-proxy redirects"
+  ignore_errors: yes
+
+# this is needed if the kube-proxy is running in userspace mode
+- name: save redirected service traffic
+  command: /bin/firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 1
+           -i docker0 -j ACCEPT -m comment --comment "kube-proxy redirects"
+  ignore_errors: yes
+
+# this is needed if the kube-proxy is running in iptables mode
+- name: open DNAT'ed service traffic
+  command: /bin/firewall-cmd --direct --add-rule ipv4 filter FORWARD 1
+           -o docker0 -j ACCEPT -m comment --comment "docker subnet"
+  ignore_errors: yes
+
+# this is needed if the kube-proxy is running in iptables mode
+- name: save DNAT'ed service traffic
+  command: /bin/firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD 1
+           -o docker0 -j ACCEPT -m comment --comment "docker subnet"
+  ignore_errors: yes
 - name: reload the firewalld rules
   shell: firewall-cmd --reload
 
