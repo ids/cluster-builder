@@ -10,6 +10,7 @@
 
   roles:
   - role: common
+  - role: common-cluster
   - role: centos
   - role: kubernetes
   - role: iscsi-provisioner

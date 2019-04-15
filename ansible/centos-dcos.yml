@@ -11,6 +11,7 @@
 
   roles:
   - role: common
+  - role: common-cluster
   - role: centos
   - role: dcos
   

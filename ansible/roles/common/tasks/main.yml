@@ -133,12 +133,6 @@
     vm_folder_name: "{{ inventory_hostname }}"
   when: platform == "linux"
 
-- name: ensure all inventory host names resolve via DNS
-  local_action:
-    module: shell
-    _raw_params: "host {{ inventory_hostname }}"
-  become: false
-
 - name: set overwrite_existing_vms default
   set_fact:
     overwrite_existing_vms: false
