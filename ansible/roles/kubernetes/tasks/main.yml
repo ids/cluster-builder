@@ -36,6 +36,7 @@
 
 - name: configure firewalld for kubernetes
   include: firewalld.yml
+  when: firewalld_disabled is undefined or firewalld_disabled|bool != True
 
 - name: disable firewalld (optional)
   service:
