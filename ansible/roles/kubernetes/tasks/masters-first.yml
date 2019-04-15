@@ -126,7 +126,7 @@
   fetch:
     src: /etc/kubernetes/pki/{{ item }}
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
-    flat: no
+    flat: yes
   become: true   
   with_items:
     - apiserver.crt  
