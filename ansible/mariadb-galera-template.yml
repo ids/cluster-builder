@@ -188,7 +188,7 @@
     become: false
     when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
-  - name: generate the 3-nodes galera native LB manifest
+  - name: generate the 5-nodes galera native LB manifest
     local_action:
       module: template
       src: templates/galera/5-node/galera-5-native-lb.j2
@@ -196,6 +196,7 @@
       mode: 0766
     run_once: true
     become: false
+    when: 'galera_cluster_node4_iscsi_targetportal is defined'
 
   - name: generate the 3-node galera seed manifest
     local_action:
