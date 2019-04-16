@@ -5,3 +5,6 @@
 - name: configure chronyd
   include: chronyd.yml
   
+- name: configure kafka network/kernel tuning
+  include: kafka-sysctl.yml
+  when: kafka_kernel_tuning is defined and kafka_kernel_tuning|bool == True
