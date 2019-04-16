@@ -146,7 +146,7 @@
 
 - name: set k8s_firewalld_enabled default
   set_fact:
-    k8s_firewalld_enabled: false
+    k8s_firewalld_enabled: true
   run_once: true
   when: k8s_firewalld_enabled is undefined
 
