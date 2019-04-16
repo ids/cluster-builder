@@ -71,7 +71,7 @@ spec:
         app: elasticsearch
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: do-block-storage
+      storageClassName: iscsi-targetd-vg-targetd
       resources:
         requests:
-          storage: 100Gi
+          storage: 10Gi
