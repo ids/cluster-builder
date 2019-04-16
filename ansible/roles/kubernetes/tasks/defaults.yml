@@ -144,3 +144,12 @@
 - debug: msg="{{ k8s_coredns_loop_check_disable }}"
   run_once: true
 
+- name: set firewalld_enabled default
+  set_fact:
+    firewalld_enabled: false
+  run_once: true
+  when: firewalld_enabled is undefined
+
+- debug: msg="{{ firewalld_enabled }}"
+  run_once: true
+

@@ -34,16 +34,16 @@
     state: started
     enabled: yes
 
-- name: configure firewalld for kubernetes
+- name: configure firewalld for kubernetes (optional)
   include: firewalld.yml
-  when: firewalld_disabled is undefined or firewalld_disabled|bool != True
+  when: firewalld_enabled|bool == True
 
-- name: disable firewalld (optional)
+- name: disable firewalld
   service:
     name: firewalld
     state: stopped
     enabled: no
-  when: firewalld_disabled is defined and firewalld_disabled|bool == True
+  when: firewalld_enabled|bool != True
 
 - name: turn swap off
   shell: swapoff -a
