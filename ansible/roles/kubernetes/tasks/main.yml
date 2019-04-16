@@ -36,14 +36,14 @@
 
 - name: configure firewalld for kubernetes (optional)
   include: firewalld.yml
-  when: firewalld_enabled|bool == True
+  when: k8s_firewalld_enabled|bool == True
 
 - name: disable firewalld
   service:
     name: firewalld
     state: stopped
     enabled: no
-  when: firewalld_enabled|bool != True
+  when: k8s_firewalld_enabled|bool != True
 
 - name: turn swap off
   shell: swapoff -a
