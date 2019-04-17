@@ -32,5 +32,5 @@
   shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
   register: pending_pods
   until: "pending_pods.stdout == '0'"
-  retries: 50
+  retries: 75
   delay: 10    

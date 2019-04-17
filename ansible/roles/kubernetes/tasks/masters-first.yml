@@ -16,7 +16,7 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.14")
 
-- name: initialize cluster on first master pre 1.14
+- name: initialize cluster on first master (pre 1.14)
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
@@ -30,7 +30,7 @@
   ignore_errors: false
   when: k8s_version is search("1.13") and cluster_type == 'fedora-k8s'
 
-- name: initialize cluster on first master 1.14+
+- name: initialize cluster on first master (1.14+)
   shell: "kubeadm init --config kube-adm.yml --experimental-upload-certs > /tmp/kube-status"
   args:
     chdir: /root
@@ -44,7 +44,7 @@
 - name: kubeadm output
   debug: msg="{{ kubeadm_out.stdout_lines }}"
 
-- name: get worker join command pre 1.14
+- name: get worker join command (pre 1.14)
   shell: "cat /tmp/kube-status | sed -n '/discovery-token-ca-cert-hash/,$p' "
   register: kubeadm_join_cmd
   when: k8s_version is search("1.13")
@@ -57,7 +57,24 @@
   shell: "echo '{{ kubeadm_join_cmd.stdout }}' > /root/join_cmd "
   when: k8s_version is search("1.13") 
 
-- name: get master join command 1.14+
+- name: create master_join_cmd
+  shell: echo " --experimental-control-plane" | cat /root/join_cmd - | sed 's/\\n//g' | tr -d '\n' | xargs > /root/master_join_cmd
+  args:
+    chdir: /root
+  ignore_errors: false
+  register: master_join
+  when: k8s_version is search("1.13")
+
+- name: list master join command
+  shell: "cat /root/master_join_cmd "
+  register: kubeadm_master_join_cmd
+  when: k8s_version is search("1.13") 
+
+- name: kubeadm master join command
+  debug: msg="{{ kubeadm_master_join_cmd.stdout }}"
+  when: k8s_version is search("1.13") 
+
+- name: get master join command
   shell: "cat /tmp/kube-status | awk '/control-plane node/ {for(i=1; i<=5; i++) {getline; print}}' | tr -d '\n' | xargs "
   register: kubeadm_master_join_cmd
   when: k8s_version is search("1.14") 
@@ -66,8 +83,8 @@
   debug: msg="{{ kubeadm_master_join_cmd.stdout }}"
   when: k8s_version is search("1.14") 
 
-- name: get worker join command 1.14+
-  shell: "cat /tmp/kube-status | awk '/worker node/{y=1;next}y' | tr -d '\n' | xargs "
+- name: get worker join command
+  shell: "cat /tmp/kube-status | awk '/worker node/{y=1;next}y' | tr -d '\n' |   sed 's/\\n//g' | xargs "
   register: kubeadm_join_cmd
   when: k8s_version is search("1.14") 
 
@@ -99,7 +116,14 @@
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
   become: true   
-  when: k8s_version is search("1.14") 
+#  when: k8s_version is search("1.14") 
+
+- name: fetch the admin.conf file
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+  become: true   
 
 - name: fetch the kube-adm.yml from the first master
   fetch:
@@ -122,6 +146,9 @@
 - name: setup the PKI directory
   shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
 
+- name: setup the PKI etcd directory
+  shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/etcd"
+
 - name: fetch the PKI certs to the local {{ cluster_pkg_folder }}/pki
   fetch:
     src: /etc/kubernetes/pki/{{ item }}
@@ -129,19 +156,21 @@
     flat: yes
   become: true   
   with_items:
-    - apiserver.crt  
-    - apiserver-kubelet-client.crt  
     - ca.crt  
-    - front-proxy-ca.crt  
-    - front-proxy-client.crt  
-    - sa.key
-    - apiserver.key  
-    - apiserver-kubelet-client.key  
     - ca.key  
+    - front-proxy-ca.crt  
     - front-proxy-ca.key  
-    - front-proxy-client.key  
+    - sa.key
     - sa.pub
-
+    - etcd/ca.crt  
+    - etcd/ca.key  
+#    - front-proxy-client.crt  
+#    - front-proxy-client.key  
+#    - apiserver.crt  
+#    - apiserver-kubelet-client.crt  
+#    - apiserver.key  
+#    - apiserver-kubelet-client.key  
+ 
 - name: setup Kubectl configuration on first master
   shell: kubectl get nodes
   register: nodes_out

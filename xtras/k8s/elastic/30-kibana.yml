@@ -10,6 +10,7 @@ spec:
   - port: 5601
   selector:
     app: kibana
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment

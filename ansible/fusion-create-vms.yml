@@ -285,6 +285,7 @@
 
   - name: view DHCPD block
     debug: msg="{{ vmware_dhcp_control_block.stdout_lines }}"
+    run_once: true
 
 #  - name: Update Windows vmnet file
 #    local_action:

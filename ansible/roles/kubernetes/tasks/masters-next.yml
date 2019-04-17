@@ -1,6 +1,9 @@
 - name: ensure pki folder exists
   shell: mkdir -p /etc/kubernetes/pki/
 
+- name: ensure pki/etcd folder exists
+  shell: mkdir -p /etc/kubernetes/pki/etcd
+
 - name: copy the PKI keys to the other masters
   copy:
     dest: /etc/kubernetes/pki/{{ item }}
@@ -9,12 +12,13 @@
   become: true   
   with_items:
     - sa.key
-    - apiserver.key  
-    - apiserver-kubelet-client.key  
+    - sa.pub  
     - ca.key  
     - front-proxy-ca.key  
-    - front-proxy-client.key  
-    - sa.pub
+    - etcd/ca.key
+ #   - front-proxy-client.key  
+ #   - apiserver.key  
+ #   - apiserver-kubelet-client.key  
   when: k8s_version is search("1.13")
 
 - name: copy the PKI certs to the other masters
@@ -24,11 +28,12 @@
     mode: 644
   become: true   
   with_items:
-    - apiserver.crt  
-    - apiserver-kubelet-client.crt  
     - ca.crt  
     - front-proxy-ca.crt  
-    - front-proxy-client.crt  
+    - etcd/ca.crt
+#    - front-proxy-client.crt  
+#    - apiserver.crt  
+#    - apiserver-kubelet-client.crt  
   when: k8s_version is search("1.13")
 
 - name: generate the kubeadm 1.13 yaml configuration
@@ -37,32 +42,41 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.13")
 
-- name: join other master pre 1.14
-  shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
-  args:
-    chdir: /root
-  ignore_errors: false
-  register: master_join
-  when: k8s_version is search("1.13") 
-
-- name: master join result
-  debug: msg="{{ master_join.stdout_lines }}"
-  when: k8s_version is search("1.13")
-
 - name: copy the master_join_cmd to the other masters
   copy:
     dest: /root/master_join_cmd
     src: ../clusters/{{ cluster_pkg_folder }}/master_join_cmd
     mode: 766
   become: true   
-  when: k8s_version is search("1.14")
+ 
+- name: copy the admin.conf to the other masters
+  copy:
+    dest: /etc/kubernetes/
+    src: ../clusters/{{ cluster_pkg_folder }}/admin.conf
+    mode: 766
+  become: true   
+
+#- name: join other master pre 1.14
+#  shell: "kubeadm init --config kube-adm.yml  > /tmp/kube-status"
+#  args:
+#    chdir: /root
+#  ignore_errors: false
+#  register: master_join
+#  when: k8s_version is search("1.13") 
+
+- name: start kubelet on other master nodes
+  service:
+    name: kubelet
+    state: stopped
+    enabled: yes
+  become: true
 
 - name: join other master to cluster
   shell: "/root/master_join_cmd"
   become: true   
   register: master_join
-  when: k8s_version is search("1.14")
+#  when: k8s_version is search("1.14")
 
 - name: master join result
   debug: msg="{{ master_join.stdout_lines }}"
-  when: k8s_version is search("1.14")
+#  when: k8s_version is search("1.14")

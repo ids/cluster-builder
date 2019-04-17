@@ -1,18 +1,18 @@
-- name: install the K8s Master Firewall Service definition
+- name: install the K8s master firewall service definition
   template:
     src: templates/firewalld/k8s-master.j2
     dest: /etc/firewalld/services/k8s-master.xml
     mode: 644
   when: "'k8s_masters' in group_names"
 
-- name: install the K8s Worker Firewall Service definition
+- name: install the K8s worker firewall service definition
   template:
     src: templates/firewalld/k8s-worker.j2
     dest: /etc/firewalld/services/k8s-worker.xml
     mode: 644
   when: "'k8s_workers' in group_names"
 
-- name: install the iSCSI Service definition
+- name: install the iscsi service definition
   template:
     src: templates/firewalld/iscsi.j2
     dest: /etc/firewalld/services/iscsi.xml
@@ -27,25 +27,25 @@
 - name: set default firewalld Zone to DMZ
   shell: firewall-cmd --set-default-zone=dmz
 
-- name: enable HTTP firewalld rule
+- name: enable http firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=http --permanent
 
-- name: enable HTTPS firewalld rule
+- name: enable https firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=https --permanent
 
-- name: enable SSH firewalld rule
+- name: enable ssh firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
 
-- name: enable NFS firewalld rule
+- name: enable nfs firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=nfs --permanent
 
-- name: enable Mountd firewalld rule
+- name: enable mountd firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=mountd --permanent
 
-- name: enable RPC Bind firewalld rule
+- name: enable rpc Bind firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=rpc-bind --permanent
 
-- name: enable iSCSI firewalld rule
+- name: enable iscsi firewalld rule
   shell: firewall-cmd --zone=dmz --add-service=iscsi --permanent
 
 - name: enable master firewall rules
