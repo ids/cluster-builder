@@ -59,7 +59,9 @@ spec:
         effect: NoSchedule
       containers:
       - name: fluentd
-        image: fluent/fluentd-kubernetes-daemonset:v0.12-debian-elasticsearch
+#        image: fluent/fluentd-kubernetes-daemonset:v1.3-debian-elasticsearch
+        image: idstudios/fluentd-k8s-ds-elastic:latest
+        imagePullPolicy: Always
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
             value: "elasticsearch.kube-logging.svc.cluster.local"
@@ -67,6 +69,8 @@ spec:
             value: "9200"
           - name: FLUENT_ELASTICSEARCH_SCHEME
             value: "http"
+          - name: FLUENT_ELASTICSEARCH_SSL_VERIFY
+            value: "false"            
           - name: FLUENT_UID
             value: "0"
         resources:
