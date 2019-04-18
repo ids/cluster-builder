@@ -1,3 +1,25 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: kube-logging
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: elasticsearch
+  namespace: kube-logging
+  labels:
+    app: elasticsearch
+spec:
+  selector:
+    app: elasticsearch
+  ports:
+    - port: 9200
+      name: rest
+    - port: 9300
+      name: inter-node
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

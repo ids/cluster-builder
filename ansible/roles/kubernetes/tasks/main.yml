@@ -28,6 +28,17 @@
   register: result
   until: result.rc is defined and result.rc == 0
 
+- name: re-configure the /etc/sysconfig/docker
+  lineinfile:
+    path: /etc/sysconfig/docker
+    regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
+    line: "OPTIONS='--selinux-enabled --signature-verification=false'"
+
+- name: configure the default k8s docker daemon.json with json-file logging
+  template:
+    src: templates/k8s-docker-daemon.j2
+    dest: /etc/docker/daemon.json
+
 - name: start docker daemon
   service:
     name: docker

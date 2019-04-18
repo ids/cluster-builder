@@ -44,8 +44,8 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 10. [Kubernetes Dashboard](#kubernetes-dashboard)
 11. [Change Cluster Password](#change-cluster-password)
 12. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-13. [VMware Docker Volume Storage Driver](#vmware-docker-volume-storage-driver)
-14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+13. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+14. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
 15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
 17. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
@@ -449,26 +449,6 @@ __Eg.__
 
 	$ bash cluster-control eg/demo-swarm suspend
 
-
-### VMware Docker Storage Volume Driver Plugin
-
-In order to make use of the VMware Volume Driver Plugin (vDVS) for persistent data volume management the VIB must be installed on all of the ESX servers used for the cluster.
-
-Download the [VIB](https://bintray.com/vmware/vDVS/download_file?file_path=VMWare_bootbank_esx-vmdkops-service_0.19.641f741-0.0.1.vib) for the vDVS.
-
-
-It is easiest to download the VIB to a shared datastore accessible to all of the ESX servers, and then copy it locally to the /tmp folder during each install.
-
-> Make sure to put the VIB in tmp on the ESX server and reference it absolutely:
-
-__Eg.__
-
-	esxcli software vib install --no-sig-check -v /tmp/VMWare_bootbank_esx-vmdkops-service_0.20.15f5e1d-0.0.1.vib
-
-The plugin is automatically installed as part of the cluster-builder swarm provisioning process. However, this can also be manually done on cluster nodes with the following command:
-
-	docker plugin install --grant-all-permissions --alias vsphere vmware/docker-volume-vsphere:latest
-
 ### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
@@ -511,6 +491,85 @@ __Eg.__
   ansible-playbook -i clusters/eg/esxi-swarm/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
+
+### Kubernetes ElasticSearch Logging
+As of release __19.04__ all _Kubernetes_ clusters are configured for `json-file` logging to support log aggregation using `fluentbit`.
+
+> __Note__ that this configuration is designed to work OOTB with the __Targetd Storage Appliance__ and the __MetalLB__ load balancer.  If these are not part of the __cluster-builder__ configuration, the installation will need to be modified.  All logging services are configured to reside in the `kube-logging` namespace.
+
+To install and configure __ElasticSearch__ for log aggregation:
+
+1. Ensure that you have installed the __Targetd Storage Appliance__ and configured your cluster with the `iscsi-provisioner`.  Elastic log data will be stored on __PVCs__ hosted on the appliance.
+
+2. Install the `elastic` stack, configured to use the iscsi storage provider.
+```
+kubectl apply -f xtras/k8s/elastic/elastic.yml
+```
+
+3. Wait for the installation to complete:
+```
+kubectl rollout status sts/es-cluster -n kube-logging
+```
+
+4. Install the `fluent-bit` collector __DaemonSet__:
+```
+kubectl apply -f xtras/k8s/elastic/fluentbit.yml
+```
+
+5. Wait for the `fluent-bit` installation to complete:
+```
+kubectl rollout status ds/fluent-bit -n kube-logging
+```
+
+6. Install `kibana`:
+```
+kubectl apply -f xtras/k8s/elastic/kibana.yml
+```
+
+Verify the assigned __IP Addresses__ for the __ElasticSearch__ and __Kibana__ services:
+
+```
+kubectl get svc -n kube-logging
+```
+
+The output should resemble the following example:
+
+```
+NAME            TYPE           CLUSTER-IP       EXTERNAL-IP       PORT(S)                         AGE
+elasticsearch   LoadBalancer   10.106.48.196    192.168.100.151   9200:31513/TCP,9300:30019/TCP   46m
+kibana          LoadBalancer   10.107.197.119   192.168.100.152   5601:31667/TCP                  37m
+```
+
+You can verify the operation of __ElasticSearch__:
+
+```
+$ curl http://<external-ip>:9200
+
+{
+  "name" : "es-cluster-2",
+  "cluster_name" : "k8s-logs",
+  "cluster_uuid" : "TUAs0QJnTRinewzreumWUA",
+  "version" : {
+    "number" : "6.4.3",
+    "build_flavor" : "oss",
+    "build_type" : "tar",
+    "build_hash" : "fe40335",
+    "build_date" : "2018-10-30T23:17:19.084789Z",
+    "build_snapshot" : false,
+    "lucene_version" : "7.4.0",
+    "minimum_wire_compatibility_version" : "5.6.0",
+    "minimum_index_compatibility_version" : "5.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+
+```
+
+Open __Kibana__ at the external-ip address, on port :5601.
+
+```
+open http://192.168.100.151:5601
+```
 
 ### Kubernetes CI Job Service Accounts
 
