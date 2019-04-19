@@ -1,0 +1,17 @@
+- hosts: all
+  become: false
+  any_errors_fatal: true
+  gather_facts: false
+
+  vars:
+    galera_cluster_folder: "{{ inventory_dir | replace(playbook_dir + '/clusters/', '') }}/galera"
+    galera_cluster_home: "{{ galera_cluster_folder }}/{{ galera_cluster_name }}"
+    drupal_deployment_folder: "{{ inventory_dir | replace(playbook_dir + '/clusters/', '') }}/drupal"
+    drupal_deployment_home: "{{ drupal_deployment_folder}}/{{ drupal_stack_name }}"
+    kube_config_file: "../clusters/{{ cluster_pkg_folder }}/kube-config"
+      
+  roles: 
+    - common
+    - mariadb-galera-template
+    - drupal-template
+    - drupal-stack

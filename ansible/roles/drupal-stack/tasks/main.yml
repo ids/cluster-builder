@@ -1,0 +1,110 @@
+- name: install the galera namespace
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/namespace.yml"
+  become: false
+  run_once: true
+  register: web_ns
+
+- debug: msg="{{ web_ns.stdout_lines }}"
+  run_once: true
+
+- name: install the galera targetd volumes
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/targetd-volumes.yml"
+  become: false
+  run_once: true
+  register: web_targetd
+
+- debug: msg="{{ web_targetd.stdout_lines }}"
+  run_once: true
+
+- name: install the galera seed node
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/seed.yml"
+  become: false
+  run_once: true
+  register: web_seed
+
+- debug: msg="{{ web_seed.stdout_lines }}"
+  run_once: true
+
+- name: waiting for seed deployment to spin up
+  pause:
+    seconds: 60
+
+- name: install the galera nodes
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/nodes.yml"
+  become: false
+  run_once: true
+  register: web_nodes
+
+- debug: msg="{{ web_nodes.stdout_lines }}"
+  run_once: true
+
+- name: waiting for node deployment to spin up
+  pause:
+    seconds: 180
+
+- name: install the galera load balancer
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/galera-native-lb.yml"
+  become: false
+  run_once: true
+  register: web_glb
+
+- debug: msg="{{ web_glb.stdout_lines }}"
+  run_once: true
+
+- name: remove the galera seed
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} delete -f {{ galera_cluster_home}}/3/seed.yml"
+  become: false
+  run_once: true
+  register: web_kill_seed
+
+- debug: msg="{{ web_kill_seed.stdout_lines }}"
+  run_once: true
+
+- name: install drupal
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ drupal_deployment_home}}/drupal.yml"
+  become: false
+  run_once: true
+  register: web_drupal
+
+- debug: msg="{{ web_drupal.stdout_lines }}"
+  run_once: true
+
+- name: scale drupal
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} scale --replicas=3 deploy/{{ drupal_stack_name }}-drupal -n {{ drupal_stack_namespace }}"
+  become: false
+  run_once: true
+  register: web_scale_drupal
+
+- debug: msg="{{ web_scale_drupal.stdout_lines }}"
+  run_once: true
+
+- name: waiting for drupal deployment to spin up
+  pause:
+    seconds: 5
+
+- name: list service addresses
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get svc -n {{ drupal_stack_namespace }}"
+  become: false
+  run_once: true
+  register: web_svc
+
+- debug: msg="{{ web_svc.stdout_lines }}"
+  run_once: true

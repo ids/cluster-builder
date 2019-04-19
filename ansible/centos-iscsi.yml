@@ -13,6 +13,7 @@
   - role: iscsi-provisioner
 
   tasks:
+
     - name: install the iscsi-provisioner secret into the {{ cluster_name }} Kubernetes cluster.
       local_action:
         module: shell
