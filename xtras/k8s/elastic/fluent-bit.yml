@@ -112,7 +112,7 @@ data:
         Index           host-cpu
         Host            ${FLUENT_ELASTICSEARCH_HOST}
         Port            ${FLUENT_ELASTICSEARCH_PORT}
-        Logstash_Prefix host-cpu
+        Logstash_Prefix node-cpu
         Logstash_Format On
         Replace_Dots    On
         Retry_Limit     False
@@ -122,10 +122,10 @@ data:
     [OUTPUT]
         Name            es
         Match           node.mem.*
-        Index           host-mem
+        Index           node-mem
         Host            ${FLUENT_ELASTICSEARCH_HOST}
         Port            ${FLUENT_ELASTICSEARCH_PORT}
-        Logstash_Prefix host-mem
+        Logstash_Prefix node-mem
         Logstash_Format On
         Replace_Dots    On
         Retry_Limit     False
@@ -135,10 +135,10 @@ data:
     [OUTPUT]
         Name            es
         Match           node.sys.*
-        Index           host-sys
+        Index           node-sys
         Host            ${FLUENT_ELASTICSEARCH_HOST}
         Port            ${FLUENT_ELASTICSEARCH_PORT}
-        Logstash_Prefix host-sys
+        Logstash_Prefix node-sys
         Logstash_Format On
         Replace_Dots    On
         Retry_Limit     False
@@ -248,6 +248,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        securityContext:
+          runAsUser: 0
+          # If using Red Hat OpenShift uncomment this:
+          privileged: true
         volumeMounts:
         - name: varlog
           mountPath: /var/log
