@@ -96,7 +96,7 @@ data:
   
     [FILTER]
         Name record_modifier
-        Match host*
+        Match node*
         Record node_name ${FLUENT_NODE_NAME}
 
   output-elasticsearch.conf: |
