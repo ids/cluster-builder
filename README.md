@@ -576,8 +576,6 @@ Look for the following __indexes__ from the `fluent-bit` configuration:
 * __kube-*__, all the container logs from the cluster
 * __node-cpu*__, a stream of node cpu metrics
 * __node-mem*__, a stream of node memory metrics
-* __node-disk*__, a stream of node disk metrics
-
 
 ### Kubernetes CI Job Service Accounts
 
