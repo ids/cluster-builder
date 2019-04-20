@@ -63,6 +63,27 @@ data:
         Skip_Long_Lines   On
         Refresh_Interval  10
 
+    [INPUT]
+        Name            systemd
+        Tag             node.sys.*
+        Systemd_Filter  _SYSTEMD_UNIT=docker.service
+        Systemd_Filter  _SYSTEMD_UNIT=kubelet.service
+        Systemd_Filter  _SYSTEMD_UNIT=sshd.service
+
+    [INPUT]
+        Name          disk
+        Tag           node.disk.*
+        Interval_Sec  1
+        Interval_NSec 0
+
+    [INPUT]
+        Name cpu
+        Tag  node.cpu.*
+
+    [INPUT]
+        Name   mem
+        Tag    node.mem.*
+
   filter-kubernetes.conf: |
     [FILTER]
         Name                kubernetes
@@ -72,19 +93,90 @@ data:
         K8S-Logging.Parser  On
         tls                 Off
         tls.verify          Off
+  
+    [FILTER]
+        Name record_modifier
+        Match host*
+        Record node_name ${FLUENT_NODE_NAME}
 
   output-elasticsearch.conf: |
     [OUTPUT]
         Name            es
-        Match           *
+        Match           kube.*
         Host            ${FLUENT_ELASTICSEARCH_HOST}
         Port            ${FLUENT_ELASTICSEARCH_PORT}
+        Logstash_Prefix kube
         Logstash_Format On
         Replace_Dots    On
         Retry_Limit     False
         tls             Off
         tls.verify      Off
  
+    [OUTPUT]
+        Name            es
+        Match           node.cpu.*
+        Index           host-cpu
+        Host            ${FLUENT_ELASTICSEARCH_HOST}
+        Port            ${FLUENT_ELASTICSEARCH_PORT}
+        Logstash_Prefix host-cpu
+        Logstash_Format On
+        Replace_Dots    On
+        Retry_Limit     False
+        tls             Off
+        tls.verify      Off
+
+    [OUTPUT]
+        Name            es
+        Match           node.mem.*
+        Index           host-mem
+        Host            ${FLUENT_ELASTICSEARCH_HOST}
+        Port            ${FLUENT_ELASTICSEARCH_PORT}
+        Logstash_Prefix host-mem
+        Logstash_Format On
+        Replace_Dots    On
+        Retry_Limit     False
+        tls             Off
+        tls.verify      Off
+
+    [OUTPUT]
+        Name            es
+        Match           node.disk.*
+        Index           host-disk
+        Host            ${FLUENT_ELASTICSEARCH_HOST}
+        Port            ${FLUENT_ELASTICSEARCH_PORT}
+        Logstash_Prefix host-disk
+        Logstash_Format On
+        Replace_Dots    On
+        Retry_Limit     False
+        tls             Off
+        tls.verify      Off
+
+    [OUTPUT]
+        Name            es
+        Match           node.sys.*
+        Index           host-sys
+        Host            ${FLUENT_ELASTICSEARCH_HOST}
+        Port            ${FLUENT_ELASTICSEARCH_PORT}
+        Logstash_Prefix host-sys
+        Logstash_Format On
+        Replace_Dots    On
+        Retry_Limit     False
+        tls             Off
+        tls.verify      Off
+
+    [OUTPUT]
+        Name            es
+        Match           systemd.*
+        Index           systemd
+        Host            ${FLUENT_ELASTICSEARCH_HOST}
+        Port            ${FLUENT_ELASTICSEARCH_PORT}
+        Logstash_Prefix systemd
+        Logstash_Format On
+        Replace_Dots    On
+        Retry_Limit     False
+        tls             Off
+        tls.verify      Off
+
   parsers.conf: |
     [PARSER]
         Name   apache
@@ -171,6 +263,10 @@ spec:
           value: "false"            
         - name: FLUENT_UID
           value: "0"
+        - name: FLUENT_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         volumeMounts:
         - name: varlog
           mountPath: /var/log

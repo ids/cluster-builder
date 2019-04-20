@@ -4,6 +4,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 kubectl apply -f $DIR/elastic.yml
 kubectl rollout status sts/es-cluster -n kube-logging
-kubectl apply -f $DIR/fluentbit.yml
+kubectl apply -f $DIR/fluent-bit.yml
 kubectl rollout status ds/fluent-bit -n kube-logging
 kubectl apply -f $DIR/kibana.yml

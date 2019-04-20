@@ -493,7 +493,7 @@ __Eg.__
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
 ### Kubernetes ElasticSearch Logging
-As of release __19.04__ all _Kubernetes_ clusters are configured for `json-file` logging to support log aggregation using `fluentbit`.
+As of release __19.04__ all _Kubernetes_ clusters are configured for `json-file` logging to support log aggregation using `fluent-bit`.
 
 > __Note__ that this configuration is designed to work OOTB with the __Targetd Storage Appliance__ and the __MetalLB__ load balancer.  If these are not part of the __cluster-builder__ configuration, the installation will need to be modified.  All logging services are configured to reside in the `kube-logging` namespace.
 
@@ -513,7 +513,7 @@ kubectl rollout status sts/es-cluster -n kube-logging
 
 4. Install the `fluent-bit` collector __DaemonSet__:
 ```
-kubectl apply -f xtras/k8s/elastic/fluentbit.yml
+kubectl apply -f xtras/k8s/elastic/fluent-bit.yml
 ```
 
 5. Wait for the `fluent-bit` installation to complete:
@@ -570,6 +570,14 @@ Open __Kibana__ at the external-ip address, on port :5601.
 ```
 open http://192.168.100.151:5601
 ```
+
+Look for the following __indexes__ from the `fluent-bit` configuration:
+
+* __kube-*__, all the container logs from the cluster
+* __node-cpu*__, a stream of node cpu metrics
+* __node-mem*__, a stream of node memory metrics
+* __node-disk*__, a stream of node disk metrics
+
 
 ### Kubernetes CI Job Service Accounts
 
