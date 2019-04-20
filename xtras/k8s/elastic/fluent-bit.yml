@@ -71,12 +71,6 @@ data:
         Systemd_Filter  _SYSTEMD_UNIT=sshd.service
 
     [INPUT]
-        Name          disk
-        Tag           node.disk.*
-        Interval_Sec  1
-        Interval_NSec 0
-
-    [INPUT]
         Name cpu
         Tag  node.cpu.*
 
@@ -132,19 +126,6 @@ data:
         Host            ${FLUENT_ELASTICSEARCH_HOST}
         Port            ${FLUENT_ELASTICSEARCH_PORT}
         Logstash_Prefix host-mem
-        Logstash_Format On
-        Replace_Dots    On
-        Retry_Limit     False
-        tls             Off
-        tls.verify      Off
-
-    [OUTPUT]
-        Name            es
-        Match           node.disk.*
-        Index           host-disk
-        Host            ${FLUENT_ELASTICSEARCH_HOST}
-        Port            ${FLUENT_ELASTICSEARCH_PORT}
-        Logstash_Prefix host-disk
         Logstash_Format On
         Replace_Dots    On
         Retry_Limit     False
