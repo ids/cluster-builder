@@ -1,0 +1,7 @@
+#!/bin/bash
+
+kubectl apply -f elastic.yml
+kubectl rollout status sts/es-cluster -n kube-logging
+kubectl apply -f fluent-bit.yml
+kubectl rollout status ds/fluent-bit -n kube-logging
+kubectl apply -f kibana.yml
