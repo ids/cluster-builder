@@ -26,7 +26,6 @@
    - unzip
    - ipset
    - nfs-utils
-   - iscsi-initiator-utils
    - docker
 
 - name: Make sure the RTC is not local

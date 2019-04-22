@@ -37,7 +37,6 @@
    - nfs-utils
    - yum-plugin-versionlock
    - open-vm-tools
-   - iscsi-initiator-utils
    - docker
 
 - name: Make sure the RTC is not local

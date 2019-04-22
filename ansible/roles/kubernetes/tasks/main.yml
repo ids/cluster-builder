@@ -85,12 +85,12 @@
   register: result
   until: result.rc is defined and result.rc == 0
  
-- name: ensure the iSCSId daemon is not running a
-  shell: systemctl stop iscsid
+#- name: ensure the iSCSId daemon is not running a
+#  shell: systemctl stop iscsid
 
-- name: generate a unique iscsi initiator name on each node
-  shell: iscsi-iname > /etc/iscsi/initiatorname.iscsi
-  become: true 
+#- name: generate a unique iscsi initiator name on each node
+#  shell: iscsi-iname > /etc/iscsi/initiatorname.iscsi
+#  become: true 
 
 - name: read node iscsi initiator value  
   shell: CODE=`cat /etc/iscsi/initiatorname.iscsi` && echo ${CODE//InitiatorName=/}
