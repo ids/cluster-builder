@@ -92,6 +92,12 @@
   shell: iscsi-iname > /etc/iscsi/initiatorname.iscsi
   become: true 
 
+- name: read node iscsi initiator value  
+  shell: CODE=`cat /etc/iscsi/initiatorname.iscsi` && echo ${CODE//InitiatorName=/}
+  register: vm_initiator_code
+
+- debug: msg="{{ vm_initiator_code.stdout }}"
+
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
 
