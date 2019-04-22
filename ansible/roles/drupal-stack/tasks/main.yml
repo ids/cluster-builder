@@ -74,7 +74,7 @@
 - name: install the galera load balancer
   local_action:
     module: shell
-    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/galera-native-lb.yml"
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} apply -f {{ galera_cluster_home}}/3/native-lb.yml"
   become: false
   run_once: true
   register: web_glb
@@ -104,6 +104,23 @@
 - debug: msg="{{ web_drupal.stdout_lines }}"
   run_once: true
 
+- name: waiting for drupal deployment to spin up
+  pause:
+    seconds: 5
+
+- name: wait for drupal to complete
+  local_action:
+    module: shell
+    _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 50
+  delay: 10    
+
+- name: waiting for drupal auto-install to complete
+  pause:
+    seconds: 60
+
 - name: scale drupal
   local_action:
     module: shell
@@ -115,11 +132,11 @@
 - debug: msg="{{ web_scale_drupal.stdout_lines }}"
   run_once: true
 
-- name: waiting for drupal deployment to spin up
+- name: waiting for drupal scale up to begin
   pause:
     seconds: 5
 
-- name: wait for drupal to complete
+- name: wait for drupal scale up to complete
   local_action:
     module: shell
     _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"

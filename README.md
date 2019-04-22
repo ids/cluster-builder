@@ -700,6 +700,56 @@ It is comprised of a __MariaDB Galera Active/Active 3 or 5 Node Database Cluster
 
 For guidance on generating the manifests for your __Cluster Builder__ cluster, deploying the stack, and performing load tests, see the [Drupal K8s Test Stack Guide](docs/drupal-k8s-test-stack.md).
 
+There is also an experimental `ansible-playbook` that generates a standard __3 replica drupal cms + 3 node active/active mariadb galera database__ sample stack.  It generates all of the templates listed in the guide, and installs the stack as per a defined unified configuration file:
+
+Eg. 'drupal-stack.conf'
+
+```
+[all:vars]
+galera_cluster_name=k8s
+galera_cluster_namespace=web
+galera_cluster_docker_image=idstudios/mariadb-galera:10.3
+
+galera_iscsi_storage_class=iscsi-targetd-vg-targetd
+
+galera_cluster_volume_size=3Gi
+
+galera_mysql_user=drupal
+galera_mysql_password=Fender2000
+galera_mysql_root_password=Fender2000
+galera_mysql_database=drupaldb
+galera_xtrabackup_password=Fender2000
+
+drupal_stack_name=k8s
+drupal_stack_namespace=web
+drupal_docker_image=idstudios/drupal:plain
+
+drupal_domain=drupal.onprem.idstudios.io
+
+drupal_files_nfs_server=192.168.1.107
+drupal_files_nfs_path="/idstudios-files-drupal-test"
+drupal_files_volume_size=10Gi
+
+drupal_db_host=k8s-galera-lb
+drupal_db_name=drupaldb 
+drupal_db_user=root 
+drupal_db_password=Fender2000
+
+[drupal_stack]
+127.0.0.1
+```
+
+Store the `drupal-stack.conf` in the __cluster package folder__, and then execute the playbook from the root cluster-builder folder:
+
+```
+$ ansible-playbook -i clusters/<org>/<cluster>/drupal-stack.conf ansible/drupal-stack.yml
+```
+
+This will generate the template yaml files and install the stack.
+
+> Note that this is based on a __MetalLB__ load balanced cluster and a configured __iscsi provisioner__, configured to use the default __Targetd Storage Appliance__ settings.  If this does not match your configuration you will need to manually adjust the manifests and execute them manually as per the guide.
+
+
 ### Knative and Istio
 
 Once inline to cluster-builder, _Istio_ and _Knative_ deployments have been moved into their own ansible playbooks to keep the cluster deployment clean.

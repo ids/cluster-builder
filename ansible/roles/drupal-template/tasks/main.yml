@@ -47,14 +47,6 @@
   run_once: true
   become: false
 
-- name: generate the traefik Ingress manifest
-  local_action:
-    module: template
-    src: templates/drupal/drupal-traefik-ingress.j2
-    dest: "{{ drupal_deployment_home }}/drupal-traefik-ingress.yml"
-  run_once: true
-  become: false
-
 - name: ensure the loadtests folder exists
   local_action:
     module: shell
