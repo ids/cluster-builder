@@ -33,7 +33,14 @@
 
 - name: waiting for seed deployment to spin up
   pause:
-    seconds: 60
+    seconds: 5
+
+- name: wait for the seed to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 50
+  delay: 10    
 
 - name: install the galera nodes
   local_action:
@@ -48,7 +55,14 @@
 
 - name: waiting for node deployment to spin up
   pause:
-    seconds: 180
+    seconds: 5
+
+- name: wait for the nodes to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 75
+  delay: 10    
 
 - name: install the galera load balancer
   local_action:
@@ -97,6 +111,13 @@
 - name: waiting for drupal deployment to spin up
   pause:
     seconds: 5
+
+- name: wait for drupal to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 50
+  delay: 10    
 
 - name: list service addresses
   local_action:

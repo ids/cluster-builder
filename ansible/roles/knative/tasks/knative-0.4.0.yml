@@ -77,7 +77,7 @@
   when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: wait for the Knative deployment to complete
-  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l  | xargs"
   become: true
   register: pending_pods
   until: "pending_pods.stdout == '0'"

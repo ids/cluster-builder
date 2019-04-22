@@ -48,7 +48,7 @@
       when: targetd_server is defined 
 
     - name: wait for the iscsi-provisioner installation to complete
-      shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+      shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"
       register: pending_pods
       until: "pending_pods.stdout == '0'"
       retries: 50

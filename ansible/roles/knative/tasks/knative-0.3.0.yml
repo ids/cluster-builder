@@ -17,7 +17,7 @@
   when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: wait for the Serving to complete
-  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l | xargs"
   become: true
   register: pending_pods
   until: "pending_pods.stdout == '0'"
@@ -36,7 +36,7 @@
   when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: wait for the Build to complete
-  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  shell: "kubectl get pods --all-namespaces |  'Pending|ContainerCreating|PodInitializing' | wc -l"
   become: true
   register: pending_pods
   until: "pending_pods.stdout == '0'"
@@ -55,7 +55,7 @@
   when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: wait for the Eventing to complete
-  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l  | xargs"
   become: true
   register: pending_pods
   until: "pending_pods.stdout == '0'"
@@ -91,7 +91,7 @@
   when: inventory_hostname == groups['k8s_masters'][0]
 
 - name: wait for the Knative deployment to complete
-  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l"
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l  | xargs"
   become: true
   register: pending_pods
   until: "pending_pods.stdout == '0'"
