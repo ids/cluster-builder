@@ -1,0 +1,1 @@
+ helm install kedacore/keda-edge --devel --set rbac.create=true --set logLevel=debug --namespace keda --name keda
