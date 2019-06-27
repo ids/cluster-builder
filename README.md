@@ -775,6 +775,13 @@ To install __KEDA__, use the following:
  helm install kedacore/keda-edge --devel --set rbac.create=true --set logLevel=debug --namespace keda --name keda
 ```
 
+> Note that this may also work `helm init --upgrade --service-account tiller`, TODO: explore a cleaner method for helm setup until they finally get rid of tiller. Eg.
+``` 
+kubectl --namespace kube-system create serviceaccount tiller
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller --upgrade
+```
+
 ### Knative and Istio
 
 Once inline to cluster-builder, _Istio_ and _Knative_ deployments have been moved into their own ansible playbooks to keep the cluster deployment clean.
