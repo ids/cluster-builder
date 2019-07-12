@@ -61,6 +61,13 @@ clientConnection:
   qps: 5
 clusterCIDR: "{{ k8s_cluster_cidr }}"
 configSyncPeriod: 15m0s
+conntrack:
+  max: null
+  maxPerCore: 32768
+  min: 131072
+  tcpCloseWaitTimeout: 1h0m0s
+  tcpEstablishedTimeout: 24h0m0s
+enableProfiling: false
 healthzBindAddress: 0.0.0.0:10256
 iptables:
   masqueradeAll: false
@@ -68,9 +75,12 @@ iptables:
   minSyncPeriod: 0s
   syncPeriod: 30s
 ipvs:
+  excludeCIDRs: null
   minSyncPeriod: 0s
   scheduler: ""
   syncPeriod: 30s
 metricsBindAddress: 127.0.0.1:10249
 resourceContainer: /kube-proxy
 udpIdleTimeout: 250ms
+nodePortAddresses: null
+
