@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+v19.07
+------
+
+* Created configuration template and verified __CentOS/Fedora Kubernetes 1.15__.
+* Updated __Canal__ to version __3.8__.
+
 v19.04
 ------
 
