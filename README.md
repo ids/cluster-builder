@@ -48,9 +48,10 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 14. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
 15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-17. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-18. [Knative and Istio](#knative-and-istio)
-19. [System Profile](#system-profile)
+17. [Helm Setup and KEDA](#helm-setup-and-keda)
+18. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+19. [Knative and Istio](#knative-and-istio)
+20. [System Profile](#system-profile)
 
 ### Supported Clusters
 
@@ -749,6 +750,37 @@ This will generate the template yaml files and install the stack.
 
 > Note that this is based on a __MetalLB__ load balanced cluster and a configured __iscsi provisioner__, configured to use the default __Targetd Storage Appliance__ settings.  If this does not match your configuration you will need to manually adjust the manifests and execute them manually as per the guide.
 
+
+### Helm Setup and KEDA
+
+To install `helm` in the cluster, first apply the necessary `CRD` to give tiller the required permissions:
+
+```
+$ kubectl apply -f xtras/k8s/tiller-rbac.yml
+```
+
+Then download and install the `helm` binary locally, and run the `helm init` process.
+
+Then patch the `tiller` deployment to use the provisioned __service account__:
+
+```
+bash xtras/k8s/tiller-patch
+```
+
+Now you should be able to use `helm` to install packages such as [KEDA](https://github.com/kedacore/keda).
+
+To install __KEDA__, use the following:
+
+```
+ helm install kedacore/keda-edge --devel --set rbac.create=true --set logLevel=debug --namespace keda --name keda
+```
+
+> Note that this may also work `helm init --upgrade --service-account tiller`, TODO: explore a cleaner method for helm setup until they finally get rid of tiller. Eg.
+``` 
+kubectl --namespace kube-system create serviceaccount tiller
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller --upgrade
+```
 
 ### Knative and Istio
 
