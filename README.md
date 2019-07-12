@@ -334,7 +334,7 @@ See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and
 A stable foundation to build on:
 
 * __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm` __1.13.x__ or __1.14.x__ Kubernetes w/ __Canal CNI (3.5)__ network plugin w/ Network Policy
+* `kubeadm` __1.13.x__, __1.14.x__ pr __1.15.x Kubernetes w/ __Canal CNI (3.5)__ network plugin w/ Network Policy
 * __MetalLB (0.7.3)__ baremetal load balancer
 * __NGINX Ingress Controller (0.21)__
 * __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
@@ -832,7 +832,7 @@ __DC/OS__: 1.11 (or latest)
 
 * centos-dcos
 
-__Stock Kubernetes__: v1.13.x, v1.14.x
+__Stock Kubernetes__: v1.13.x, v1.14.x, v1.15.x
 
 * centos-k8s
 * fedora-k8s
