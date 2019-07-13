@@ -13,20 +13,7 @@
     state=latest
 
 - name: Install packages required 
-  dnf: >
-    name={{item}}
-    state=present
-  with_items:
-   - curl
-   - bash
-   - iputils # for ping
-   - tar
-   - xz
-   - nano
-   - unzip
-   - ipset
-   - nfs-utils
-   - docker
+  command: "dnf -y install curl bash iputils tar xz nano unzip ipset nfs-utils yum-plugin-versionlock open-vm-tools docker"
 
 - name: Make sure the RTC is not local
   command: timedatectl set-local-rtc 0

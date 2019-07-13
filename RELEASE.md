@@ -6,6 +6,8 @@ v19.07
 
 * Created configuration template and verified __CentOS/Fedora Kubernetes 1.15__.
 * Updated __Canal__ to version __3.8__.
+* Removed deprecations and tested with __Packer 1.4.5__.
+* Upgraded to __Fedora 30__.
 * New __xtras__:
   * Working __EFK__ stack in __xtras/k8s/elastic__ will automatically aggregate new container logs, along with base node metrics, using the targetd storage class.
   * Basic Kafka manifests and a port of the Lenses dev box in __xtras/k8s/kafka__ that also uses the targetd storage class.

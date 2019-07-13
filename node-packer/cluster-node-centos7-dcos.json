@@ -68,7 +68,6 @@
       "output_directory": "output_centos7-dcos_vmx",
       "vmx_template_path": "cluster-node-template.vmx",
       "vm_name": "cluster-node-centos7-dcos-x86_64",
-      "format": "ova",
       "vmx_data": {
         "memsize": "1536",
         "numvcpus": "2"

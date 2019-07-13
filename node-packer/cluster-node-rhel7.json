@@ -88,7 +88,6 @@
       "output_directory": "output_rhel7_vmx",
       "vmx_template_path": "cluster-node-template.vmx",
       "vm_name": "cluster-node-rhel7-x86_64",
-      "format": "ova",
       "vmx_data": {
         "memsize": "1536",
         "numvcpus": "2",

@@ -22,22 +22,7 @@
 - debug: msg="CentOS upgraded to {{ kernel_version.stdout }}"
 
 - name: Install packages required 
-  yum: >
-    name={{item}}
-    state=present
-  with_items:
-   - curl
-   - bash
-   - iputils # for ping
-   - tar
-   - xz
-   - nano
-   - unzip
-   - ipset
-   - nfs-utils
-   - yum-plugin-versionlock
-   - open-vm-tools
-   - docker
+  command: "yum -y install curl bash iputils tar xz nano unzip ipset nfs-utils yum-plugin-versionlock open-vm-tools docker"
 
 - name: Make sure the RTC is not local
   command: timedatectl set-local-rtc 0

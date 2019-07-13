@@ -4,22 +4,7 @@
 # CentOS 7 comes with systemd-container pre-installed.
 # Avoid installing systemd, which may conflict with systemd-container.
 - name: Install packages required by DC/OS installer
-  yum: >
-    name={{item}}
-    state=present
-  with_items:
-   - curl
-   - bash
-   - iputils # for ping
-   - tar
-   - xz
-   - nano
-   - unzip
-   - nfs-utils
-   - net-tools
-   - ipset
-   - device-mapper-persistent-data 
-   - lvm2
+  command: "yum -y install device-mapper-persistent-data lvm2 curl bash iputils tar xz nano unzip ipset nfs-utils yum-plugin-versionlock open-vm-tools docker"
 
 # Firewall should be configured if custer is publicly accessible.
 # For local dev/test/demo, just disable it.

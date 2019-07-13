@@ -3,12 +3,7 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/centos-bootstrap.sh"
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/vmware-tools.sh"
+      "script": "bin/fedora-bootstrap.sh"
     },
     {
       "type": "file",
@@ -17,7 +12,7 @@
     },     
     {
       "type": "ansible-local",
-      "playbook_file": "ansible/coreos-centos-provisioner.yml",
+      "playbook_file": "ansible/fedora.yml",
       "playbook_dir": "ansible",
       "extra_arguments": "-vvvvv"
     },
@@ -30,6 +25,7 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "expect_disconnect": true,
       "script": "bin/zerodisk.sh"
     }
   ],
@@ -38,7 +34,7 @@
     {
       "type": "shell-local",
       "inline": [
-          "ovftool --overwrite output_coreos-centos-provisioner_vmx/coreos-centos-provisioner-x86_64.vmx output_ovas/coreos-centos-provisioner-x86_64.ova"
+          "ovftool --overwrite output_fedora_vmx/cluster-node-fedora-x86_64.vmx output_ovas/cluster-node-fedora-x86_64.ova"
       ]
   }],
  
@@ -46,31 +42,31 @@
     {
       "type": "vmware-iso",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos.cfg<enter><wait>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-fedora.cfg<enter><wait>"
       ],
       "boot_wait": "10s",
       "disk_size": 256000,
-      "guest_os_type": "centos-64",
+      "guest_os_type": "fedora-64",
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
-        "iso/CentOS-7-x86_64-Minimal-1810.iso",
-        "http://mirrors.sonic.net/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso"
+        "iso/Fedora-Server-dvd-x86_64-29-1.2.iso",
+        "https://download.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/iso/Fedora-Server-dvd-x86_64-29-1.2.iso"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "38d5d51d9d100fd73df031ffd6bd8b1297ce24660dc8c13a3b8b4534a4bd291c",
+      "iso_checksum": "129d131a55e5bd518f593f0eacdce095f7c795fe7ccbef1f3f6aeb2ff9f99f35",
       "ssh_username": "admin",
       "ssh_password": "TempPass2017",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "echo 'TempPass2017'|sudo -S /sbin/halt -h -p",
-      "output_directory": "output_coreos-centos-provisioner_vmx",
+      "output_directory": "output_fedora_vmx",
       "vmx_template_path": "cluster-node-template.vmx",
-      "vm_name": "coreos-centos-provisioner-x86_64",
+      "vm_name": "cluster-node-fedora-x86_64",
+      "format": "ova",
       "vmx_data": {
         "memsize": "1536",
-        "numvcpus": "2",
-        "ethernet0.connectionType": "nat"
+        "numvcpus": "2"
       },
       "vmx_data_post": {
         "ethernet0.connectionType": "bridged",
