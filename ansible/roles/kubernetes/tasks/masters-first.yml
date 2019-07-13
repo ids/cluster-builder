@@ -50,7 +50,7 @@
   ignore_errors: false
   when: k8s_version is search("1.14") 
 
-  - name: register cluster status
+- name: register cluster status
   shell: "cat /tmp/kube-status"
   register: kubeadm_out
 
