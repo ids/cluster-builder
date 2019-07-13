@@ -4,12 +4,13 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-echo '>>> Installing pip (and dependencies)'
+echo '>>> Installing base dependencies'
 dnf install -y python3-devel libffi-devel openssl-devel gcc redhat-rpm-config open-vm-tools
 
 echo '>>> Upgrading pip3'
 pip3 install --upgrade pip3
 
+cd /root
 # Avoid bug in default python cryptography library
 # [WARNING]: Optional dependency 'cryptography' raised an exception, falling back to 'Crypto'
 echo '>>> Upgrading python cryptography library'
