@@ -11,6 +11,7 @@
   dnf: >
     name=*
     state=latest
+  ignore_errors: true
 
 - name: Install packages required 
   command: "dnf -y install curl bash iputils tar xz nano unzip ipset nfs-utils yum-plugin-versionlock open-vm-tools docker"
