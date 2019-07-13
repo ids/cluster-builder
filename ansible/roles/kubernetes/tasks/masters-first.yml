@@ -48,7 +48,7 @@
   args:
     chdir: /root
   ignore_errors: false
-  when: k8s_version is search("1.14") 
+  when: k8s_version is search("1.15") 
 
 - name: register cluster status
   shell: "cat /tmp/kube-status"
