@@ -22,14 +22,14 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.15")
 
-- name: initialize cluster on first master (pre 1.14)
+- name: initialize cluster on first master (1.13) CentOS
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
     chdir: /root
   ignore_errors: false
   when: k8s_version is search("1.13") and cluster_type == 'centos-k8s'
 
-- name: initialize cluster on first master pre 1.14
+- name: initialize cluster on first master (1.13) Fedora
   shell: "kubeadm init --config kube-adm.yml --ignore-preflight-errors=SystemVerification > /tmp/kube-status"
   args:
     chdir: /root
