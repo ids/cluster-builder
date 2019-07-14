@@ -18,21 +18,21 @@
   register: result
   until: result.rc is defined and result.rc == 0
 
-- name: install base distro docker for Fedora
-  shell: "dnf install -y docker"
-  args:
-    warn: false
-  when: cluster_type == "fedora-k8s"
-  retries: 10
-  delay: 10
-  register: result
-  until: result.rc is defined and result.rc == 0
+#- name: install base distro docker for Fedora
+#  shell: "dnf install -y docker"
+#  args:
+#    warn: false
+#  when: cluster_type == "fedora-k8s"
+#  retries: 10
+#  delay: 10
+#  register: result
+#  until: result.rc is defined and result.rc == 0
 
-- name: re-configure the /etc/sysconfig/docker
-  lineinfile:
-    path: /etc/sysconfig/docker
-    regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
-    line: "OPTIONS='--selinux-enabled --signature-verification=false'"
+#- name: re-configure the /etc/sysconfig/docker
+#  lineinfile:
+#    path: /etc/sysconfig/docker
+#    regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
+#    line: "OPTIONS='--selinux-enabled --signature-verification=false'"
 
 - name: configure the default k8s docker daemon.json with json-file logging
   template:
