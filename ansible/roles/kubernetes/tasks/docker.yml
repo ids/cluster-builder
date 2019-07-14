@@ -1,0 +1,109 @@
+- name: remove any updated docker-ce if it exists
+  yum:
+    name: docker-ce
+    state: absent
+  when: cluster_type == "centos-k8s" and k8s_docker_version == 'distro'
+
+- name: remove any updated docker-ce if it exists
+  yum:
+    name: docker-ce-cli
+    state: absent
+  when: cluster_type == "centos-k8s" and k8s_docker_version == 'distro'
+
+- name: remove any updated docker-ce if it exists
+  yum:
+    name: containerd.io
+    state: absent
+  when: cluster_type == "centos-k8s" and k8s_docker_version == 'distro'
+
+- name: install base distro docker 
+  yum:
+    name: docker
+    state: present
+  when: cluster_type == "centos-k8s" and k8s_docker_version == 'distro'
+  retries: 10
+  delay: 10
+  register: result
+  until: result.rc is defined and result.rc == 0
+
+- name: remove any updated docker-ce if it exists
+  dnf:
+    name: docker-ce
+    state: absent
+  when: cluster_type == "fedora-k8s" and k8s_docker_version == 'distro'
+
+- name: remove any updated docker-ce if it exists
+  dnf:
+    name: docker-ce-cli
+    state: absent
+  when: cluster_type == "fedora-k8s" and k8s_docker_version == 'distro'
+
+- name: remove any updated docker-ce if it exists
+  dnf:
+    name: containerd.io
+    state: absent
+  when: cluster_type == "fedora-k8s" and k8s_docker_version == 'distro'
+
+- name: install base distro docker for Fedora
+  shell: "dnf install -y docker"
+  args:
+    warn: false
+  when: cluster_type == "fedora-k8s" and k8s_docker_version == 'distro'
+  retries: 10
+  delay: 10
+  register: result
+  until: result.rc is defined and result.rc == 0
+
+- name: re-configure the /etc/sysconfig/docker
+  lineinfile:
+    path: /etc/sysconfig/docker
+    regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
+    line: "OPTIONS='--selinux-enabled --signature-verification=false'"
+  when: k8s_docker_version == 'distro'
+
+- name: Register docker repo on CentOS
+  command: "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+  when: cluster_type == "centos-k8s" and k8s_docker_version != 'distro'
+
+- name: Install docker dependencies on CentOS
+  command: "yum install -y yum-utils device-mapper-persistent-data lvm2"
+  when: cluster_type == "centos-k8s" and k8s_docker_version != 'distro'
+
+- name: Purge distro docker on CentOS
+  command: "yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
+  ignore_errors: true
+  when: cluster_type == "centos-k8s" and k8s_docker_version != 'distro'
+
+- name: Install docker-ce and friends on CentOS
+  command: "yum install -y docker-ce-{{ k8s_docker_version }} docker-ce-cli={{ k8s_docker_version }} containerd.io"
+  when: cluster_type == "centos-k8s" and k8s_docker_version != 'distro'
+
+- name: Register docker repo on Fedora
+  command: "dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
+  when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
+
+- name: Purge distro docker on Fedora
+  command: "dnf -y remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
+  ignore_errors: true
+  when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
+
+- name: Install docker-ce and friends on Fedora
+  command: "dnf -y install docker-ce-{{ k8s_docker_version }} docker-ce-cli={{ k8s_docker_version }} containerd.io"
+  when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
+
+- name: configure the default k8s docker daemon.json with json-file logging
+  template:
+    src: templates/k8s-docker-daemon.j2
+    dest: /etc/docker/daemon.json
+
+- name: start docker daemon
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Show docker info 
+  command: "docker info"
+  register: docker_info
+
+- debug: msg="{{ docker_info.stdout_lines }}"

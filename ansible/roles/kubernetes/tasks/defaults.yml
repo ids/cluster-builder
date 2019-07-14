@@ -7,6 +7,21 @@
 - debug: msg="{{ k8s_version }}"
   run_once: true
 
+- name: set k8s_docker_version default
+  set_fact:
+    k8s_docker_version: distro
+  run_once: true
+  when: k8s_docker_version is undefined and cluster_type == 'centos-k8s'
+
+- name: set k8s_docker_version default
+  set_fact:
+    k8s_docker_version: 3:18.09.*
+  run_once: true
+  when: k8s_docker_version is undefined and cluster_type == 'fedora-k8s'
+
+- debug: msg="{{ k8s_docker_version }}"
+  run_once: true
+
 - name: set k8s_semantic_version default for 1.15
   set_fact:
     k8s_semantic_version: 1.15.0

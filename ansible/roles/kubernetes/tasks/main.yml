@@ -2,48 +2,8 @@
   include: defaults.yml
   run_once: true
 
-- name: remove any updated docker-ce if it exists
-  yum:
-    name: docker-ce
-    state: absent
-  when: cluster_type != "fedora-k8s"
-
-- name: install base distro docker for CentOS
-  yum:
-    name: docker
-    state: present
-  when: cluster_type == "centos-k8s"
-  retries: 10
-  delay: 10
-  register: result
-  until: result.rc is defined and result.rc == 0
-
-#- name: install base distro docker for Fedora
-#  shell: "dnf install -y docker"
-#  args:
-#    warn: false
-#  when: cluster_type == "fedora-k8s"
-#  retries: 10
-#  delay: 10
-#  register: result
-#  until: result.rc is defined and result.rc == 0
-
-#- name: re-configure the /etc/sysconfig/docker
-#  lineinfile:
-#    path: /etc/sysconfig/docker
-#    regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
-#    line: "OPTIONS='--selinux-enabled --signature-verification=false'"
-
-- name: configure the default k8s docker daemon.json with json-file logging
-  template:
-    src: templates/k8s-docker-daemon.j2
-    dest: /etc/docker/daemon.json
-
-- name: start docker daemon
-  service:
-    name: docker
-    state: started
-    enabled: yes
+- name: apply docker settings
+  include: docker.yml
 
 - name: configure firewalld for kubernetes (optional)
   include: firewalld.yml
