@@ -6,7 +6,8 @@ v19.07
 
 * Created configuration template and verified __CentOS/Fedora Kubernetes 1.15__.
 * Updated __Canal__ to version __3.8__.
-* Removed _Python2_ dependency on _Fedora_ nodes.
+* Updated to `docker-ce` stable on _Fedora 29_.
+* Removed _Python2_ dependency on _Fedora 29_ nodes.
 
 > In preparation for the deprecation of _Python2_, please rebuild your _Fedora_ nodes, and ensure that `ansible_python_interpreter=/usr/bin/python3` in all your __fedora-k8s__ hosts files going forward.  In the future this will be the default.
 
@@ -15,6 +16,7 @@ v19.07
   * Working __EFK__ stack in __xtras/k8s/elastic__ will automatically aggregate new container logs, along with base node metrics, using the targetd storage class.
   * Basic Kafka manifests and a port of the Lenses dev box in __xtras/k8s/kafka__ that also uses the targetd storage class.
   * Tiller RBAC patch to enable Helm installation, to enable [KEDA](https://github.com/kedacore/keda) installation.
+  
 
 v19.04
 ------

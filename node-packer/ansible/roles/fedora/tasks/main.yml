@@ -20,7 +20,7 @@
   command: "dnf -y install curl bash iputils tar xz nano unzip ipset nfs-utils open-vm-tools dnf-plugins-core"
 
 - name: Install docker-ce and friends
-  command: "dnf -y install docker-ce docker-ce-cli containerd.io"
+  command: "dnf -y install docker-ce- docker-ce-cli containerd.io"
 
 - name: Enable docker-ce daemon
   command: "systemctl enable --now docker"
