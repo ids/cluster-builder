@@ -334,10 +334,10 @@ See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and
 A stable foundation to build on:
 
 * __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm` __1.13.x__, __1.14.x__ pr __1.15.x Kubernetes w/ __Canal CNI (3.5)__ network plugin w/ Network Policy
-* __MetalLB (0.7.3)__ baremetal load balancer
-* __NGINX Ingress Controller (0.21)__
-* __Kubernetes Dashboard (1.10.1)__ w/ Heapster, Grafana, InfluxDB (1.5.4)
+* `kubeadm` __1.13.x__, __1.14.x__ or __1.15.x Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* __MetalLB__ baremetal load balancer
+* __NGINX Ingress Controller__
+* __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
 
 (As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
 
@@ -353,7 +353,80 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 
 See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ESXi deployment](clusters/eg/esxi-k8s/hosts).
 
+##### Formula: Latest Fedora Kubernetes (Stable)
+
+The latest Kubernetes on a 4.x kernel:
+
+* __Fedora 29__ minimal OS node
+* `kubeadm` __1.13.x__, __1.14.x__ or __1.15.x Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* __MetalLB__ baremetal load balancer
+* __NGINX Ingress Controller__
+* __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
+
+(As shown in the example below, deployed to the ESXi network of `192.168.1.0/24`).
+
+```
+[all:vars]
+cluster_type=fedora-k8s
+cluster_name=k8s
+remote_user=admin
+
+ansible_python_interpreter=/usr/bin/python3
+
+vmware_target=esxi
+overwrite_existing_vms=true
+ovftool_parallel=true
+
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
+
+network=192.168.1.0
+network_mask=255.255.255.0
+network_gateway=192.168.1.2
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=onprem.idstudios.io
+
+targetd_server=192.168.1.205
+targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
+targetd_server_volume_group=vg-targetd
+targetd_server_provisioner_name=iscsi-targetd
+targetd_server_account_credentials=targetd-account
+targetd_server_account_username=admin
+targetd_server_account_password=ciao
+targetd_server_namespace=kube-system
+
+k8s_version=1.15.*
+
+k8s_metallb_address_range=192.168.1.170-192.168.1.175
+
+k8s_control_plane_uri=k8sf-admin.onprem.idstudios.io
+k8s_advertise_addr=192.168.1.230
+k8s_ingress_url=k8sf-ingress.onprem.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
+
+[k8s_masters]
+k8sf-m1 ansible_host=192.168.1.230 
+
+[k8s_workers]
+k8sf-w1 ansible_host=192.168.1.231 
+k8sf-w2 ansible_host=192.168.1.232 
+k8sf-w3 ansible_host=192.168.1.233 
+k8sf-w4 ansible_host=192.168.1.234 
+k8sf-w5 ansible_host=192.168.1.235 
+
+[vmware_vms]
+k8sf-m1 numvcpus=4 memsize=5144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+k8sf-w1 numvcpus=4 memsize=5144 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+k8sf-w2 numvcpus=4 memsize=5144 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+k8sf-w3 numvcpus=4 memsize=5144 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+k8sf-w4 numvcpus=4 memsize=5144 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+k8sf-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+```
+
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
+
+> Note also the use of __ansible_python_interpreter=/usr/bin/python3__ as the newest _Fedora OVA Node Image_ uses _Python3_ exclusively.  [The above example can be found in](clusters/eg/esxi-k8sf/hosts)
 
 #### VMware Fusion/Workstation Complete Examples
 
