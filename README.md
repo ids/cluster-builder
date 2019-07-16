@@ -34,24 +34,25 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
-3. [Setup and Environment Preparation](#setup-and-environment-preparation)
-4. [Cluster Definition Packages](#cluster-definition-packages)
-5. [General Cluster Configuration](#general-cluster-configuration)
-6. [Kubernetes KubeAdm Configuration](#kubernetes-kubeadm-configuration)
-7. [Cluster Builder Usage](#cluster-builder-usage)
-8. [Deploying a Cluster](#deploying-a-cluster)
-9. [Connecting to a Cluster](#connecting-to-a-cluster)
-10. [Kubernetes Dashboard](#kubernetes-dashboard)
-11. [Change Cluster Password](#change-cluster-password)
-12. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-13. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-14. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
-15. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-16. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-17. [Helm Setup and KEDA](#helm-setup-and-keda)
-18. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-19. [Knative and Istio](#knative-and-istio)
-20. [System Profile](#system-profile)
+3. [Quick Start Steps](#quick-start-steps)
+4. [Setup and Environment Preparation](#setup-and-environment-preparation)
+5. [Cluster Definition Packages](#cluster-definition-packages)
+6. [General Cluster Configuration](#general-cluster-configuration)
+7. [Kubernetes KubeAdm Configuration](#kubernetes-kubeadm-configuration)
+8. [Cluster Builder Usage](#cluster-builder-usage)
+9. [Deploying a Cluster](#deploying-a-cluster)
+10. [Connecting to a Cluster](#connecting-to-a-cluster)
+11. [Kubernetes Dashboard](#kubernetes-dashboard)
+12. [Change Cluster Password](#change-cluster-password)
+13. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+15. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
+16. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+17. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+18. [Helm Setup and KEDA](#helm-setup-and-keda)
+19. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+20. [Knative and Istio](#knative-and-istio)
+21. [System Profile](#system-profile)
 
 ### Supported Clusters
 
@@ -121,6 +122,25 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 
 > __Note__ it is best to deploy the __Targetd Storage Appliance__ prior to installing the Kubernetes cluster as the cluster deployment process will deploy and configure an __iscsi-provisioner__ deployment configured for the Targetd server when it already exists - and when the cluster _hosts_ file contains the necessary configuration information for the Targetd.
 
+### Quick Start Steps
+
+#### Local Workstation
+
+1. Setup the VMware networks according to the [guide](docs/local_deployment_guide.md).
+2. Ensure all required software is installed and in the __PATH__.
+3. Ensure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`.
+4. Provision DNS entries
+5. Follow the steps in the readme below to start deploying clusters!
+
+#### ESXi/vSphere
+
+1. Ensure you have one or more VMware ESXi hypervisors available.
+2. Configure the ESXi hypervisors to support __passwordless SSH__ as per the [guide](docs/esxi_deployment_guide.md), and ensure SSH is enabled for the ESXi hosts.
+3. Ensure all required software is installed and in the __PATH__.
+4. Ensure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`.
+5. Provision DNS entries
+6. Follow the steps in the readme below to start deploying clusters!
+
 ### Setup and Environment Preparation
 
 #### macOS / Linux
@@ -134,7 +154,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * Docker for Mac or __docker-ce__ (Swarm only)
 * Python `pip`
 
-__Linux Setup Notes__
+__Linux Workstation Setup Notes__
 
 * For local machine deployments, configure _VMnet8_ (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnets (which map to the demo.idstudios.io and vm.idstudios.io example DNS names in the example cluster definition packages), but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified in the configuration, which in the case of Windows should be __vmnet8__.
 * Ensure all VMware tools and Packer are in __PATH__:
@@ -147,7 +167,7 @@ __Linux Setup Notes__
 
 > __Note__ Make sure and use _VMware's Virtual Network Editor_ that comes with the Pro version of Fusion/Workstation.  Trying to adjust the interface subnets by hand can be problematic.
 
-__macOS Setup Notes__
+__macOS Workstation Setup Notes__
 
 * The locally deployed examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created in Fusion Pro before attempting to deploy the fusion demos.
 
@@ -162,7 +182,7 @@ __macOS Setup Notes__
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 * Python `pip` installed in the WSL
 
-__Windows Setup Notes__
+__Windows Workstation Setup Notes__
 
 * When starting the WSL Bash shell make sure to start it with __Run as Administrator__.
 * For local machine deployments, configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
