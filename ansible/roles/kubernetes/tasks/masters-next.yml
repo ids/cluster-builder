@@ -80,3 +80,6 @@
 - name: master join result
   debug: msg="{{ master_join.stdout_lines }}"
 #  when: k8s_version is search("1.14")
+
+- name: ensure the Kubelet is enabled
+  shell: systemctl enable kubelet

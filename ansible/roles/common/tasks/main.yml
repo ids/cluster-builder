@@ -138,6 +138,11 @@
     overwrite_existing_vms: false
   when: overwrite_existing_vms is undefined
 
+- name: set ovftool_parallel default
+  set_fact:
+    ovftool_parallel: false
+  when: ovftool_parallel is undefined
+
 - name: set targetd_server_namespace default
   set_fact:
     targetd_server_namespace: "kube-system"

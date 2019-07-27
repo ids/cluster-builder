@@ -222,3 +222,6 @@
   register: master_node_out
 
 - debug: msg="{{ master_node_out.stdout_lines }}"
+
+- name: ensure the Kubelet is enabled
+  shell: systemctl enable kubelet
