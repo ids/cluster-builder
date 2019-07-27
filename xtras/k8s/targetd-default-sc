@@ -1,1 +1,2 @@
- kubectl patch storageclass iscsi-targetd-vg-targetd -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+DEFAULT_STATE=$1
+kubectl patch storageclass iscsi-targetd-vg-targetd -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"$DEFAULT_STATE"}}}'
