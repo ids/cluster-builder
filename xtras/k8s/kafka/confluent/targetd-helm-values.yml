@@ -49,7 +49,7 @@ cp-kafka:
   persistence:
     enabled: true
     storageClass: "iscsi-targetd-vg-targetd"
-    size: 5Gi
+    size: 10Gi
     disksPerBroker: 1
   resources: {}
   ## If you do want to specify resources, uncomment the following lines, adjust them as necessary,
@@ -60,6 +60,12 @@ cp-kafka:
   #  requests:
   #   cpu: 100m
   #   memory: 128Mi
+  nodeport:
+    enabled: true
+
+  configurationOverrides:
+    "advertised.listeners": |-
+      EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
 
 ## ------------------------------------------------------
 ## Schema Registry
