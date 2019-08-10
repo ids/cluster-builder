@@ -1,0 +1,2 @@
+curl -X DELETE http://192.168.1.175:8083/connectors/jdbc_source_mysql
+

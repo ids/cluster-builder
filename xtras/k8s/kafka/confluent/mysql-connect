@@ -1,0 +1,16 @@
+curl -X POST http://192.168.1.175:8083/connectors -H "Content-Type: application/json" -d '{
+        "name": "jdbc_source_mysql",
+        "config": {
+                "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+                "connection.url": "jdbc:mysql://mysql-kafka:3306/kafka",
+                "connection.user": "root",
+                "connection.password": "Fender2000",
+                "topic.prefix": "mysql-2-",
+                "mode":"incrementing",
+                "incrementing.column.name": "title_id",
+                "table.whitelist": "kafka.titles",
+                "poll.interval.ms" : 5000,
+                "catalog.pattern" : "kafka"
+                }
+        }'
+
