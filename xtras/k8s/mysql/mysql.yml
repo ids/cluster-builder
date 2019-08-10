@@ -8,6 +8,7 @@ spec:
   selector:
     app: mysql-kafka
   type: LoadBalancer
+  loadBalancerIP: 192.168.1.197
 status:
   loadBalancer:
 ---

@@ -22,7 +22,7 @@ So to use the `targetd-helm-values.yml` values file specific to cluster-builder,
 
 ```
 cd cp-helm-charts
-helm install ./ -f ../cluster-builder/xtras/k8s/kafka/confluent/targetd-helm-values.yml --name  confluent-oss
+helm install ./ -f ../cluster-builder/xtras/k8s/kafka/confluent/cb-helm-values.yml --name  confluent-oss
 ```
 
 If you would like your `control-center` (or any other service) to expose a dedicated IP address via __MetalLB__, simply edit the `svc` defintion and change the type from __ClusterIP__ to __LoadBalancer__.

@@ -61,7 +61,7 @@ cp-kafka:
   #   cpu: 100m
   #   memory: 128Mi
   nodeport:
-    enabled: true
+   enabled: true
 
   configurationOverrides:
     "advertised.listeners": |-
@@ -116,8 +116,8 @@ cp-kafka-rest:
 ## ------------------------------------------------------
 cp-kafka-connect:
   enabled: true
-  image: confluentinc/cp-kafka-connect
-  imageTag: 5.2.2
+  image: idstudios/kafka-connect
+  imageTag: latest
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
   ## https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
   imagePullSecrets:
