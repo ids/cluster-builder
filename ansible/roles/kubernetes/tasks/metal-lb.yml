@@ -1,5 +1,5 @@
 - name: install MetalLB manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.7.3/manifests/metallb.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/google/metallb/v{{ k8s_metallb_version }}/manifests/metallb.yaml
   register: metallb_out
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
