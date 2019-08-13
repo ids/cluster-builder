@@ -66,6 +66,7 @@ cp-kafka:
   configurationOverrides:
     "advertised.listeners": |-
       EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
+    "log.retention.bytes": "8589934592"
 
 ## ------------------------------------------------------
 ## Schema Registry
