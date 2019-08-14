@@ -6,8 +6,9 @@ curl -X POST http://kafka-connect.onprem.idstudios.io:8083/connectors -H "Conten
                 "connection.user": "root",
                 "connection.password": "Fender2000",
                 "topic.prefix": "mysql-kafka-",
-                "mode":"incrementing",
+                "mode":"timestamp+incrementing",
                 "incrementing.column.name": "data_id",
+                "timestamp.column.name": "update_ts",
                 "table.whitelist": "kafka.data_kv",
                 "poll.interval.ms" : 5000,
                 "catalog.pattern" : "kafka"
