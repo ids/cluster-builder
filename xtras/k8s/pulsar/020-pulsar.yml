@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pulsar
+  namespace: pulsar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pulsar
+  template:
+    metadata:
+      labels:
+        app: pulsar
+    spec:
+      containers:
+      - name: pulsar
+        image: apachepulsar/pulsar-all:2.4.0
+        ports:
+        - containerPort: 6650
+        - containerPort: 8080
+        command: ["/bin/pulsar"]
+        args: ["standalone"]        
+        volumeMounts:
+          - name: pulsar-data-volume
+            mountPath: "/pulsar/data"
+      volumes:
+      - name: pulsar-data-volume
+        persistentVolumeClaim:
+          claimName: pulsar-data-volume-claim
