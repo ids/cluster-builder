@@ -1,8 +1,6 @@
 ---
-- name: install net-tools
-  yum: >
-    name=net-tools
-    state=latest
+- name: install net-tools and distro docker
+  shell: yum install -y net-tools docker
 
 - name: ensure tmp location exists 
   file:
