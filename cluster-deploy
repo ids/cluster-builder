@@ -39,7 +39,7 @@ function esxi_deploy () {
   else
     echo -e "Using cluster node root password found in package .passwords"
   fi
-  PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ROOT_PASSWORD}')"
+  PYTHON_CMD="from passlib.hash import sha512_crypt; print(sha512_crypt.hash('${CB_NODE_ROOT_PASSWORD}'))"
   TARGET_ROOT_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   
   if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
@@ -61,7 +61,7 @@ function esxi_deploy () {
     else
       echo -e "Using cluster node ${REMOTE_USER} password found in package .passwords"
     fi
-    PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ADMIN_PASSWORD}')"
+    PYTHON_CMD="from passlib.hash import sha512_crypt; print(sha512_crypt.hash('${CB_NODE_ADMIN_PASSWORD}'))"
     TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   fi 
 

@@ -42,7 +42,7 @@ if [ -z $TARGET_PASSWORD_HASH ]; then
     echo
     exit 1
   else
-    PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${NEW_PASSWORD}')"
+    PYTHON_CMD="from passlib.hash import sha512_crypt; print(sha512_crypt.hash('${NEW_PASSWORD}'))"
     TARGET_PASSWORD_HASH=`python3 -c "${PYTHON_CMD}"`
   fi 
 fi
