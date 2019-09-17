@@ -26,7 +26,7 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 
 [cluster-builder](https://github.com/ids/cluster-builder) can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent iSCSI block storage, and NFS shared file volume persistant storage for K8s clusters.
 
-> Hard to believe?  It's true.  [cluster-builder](https://github.com/ids/cluster-builder) makes generic on-premise Kubernetes easy.  It is a single infrastructure codebase that can automatically deploy all of the major container orchestration systems as production ready VMware VM clusters.  Not enough? It can also deploy the backing persistent volume technology to enable full stack containerized application deployment (_that means including the database_).  
+> Hard to believe?  It's true.  [cluster-builder](https://github.com/ids/cluster-builder) makes generic on-premise Kubernetes easy.  It is a single infrastructure codebase that can automatically deploy K8s and/or DC/OS container orchestration systems as production ready VMware VM clusters.  Not enough? It can also deploy the backing persistent volume technology to enable full stack containerized application deployment (_that means including the database_).  
 
 [cluster-builder](https://github.com/ids/cluster-builder) utilizes _VMware_ and _Kubernetes_ as the on-premise datacenter components of a cost optimized _Hybrid Multi-Cloud strategy_. It's __fully open__, __forkable__ and __hackable__.  
 
@@ -43,7 +43,7 @@ _Why start from scratch?_
 <style>
 
 #header_wrap {
-  background: linear-gradient(to top, #002B36, #004a5d);
+  background: linear-gradient(to top, #002B36, #999);
 }
 
 #footer_wrap {
@@ -96,5 +96,9 @@ _Why start from scratch?_
 
 .asciicast {
   max-height: 511px;
+}
+
+code {
+  color: #333;
 }
 </style>
