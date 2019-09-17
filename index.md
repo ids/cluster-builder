@@ -34,7 +34,7 @@ _Why start from scratch?_
 
 ---
 <div class="center" style="margin-left: -20px;">
-<img style="width: 100px" src="/assets/images/cbLogo2-100.png" >
+<img style="width: 100px;box-shadow:none;margin-bottom:0px" src="/assets/images/cbLogo2-100.png" >
 </div>
 <div class="center" style="margin-left: -20px;">
 <a id="try-cb-link" href="https://github.com/ids/cluster-builder">Try Cluster Builder</a>
@@ -72,6 +72,8 @@ _Why start from scratch?_
 #try-cb-link {
   font-weight: 300;
   font-size: 1.5em;
+  margin-top: -20px;
+  display: inline-block;
 }
 
 .center {
