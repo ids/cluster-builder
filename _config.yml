@@ -1,6 +1,6 @@
 title: Cluster Builder
 email: admin@idstudios.io
-description: 'Automatically Deploy <strong>Kubernetes</strong>, Docker Swarm and DC/OS Orchestration Clusters into VMware Environments.'
+description: 'Automatically Deploy <strong>Kubernetes</strong> and DC/OS Orchestration Clusters into VMware Environments.'
 url: 'https://cluster-builder.idstudios.io'
 github_username: ids
 future: true

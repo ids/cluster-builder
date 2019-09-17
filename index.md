@@ -23,7 +23,6 @@ With freely available tools and only an annotated Ansible inventory file [cluste
   * `kubeadm` _Vanilla K8s_ CentOS 7.6
   * `kubeadm` _Vanilla K8s_ Fedora 29 (5.x kernel)  
 * [DC/OS](https://dcos.io/) on CentOS 7.6
-* [Docker Swarm CE (Community Edition)](https://docs.docker.com/engine/swarm/) on CentOS/RHEL 7.6.
 
 [cluster-builder](https://github.com/ids/cluster-builder) can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent iSCSI block storage, and NFS shared file volume persistant storage for K8s clusters.
 
@@ -41,59 +40,6 @@ _Why start from scratch?_
 <a id="try-cb-link" href="https://github.com/ids/cluster-builder">Try Cluster Builder</a>
 </div>
 ---
-<script>
-
-window.onload = function() {
-
-  function swapClusterType() {
-    var cluster = $("#title-cluster-type").text();
-    switch(cluster) {
-      case "Kubernetes":
-        cluster = "Docker Swarm";
-        break;
-      case "Docker Swarm":
-        cluster = "DC/OS";
-        break;
-      default:
-        cluster = "Kubernetes";
-    }
-    $("#title-cluster-type").fadeOut(function(){
-      $("#title-cluster-type").html(cluster);
-      $("#title-cluster-type").fadeIn();
-    });
-  }
-
-  function swapEnv() {
-    var cluster = $("#title-vmware-env").text();
-    switch(cluster) {
-      case "VMware ESXi":
-        cluster = "VMware Fusion";
-        break;
-      case "VMware Fusion":
-        cluster = "VMware Workstation Windows";
-        break;
-      case "VMware Workstation Windows":
-        cluster = "VMware Workstation Linux";
-        break;
-      default:
-        cluster = "VMware ESXi";
-    }
-    $("#title-vmware-env").fadeOut(function(){
-      $("#title-vmware-env").html(cluster);
-      $("#title-vmware-env").fadeIn();
-    });
-  }
-
-  //setInterval(swapClusterType,5000);
-  //setInterval(swapEnv,3500);
-
-  //swapClusterType();
-  //swapEnv();
-
-}
-
-</script>
-
 <style>
 
 #header_wrap {
