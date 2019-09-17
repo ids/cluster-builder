@@ -1,7 +1,7 @@
 Cluster Builder
 ===============
 
-[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
+[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/) and [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
 
 > Deploy a production ready container orchestration cluster to VMware in minutes while you read [hacker news](https://news.ycombinator.com/)...
 
@@ -19,18 +19,18 @@ __Cluster Builder__ enables both local and remote deployment, leveraging the sam
 
 ### Enterprise Hybrid-Cloud On-Premise Deployment
 
-__Cluster Builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__, __DC/OS__ and __Docker Swarm__ clusters.
+__Cluster Builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__ abd __DC/OS__ clusters.
 
 ![cluster-builder Enterprise Usage](docs/images/cluster-builder-enterprise-usage.png)
 
-> Emphasis is on __Kubernetes__ now that __Kubernetes__ has won the container orchestration wars.
+> Emphasis is on __Kubernetes__ now that it has won the container orchestration wars.
 
 > See [here](docs/images/cluster-builder-overview.png) for a diagramtic depiction of the __Cluster Builder__ components.
 
 
 ## Usage Guide
 
-__Cluster Builder__ is designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/), [Docker Swarm](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
+__Cluster Builder__ is designed to handle ~all~ most of the complexity associated with on-premise deployments of [DC/OS](https://dcos.io/) and [Kubernetes](https://kubernetes.io/) container orchestration clusters.
 
 1. [Supported Clusters](#supported-clusters)
 2. [Deployment Options](#deployment-options)
@@ -82,11 +82,6 @@ Production usage targets:
 > __Note__ that __DRS__ must be turned __off__ when deploying with __Cluster Builder__ to a vSphere/ESXi environment as the toolset currently expects VMs to be on the ESXi hosts specified in the deployment configuration file.  A future version will support a vSphere API based deployment option that will leverage and enable functionality such as DRS.  While DRS must be turned _off_ during current deployments, it can be turned back on when cluster deployment is complete (which usually only takes a few minutes).  This may result in the loss of post-deployment _cluster-control_ capabilities after VMs have been relocated, but should not affect cluster operations or management that relies on SSH.  On the up side, you don't need vCenter to perform __Cluster Builder__ deployments.  Free ESXi will do nicely.
 
 > Each variant starts in the **node-packer** and uses _packer_ to build a base VMX/OVA template image from distribution iso.
-
-#### Docker Swarm Cluster Types
-
-* centos-swarm
-* rhel-swarm
 
 #### DC/OS Cluster Types
 
@@ -151,25 +146,25 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * Ansible 2.3+ `brew install/upgrade ansible`
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
 * __kubectl__ 1.13+ (Kubernetes - `brew install/upgrade kubernetes-cli`)
-* Docker for Mac or __docker-ce__ (Swarm only)
-* Python `pip`
+* Docker for Mac or __docker-ce__ 
+* Python3 and  `pip3`
 
 __Linux Workstation Setup Notes__
 
-* For local machine deployments, configure _VMnet8_ (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnets (which map to the demo.idstudios.io and vm.idstudios.io example DNS names in the example cluster definition packages), but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified in the configuration, which in the case of Windows should be __vmnet8__.
+* For local machine deployments, configure _VMnet8_ (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnets (which map to the demo.idstudios.io and vm.idstudios.io example DNS names in the example cluster definition packages), but these can be adjusted as needed.  They simply need to align with the deployed __desktop_net__ and __desktop_net_type__ specified in the configuration, which in the case of Windows should be __vmnet8__.
 * Ensure all VMware tools and Packer are in __PATH__:
   * vmrun
   * ovftool
 * Ensure __kubectl__ is in the PATH (for K8s deployments).
-* Ensure __docker__ is in the PATH (for swarm deployments).
+* Ensure __docker__ is in the PATH.
 * Ensure __host__ is in the PATH.
-* For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
+* For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __desktop_net__ and __desktop_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
 > __Note__ Make sure and use _VMware's Virtual Network Editor_ that comes with the Pro version of Fusion/Workstation.  Trying to adjust the interface subnets by hand can be problematic.
 
 __macOS Workstation Setup Notes__
 
-* The locally deployed examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created in Fusion Pro before attempting to deploy the fusion demos.
+* The locally deployed examples use a custom VMware Fusion host-only network that maps to **vmnet2** with the network **192.168.100.0**.  This should be created in Fusion Pro before attempting to deploy the desktop demos.
 
 #### Windows
 
@@ -180,19 +175,19 @@ __macOS Workstation Setup Notes__
 * __kubectl__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
 * __docker-ce__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
 * Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
-* Python `pip` installed in the WSL
+* Python2 and `pip3` installed in the WSL
 
 __Windows Workstation Setup Notes__
 
 * When starting the WSL Bash shell make sure to start it with __Run as Administrator__.
-* For local machine deployments, configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __fusion_net__ and __fusion_net_type__ specified, which in the case of Windows should be __vmnet8__.
+* For local machine deployments, configure VMnet8 (the NAT interface) with correct subnet and DHCP settings for the host file configuration and DNS names you plan to use.  The examples are given using either a __192.168.100.0__ or __192.168.101.0__ subnet, but these can be adjusted as needed.  They simply need to align with the deployed __desktop_net__ and __desktop_net_type__ specified, which in the case of Windows should be __vmnet8__.
 * Ensure all VMware tools and Packer are in PATH for __bash__ and __cmd__.  This can be done by adding them to the Windows system path:
   * vmrun.exe
   * ovftool.exe
 * Ensure __kubectl__ is in the PATH (for K8s deployments).
-* Ensure __docker__ is in the PATH (for swarm deployments).
+* Ensure __docker__ is in the PATH.
 * Ensure __host__ is in the PATH.
-* For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __fusion_net__ and __fusion_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
+* For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __desktop_net__ and __desktop_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
 Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
 
@@ -452,13 +447,11 @@ k8sf-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 
 * [Kubernetes 1.14 (Single Node) CentOS 7.6 - VMware Fusion/Workstation](clusters/eg/demo-k8s/hosts)
 * [DC/OS in VMware Fusion/Workstation](clusters/eg/demo-dcos/hosts)
-* [Docker CE in VMware Fusion/Workstation](clusters/eg/demo-swarm/hosts)
 
 #### VMware ESXi Examples
 
 * [Kubernetes 1.14 on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
-* [Docker CE on ESXi](clusters/eg/esxi-swarm/hosts)
 
 ### Cluster Builder Usage
 
@@ -472,7 +465,7 @@ __Eg.__
 cluster-builder
  |_ clusters
   |_ ids          # an organization - git repo - named anything - shorter is better
-   |_ swarm-dev   # a cluster definition package in the organization repo
+   |_ k8s-dev     # a cluster definition package in the organization repo
     |_ hosts      # the cluster inventory hosts file
 ```
 All resulting artifacts from __Cluster Builder__ are then stored within the cluster definition package.
@@ -484,7 +477,7 @@ To deploy a cluster use **cluster-deploy**:
 
 Eg.
 
-	$ bash cluster-deploy eg/demo-swarm
+	$ bash cluster-deploy eg/demo-k8s
 
 ### Connecting to a Cluster
 Once a cluster has been deployed, all of the required and relevant artifacts for administering that cluster will be located in the cluster definition package folder.  Keep these safe (such as in a secure source control repository or vault).
@@ -528,7 +521,7 @@ This functionality is also available as as top level script:
 
 Eg.
 
-	bash cluster-passwd eg/esxi-swarm admin
+	bash cluster-passwd eg/esxi-k8s admin
 
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
 
@@ -541,7 +534,7 @@ Use **cluster-control**:
 
 __Eg.__
 
-	$ bash cluster-control eg/demo-swarm suspend
+	$ bash cluster-control eg/demo-k8s suspend
 
 ### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
@@ -572,17 +565,17 @@ __Eg.__
   nfs_shares:
     - folder: /mnt/nfs/shared
       fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
-      group: "docker_swarm_worker"
+      group: "k8s_workers"
     - folder: /mnt/nfs/shared
       fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"
-      group: "docker_swarm_worker"
+      group: "k8s_workers"
 ```
 
 And then run the ansible playbook for the platform:
 
 __Eg.__
 
-  ansible-playbook -i clusters/eg/esxi-swarm/hosts ansible/centos-nfs-shares.yml
+  ansible-playbook -i clusters/eg/esxi-k8s/hosts ansible/centos-nfs-shares.yml
 
 And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
 
@@ -914,14 +907,9 @@ $ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/knative.yml
 
 A general overview of the highlights:
 
-#### Docker Versions
+#### Versions
 
-__Docker CE:__ 17.12.1-ce (or later)
-
-* centos-swarm
-* rhel-swarm
-
-__DC/OS__: 1.11 (or latest)
+__DC/OS__: 1.12 (or latest)
 
 * centos-dcos
 
@@ -935,11 +923,10 @@ __Stock Kubernetes__: v1.13.x, v1.14.x, v1.15.x
 * CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
 * CentOS base VM image is a fully functioning and ready worker node.
 * Default linux kernel is 3.10.x
-* Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to swarms
-* The __VMware Docker Volume Service__ Docker Volume Plugin has been pre-installed on all Swarm based cluster-builder VMs.
+* Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to the clusters
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
 * Deployments can include configurable options for log shipping to ELK, using logstash.  
-* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring for Docker Swarm.  Heapster provides metrics to the Kubernetes Dashboard, though additional metric capture platforms can be added as required.
+* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring.  Heapster provides metrics to the Kubernetes Dashboard, though additional metric capture platforms can be added as required.
 * Remote API and TLS certificates are installed and configured on Docker CE deployments.
 
 > Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented within the _IaC_ codebase.

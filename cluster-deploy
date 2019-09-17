@@ -40,7 +40,7 @@ function esxi_deploy () {
     echo -e "Using cluster node root password found in package .passwords"
   fi
   PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ROOT_PASSWORD}')"
-  TARGET_ROOT_PASSWORD_HASH=`sudo python -c "${PYTHON_CMD}"`
+  TARGET_ROOT_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   
   if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
     if [ -z $CB_NODE_ADMIN_PASSWORD ]; then
@@ -62,7 +62,7 @@ function esxi_deploy () {
       echo -e "Using cluster node ${REMOTE_USER} password found in package .passwords"
     fi
     PYTHON_CMD="from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('${CB_NODE_ADMIN_PASSWORD}')"
-    TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python -c "${PYTHON_CMD}"`
+    TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   fi 
 
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
@@ -123,13 +123,13 @@ function esxi_deploy () {
   echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
-function fusion_deploy () {
+function desktop_deploy () {
 
   echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
   sudo date
 
   echo "Creating the ${VMWARE_APP} VMs and configuring the network for static IP assignment..."
-  ansible-playbook -i $INVENTORY_FILE ansible/fusion-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
+  ansible-playbook -i $INVENTORY_FILE ansible/desktop-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
     exit 1
@@ -226,11 +226,6 @@ if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   OVA_BUILD_TYPE=centos7-dcos
   SERVER_WAIT=360s
   REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'centos-swarm' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
-  CLUSTER_TYPE_NAME='CentOS Swarm'
-  OVA_BUILD_TYPE=centos7
-  REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'centos-k8s' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
   CLUSTER_TYPE_NAME='CentOS Kubernetes'
@@ -240,12 +235,6 @@ elif [ "$CLUSTER_TYPE" == 'fedora-k8s' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-fedora-x86_64.ova
   CLUSTER_TYPE_NAME='Fedora Kubernetes'
   OVA_BUILD_TYPE=fedora
-  REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'rhel-swarm' ]; then
-  RHEL_LIC=$( cat $CLUSTER_PKG_PATH/rhel.lic)
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-rhel7-x86_64.ova
-  CLUSTER_TYPE_NAME='RHEL Swarm'
-  OVA_BUILD_TYPE=rhel7
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'targetd-server' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/targetd-server-x86_64.ova
@@ -294,8 +283,8 @@ fi
 
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   esxi_deploy
-elif [ "$VMWARE_TARGET" == "fusion" ]; then
-  fusion_deploy
+elif [ "$VMWARE_TARGET" == "fusion" ] || [ "$VMWARE_TARGET" == "desktop" ]; then
+  desktop_deploy
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))

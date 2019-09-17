@@ -89,7 +89,7 @@ VMs are provisioned based on the **[vmware_vms]** group attributes.
 
 **exsi_host** is the target host where the VM will be deployed. **esxi-user** and **esxi-ds** are fairly straightforward.
 
-**cluster_type**: one of _centos-dcos_, _centos-swarm_, _rhel-swarm_.
+**cluster_type**: one of _centos-dcos_, _centos-k8s_ or _fedora-k8s_.
 
 **vmware_target**: _esxi_
 
@@ -110,10 +110,6 @@ __network_dns2__: 2nd DNS entry for the primary interface
 __network_dns3__: 3rd DNS entry for the primary interface
 
 __network_dn__: Domain name for the primary interface subnet
-
-__docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
-
-__docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
 
 __data_network_mask__: The network mask for the data network
 

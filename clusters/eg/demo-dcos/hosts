@@ -5,10 +5,10 @@ cluster_name=demo-centos-dcos
 dcos_boot_server=192.168.100.99
 dcos_boot_server_port=9580
 
-vmware_target=fusion
-fusion_net="vmnet2"
-fusion_net_type="custom"
-fusion_vm_folder="../virtuals"
+vmware_target=desktop
+desktop_net="vmnet2"
+desktop_net_type="custom"
+desktop_vm_folder="../virtuals"
 
 network_mask=255.255.255.0
 network_gateway=192.168.100.1

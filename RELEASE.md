@@ -1,6 +1,36 @@
 Release Notes
 =============
 
+v19.09
+------
+
+* Removed __Docker Swarm__ provisioning as it is largely a deprecated, never-was orchestration system.
+* Removed _Python2_ dependency on _CentOS7_ nodes and migrated all scripts to use _Python3_ and _pip3_.
+
+> In preparation for the deprecation of _Python2_, please rebuild your _CentOS_ nodes, and ensure that `ansible_python_interpreter=/usr/bin/python3` in all your __centos-k8s__ hosts files going forward.  In the future this will be the default.
+
+* Renamed all `fusion_` parameters to `desktop_` parameters as they apply to both __VMware Fusion__ and __VMware Workstation__ desktop products.
+
+> Make sure to update all locally deployed cluster `hosts` files accordingly as the following parameters have changed for desktop deployment:
+
+__Old__
+```
+vmware_target=fusion
+fusion_vm_folder="../virtuals"
+
+fusion_net="vmnet2"         # this should be vmnet8 for Windows and Linux
+fusion_net_type="custom"    # this should be nat for Windows and Linux
+```
+
+__New__
+```
+vmware_target=desktop
+desktop_vm_folder="../virtuals"
+
+desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux
+desktop_net_type="custom"    # this should be nat for Windows and Linux
+```
+
 v19.07
 ------
 

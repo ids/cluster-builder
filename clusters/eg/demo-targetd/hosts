@@ -3,11 +3,11 @@ cluster_type=targetd-server
 cluster_name=targetd
 remote_user=admin
 
-vmware_target=fusion
-fusion_vm_folder="../virtuals"
+vmware_target=desktop
+desktop_vm_folder="../virtuals"
 
-fusion_net="vmnet2"         # this should be vmnet8 for Windows and Linux
-fusion_net_type="custom"    # this should be nat for Windows and Linux
+desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux
+desktop_net_type="custom"    # this should be nat for Windows and Linux
 
 network_mask=255.255.255.0
 network_gateway=192.168.100.1

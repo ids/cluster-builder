@@ -38,10 +38,10 @@ Eg for macOS.
 
 The hostnames of the target VM nodes used in the cluster definition package:
 
-		192.168.100.90  demo-swarm-m1  drupal.idstudios.vmware
-		192.168.100.91	demo-swarm-w1
-		192.168.100.92	demo-swarm-w2
-		192.168.100.93	demo-swarm-w3
+		192.168.100.90  demo-k8k8ss-m1  drupal.idstudios.vmware
+		192.168.100.91	demo-k8s-w1
+		192.168.100.92	demo-k8s-w2
+		192.168.100.93	demo-k8s-w3
 
 > The preferred approach is to use a DNS server.
 
@@ -53,52 +53,68 @@ The ansible scripts will adjust your local VMware network dhcpd.conf file based 
 
 Once the VMs have been created, assigned their correct addresses, and are running, cluster provisioning process will begin.
 
-> __Note__ that all settings marked as __fusion__ apply to all of the VMware desktop platforms.
+> __Note__ that all settings marked as __desktop__ apply to all of the VMware desktop platforms.
 
 ### Ansible Fusion Configuration
 
-### Fusion Sample: demo-centos-swarm hosts file
+### Fusion Sample: demo-centos-k8s hosts file
 
-    [all:vars]
-    cluster_type=centos-swarm
-    cluster_name=demo-centos-swarm
+```
+[all:vars]
+cluster_type=centos-k8s
+cluster_name=k8s-demo
+remote_user=admin
 
-    vmware_target=fusion
-    fusion_net="vmnet2"
-    fusion_net_type="custom"
-    fusion_vm_folder="../virtuals"
+vmware_target=desktop
+desktop_vm_folder="../virtuals"
 
-    network_mask=255.255.255.0
-    network_gateway=192.168.100.1
-    network_dns=192.168.100.1
-    network_dns2=8.8.8.8
-    network_dns3=8.8.4.4
-    network_dn=idstudios.vmware
+desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux
+desktop_net_type="custom"    # this should be nat for Windows and Linux
 
-    docker_prometheus_server=demo-swarm-m1
+network_mask=255.255.255.0
+network_gateway=192.168.100.1
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=demo.idstudios.io
 
-    [docker_swarm_manager]
-    demo-swarm-m1 ansible_host=192.168.100.90 
+targetd_server=192.168.100.250
+targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
+targetd_server_volume_group=vg-targetd
+targetd_server_provisioner_name=iscsi-targetd
+targetd_server_account_credentials=targetd-account
+targetd_server_account_username=admin
+targetd_server_account_password=ciao
 
-    [docker_swarm_worker]
-    demo-swarm-w1 ansible_host=192.168.100.91 swarm_labels='["front-end", "db-galera-node-1"]'
-    demo-swarm-w2 ansible_host=192.168.100.92 swarm_labels='["front-end", "db-galera-node-2"]'
-    demo-swarm-w3 ansible_host=192.168.100.93 swarm_labels='["front-end", "db-galera-node-3"]'
+k8s_version=1.14.*
+k8s_metallb_address_range=192.168.100.150-192.168.100.169
+k8s_network_cni=canal
+k8s_control_plane_uri=k8s-admin-single.demo.idstudios.io
+k8s_advertise_addr=192.168.100.200
+k8s_ingress_url=k8s-ingress.demo.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
 
-    [vmware_vms]
-    demo-swarm-m1 numvcpus=2 memsize=2048 
-    demo-swarm-w1 numvcpus=2 memsize=3072 
-    demo-swarm-w2 numvcpus=2 memsize=3072 
-    demo-swarm-w3 numvcpus=2 memsize=3072 
+[k8s_masters]
+k8s-m1.demo.idstudios.io ansible_host=192.168.100.200 
 
+[k8s_workers]
+k8s-w1.demo.idstudios.io ansible_host=192.168.100.201
+k8s-w2.demo.idstudios.io ansible_host=192.168.100.202
+k8s-w3.demo.idstudios.io ansible_host=192.168.100.203
 
-**cluster_type**: one of _centos-dcos_, _centos-swarm_, _rhel-swarm_.
+[vmware_vms]
+k8s-m1.demo.idstudios.io numvcpus=4 memsize=2048
+k8s-w1.demo.idstudios.io numvcpus=4 memsize=3072
+k8s-w2.demo.idstudios.io numvcpus=4 memsize=3072
+k8s-w3.demo.idstudios.io numvcpus=4 memsize=3072
+```
 
-**vmware_target**: _fusion_ (also applies for workstation)
+**cluster_type**: one of _centos-dcos_, _centos-k8s or _fedora-k8s_.
 
-**fusion_net**: The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
+**vmware_target**: _desktop_ (also applies for workstation)
 
-**fusion_net_type**: One of _nat_, _bridged_ or _custom_.
+**desktop_net**: The name of the VMware network, vmnet[1-n], default is **vmnet2** with a network of 192.168.100.0.
+
+**desktop_net_type**: One of _nat_, _bridged_ or _custom_.
 
 __network_dns__: DNS entry for the primary interface
 
@@ -107,15 +123,6 @@ __network_dns2__: 2nd DNS entry for the primary interface
 __network_dns3__: 3rd DNS entry for the primary interface
 
 __network_dn__: Domain name for the primary interface subnet
-
-__docker_prometheus_server=<host>__: The specified server will have **prometheus** and **grafana** instances installed.
-
-__docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
-
-
-__docker_swarm_mgmt_cn__: The fully qualified server name to use for the remote api manager certificates.  This is the address used for the load balancer that balances the remote api requests over the manager nodes.
-
-__docker_swarm_mgmt_gw__: The fully qualified gateway name to use for all external cluster access.
 
 __docker_daemon_dns_override__: (optional)  By default, cluster-builder will use the dns entries defined for the host interfaces (network_dns, network_dns2, etc).  If a different DNS configuration is desired for Docker, this value can be used to override the default behavior.  It must be supplied in the JSON string array form:
 

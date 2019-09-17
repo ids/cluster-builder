@@ -38,6 +38,10 @@ CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' 
 VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
+if [ "$VMWARE_TARGET" == "fusion" ]; then
+  VMWARE_TARGET=desktop
+fi
+
 if [ "$ACTION" == "destroy" ] && [ "$CLUSTER_PROTECTED" == "true" ]; then
   echo
   echo "Destroy Blocked!"
