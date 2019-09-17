@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pulsar-data-volume-claim
-  namespace: kafka
+  namespace: pulsar
   annotations:
     volume.beta.kubernetes.io/storage-class: "iscsi-targetd-vg-targetd"  
 spec:

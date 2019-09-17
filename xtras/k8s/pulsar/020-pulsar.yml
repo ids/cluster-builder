@@ -20,7 +20,7 @@ spec:
         ports:
         - containerPort: 6650
         - containerPort: 8080
-        command: ["/bin/pulsar"]
+        command: ["bin/pulsar"]
         args: ["standalone"]        
         volumeMounts:
           - name: pulsar-data-volume
