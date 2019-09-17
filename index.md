@@ -43,7 +43,7 @@ _Why start from scratch?_
 <style>
 
 #header_wrap {
-  background: linear-gradient(to top, #002B36, #999);
+  background: linear-gradient(to top, #002B36, #003B36);
 }
 
 #footer_wrap {
