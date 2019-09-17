@@ -4,7 +4,8 @@ Release Notes
 v19.09
 ------
 
-* Removed __Docker Swarm__ provisioning as it is largely a deprecated, never-was orchestration system.
+* Removed __Docker Swarm__ provisioning; a deprecated, never-was orchestration system.
+* Standardize toolset on _Python3_ and _pip3_.
 * Removed _Python2_ dependency on _CentOS7_ nodes and migrated all scripts to use _Python3_ and _pip3_.
 
 > In preparation for the deprecation of _Python2_, please rebuild your _CentOS_ nodes, and ensure that `ansible_python_interpreter=/usr/bin/python3` in all your __centos-k8s__ hosts files going forward.  In the future this will be the default.
