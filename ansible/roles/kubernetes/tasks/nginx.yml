@@ -1,11 +1,11 @@
 - name: install NGINX ingress controller dependencies manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.21.0/deploy/mandatory.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
   register: nginx_dep_out
 
 - debug: msg="{{ nginx_dep_out.stdout_lines }}"
 
 - name: install NGINX ingress controller BareMetal NodePort manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.21.0/deploy/provider/baremetal/service-nodeport.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/service-nodeport.yaml
   register: nginx_out
   when: k8s_metallb_address_range is undefined
 
@@ -13,7 +13,7 @@
   when: k8s_metallb_address_range is undefined
 
 - name: install NGINX ingress controller LoadBalancer (MetalLB) manifest (cloud generic)
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.21.0/deploy/provider/cloud-generic.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud-generic.yaml
   register: nginx_out
   when: k8s_metallb_address_range is defined
 

@@ -4,6 +4,7 @@ Release Notes
 v19.09
 ------
 
+* Added initial support for __Kubernetes 1.16__, with required upgrades to 
 * Removed __Docker Swarm__ provisioning; a deprecated, never-was orchestration system.
 * Standardize toolset on _Python3_ and _pip3_.
 * Removed _Python2_ dependency on _CentOS7_ nodes and migrated all scripts to use _Python3_ and _pip3_.

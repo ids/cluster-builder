@@ -63,12 +63,15 @@ metadata:
   name: iscsi-provisioner
 ---
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: iscsi-provisioner
   namespace: {{ targetd_server_namespace }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: iscsi-provisioner
   template:
     metadata:
       labels:

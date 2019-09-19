@@ -1,28 +1,42 @@
 - name: install InfluxDB manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-retired/heapster/v1.5.4/deploy/kube-config/influxdb/influxdb.yaml
   register: influx_out
+  when: "k8s_version is not search ('1.16')"
 
 - debug: msg="{{ influx_out.stdout_lines }}"
+  when: "k8s_version is not search ('1.16')"
 
 - name: install Grafana manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-retired/heapster/v1.5.4/deploy/kube-config/influxdb/grafana.yaml
   register: graf_out
+  when: "k8s_version is not search ('1.16')"
 
 - debug: msg="{{ graf_out.stdout_lines }}"
+  when: "k8s_version is not search ('1.16')"
 
 - name: configure the heapster metrics service
   include: heapster.yml
-  when: "install_metrics_server is undefined"
+  when: "install_metrics_server is undefined and k8s_version is not search('1.16')"
 
 - name: configure the metrics server service
   include: metric-server.yml
-  when: "install_metrics_server is defined"
+  when: "install_metrics_server is defined or k8s_version is search('1.16')"
 
-- name: install kubernetes dashboard manifest
+- name: install kubernetes dashboard 1.x manifest
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
   register: dash_out
+  when: "k8s_version is not search ('1.16')"
 
 - debug: msg="{{ dash_out.stdout_lines }}"
+  when: "k8s_version is not search ('1.16')"
+
+- name: install kubernetes dashboard 2.x manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta1/aio/deploy/recommended.yaml
+  register: dash_out
+  when: "k8s_version is search ('1.16')"
+
+- debug: msg="{{ dash_out.stdout_lines }}"
+  when: "k8s_version is search ('1.16')"
 
 - name: waiting for kubernetes dashboard deployment to spin up
   pause:
