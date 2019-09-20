@@ -187,7 +187,7 @@ __Windows Workstation Setup Notes__
 * Ensure __docker__ is in the PATH.
 * For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __desktop_net__ and __desktop_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
-Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
+> Through experimentation it has been found that for local machine deployments on Windows cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
 
 #### Cluster Builder Control Box (Jump Box & Management Station)
 
