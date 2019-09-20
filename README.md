@@ -157,7 +157,6 @@ __Linux Workstation Setup Notes__
   * ovftool
 * Ensure __kubectl__ is in the PATH (for K8s deployments).
 * Ensure __docker__ is in the PATH.
-* Ensure __host__ is in the PATH.
 * For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __desktop_net__ and __desktop_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
 > __Note__ Make sure and use _VMware's Virtual Network Editor_ that comes with the Pro version of Fusion/Workstation.  Trying to adjust the interface subnets by hand can be problematic.
@@ -186,7 +185,6 @@ __Windows Workstation Setup Notes__
   * ovftool.exe
 * Ensure __kubectl__ is in the PATH (for K8s deployments).
 * Ensure __docker__ is in the PATH.
-* Ensure __host__ is in the PATH.
 * For local deployments ensure that the cluster definition package configuration uses __vmnet8__ and __nat__ for the __desktop_net__ and __desktop_net_type__ settings respectively.  As mentioned above, the host machine will need to be configured with the correct __subnet__ for __vmnet8__, and this has to match the networking settings defined for the target cluster configuration.
 
 Unlike Fusion where the host-only network is NAT'd by default, host-only on VMware Workstation for Windows does not have internet access.  Through experimentation it has been found that for local machine deployments cluster builder works best on the NAT'd interface, which is __VMnet8__ by default.
