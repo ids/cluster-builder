@@ -4,12 +4,15 @@ Release Notes
 v19.09
 ------
 
-* Added initial support for __Kubernetes 1.16__, with required upgrades to 
+* Added initial support for __Kubernetes 1.16__.
+* Upgraded __NGINX__ to __0.25__.
+* Introduced __Kubernetes Dashboard 2.0__ and __Metrics Server__ into the __1.15 and 1.16__ cluster deployments.
+* Re-introduce __Kubernetes 1.12.x__ series as this is the current stable GKE version (who knew Google's GCP would trail their own releases so many versions)
 * Removed __Docker Swarm__ provisioning; a deprecated, never-was orchestration system.
 * Standardize toolset on _Python3_ and _pip3_.
-* Removed _Python2_ dependency on _CentOS7_ nodes and migrated all scripts to use _Python3_ and _pip3_.
+* Removed _Python2_ dependency on _CentOS7_ nodes.
 
-> In preparation for the deprecation of _Python2_, please rebuild your _CentOS_ nodes, and ensure that `ansible_python_interpreter=/usr/bin/python3` in all your __centos-k8s__ hosts files going forward.  In the future this will be the default.
+> In preparation for the deprecation of _Python2_, please rebuild your _CentOS_ ova templates, and ensure that `ansible_python_interpreter=/usr/bin/python3` in all your __centos-k8s__ hosts files going forward.  
 
 * Renamed all `fusion_` parameters to `desktop_` parameters as they apply to both __VMware Fusion__ and __VMware Workstation__ desktop products.
 
