@@ -110,33 +110,37 @@
 - name: get master join command
   shell: "cat /tmp/kube-status | awk '/control-plane node/ {for(i=1; i<=5; i++) {getline; print}}' | tr -d '\n' | xargs "
   register: kubeadm_master_join_cmd
-  when: k8s_version is search("1.12") or k8s_version is not search("1.13") 
+  when: k8s_version is search("1.12") or k8s_version is search("1.13") 
 
 - name: kubeadm master join command
   debug: msg="{{ kubeadm_master_join_cmd.stdout }}"
-  when: k8s_version is search("1.12") or k8s_version is not search("1.13")  
+  when: k8s_version is search("1.12") or k8s_version is search("1.13")  
 
 - name: get worker join command
   shell: "cat /tmp/kube-status | awk '/worker node/{y=1;next}y' | tr -d '\n' |   sed 's/\\n//g' | xargs "
   register: kubeadm_join_cmd
-  when: k8s_version is not search("1.13")  
-
-- name: get worker join command
-  shell: "cat /tmp/kube-status | sed -n '/discovery-token-ca-cert-hash/,$p' "
-  register: kubeadm_join_cmd
-  when: k8s_version is search("1.12") 
+  when:  k8s_version is not search("1.12") and k8s_version is not search("1.13")  
 
 - name: kubeadm worker join command
   debug: msg="{{ kubeadm_join_cmd.stdout }}"
-  when: k8s_version is search("1.12") or k8s_version is not search("1.13")  
+  when:  k8s_version is not search("1.12") and k8s_version is not search("1.13")  
 
 - name: export worker join command to /root/join_cmd
   shell: "echo '{{ kubeadm_join_cmd.stdout }}' > /root/join_cmd "
-  when: k8s_version is search("1.12") or k8s_version is not search("1.13")  
+  when:  k8s_version is not search("1.12") and k8s_version is not search("1.13")  
 
+- name: get master join command
+  shell: "cat /tmp/kube-status | awk '/control-plane node/ {for(i=1; i<=5; i++) {getline; print}}' | tr -d '\n' | xargs "
+  register: kubeadm_master_join_cmd
+  when:  k8s_version is not search("1.12") and k8s_version is not search("1.13")  
+
+- name: kubeadm master join command
+  debug: msg="{{ kubeadm_master_join_cmd.stdout }}"
+  when:  k8s_version is not search("1.12") and k8s_version is not search("1.13")  
+    
 - name: export master join command to /root/join_cmd
   shell: "echo '{{ kubeadm_master_join_cmd.stdout }}' > /root/master_join_cmd "
-  when: k8s_version is search("1.12") or k8s_version is not search("1.13") 
+  when:  k8s_version is not search("1.12") and k8s_version is not search("1.13")  
 
 - name: setup kubectl configuration
   shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
