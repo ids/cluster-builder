@@ -22,11 +22,17 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.14")
 
-- name: generate the kubeadm 1.15+ yaml configuration
+- name: generate the kubeadm 1.15 yaml configuration
   template:
     src: templates/k8s-kube-adm-15.j2
     dest: /root/kube-adm.yml
-  when: k8s_version is search("1.15") or k8s_version is search("1.16")
+  when: k8s_version is search("1.15") 
+
+- name: generate the kubeadm 1.16 yaml configuration
+  template:
+    src: templates/k8s-kube-adm-16.j2
+    dest: /root/kube-adm.yml
+  when: k8s_version is search("1.16")
 
 - name: initialize cluster on first master (1.12) CentOS
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"

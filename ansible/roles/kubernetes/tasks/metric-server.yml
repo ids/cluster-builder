@@ -22,11 +22,22 @@
 
 - debug: msg="{{ metric_4_out.stdout_lines }}"
 
-- name: install Metrics Server - Metrics Server Deployment
-  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-server-deployment.yaml
-  register: metric_5_out
+#- name: install Metrics Server - Metrics Server Deployment
+#  shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-server-deployment.yaml
+#  register: metric_5_out
 
-- debug: msg="{{ metric_5_out.stdout_lines }}"
+#- debug: msg="{{ metric_5_out.stdout_lines }}"
+
+- name: generate the custom Metrics Server - Metrics Server Deployment with no TLS verify
+  template:
+    src: templates/metrics-server-deployment.j2
+    dest: /tmp/metrics-server-deployment.yml
+
+- name: apply Metrics Server - Metrics Server Deployment configuration
+  shell: kubectl apply -f /tmp/metrics-server-deployment.yml
+  register: metrics_dep_out
+
+- debug: msg="{{ metrics_dep_out.stdout_lines }}"
 
 - name: install Metrics Server - Metrics Server Service
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-server-service.yaml
