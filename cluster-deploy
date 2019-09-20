@@ -302,8 +302,15 @@ echo -e "To connect to the Kubernetes Dashboard:"
 echo
 echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
 echo
-echo -e "Open ${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
-echo
+
+if [[ $K8S_VERSION == 1.12* ]] || [[ $K8S_VERSION == 1.13* ]] || [[ $K8S_VERSION == 1.14* ]]; then
+  echo -e "Open ${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
+  echo
+else
+  echo -e "Open ${TC}http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login${NC}"
+  echo
+fi
+
 echo -e "Authenticate using the token found in clusters/${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
 echo
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
