@@ -913,7 +913,7 @@ __DC/OS__: 1.12 (or latest)
 
 * centos-dcos
 
-__Stock Kubernetes__: v1.13.x, v1.14.x, v1.15.x
+__Stock Kubernetes__: v1.12.x to v1.16.x
 
 * centos-k8s
 * fedora-k8s
@@ -925,8 +925,6 @@ __Stock Kubernetes__: v1.13.x, v1.14.x, v1.15.x
 * Default linux kernel is 3.10.x
 * Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to the clusters
 * Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
-* Deployments can include configurable options for log shipping to ELK, using logstash.  
 * Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring.  Heapster provides metrics to the Kubernetes Dashboard, though additional metric capture platforms can be added as required.
-* Remote API and TLS certificates are installed and configured on Docker CE deployments.
 
 > Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented within the _IaC_ codebase.
