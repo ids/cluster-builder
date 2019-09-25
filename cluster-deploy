@@ -161,7 +161,7 @@ function cluster_info_display() {
   echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
   echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
-  if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
+  if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
   if [ "$K8S_VERSION" == "" ]; then
     K8S_VERSION=default
   fi
@@ -228,8 +228,13 @@ if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'centos-k8s' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
-  CLUSTER_TYPE_NAME='CentOS Kubernetes'
+  CLUSTER_TYPE_NAME='CentOS 7 Kubernetes'
   OVA_BUILD_TYPE=centos7
+  REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'centos8-k8s' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos8-x86_64.ova
+  CLUSTER_TYPE_NAME='CentOS 8 Kubernetes'
+  OVA_BUILD_TYPE=centos8
   REMOTE_USER=admin
 elif [ "$CLUSTER_TYPE" == 'fedora-k8s' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-fedora-x86_64.ova
@@ -292,7 +297,7 @@ echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec"
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
-if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
+if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
 
 echo -e "The ${TC}kube-config${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
 echo 

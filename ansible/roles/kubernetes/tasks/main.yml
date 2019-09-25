@@ -25,33 +25,26 @@
     state: absent
     regexp: '^/dev/mapper/system-swap'
 
-- name: install iSCSI utils for CentOS
+- name: install iSCSI utils for CentOS 7
   yum: > 
     pkg=iscsi-initiator-utils 
     state=present
-  when: cluster_type != "fedora-k8s"
+  when: cluster_type == "centos-k8s"
   retries: 50
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
 
-- name: install iSCSI utils for Fedora
+- name: install iSCSI utils for Fedora / CentOS 8
   shell: "dnf install -y iscsi-initiator-utils"
   args:
     warn: false
-  when: cluster_type == "fedora-k8s"
+  when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
   retries: 50
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
  
-#- name: ensure the iSCSId daemon is not running a
-#  shell: systemctl stop iscsid
-
-#- name: generate a unique iscsi initiator name on each node
-#  shell: iscsi-iname > /etc/iscsi/initiatorname.iscsi
-#  become: true 
-
 - name: read node iscsi initiator value  
   shell: CODE=`cat /etc/iscsi/initiatorname.iscsi` && echo ${CODE//InitiatorName=/}
   register: vm_initiator_code
@@ -61,7 +54,7 @@
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
 
-- name: configure the Kubernetes Repo
+- name: configure the Kubernetes repo
   become: true
   template:
     src: templates/k8s-repo.j2
@@ -92,6 +85,10 @@
   include: cni.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
+
+- name: encrypt the Kubernetes secrets
+  include: secrets.yml
+  when: "'k8s_masters' in group_names"
 
 - name: install workaround patches for Kubernetes
   include: patch.yml

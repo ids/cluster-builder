@@ -15,11 +15,11 @@
 - name: join worker to cluster
   shell: "/root/join_cmd"
   register: worker_join
-  when: cluster_type == "centos-k8s"
+  when: cluster_type == "centos-k8s" or cluster_type == "centos8-k8s"
 
 - name: worker join result
   debug: msg="{{ worker_join.stdout_lines }}"
-  when: cluster_type == "centos-k8s"
+  when: cluster_type == "centos-k8s" or cluster_type == "centos8-k8s"
 
 - name: join worker to cluster
   shell: "cat /root/join_cmd | tr -d '\n' >> /root/join_cmd_fedora && echo -e ' --ignore-preflight-errors=SystemVerification \n' >> /root/join_cmd_fedora && bash /root/join_cmd_fedora"

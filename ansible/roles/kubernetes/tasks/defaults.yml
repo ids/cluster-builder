@@ -7,13 +7,19 @@
 - debug: msg="{{ k8s_version }}"
   run_once: true
 
-- name: set k8s_docker_version default
+- name: set k8s_docker_version default for CentOS 7
   set_fact:
     k8s_docker_version: distro
   run_once: true
   when: k8s_docker_version is undefined and cluster_type == 'centos-k8s'
 
-- name: set k8s_docker_version default
+- name: set k8s_docker_version default for CentOS 8
+  set_fact:
+    k8s_docker_version: 18.06.*
+  run_once: true
+  when: k8s_docker_version is undefined and cluster_type == 'centos8-k8s'
+
+- name: set k8s_docker_version default for Fedora
   set_fact:
     k8s_docker_version: 18.09.*
   run_once: true
@@ -187,5 +193,24 @@
   when: k8s_metallb_version is undefined
 
 - debug: msg="{{ k8s_metallb_version }}"
+  run_once: true
+
+- name: generate k8s_encryption_key default
+  shell: "head -c 32 /dev/urandom | base64 -i -"
+  register: generated_encryption_key
+  run_once: true
+  when: k8s_encryption_key is undefined
+
+- debug: msg="{{ generated_encryption_key }}"
+  when: k8s_encryption_key is undefined
+  run_once: true
+
+- name: set k8s_encryption_key default
+  set_fact:
+    k8s_encryption_key: "{{ generated_encryption_key.stdout }}"
+  run_once: true
+  when: k8s_encryption_key is undefined
+
+- debug: msg="{{ k8s_encryption_key }}"
   run_once: true
 
