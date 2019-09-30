@@ -14,25 +14,25 @@
     name=*
     state=latest
 
-- name: Install packages required 
+- name: install packages required 
   command: "yum -y install curl bash iputils tar xz nano unzip ipset nfs-utils yum-plugin-versionlock open-vm-tools"
  
-- name: Make sure the RTC is not local
+- name: make sure the RTC is not local
   command: timedatectl set-local-rtc 0
 
 - name: stop chronyd
   become: true
   command: systemctl stop chronyd
 
-- name: Force one time clock set
+- name: force one time clock set
   become: true
   command: chronyd -q 'pool ca.pool.ntp.org iburst'
 
-- name: Start chronyd
+- name: start chronyd
   become: true
   command: systemctl start chronyd
 
-- name: Find kernel version
+- name: find kernel version
   command: uname -r
   changed_when: false
   register: kernel_version
@@ -58,13 +58,13 @@
 #- name: Install Docker CE
 #  include: docker.yml
 
-- name: Enable extras
+- name: enable extras
   shell: sudo yum-config-manager --enable extras
 
-- name: Yum install container-selinux
+- name: yum install container-selinux
   shell: sudo yum -y install http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.33-1.git86f33cd.el7.noarch.rpm
 
-- name: Yum add Docker CE repo
+- name: yum add Docker CE repo
   shell: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 

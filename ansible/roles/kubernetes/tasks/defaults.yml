@@ -214,3 +214,12 @@
 - debug: msg="{{ k8s_encryption_key }}"
   run_once: true
 
+- name: set k8s_container_runtime default
+  set_fact:
+    k8s_container_runtime: docker
+  run_once: true
+  when: k8s_container_runtime is undefined 
+
+- debug: msg="{{ k8s_container_runtime }}"
+  run_once: true
+

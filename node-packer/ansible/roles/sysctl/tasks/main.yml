@@ -1,43 +1,48 @@
 - name: modprobe
   shell: modprobe br_netfilter
 
-- name: Adjust max file descriptors
-  lineinfile:
-    dest: /etc/sysctl.conf
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
+
+- name: adjust max file descriptors
+  sysctl:
+    name: fs.file-max
+    value: 100000
     state: present
-  with_items:
-    - { regexp: '^fs.file-max', line: 'fs.file-max = 100000' }
     
-- name: Adjust hard and soft limits
+- name: adjust hard and soft limits
   template:
     src: templates/limits-conf.j2
     dest: /etc/security/limits.conf
     
 - name: configure sysctl for ip4
-  lineinfile:
-    path: "/etc/sysctl.conf"
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
     state: present
-    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
-    line: 'net.bridge.bridge-nf-call-iptables = 1'      
 
 - name: disable ipv6
-  lineinfile:
-    path: "/etc/sysctl.conf"
+  sysctl:
+    name: net.ipv6.conf.all.disable_ipv6
+    value: 1
     state: present
-    regexp: '^net.ipv6.conf.all.disable_ipv6\s'
-    line: 'net.ipv6.conf.all.disable_ipv6 = 1'
 
 - name: set reverse path filter
-  lineinfile:
-    path: "/etc/sysctl.conf"
+  sysctl:
+    name: net.ipv4.conf.all.rp_filter
+    value: 1
     state: present
-    regexp: '^net.ipv4.conf.all.rp_filter\s'
-    line: 'net.ipv4.conf.all.rp_filter=1'
-    
+
+- name: enable ipv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward  
+    value: 1
+    state: present
+
 - name: enable changes
   shell: sysctl -w net.ipv4.route.flush=1
 
+- name: ensure netfilter is loaded
+  shell: modprobe br_netfilter
+
 - name: attempt to reconfigure sysctl
   shell: sysctl -p /etc/sysctl.conf
+

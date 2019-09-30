@@ -136,7 +136,7 @@
     enabled: yes
   when: (cluster_type == "centos8-k8s" and k8s_docker_version != 'distro') or cluster_type != "centos8-k8s"
 
-- name: Show docker info 
+- name: show docker info 
   command: "docker info"
   register: docker_info
 

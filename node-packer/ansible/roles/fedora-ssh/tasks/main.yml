@@ -1,7 +1,7 @@
 ---
 # Configure SSH
 
-- name: Configure Admin User SSH
+- name: configure Admin User SSH
   file:
     path: /home/admin/.ssh
     state: directory
@@ -9,7 +9,7 @@
     group: admin
     mode: 0700
 
-- name: Install Admin public SSH key
+- name: install Admin public SSH key
   copy:
     src: "/tmp/authorized_keys"
     dest: /home/admin/.ssh/authorized_keys
@@ -17,7 +17,7 @@
     group: admin
     mode: 0600
 
-- name: Configure SSH daemon
+- name: configure SSH daemon
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "{{ item.regexp }}"

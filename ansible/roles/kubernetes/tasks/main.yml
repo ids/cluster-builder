@@ -2,8 +2,25 @@
   include: defaults.yml
   run_once: true
 
+- name: ensure netfilter is loaded
+  shell: modprobe br_netfilter
+
+- name: enable ipv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward  
+    value: 1
+    state: present
+
+- name: enable changes
+  shell: sysctl -w net.ipv4.route.flush=1
+
 - name: apply docker settings
   include: docker.yml
+  when: k8s_container_runtime != 'crio'
+
+- name: apply crio settings
+  include: crio.yml
+  when: k8s_container_runtime == 'crio'
 
 - name: configure firewalld for kubernetes (optional)
   include: firewalld.yml

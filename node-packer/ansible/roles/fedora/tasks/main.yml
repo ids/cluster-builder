@@ -1,64 +1,48 @@
 ---
-- name: Find kernel version
+- name: find kernel version
   command: uname -r
   changed_when: false
   register: kernel_version
 
 - debug: msg="Fedora base image at {{ kernel_version.stdout }}"
 
-- name: Register docker repo 
+- name: register docker repo 
   command: "dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
 
   # Upgrade/Update all packages to latest version
-- name: Upgrade Fedora
+- name: upgrade Fedora
   dnf: >
     name=*
     state=latest
   ignore_errors: true
 
-- name: Install required base packages
+- name: install required base packages
   command: "dnf -y install curl bash iputils tar xz nano unzip ipset nfs-utils open-vm-tools dnf-plugins-core"
 
-- name: Install docker-ce and friends
+- name: install docker-ce and friends
   command: "dnf -y install docker-ce-18.09.* docker-ce-cli-18.09.* containerd.io"
 
-- name: Enable docker-ce daemon
+- name: enable docker-ce daemon
   command: "systemctl enable --now docker"
 
-- name: Show docker info 
+- name: show docker info 
   command: "docker info"
   register: docker_info
 
 - debug: msg="{{ docker_info.stdout_lines }}"
 
-- name: Make sure the RTC is not local
+- name: make sure the RTC is not local
   command: timedatectl set-local-rtc 0
 
 - name: stop chronyd
   become: true
   command: systemctl stop chronyd
 
-- name: Force one time clock set
+- name: force one time clock set
   become: true
   command: chronyd -q 'pool ca.pool.ntp.org iburst'
 
-- name: Start chronyd
+- name: start chronyd
   become: true
   command: systemctl start chronyd
 
-#- name: Configure bridge iptables for Fedora install for ip4
-#  lineinfile:
-#    path: "/etc/sysctl.conf"
-#    state: present
-#    regexp: '^net.bridge.bridge-nf-call-iptables =\s'
-#    line: 'net.bridge.bridge-nf-call-iptables = 1'
-  
-#- name: Configure bridge iptables for Fedora install for ip6
-#  lineinfile:
-#    path: "/etc/sysctl.conf"
-#    state: present
-#    regexp: '^net.bridge.bridge-nf-call-ip6tables =\s'
-#    line: 'net.bridge.bridge-nf-call-ip6tables = 1'
-  
-#- name: Attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
-#  shell: sysctl -p /etc/sysctl.conf

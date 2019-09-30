@@ -150,6 +150,8 @@
 
 - name: setup kubectl configuration
   shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
+  args:
+    warn: false
 
 - name: fetch the join_cmd file
   fetch:
@@ -189,13 +191,19 @@
 
 - name: clean the existing PKI directory
   shell: "rm -rf {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
+  args:
+    warn: false
   ignore_errors: true 
 
 - name: setup the PKI directory
   shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
+  args:
+    warn: false
 
 - name: setup the PKI etcd directory
   shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/etcd"
+  args:
+    warn: false
 
 - name: fetch the PKI certs to the local {{ cluster_pkg_folder }}/pki
   fetch:

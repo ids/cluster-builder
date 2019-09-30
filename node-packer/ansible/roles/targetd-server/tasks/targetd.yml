@@ -1,9 +1,9 @@
-- name: Install Targetd
+- name: install Targetd
   yum: >
     name=targetd
     state=latest
 
-- name: Install Targetd CLI
+- name: install Targetd CLI
   yum: >
     name=targetcli
     state=latest

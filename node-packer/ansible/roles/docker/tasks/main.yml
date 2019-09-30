@@ -1,15 +1,15 @@
 ---
-- name: Install Docker CE
+- name: install Docker CE
   yum: >
     name=docker
     state=present
 
-- name: Create docker group
+- name: create docker group
   group: >
     name=docker
     state=present
 
-- name: Add users to the docker group
+- name: add users to the docker group
   user:
     name: "{{ item }}"
     groups: docker
@@ -17,34 +17,34 @@
   with_items:
   - docker
 
-- name: Ensures /etc/docker exists
+- name: ensure /etc/docker exists
   file: 
     path: /etc/docker/ 
     state: directory
 
-- name: Start Docker
+- name: start Docker
   service:
     name: docker
     state: started
     enabled: yes
 
-- name: Verify Docker Configuration
+- name: verify Docker Configuration
   shell: docker info
   register: docker_out
 
 - debug: msg="{{ docker_out.stdout_lines }}"
 
-- name: Set SELinux to permissive mode
+- name: set SELinux to permissive mode
   selinux: policy=targeted state=permissive
 
-- name: Allow sudo without a tty
+- name: allow sudo without a tty
   lineinfile: >
     dest=/etc/sudoers
     regexp="^Defaults(\s+)(.*)requiretty(.*)"
     line="#Defaults\1\2requiretty\3"
     backrefs=yes
 
-- name: Disable IPv6
+- name: disable IPv6
   sysctl:
     name: "{{ item }}"
     value: 1
@@ -53,7 +53,7 @@
   - net.ipv6.conf.all.disable_ipv6
   - net.ipv6.conf.default.disable_ipv6
 
-- name: Enable IPv4 Forwarding
+- name: enable IPv4 Forwarding
   sysctl:
     name: net.ipv4.ip_forward
     value: 1

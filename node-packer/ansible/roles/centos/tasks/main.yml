@@ -21,10 +21,10 @@
 
 - debug: msg="CentOS upgraded to {{ kernel_version.stdout }}"
 
-- name: Install required packages 
+- name: install required packages 
   command: "yum -y install curl bash iputils tar xz nano unzip ipset nfs-utils yum-plugin-versionlock open-vm-tools"
 
-- name: Make sure the RTC is not local
+- name: make sure the RTC is not local
   command: timedatectl set-local-rtc 0
 
 - name: stop chronyd
