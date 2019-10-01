@@ -15,12 +15,12 @@
   shell: sysctl -w net.ipv4.route.flush=1
 
 - name: apply docker settings
-  include: docker.yml
-  when: k8s_container_runtime != 'crio'
+  include: cri-docker.yml
+  when: k8s_container_runtime != 'cri-o'
 
 - name: apply crio settings
-  include: crio.yml
-  when: k8s_container_runtime == 'crio'
+  include: cri-crio.yml
+  when: k8s_container_runtime == 'cri-o'
 
 - name: configure firewalld for kubernetes (optional)
   include: firewalld.yml

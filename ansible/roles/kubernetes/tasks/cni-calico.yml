@@ -1,25 +1,18 @@
 
-- name: configure NetworkManager for Calico
-  become: true
-  template:
-    src: templates/calico-conf.j2
-    dest: /etc/NetworkManager/conf.d/calico.conf
-
-- name: install Calico RBAC manifest
-  shell: "kubectl apply -f https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml"
-  register: calico_rbac_out
-  when: k8s_calico_version == "v3.3"
-
-- debug: msg="{{ calico_rbac_out.stdout_lines }}"
-  when: k8s_calico_version == "v3.3"
+#- name: download the current Calico default manifest
+#  shell: "curl -L -O https://docs.projectcalico.org/v3.9/manifests/calico.yaml"
+#  args:
+#    chdir: /tmp
+#  register: calico_def_out
   
-- name: download the current Calico default manifest
-  shell: "curl -L -O https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml"
-  args:
-    chdir: /tmp
-  register: calico_def_out
-  
-- debug: msg="{{ calico_def_out.stdout_lines }}"
+#- debug: msg="{{ calico_def_out.stdout_lines }}"
+
+- name: copy up the manifest for Calico 3.9
+  copy:
+    src: ../xtras/k8s/calico/calico.yml
+    dest: /tmp/calico.yaml
+    mode: 0766   
+  become: true   
 
 - name: "update the manifest with the correct cluster CIDR: {{ k8s_cluster_cidr }}"
   shell: "sed 's/.*192.168.0.0.*/              value: \"{{ k8s_cluster_cidr | replace('/', '\\/') }}\"/' /tmp/calico.yaml > /tmp/calico-fixed.yaml"
@@ -36,10 +29,10 @@
   
 - debug: msg="{{ calico_out.stdout_lines }}"
   
-- name: configure Calico CNI Network Policy 
-  include: cni-calico-policy.yml
-  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]
+#- name: configure Calico CNI Network Policy 
+#  include: cni-calico-policy.yml
+#  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+#    and inventory_hostname == groups['k8s_masters'][0]
 
 - name: give the Calico CNI time to reconcile
   pause:
