@@ -1,21 +1,28 @@
 
-#- name: download the current Calico default manifest
-#  shell: "curl -L -O https://docs.projectcalico.org/v3.9/manifests/calico.yaml"
-#  args:
-#    chdir: /tmp
-#  register: calico_def_out
+- name: download the Calico default manifest
+  shell: "curl -L -O https://docs.projectcalico.org/{{ k8s_calico_version }}/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml"
+  args:
+    chdir: /tmp
+  register: calico_def_out
   
-#- debug: msg="{{ calico_def_out.stdout_lines }}"
-
-- name: copy up the manifest for Calico 3.9
-  copy:
-    src: ../xtras/k8s/calico/calico.yml
-    dest: /tmp/calico.yaml
-    mode: 0766   
-  become: true   
+- debug: msg="{{ calico_def_out.stdout_lines }}"
 
 - name: "update the manifest with the correct cluster CIDR: {{ k8s_cluster_cidr }}"
   shell: "sed 's/.*192.168.0.0.*/              value: \"{{ k8s_cluster_cidr | replace('/', '\\/') }}\"/' /tmp/calico.yaml > /tmp/calico-fixed.yaml"
+
+- name: adjust calico-fixed yaml file for IP Auto detection method
+  lineinfile:
+    dest: /tmp/calico-fixed.yaml
+    insertafter: ".*value: \"autodetect\""
+    line: "            - name: IP_AUTODETECTION_METHOD"
+    state: present
+
+- name: adjust calico-fixed yaml file
+  lineinfile:
+    dest: /tmp/calico-fixed.yaml
+    insertafter: ".*IP_AUTODETECTION_METHOD"
+    line: "              value: \"interface=ens.*\""
+    state: present
 
 - name: view modified Calico manifest
   shell: cat /tmp/calico-fixed.yaml
@@ -29,14 +36,13 @@
   
 - debug: msg="{{ calico_out.stdout_lines }}"
   
-#- name: configure Calico CNI Network Policy 
-#  include: cni-calico-policy.yml
-#  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
-#    and inventory_hostname == groups['k8s_masters'][0]
+- name: configure Calico CNI Network Policy 
+  include: cni-calico-policy.yml
+  when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
 
-- name: give the Calico CNI time to reconcile
+- name: give the Calico Policy with Istio time to reconcile
   pause:
     minutes: "{{ k8s_calico_policy_wait_min }}"
   when: k8s_network_cni == 'calico-policy' and 'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
-

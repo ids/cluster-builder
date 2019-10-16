@@ -1,0 +1,2 @@
+docker build -t idstudios/streamsets-dc:latest .
+docker push idstudios/streamsets-dc:latest 
