@@ -1,6 +1,14 @@
 Release Notes
 =============
 
+v19.10
+------
+
+* Added initial scaffold for __CentOS 8__, but thus far no luck installing non-OpenShift K8s.
+* Added initial scaffold for the __CRI-O__ runtime as alternative to __containerd__.
+* Added __Kubeflow__ setup scripts in __xtras__.  
+* Validated __Calico__ CNI as a working option to __Canal__ (the default).
+
 v19.09
 ------
 

@@ -12,7 +12,7 @@ localAPIEndpoint:
   advertiseAddress: {{ k8s_advertise_addr }}
   bindPort: 6443
 nodeRegistration:
-{% if k8s_container_runtime == 'crio' %}
+{% if k8s_container_runtime == 'cri-o' %}
   criSocket: /var/run/crio/crio.sock
 {% else %}
   criSocket: /var/run/dockershim.sock

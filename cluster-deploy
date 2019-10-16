@@ -165,7 +165,15 @@ function cluster_info_display() {
   if [ "$K8S_VERSION" == "" ]; then
     K8S_VERSION=default
   fi
+  if [ "$K8S_CNI" == "" ]; then
+    K8S_CNI=default
+  fi
+  if [ "$K8S_CRI" == "" ]; then
+    K8S_CRI=default
+  fi
   echo -e " K8s Version     : ${TC}${K8S_VERSION}${NC}"
+  echo -e " K8s CRI         : ${TC}${K8S_CRI}${NC}"
+  echo -e " K8s CNI         : ${TC}${K8S_CNI}${NC}"
   fi
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
@@ -199,6 +207,8 @@ CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' 
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 K8S_VERSION=`sed -n '/^k8s_version=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+K8S_CRI=`sed -n '/^k8s_container_runtime=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+K8S_CNI=`sed -n '/^k8s_network_cni=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
 if [ "$CLUSTER_PROTECTED" == "true" ]; then
   echo

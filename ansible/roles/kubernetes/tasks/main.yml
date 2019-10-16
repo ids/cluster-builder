@@ -15,12 +15,12 @@
   shell: sysctl -w net.ipv4.route.flush=1
 
 - name: apply docker settings
-  include: docker.yml
-  when: k8s_container_runtime != 'crio'
+  include: cri-docker.yml
+  when: k8s_container_runtime != 'cri-o'
 
 - name: apply crio settings
-  include: crio.yml
-  when: k8s_container_runtime == 'crio'
+  include: cri-crio.yml
+  when: k8s_container_runtime == 'cri-o'
 
 - name: configure firewalld for kubernetes (optional)
   include: firewalld.yml
@@ -153,12 +153,14 @@
   include: kubernetes-dashboard-1.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
+    and k8s_install_dashboard|bool == True
     and (k8s_version is search('1.12') or k8s_version is search('1.13') or  k8s_version is search('1.14'))"
     
 - name: configure the Kubernetes Dashboard 2.x
   include: kubernetes-dashboard-2.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]
+    and k8s_install_dashboard|bool == True
     and (k8s_version is search('1.15') or  k8s_version is search('1.16'))"
 
 - name: display cluster worker node status

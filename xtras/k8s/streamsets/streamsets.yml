@@ -1,0 +1,58 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: streamsets-dc-data-volume-claim
+  namespace: streamsets
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "iscsi-targetd-vg-targetd"  
+spec:
+  resources:
+    requests:
+      storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: streamsets-dc-service
+  namespace: streamsets
+spec:
+  selector:
+    app: streamsets-dc
+  ports:
+  - protocol: TCP
+    name: streamsets-port
+    port: 18630
+    targetPort: 18630
+  type: LoadBalancer  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamsets-dc
+  namespace: streamsets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamsets-dc
+  template:
+    metadata:
+      labels:
+        app: streamsets-dc
+    spec:
+      containers:
+      - name: streamsets-dc
+        image: idstudios/streamsets-dc:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 18630
+        volumeMounts:
+          - name: streamsets-dc-data-volume
+            mountPath: "/data"
+      volumes:
+      - name: streamsets-dc-data-volume
+        persistentVolumeClaim:
+          claimName: streamsets-dc-data-volume-claim
