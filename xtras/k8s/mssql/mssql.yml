@@ -14,8 +14,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mssql-deployment
+  name: mssql
 spec:
+spec:
+  selector:
+    matchLabels:
+      app: mssql
   replicas: 1
   template:
     metadata:
@@ -49,7 +53,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mssql-deployment
+  name: mssql-service
 spec:
   selector:
     app: mssql
