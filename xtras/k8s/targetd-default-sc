@@ -1,5 +1,16 @@
-DEFAULT_STATE=$1
-kubectl patch storageclass iscsi-targetd-vg-targetd -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"${DEFAULT_STATE}"}}}'
+#!/usr/bin/env bash
 
-# True
-# kubectl patch storageclass iscsi-targetd-vg-targetd -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+if [ -z $1 ]; then
+    STATUS=false
+else
+    STATUS=$1
+fi
+export DEFAULT_SC_STATE=`echo "$STATUS" | tr '[:upper:]' '[:lower:]'`
+
+echo $DEFAULT_SC_STATE
+
+if [ "$DEFAULT_SC_STATE" == "true" ]; then
+    kubectl patch storageclass iscsi-targetd-vg-targetd -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+else
+    kubectl patch storageclass iscsi-targetd-vg-targetd -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+fi
