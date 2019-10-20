@@ -4,10 +4,17 @@ Release Notes
 v19.10
 ------
 
-* Added initial scaffold for __CentOS 8__, but thus far no luck installing non-OpenShift K8s.
-* Added initial scaffold for the __CRI-O__ runtime as alternative to __containerd__.
+* Updated to __Fedora 30__.
+* Added secrets encryption to all Kubernetes clusters.
 * Added __Kubeflow__ setup scripts in __xtras__.  
 * Validated __Calico__ CNI as a working option to __Canal__ (the default).
+* Aligned component versions for __NGINX__ and __Canal__ from __1.12__ to __1.16__.
+
+_Experimental_
+
+* Added initial scaffold for __CentOS 8__, but thus far no luck installing `kubeadm k8s`, still hung up on the CNI.
+* Added initial scaffold for the __CRI-O__ runtime as alternative to __containerd__, but with no stable version yet.
+
 
 v19.09
 ------
