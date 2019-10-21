@@ -93,6 +93,11 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
+- name: encrypt the Kubernetes secrets
+  include: secrets.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]"
+
 - name: configure the remaining Kubernetes masters
   include: masters-next.yml
   when: "'k8s_masters' in group_names
@@ -102,10 +107,6 @@
   include: cni.yml
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
-
-- name: encrypt the Kubernetes secrets
-  include: secrets.yml
-  when: "'k8s_masters' in group_names"
 
 - name: install workaround patches for Kubernetes
   include: patch.yml

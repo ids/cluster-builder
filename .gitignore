@@ -16,4 +16,6 @@ terraform.tfstate.backup
 
 nohup.out
 .passwords
+.vscode
+
 
