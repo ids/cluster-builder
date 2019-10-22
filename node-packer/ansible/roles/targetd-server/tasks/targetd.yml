@@ -1,9 +1,4 @@
-- name: install Targetd
-  yum: >
-    name=targetd
-    state=latest
-
-- name: install Targetd CLI
-  yum: >
-    name=targetcli
-    state=latest
+- name: install targetd service and CLI
+  command: "yum install -y targetd targetcli"
+  args:
+    warn: false
