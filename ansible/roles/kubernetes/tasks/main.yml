@@ -150,6 +150,13 @@
   when: "'k8s_masters' in group_names
     and inventory_hostname == groups['k8s_masters'][0]"
 
+- name: configure NFS client provisioner (optional) 
+  include: nfs-external.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+    and k8s_nfs_external_server is defined
+    and k8s_nfs_external_path is defined"
+
 - name: configure the Kubernetes Dashboard 1.x
   include: kubernetes-dashboard-1.yml
   when: "'k8s_masters' in group_names
