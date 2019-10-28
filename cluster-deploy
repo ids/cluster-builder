@@ -312,7 +312,7 @@ echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec"
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
-if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
+if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s"  || [ "$CLUSTER_TYPE" == "ubuntu-k8s" ]; then
 
 echo -e "The ${TC}kube-config${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
 echo 
