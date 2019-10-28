@@ -46,6 +46,7 @@ if [ "$IMAGE" == "centos7-dcos" ] || \
     [ "$IMAGE" == "centos7" ] || \
     [ "$IMAGE" == "centos8" ] || \
     [ "$IMAGE" == "fedora" ] || \
+    [ "$IMAGE" == "ubuntu" ] || \
     [ "$IMAGE" == "rhel7" ]; then
   echo
   echo 'Building VM image:' $IMAGE

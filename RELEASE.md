@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+v19.11
+------
+
+* Added __Ubuntu 18.04__ variant of `kubeadm k8s` as `ubuntu-k8s`
+
 v19.10
 ------
 

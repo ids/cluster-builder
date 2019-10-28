@@ -1,0 +1,39 @@
+---
+# Configure SSH
+
+- name: configure Admin User SSH
+  file:
+    path: /home/sysop/.ssh
+    state: directory
+    owner: sysop
+    group: sysop
+    mode: 0700
+
+- name: install sysop public SSH key
+  copy:
+    src: "/tmp/authorized_keys"
+    dest: /home/sysop/.ssh/authorized_keys
+    owner: sysop
+    group: sysop
+    mode: 0600
+
+- name: configure SSH daemon
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { regexp: '^UseDNS', line: 'UseDNS no' }
+    - { regexp: '^GSSAPIAuthentication', line: 'GSSAPIAuthentication no' }
+    - { regexp: '^#AllowTcpForwarding yes', line: 'AllowTcpForwarding no' }
+    - { regexp: '^#ClientAliveCountMax 3', line: 'ClientAliveCountMax 2' }
+    - { regexp: '^#Compression delayed', line: 'Compression no' }
+    - { regexp: '^#LogLevel INFO', line: 'LogLevel VERBOSE' }
+    - { regexp: '^#MaxSessions 10', line: 'MaxSessions 2' }
+    - { regexp: '^#MaxAuthTries 6', line: 'MaxAuthTries 2' }
+    - { regexp: '^#PermitRootLogin yes', line: 'PermitRootLogin no' }
+    - { regexp: '^#TCPKeepAlive yes', line: 'TCPKeepAlive no' }
+    - { regexp: '^X11Forwarding yes', line: 'X11Forwarding no' }
+    - { regexp: '^#AllowAgentForwarding yes', line: 'AllowAgentForwarding no' }
+    - { regexp: '^AllowUsers', line: 'AllowUsers sysop' }

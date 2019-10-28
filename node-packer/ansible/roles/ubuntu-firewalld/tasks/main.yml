@@ -1,0 +1,24 @@
+- name: install firewalld 
+  command: "apt-get -y install firewalld"
+
+- name: enable and start firewalld
+  service:
+    name: firewalld
+    state: restarted
+    enabled: yes  
+
+- name: set default Firewalld Zone to DMZ
+  shell: firewall-cmd --set-default-zone=dmz
+
+- name: enable SSH Firewalld rule
+  shell: firewall-cmd --zone=dmz --add-service=ssh --permanent
+
+- name: reload the Firewalld rules
+  shell: firewall-cmd --reload
+
+- name: list the active Firewalld rules
+  shell: firewall-cmd --list-all    
+  register: firewalld_rules
+
+- debug: msg="{{ firewalld_rules.stdout_lines }}"
+

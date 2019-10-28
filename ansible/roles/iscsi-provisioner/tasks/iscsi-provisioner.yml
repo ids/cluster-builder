@@ -8,7 +8,12 @@
   - name: read VM Node Initiator value for storage class 
     shell: CODE=`cat /etc/iscsi/initiatorname.iscsi` && echo ${CODE//InitiatorName=/}
     register: vm_initiator_code
-    when: targetd_server is defined 
+    when: targetd_server is defined and cluster_type != "ubuntu-k8s"
+
+  - name: read node iscsi initiator value in Ubuntu OS
+    shell: cat /etc/iscsi/initiatorname.iscsi | grep InitiatorName= | sed 's/^InitiatorName=//'
+    register: vm_initiator_code
+    when: targetd_server is defined and cluster_type == "ubuntu-k8s"
 
   - debug: msg="{{ vm_initiator_code.stdout }}"
     when: targetd_server is defined 

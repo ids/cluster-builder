@@ -251,6 +251,11 @@ elif [ "$CLUSTER_TYPE" == 'fedora-k8s' ]; then
   CLUSTER_TYPE_NAME='Fedora Kubernetes'
   OVA_BUILD_TYPE=fedora
   REMOTE_USER=admin
+elif [ "$CLUSTER_TYPE" == 'ubuntu-k8s' ]; then
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-ubuntu-x86_64.ova
+  CLUSTER_TYPE_NAME='Ubuntu Kubernetes'
+  OVA_BUILD_TYPE=ubuntu
+  REMOTE_USER=sysop
 elif [ "$CLUSTER_TYPE" == 'targetd-server' ]; then
   OVA_TEMPLATE_FILE=node-packer/output_ovas/targetd-server-x86_64.ova
   CLUSTER_TYPE_NAME='Targetd iSCSI Storage Appliance'

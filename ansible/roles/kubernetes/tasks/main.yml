@@ -62,28 +62,30 @@
   register: result
   until: result.rc is defined and result.rc == 0
  
-- name: read node iscsi initiator value  
+- name: install iSCSI utils for Ubuntu
+  shell: "apt-get -y install open-iscsi"
+  args:
+    warn: false
+  when: cluster_type == "ubuntu-k8s"
+  retries: 50
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
+
+- name: read node iscsi initiator value in non-Ubuntu OS
   shell: CODE=`cat /etc/iscsi/initiatorname.iscsi` && echo ${CODE//InitiatorName=/}
   register: vm_initiator_code
+  when: cluster_type != "ubuntu-k8s"
+
+- name: read node iscsi initiator value in Ubuntu OS
+  shell: cat /etc/iscsi/initiatorname.iscsi | grep InitiatorName= | sed 's/^InitiatorName=//'
+  register: vm_initiator_code
+  when: cluster_type == "ubuntu-k8s"
 
 - debug: msg="{{ vm_initiator_code.stdout }}"
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
-
-- name: configure the Kubernetes repo
-  become: true
-  template:
-    src: templates/k8s-repo.j2
-    dest: /etc/yum.repos.d/kubernetes.repo
-
-- name: disable GPG check on repo due to issues with the K8s source repo.
-  lineinfile:
-    dest: /etc/yum.repos.d/kubernetes.repo
-    line: "{{ item.line }}"
-    state: present
-  with_items:
-    - { line: 'repo_gpgcheck=0' }
 
 - name: install Kubernetes on all the nodes
   include: k8s-install.yml

@@ -1,10 +1,38 @@
+- name: configure the Kubernetes repo
+  become: true
+  template:
+    src: templates/k8s-repo.j2
+    dest: /etc/yum.repos.d/kubernetes.repo
+  when: cluster_type != "ubuntu-k8s"
+
+- name: disable GPG check on repo due to issues with the K8s source repo.
+  lineinfile:
+    dest: /etc/yum.repos.d/kubernetes.repo
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - { line: 'repo_gpgcheck=0' }
+  when: cluster_type != "ubuntu-k8s"
+
+- name: add key for k8s repo
+  shell: "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -"
+  when: cluster_type == "ubuntu-k8s"
+
+- name: add k8s repo
+  shell: 'apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"'
+  when: cluster_type == "ubuntu-k8s"
+
+- name: update apt
+  shell: "apt-get update"
+  when: cluster_type == "ubuntu-k8s"
+
 - name: install K8s (CentOS)
   shell: "yum -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
   args:
     warn: false
   register: k8s_install
   when: cluster_type == "centos-k8s"
-  retries: 50
+  retries: 5
   delay: 10
   until: k8s_install.rc is defined and k8s_install.rc == 0
 
@@ -17,7 +45,20 @@
     warn: false
   register: k8s_install
   when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
-  retries: 50
+  retries: 5
+  delay: 10
+  until: k8s_install.rc is defined and k8s_install.rc == 0
+  
+- debug: msg="{{ k8s_install.stdout_lines }}"
+  when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+- name: install K8s (Ubuntu)
+  shell: "apt-get -y install kubectl={{ k8s_version }} kubeadm={{ k8s_version }} kubelet={{ k8s_version }}"
+  args:
+    warn: false
+  register: k8s_install
+  when: cluster_type == "ubuntu-k8s"
+  retries: 5
   delay: 10
   until: k8s_install.rc is defined and k8s_install.rc == 0
   

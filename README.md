@@ -56,13 +56,10 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 
 ### Supported Clusters
 
-* CentOS 7 Docker CE
-* CentOS 7 DC/OS
-* RedHat Enterprise 7 Docker CE
+* CentOS 7.6 DC/OS
 * CentOS 7.6 Kubernetes (Stock `kubeadm`)
 * Fedora 29 Kubernetes (Stock `kubeadm`)
-
-> The last two `kubeadm` based Kubernetes clusters are likely to be the focus going forward.  Stock `kubeadm` clusters are quite stable and reliable when properly configured.
+* Ubuntu 18.04 LTS Kubernetes (Stock `kubeadm`)
 
 ### Deployment Options
 
@@ -89,10 +86,11 @@ Production usage targets:
 
 #### Kubernetes Cluster Types
 
-There are two maintained `kubeadm` built Kubernetes variants:
+There are three maintained `kubeadm` built Kubernetes variants:
 
 * centos-k8s
 * fedora-k8s
+* ubuntu-k8s
 
 These `kubeadm` __Kubernetes__ cluster builds come pre-configured with a core toolset rivaling the latest cloud provider offerings:
 

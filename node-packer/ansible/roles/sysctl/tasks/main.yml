@@ -1,6 +1,5 @@
-- name: modprobe
+- name: ensure netfilter is loaded
   shell: modprobe br_netfilter
-
 
 - name: adjust max file descriptors
   sysctl:
