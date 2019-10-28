@@ -22,20 +22,20 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 [cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following container orchestration clusters:
 
 * [Kubernetes](https://kubernetes.io/):
-  * `kubeadm` _Vanilla K8s_ CentOS 7.6
-  * `kubeadm` _Vanilla K8s_ Fedora 29 (5.x kernel)  
+  * `centos-k8s` - `kubeadm` on CentOS 7.6
+  * `fedora-k8s` - `kubeadm` on Fedora 30 (5.x kernel)  
+  * `ubuntu-k8s` - `kubeadm` on Ubuntu 18.04 LTS  
 
-and 
+* [DC/OS](https://dcos.io/) 
+  * `centos-dcos` - CentOS 7.6
 
-* [DC/OS](https://dcos.io/) on CentOS 7.6
+[cluster-builder](https://github.com/ids/cluster-builder) can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent iSCSI block storage, and NFS shared file volume persistent storage for K8s clusters.  This is especially useful in pre-production cluster environments.
 
-[cluster-builder](https://github.com/ids/cluster-builder) can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent iSCSI block storage, and NFS shared file volume persistent storage for K8s clusters.
+[cluster-builder](https://github.com/ids/cluster-builder) makes generic on-premise Kubernetes easy.  It is a single infrastructure codebase that can automatically deploy K8s and/or DC/OS container orchestration systems as production ready VMware VM clusters.  
 
-> Hard to believe?  It's true.  [cluster-builder](https://github.com/ids/cluster-builder) makes generic on-premise Kubernetes easy.  It is a single infrastructure codebase that can automatically deploy K8s and/or DC/OS container orchestration systems as production ready VMware VM clusters.  Not enough? It can also deploy the backing persistent volume technology to enable full stack containerized application deployment (_i.e. including the database_).  
+[cluster-builder](https://github.com/ids/cluster-builder) unites _VMware_ and _Kubernetes_ using accessible, open technology delivering an on-premise _Hybrid Cloud_ service model. It's __fully open__, __forkable__ and __hackable__.  
 
-[cluster-builder](https://github.com/ids/cluster-builder) unites _VMware_ and _Kubernetes_ using simple, open technology realizing an on-premise _Hybrid Cloud_ service delivery model. It's __fully open__, __forkable__ and __hackable__.  
-
-_Why start from scratch?_
+_Why are you still deploying server VMs?_
 
 ---
 <div class="center" style="margin-left: -20px;">
