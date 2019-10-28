@@ -161,7 +161,7 @@ function cluster_info_display() {
   echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
   echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
-  if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ]; then
+  if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ] || [ "$CLUSTER_TYPE" == "ubuntu-k8s" ]; then
   if [ "$K8S_VERSION" == "" ]; then
     K8S_VERSION=default
   fi

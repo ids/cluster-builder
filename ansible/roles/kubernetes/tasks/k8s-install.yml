@@ -5,7 +5,7 @@
     dest: /etc/yum.repos.d/kubernetes.repo
   when: cluster_type != "ubuntu-k8s"
 
-- name: disable GPG check on repo due to issues with the K8s source repo.
+- name: disable GPG check on repo due to issues with the k8s source repo.
   lineinfile:
     dest: /etc/yum.repos.d/kubernetes.repo
     line: "{{ item.line }}"
@@ -22,11 +22,11 @@
   shell: 'apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"'
   when: cluster_type == "ubuntu-k8s"
 
-- name: update apt
+- name: update apt source with k8s details
   shell: "apt-get update"
   when: cluster_type == "ubuntu-k8s"
 
-- name: install K8s (CentOS)
+- name: install k8s (CentOS)
   shell: "yum -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
   args:
     warn: false
@@ -39,7 +39,7 @@
 - debug: msg="{{ k8s_install.stdout_lines }}"
   when: cluster_type == "centos-k8s"
 
-- name: install K8s (Fedora / CentOS 8)
+- name: install k8s (Fedora / CentOS 8)
   shell: "dnf -y install kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
   args:
     warn: false
@@ -52,7 +52,7 @@
 - debug: msg="{{ k8s_install.stdout_lines }}"
   when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
-- name: install K8s (Ubuntu)
+- name: install k8s (Ubuntu)
   shell: "apt-get -y install kubectl={{ k8s_version }} kubeadm={{ k8s_version }} kubelet={{ k8s_version }}"
   args:
     warn: false

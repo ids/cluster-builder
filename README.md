@@ -261,6 +261,8 @@ See the [Local Deployment Guide](docs/local_deployment_guide.md) for details abo
 
 See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about deploying to ESXi hypervisor(s).
 
+> Note that all __CentOS/Fedora__ based clusters use `admin` as the default management account and Ansible __remote_user__, where __Ubuntu__ based clusters use `sysop` as the default management account and Ansible __remote_user__. 
+
 ### Kubernetes KubeAdm Configuration
 
 With respect to `centos-k8s` and `fedora-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
