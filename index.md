@@ -24,7 +24,7 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 * [Kubernetes](https://kubernetes.io/):
   * `centos-k8s` - `kubeadm` on CentOS 7.6
   * `fedora-k8s` - `kubeadm` on Fedora 30 (5.x kernel)  
-  * `ubuntu-k8s` - `kubeadm` on Ubuntu 18.04 LTS  
+  * `ubuntu-k8s` - `kubeadm` on Ubuntu 18.04 LTS (under development)
 
 * [DC/OS](https://dcos.io/) 
   * `centos-dcos` - CentOS 7.6
