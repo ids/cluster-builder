@@ -12,6 +12,7 @@
   - role: common
   - role: common-cluster
   - role: ubuntu
+  - role: ubuntu-ssh
   - role: kubernetes
   - role: iscsi-provisioner
 

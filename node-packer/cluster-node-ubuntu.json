@@ -1,37 +1,14 @@
 {
   "provisioners": [
     {
-      "type": "shell",
-      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "expect_disconnect": true,
-      "inline": ["reboot"]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/ubuntu-bootstrap.sh"
-    },
-    {
       "type": "file",
       "source": "keys/authorized_keys",
       "destination": "/tmp/authorized_keys"
     },     
     {
-      "type": "ansible-local",
-      "playbook_file": "ansible/ubuntu.yml",
-      "playbook_dir": "ansible",
-      "extra_arguments": "-vvvvv"
-    },
-    {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "expect_disconnect": true,
-      "inline": ["reboot"]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "bin/zerodisk.sh"
+      "script": "bin/ubuntu-bootstrap.sh"
     }
   ],
 
@@ -47,7 +24,7 @@
     {
       "type": "vmware-iso",
       "boot_command": [
-        "<leftShift><wait5s><esc><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<leftShift><wait7s><esc><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",

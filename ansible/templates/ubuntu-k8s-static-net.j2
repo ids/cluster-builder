@@ -6,16 +6,12 @@ network:
   renderer: networkd 
   ethernets:
     ens32:
-      dchp4: no
-      dchp6: no
+      dhcp4: no
+      dhcp6: no
       addresses: [{{ hostvars[inventory_hostname]['ansible_host'] }}{{ network_cidr }}, ]
-      gateway: {{ network_gateway }}
+      gateway4: {{ network_gateway }}
       nameservers:
-{% if network_dns is defined and network_dns2 is defined %}  
-        addresses: [{{ network_dns }}, {{ network_dns2 }}]      
-{{% else %}
-        addresses: [{{ network_dns }}, ]      
-{% endif %}
+        addresses: [{{ network_dns }}{% if network_dns2 is defined %},{{ network_dns2 }}{% endif %}]
 
 EOF
 

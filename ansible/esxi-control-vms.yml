@@ -6,7 +6,7 @@
   - name: scan the VMs for the VM ID
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep " {{ inventory_hostname }} " | cut -d" " -f1
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/getallvms | grep " {{ inventory_hostname }} " | cut -d" " -f1
     register: vm_id
   
   - debug: msg="{{ vm_id.stdout }}"
@@ -14,7 +14,7 @@
   - name: start the VMs
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.on {{ vm_id.stdout }} 
     when: vm_id.stdout is defined and vm_action == 'start'
     retries: 30
     delay: 10
@@ -24,7 +24,7 @@
   - name: stop the VMs
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.shutdown {{ vm_id.stdout }} 
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.shutdown {{ vm_id.stdout }} 
     when: vm_id.stdout is defined and vm_action == 'stop'
     retries: 30
     delay: 10
@@ -34,19 +34,19 @@
   - name: suspend the VMs
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.suspend {{ vm_id.stdout }} 
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.suspend {{ vm_id.stdout }} 
     when: vm_id.stdout is defined and vm_action == 'suspend'
 
   - name: kill the VMs 
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/power.off {{ vm_id.stdout }} 
     ignore_errors: true
     when: vm_action == 'destroy'
   
   - name: destroy the VMs 
     local_action:
       module: shell
-      _raw_params: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/destroy {{ vm_id.stdout }} 
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ esxi_user }}@{{ esxi_host }} vim-cmd vmsvc/destroy {{ vm_id.stdout }} 
     when: vm_action == 'destroy'
 
