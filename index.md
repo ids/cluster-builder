@@ -48,7 +48,7 @@ _Why are you still deploying server VMs?_
 <style>
 
 #header_wrap {
-  background: linear-gradient(to top, #002B36, #003B36);
+  background: linear-gradient(to top, #002B36, #013d4d);
 }
 
 #footer_wrap {
