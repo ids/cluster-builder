@@ -1,3 +1,7 @@
+- name: enable http firewalld rule
+  shell: apt-get -y install firewalld
+  when: cluster_type == 'ubuntu-k8s'
+
 - name: install the K8s master firewall service definition
   template:
     src: templates/firewalld/k8s-master.j2

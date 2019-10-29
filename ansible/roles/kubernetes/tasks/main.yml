@@ -31,6 +31,7 @@
     name: firewalld
     state: stopped
     enabled: no
+  ignore_errors: true
   when: k8s_firewalld_enabled|bool != True
 
 - name: turn swap off

@@ -86,8 +86,9 @@ function esxi_deploy () {
   
   echo -e "Assigning VM static IPs"
   bash $TEMP_SCRIPT_PATH/esxi-set-statics
-
+  
   echo "Waiting for the VMs to come up with their permanent IPs..."
+  sleep 5s
   ansible-playbook -i $INVENTORY_FILE ansible/wait-for-vms.yml 
   if [ $? -ne 0 ]; then
     echo "FAIL: All the VMs were not responsive at their permanent IPs within the timeout period."

@@ -3,11 +3,3 @@
 - name: set hostname.
   shell: hostnamectl set-hostname {{ node_fqdn }}
   become: yes
-
-- name: remove template duplicate machine-id.
-  shell: rm -f /etc/machine-id
-  become: yes
-
-- name: generate unique machine-id.
-  shell: dbus-uuidgen --ensure=/etc/machine-id
-  become: yes
