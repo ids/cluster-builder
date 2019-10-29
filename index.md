@@ -17,7 +17,7 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 
 [cluster-builder](https://github.com/ids/cluster-builder) embraces minimalism wherever possible.  Simple, freely available tools.  Readable and fungible scripts.
 
-[cluster-builder](https://github.com/ids/cluster-builder) follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this re-usable framework can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts, while offering a mechanism for managing the resulting cluster definition packages.
+[cluster-builder](https://github.com/ids/cluster-builder) follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this re-usable framework can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts.
 
 [cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following container orchestration clusters:
 
