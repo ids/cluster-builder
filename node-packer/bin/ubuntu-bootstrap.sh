@@ -22,22 +22,17 @@ cat > /etc/ssh/sshd_config << EOF
 
 # This sshd was compiled with PATH=/usr/local/bin:/usr/bin
 
-# The strategy used for options in the default sshd_config shipped with
-# OpenSSH is to specify options with their default value where
-# possible, but leave them commented.  Uncommented options override the
-# default value.
+Port 22
 
-# If you want to change the port on a SELinux system, you have to tell
-# SELinux about this change.
-# semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
-#
-#Port 22
-#AddressFamily any
-#ListenAddress 0.0.0.0
+# Use these options to restrict which interfaces/protocols sshd will bind to
 #ListenAddress ::
+#ListenAddress 0.0.0.0
 
+Protocol 2
+
+# HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
 
