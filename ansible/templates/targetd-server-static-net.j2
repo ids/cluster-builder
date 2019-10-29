@@ -24,13 +24,13 @@ SEARCH={{ network_dn }}
 EOF
 
 cat > /etc/resolv.conf << EOF
-{% if data_network_dns is defined %}  
+{% if network_dns is defined %}  
 nameserver {{ network_dns }}
 {% endif %}
-{% if data_network_dns2 is defined %}  
+{% if network_dns2 is defined %}  
 nameserver {{ network_dns2 }}
 {% endif %}
-{% if data_network_dns3 is defined %}  
+{% if network_dns3 is defined %}  
 nameserver {{ network_dns3 }}
 {% endif %}
 EOF

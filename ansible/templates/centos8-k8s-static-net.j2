@@ -21,9 +21,6 @@ EOF
 cat > /etc/sysconfig/network << EOF
 HOSTNAME={{ node_hostname }}.{{ network_dn }}
 SEARCH={{ network_dn }}
-{% if data_network_dn is defined %}  
-SEARCH={{ data_network_dn }}
-{% endif %}
 EOF
 
 cat > /etc/resolv.conf << EOF

@@ -1,29 +1,22 @@
-rm /etc/sysconfig/network-scripts/ifcfg-ens*
+rm /etc/netplan/01-netcfg*
 
-cat > /etc/sysconfig/network-scripts/ifcfg-ens32 << EOF
-DEVICE="ens32"
-ONBOOT="yes"
-BOOTPROTO=static
-IPADDR={{ hostvars[inventory_hostname]['ansible_host'] }}
-NETMASK={{ network_mask }}
-GATEWAY={{ network_gateway }}
-{% if network_dns is defined %}  
-DNS1={{ network_dns }}
+cat > /etc/netplan/01-netcfg.yaml << EOF
+network:
+  version: 2
+  renderer: networkd 
+  ethernets:
+    ens32:
+      dchp4: no
+      dchp6: no
+      addresses: [{{ hostvars[inventory_hostname]['ansible_host'] }}{{ network_cidr }}, ]
+      gateway: {{ network_gateway }}
+      nameservers:
+{% if network_dns is defined and network_dns2 is defined %}  
+        addresses: [{{ network_dns }}, {{ network_dns2 }}]      
+{{% else %}
+        addresses: [{{ network_dns }}, ]      
 {% endif %}
-{% if network_dns2 is defined %}  
-DNS2={{ network_dns2 }}
-{% endif %}
-{% if network_dns3 is defined %}  
-DNS3={{ network_dns3 }}
-{% endif %}
-EOF
 
-cat > /etc/sysconfig/network << EOF
-HOSTNAME={{ node_hostname }}.{{ network_dn }}
-SEARCH={{ network_dn }}
-{% if data_network_dn is defined %}  
-SEARCH={{ data_network_dn }}
-{% endif %}
 EOF
 
 cat > /etc/resolv.conf << EOF
@@ -34,5 +27,7 @@ nameserver {{ network_dns2 }}
 {% if network_dns3 is defined %}  
 nameserver {{ network_dns3 }}
 {% endif %}
+options edns0
+search {{ network_dn }}
 EOF
 

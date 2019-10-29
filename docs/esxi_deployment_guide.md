@@ -111,30 +111,6 @@ __network_dns3__: 3rd DNS entry for the primary interface
 
 __network_dn__: Domain name for the primary interface subnet
 
-__data_network_mask__: The network mask for the data network
+__network_mask__: The primary interface subnet network mask
 
-__data_network_gateway__: The gateway address for the data network
-
-> When deploying two interface nodes, the Data plane interface should be assigned the default gateway, and the Control/Mgmt plane interface should NOT be assigned a default gateway.
-
-__data_network_dns__: DNS entry for the data plane interface
-
-__data_network_dns2__: 2nd DNS entry for the data plane interface
-
-__data_network_dns3__: 3rd DNS entry for the data plane interface
-
-__data_network_dn__: Domain name for the data interface subnet
-
-#### Docker Specific Options
-
-__docker_prometheus_server=<host>__: The specified server will have **prometheus** and **grafana** instances installed.
-
-__docker_elk_target=<elk-server:port>__: Will configure global instances of **logstash**  on all nodes in the cluster, with the docker engine configured to use the **gelf** log driver for sending logs to logstash, which will be configured to ship the logs to the specified elk server.
-
-#### Advanced options:
-
-__docker_daemon_dns_override__: (optional)  By default, cluster-builder will use the dns entries defined for the host interfaces (network_dns, network_dns2, etc).  If a different DNS configuration is desired for Docker, this value can be used to override the default behavior.  It must be supplied in the JSON string array form:
-
-		docker_daemon_dns_override='"192.168.1.1", "8.8.8.8"'
-
-> Note the single quotes wrapping the double quotes.
+__network_cidr__: The primary interface network mask in CIDR form for (required for Ubuntu nodes)
