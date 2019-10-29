@@ -35,7 +35,7 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 
 [cluster-builder](https://github.com/ids/cluster-builder) unites _VMware_ and _Kubernetes_ using accessible, open technology delivering an on-premise _Hybrid Cloud_ service model. It's __fully open__, __forkable__ and __hackable__.  
 
-_Why are you still deploying server VMs?_
+_Why do things the hard way?_
 
 ---
 <div class="center" style="margin-left: -20px;">
