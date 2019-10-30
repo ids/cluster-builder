@@ -48,7 +48,7 @@
   args:
     warn: false
   when: cluster_type == "centos-k8s"
-  retries: 50
+  retries: 5
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
@@ -58,7 +58,7 @@
   args:
     warn: false
   when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
-  retries: 50
+  retries: 5
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
@@ -68,7 +68,7 @@
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"
-  retries: 50
+  retries: 5
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
@@ -78,12 +78,16 @@
   register: vm_initiator_code
   when: cluster_type != "ubuntu-k8s"
 
+- debug: msg="{{ vm_initiator_code.stdout }}"
+  when: cluster_type != "ubuntu-k8s"
+
 - name: read node iscsi initiator value in Ubuntu OS
   shell: cat /etc/iscsi/initiatorname.iscsi | grep InitiatorName= | sed 's/^InitiatorName=//'
   register: vm_initiator_code
   when: cluster_type == "ubuntu-k8s"
 
 - debug: msg="{{ vm_initiator_code.stdout }}"
+  when: cluster_type == "ubuntu-k8s"
 
 - name: ensure the iSCSId daemon is running and enabled on the nodes
   shell: systemctl enable iscsid && systemctl start iscsid
