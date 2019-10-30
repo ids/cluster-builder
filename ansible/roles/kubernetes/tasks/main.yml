@@ -97,13 +97,7 @@
 
 - name: configure the first Kubernetes master
   include: masters-first.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
-
-- name: encrypt the Kubernetes secrets
-  include: secrets.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: configure the remaining Kubernetes masters
   include: masters-next.yml
@@ -112,23 +106,23 @@
 
 - name: install the CNI
   include: cni.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: encrypt the Kubernetes secrets
+  include: secrets.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: install workaround patches for Kubernetes
   include: patch.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: display cluster master node status
   shell: kubectl get nodes
   register: final_nodes_out
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_nodes_out.stdout_lines }}"
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: remove the master taints (1.14+)
   shell: kubectl taint nodes --all node-role.kubernetes.io/master-
@@ -154,8 +148,7 @@
 
 - name: configure ingress and load balancing 
   include: ingress.yml
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: configure NFS client provisioner (optional) 
   include: nfs-external.yml
@@ -181,12 +174,10 @@
 - name: display cluster worker node status
   shell: kubectl get nodes
   register: final_nodes_out
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_nodes_out.stdout_lines }}"
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: configure log rotation
   become: true
@@ -197,29 +188,23 @@
 - name: list cluster nodes
   shell: kubectl get nodes
   register: final_nodes_out
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_nodes_out.stdout_lines }}"
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: list all running pods
   shell: kubectl get pods --all-namespaces
   register: final_pods_out
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_pods_out.stdout_lines }}"
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: list all services
   shell: kubectl get svc --all-namespaces
   register: final_svc_out
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_svc_out.stdout_lines }}"
-  when: "'k8s_masters' in group_names
-    and inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
