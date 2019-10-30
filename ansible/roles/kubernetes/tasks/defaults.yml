@@ -29,7 +29,7 @@
   set_fact:
     k8s_docker_version: distro
   run_once: true
-  when: k8s_version is search("1.12") k8s_docker_version is undefined and cluster_type == 'fedora-k8s'
+  when: k8s_version is search("1.12") and k8s_docker_version is undefined and cluster_type == 'fedora-k8s'
 
 - name: set k8s_docker_version default for Ubuntu
   set_fact:
