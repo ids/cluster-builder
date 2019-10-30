@@ -312,11 +312,21 @@ The __k8s_workloads_on_master__ setting removes all taints on the master node th
 
 (optional) This can be used to fix a crashing _CoreDNS_ when deploying to some environments with __calico__, the cause is under invesigation, and the workaround does not appear to impair cluster function.  If it is not needed in your environment it can be left out of the configuration.
 
-	k8s_cni_wait_min=7
-	k8s_worker_wait_min=7
-	k8s_calico_node_wait_min=3
+	k8s_firewalld_enabled
 
-The __k8s_XXX_wait_min__ settings allow control of various pauses during the cluster deployment.  The wait times will vary depending on your environment, and if deployments proceed too soon the PODS will not come up properly.  Adjust these values as required.  Larger clusters will require longer wait times.
+This defaults to __false__, but can be overridden to enable a Kubernetes tailored set of firewalld service definitions.
+
+	k8s_encryption_key=`head -c 32 /dev/urandom | base64 -i -`
+
+If a valid key is specified it will be used, otherwise the default is to generate a new __secrets__ encryption key per cluster deployment on the fly using the command shown.
+
+	k8s_container_runtime=docker | cri-o
+
+The default is to use the docker runtime.  __cri-o__ is an option, but has not been successfully configured and is currently under development.
+
+	k8s_install_dashboard=true | false
+
+The default is to install the appropriate Kubernetes dashboard for the cluster version.
 
 #### Working KubeAdm Formulas
 
@@ -342,17 +352,19 @@ Adjust the settings to suit your environment, and then simply copy the settings 
 
 See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and [ESXi deployment](clusters/eg/targetd-server/hosts).
 
-##### Formula: Basic Kubernetes (Stable)
+##### Formula: Basic CentOS 7 Kubernetes (Stable)
 
-A stable foundation to build on:
+A stable foundation upon which to build production service deployments:
 
 * __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm` __1.13.x__, __1.14.x__ or __1.15.x Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* `kubeadm`  __1.12.x__-__1.16.x__  Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
 
 (As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
+
+> CentOS 7 Kubernetes is considered the most stable of the variants and works with all stated versions in both single and multi-master HA configurations.
 
 ```
 k8s_version=1.14.*
@@ -366,17 +378,20 @@ k8s_cluster_token=9aeb42.99b7540a5833866a
 
 See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ESXi deployment](clusters/eg/esxi-k8s/hosts).
 
-##### Formula: Latest Fedora Kubernetes (Stable)
+##### Formula: Fedora Kubernetes (Stable)
 
-The latest Kubernetes on a 4.x kernel:
+The __1.15__ Kubernetes on a 5.x kernel:
 
-* __Fedora 29__ minimal OS node
-* `kubeadm` __1.13.x__, __1.14.x__ or __1.15.x Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* __Fedora 30__ minimal OS node
+* `kubeadm` __1.12.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
+* __iSCSI Provisioner__ for dynamic PVC volume provisioning against backing __Targetd Storage Appliance_.
 
 (As shown in the example below, deployed to the ESXi network of `192.168.1.0/24`).
+
+> This Fedora recipe works with all stated versions.
 
 ```
 [all:vars]
@@ -435,6 +450,88 @@ k8sf-w2 numvcpus=4 memsize=5144 esxi_host=esxi-2 esxi_user=root esxi_ds=datastor
 k8sf-w3 numvcpus=4 memsize=5144 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
 k8sf-w4 numvcpus=4 memsize=5144 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
 k8sf-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+```
+
+> Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
+
+> Note also the use of __ansible_python_interpreter=/usr/bin/python3__ as the newest _Fedora OVA Node Image_ uses _Python3_ exclusively.  [The above example can be found in](clusters/eg/esxi-k8sf/hosts)
+
+##### Formula: Latest Ubuntu HA Kubernetes (Stable)
+
+The latest HA Kubernetes on an Ubuntu foundation:
+
+* __Ubuntu 18.04.3__ minimal OS node
+* `kubeadm` __1.12.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* __MetalLB__ baremetal load balancer
+* __NGINX Ingress Controller__
+* __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
+* __iSCSI Provisioner__ for dynamic PVC volume provisioning against backing __Targetd Storage Appliance_.
+
+(As shown in the example below, deployed to the ESXi network of `192.168.1.0/24`).
+
+> Note that with __ubuntu-k8s__ deployments it is necessary to change the __remote_user__ to __sysop__.  This Ubuntu recipe works with all state versions.
+
+```
+[all:vars]
+cluster_type=ubuntu-k8s
+cluster_name=k8s
+remote_user=sysop
+
+ansible_python_interpreter=/usr/bin/python3
+
+vmware_target=esxi
+overwrite_existing_vms=true
+ovftool_parallel=true
+
+esxi_net="VM Network" 
+esxi_net_prefix=192.168.1
+
+network=192.168.1.0
+network_mask=255.255.255.0
+network_gateway=192.168.1.2
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=onprem.idstudios.io
+
+targetd_server=192.168.1.205
+targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
+targetd_server_volume_group=vg-targetd
+targetd_server_provisioner_name=iscsi-targetd
+targetd_server_account_credentials=targetd-account
+targetd_server_account_username=admin
+targetd_server_account_password=ciao
+targetd_server_namespace=kube-system
+
+k8s_version=1.16.*
+
+k8s_metallb_address_range=192.168.1.170-192.168.1.175
+
+k8s_control_plane_uri=k8sf-admin.onprem.idstudios.io
+k8s_advertise_addr=192.168.1.41
+k8s_ingress_url=k8sf-ingress.onprem.idstudios.io
+k8s_cluster_token=9aeb42.99b7540a5833866a
+
+[k8s_masters]
+k8sb-m1 ansible_host=192.168.1.41
+k8sb-m2 ansible_host=192.168.1.42
+k8sb-m3 ansible_host=192.168.1.43
+
+[k8s_workers]
+k8sb-w1 ansible_host=192.168.1.51
+k8sb-w2 ansible_host=192.168.1.52
+k8sb-w3 ansible_host=192.168.1.53
+k8sb-w4 ansible_host=192.168.1.54
+k8sb-w5 ansible_host=192.168.1.55
+
+[vmware_vms]
+k8sb-m1 numvcpus=4 memsize=5144 esxi_host=esxi-6 esxi_user=root esxi_ds=datastore6-ssd
+k8sb-m2 numvcpus=4 memsize=5144 esxi_host=esxi-7 esxi_user=root esxi_ds=datastore7
+k8sb-m3 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
+k8sb-w1 numvcpus=4 memsize=5144 esxi_host=esxi-1 esxi_user=root esxi_ds=datastore1
+k8sb-w2 numvcpus=4 memsize=5144 esxi_host=esxi-2 esxi_user=root esxi_ds=datastore2
+k8sb-w3 numvcpus=4 memsize=5144 esxi_host=esxi-3 esxi_user=root esxi_ds=datastore3
+k8sb-w4 numvcpus=4 memsize=5144 esxi_host=esxi-4 esxi_user=root esxi_ds=datastore4
+k8sb-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastore5-m2
 ```
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
