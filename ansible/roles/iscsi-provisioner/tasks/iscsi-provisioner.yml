@@ -12,7 +12,12 @@
   
   - debug: msg="{{ vm_initiator_code.stdout }}"
     when: targetd_server is defined and cluster_type != "ubuntu-k8s"
- 
+
+  - name: assign initiator fact 
+    set_fact:
+      initiator_name: "{{ vm_initiator_code.stdout }}"
+    when: targetd_server is defined and cluster_type != "ubuntu-k8s"
+
   - name: read node iscsi initiator value in Ubuntu OS
     shell: cat /etc/iscsi/initiatorname.iscsi | grep InitiatorName= | sed 's/^InitiatorName=//'
     register: vm_initiator_code
@@ -24,7 +29,7 @@
   - name: assign initiator fact 
     set_fact:
       initiator_name: "{{ vm_initiator_code.stdout }}"
-    when: targetd_server is defined 
+    when: targetd_server is defined and cluster_type == "ubuntu-k8s"
 
   - debug: msg="{{ initiator_name }}"
     when: targetd_server is defined 
