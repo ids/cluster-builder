@@ -152,7 +152,7 @@
   args:
     warn: false
   ignore_errors: true
-  when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
+  when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
 
 - name: install docker-ce and friends on Ubuntu
   shell: "apt-get -y install docker-ce-{{ k8s_docker_version }} docker-ce-cli-{{ k8s_docker_version }} containerd.io"
