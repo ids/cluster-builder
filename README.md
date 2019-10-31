@@ -265,7 +265,7 @@ See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about
 
 ### Kubernetes Versions and Variants
 
-With each release the default Kubernetes cluster profile (described in subsequent sections of this readme) is tested w/ the following version combinations.  Deployments are tested as both local workstation and ESXi deployments.  Recipes and template host files are readily available for most combinations in [clusters/eg] and can be tailored to your environment.
+With each release the default Kubernetes cluster profile (described in subsequent sections of this readme) is tested w/ the following version combinations.  Deployments are tested as both local workstation and ESXi deployments.  Recipes and template host files are readily available for most combinations in [clusters/eg](clusters/eg) and can be tailored to your environment.
 
 | k8s version |  centos-k8s | fedora-k8s  | ubuntu-k8s  |
 |-------------|-------------|-------------|-------------|
