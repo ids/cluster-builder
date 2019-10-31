@@ -351,13 +351,15 @@ The default is to install the appropriate Kubernetes dashboard for the cluster v
 
 #### Working KubeAdm Formulas
 
-The following are based on the `centos-k8s` __kubeadm__ based Kubernetes deployment, but should also work with `fedora-k8s`.  Thus far testing has revealed that `centos-k8s` performs better and with greater stability.  
+The following formulas are largely interchangeable within the matrix of supported versions and variants.  
 
 For local development single node deployments (`k8s_workloads_on_master`), as in the [demo-k8s example](clusters/eg/demo-k8s-single/hosts), when planning to install _Istio_ and _Knative_ ensure to allocate at least _5GB of RAM and 4 vCPU_ to your single node cluster.
 
 ##### Formula: Targetd Storage Appliance
 
 The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
+
+> This one is a must have, and can provide backing storage for several development clusters.
 
 ```
 targetd_server=192.168.100.250
@@ -385,8 +387,6 @@ A stable foundation upon which to build production service deployments:
 
 (As shown in the example below, deployed to the local VMware Fusion private network of `192.168.100.0/24`).
 
-> CentOS 7 Kubernetes is considered the most stable of the variants and works with all stated versions in both single and multi-master HA configurations.
-
 ```
 k8s_version=1.14.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
@@ -408,7 +408,7 @@ The __1.15__ Kubernetes on a 5.x kernel:
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
-* __iSCSI Provisioner__ for dynamic PVC volume provisioning against backing __Targetd Storage Appliance_.
+* __iSCSI Provisioner__ for dynamic PVC volume provisioning against backing __Targetd Storage Appliance__.
 
 (As shown in the example below, deployed to the ESXi network of `192.168.1.0/24`).
 
@@ -479,14 +479,14 @@ k8sf-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 
 ##### Formula: Latest Ubuntu HA Kubernetes (Stable)
 
-The latest HA Kubernetes on an Ubuntu foundation:
+The latest HA Kubernetes __1.16__ on an __Ubuntu LTS__ foundation:
 
-* __Ubuntu 18.04.3__ minimal OS node
+* __Ubuntu 18.04.3 LTS__ minimal OS node
 * `kubeadm` __1.13.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
-* __iSCSI Provisioner__ for dynamic PVC volume provisioning against backing __Targetd Storage Appliance_.
+* __iSCSI Provisioner__ for dynamic PVC volume provisioning against backing __Targetd Storage Appliance__.
 
 (As shown in the example below, deployed to the ESXi network of `192.168.1.0/24`).
 
