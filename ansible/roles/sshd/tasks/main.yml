@@ -20,7 +20,7 @@
     - { regexp: '^#TCPKeepAlive yes', line: 'TCPKeepAlive no' }
     - { regexp: '^X11Forwarding yes', line: 'X11Forwarding no' }
     - { regexp: '^#AllowAgentForwarding yes', line: 'AllowAgentForwarding no' }
-    - { regexp: '^AllowUsers', line: 'AllowUsers sysop' }
+    - { regexp: '^AllowUsers', line: 'AllowUsers {{ remote_user }}' }
 
 - name: restart sshd
   shell: systemctl restart sshd
