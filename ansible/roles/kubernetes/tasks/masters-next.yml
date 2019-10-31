@@ -63,6 +63,11 @@
     enabled: yes
   become: true
 
+- name: load kernel modules
+  shell: "modprobe --"
+  become: true   
+  when: k8s_version is search("1.12")
+
 - name: join other master to cluster
   shell: "/root/master_join_cmd"
   become: true   

@@ -28,6 +28,7 @@ etcd:
 {% for host in groups['k8s_masters'] %}
     - "{{ hostvars[host].inventory_hostname }}"
 {% endfor %}
+    - "{{ k8s_control_plane_uri }}"
   peerCertSANs:
 {% for host in groups['k8s_masters'] %}
     - "{{ hostvars[host].ansible_host }}"
