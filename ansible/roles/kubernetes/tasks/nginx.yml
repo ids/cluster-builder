@@ -2,7 +2,6 @@
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.21.0/deploy/mandatory.yaml
   when: k8s_version is search("1.12") or k8s_version is search("1.13")
   register: nginx_dep_out
-  when: k8s_version is search("1.12") or k8s_version is search("1.13")
 
 - debug: msg="{{ nginx_dep_out.stdout_lines }}"
   when: k8s_version is search("1.12") or k8s_version is search("1.13")
