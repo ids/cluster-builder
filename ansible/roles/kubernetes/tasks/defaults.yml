@@ -33,6 +33,12 @@
 
 - name: set k8s_docker_version default for Ubuntu
   set_fact:
+    k8s_docker_version: distro
+  run_once: true
+  when: k8s_version is not search("1.12") and k8s_docker_version is undefined and cluster_type == 'ubuntu-k8s'
+
+- name: set k8s_docker_version default for Ubuntu
+  set_fact:
     k8s_docker_version: 18.06.*
   run_once: true
   when: k8s_docker_version is undefined and cluster_type == 'ubuntu-k8s'
