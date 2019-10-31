@@ -94,14 +94,10 @@
 
 - name: export worker join command to /root/join_cmd
   shell: "echo '{{ kubeadm_join_cmd.stdout }} --ignore-preflight-errors=SystemVerification ' > /root/join_cmd "
-  when: k8s_version is search("1.12")  
-
-- name: export worker join command to /root/join_cmd
-  shell: "echo '{{ kubeadm_join_cmd.stdout }} ' > /root/join_cmd "
-  when: k8s_version is search("1.13") 
+  when: k8s_version is search("1.12") or k8s_version is search("1.13")
 
 - name: create master_join_cmd
-  shell: echo " --experimental-control-plane" | cat /root/join_cmd - | sed 's/\\n//g' | tr -d '\n' | xargs > /root/master_join_cmd
+  shell: echo " --experimental-control-plane --ignore-preflight-errors=SystemVerification" | cat /root/join_cmd - | sed 's/\\n//g' | tr -d '\n' | xargs > /root/master_join_cmd
   args:
     chdir: /root
   ignore_errors: false
