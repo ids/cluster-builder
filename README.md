@@ -278,9 +278,9 @@ With each release the default Kubernetes cluster profile (described in subsequen
 __HA__ = multi-master
 __S__ = single master
 
-__cluster-builder__ will supports the last 5 versions of Kubernetes, and with each new release, deprecates the oldest release.  There is no reason to remove the scripts, but they will fall out of the test cycle and be pruned in due course.
+__cluster-builder__ supports the last 4 versions of Kubernetes, and with each new release, deprecates the oldest release.  There is no reason to remove the scripts, but they will fall out of the test cycle and be pruned in due course.
 
-The Kubernetes release cycle cadence seems to suggest that 5 versions approximates 18 months of coverage, which represents a sane cut-off point, though the cluster deployment variants are likely to continue working well past that point.
+The Kubernetes release cycle cadence seems to suggest that 4 versions approximates 18 months of coverage, which represents a sane cut-off point, though the cluster deployment variants are likely to continue working well past that point.
 
 > One of these days (soon) I will get around to automating the test matrix as a CI pipeline.
 
