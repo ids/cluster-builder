@@ -359,7 +359,7 @@ For local development single node deployments (`k8s_workloads_on_master`), as in
 
 The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
 
-> This one is a must have.  It is even handy on a local laptop deployment for providing dynamic PVC volume provisioning, often required of helm charts and complex deployments.
+> This one is a must have.  It is especially handy on local laptop deployments for providing dynamic PVC volume provisioning, which is often required of helm charts and complex deployments.
 
 ```
 targetd_server=192.168.100.250
