@@ -130,19 +130,21 @@
   args:
     warn: false
   when: cluster_type == "centos8-k8s" and k8s_docker_version != 'distro'
-  #retries: 10
-  #delay: 10
-  #register: result
-  #until: result.rc is defined and result.rc == 0
+
+- name: install docker repo dependencies
+  shell: "apt-get -y install apt-transport-https ca-certificates curl software-properties-common"
+  args:
+    warn: false
+  when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
 
 - name: install docker repo key on Ubuntu
-  command: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
 
 - name: register docker repo on Ubuntu
-  command: "add-apt-repository deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  command: 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"'
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
