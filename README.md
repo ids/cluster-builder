@@ -359,7 +359,7 @@ For local development single node deployments (`k8s_workloads_on_master`), as in
 
 The Targetd Storage Appliance provides backing iSCSI dynamic volumes to one or more Kubernetes clusters.  It can simulate a SAN appliance in pre-production scenarios.  It is configured with a 1TB thinly provisioned volume.  It provides persistent storage for stateful services, and can also be configured as an NFS server to provide shared storage to front end web farms, etc.
 
-> This one is a must have, and can provide backing storage for several development clusters.
+> This one is a must have.  It is even handy on a local laptop deployment for providing dynamic PVC volume provisioning, often required of helm charts and complex deployments.
 
 ```
 targetd_server=192.168.100.250
@@ -490,7 +490,7 @@ The latest HA Kubernetes __1.16__ on an __Ubuntu LTS__ foundation:
 
 (As shown in the example below, deployed to the ESXi network of `192.168.1.0/24`).
 
-> Note that with __ubuntu-k8s__ deployments it is necessary to change the __remote_user__ to __sysop__.  This Ubuntu recipe works with all state versions.
+> Note that with __ubuntu-k8s__ deployments it is necessary to change the __remote_user__ to __sysop__.  
 
 ```
 [all:vars]
