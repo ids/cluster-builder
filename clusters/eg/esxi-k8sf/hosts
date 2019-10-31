@@ -33,7 +33,6 @@ k8s_version=1.15.*
 k8s_metallb_address_range=192.168.1.170-192.168.1.175
 
 k8s_control_plane_uri=k8sf-admin.onprem.idstudios.io
-k8s_advertise_addr=192.168.1.230
 k8s_ingress_url=k8sf-ingress.onprem.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 

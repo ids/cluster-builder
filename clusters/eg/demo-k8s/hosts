@@ -27,7 +27,6 @@ k8s_version=1.14.*
 k8s_metallb_address_range=192.168.100.150-192.168.100.169
 k8s_network_cni=canal
 k8s_control_plane_uri=k8s-admin-single.demo.idstudios.io
-k8s_advertise_addr=192.168.100.200
 k8s_ingress_url=k8s-ingress.demo.idstudios.io
 k8s_cluster_token=9aeb42.99b7540a5833866a
 
