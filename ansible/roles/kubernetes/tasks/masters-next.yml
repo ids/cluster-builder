@@ -1,8 +1,10 @@
 - name: ensure pki folder exists
   shell: mkdir -p /etc/kubernetes/pki/
+  become: true
 
 - name: ensure pki/etcd folder exists
   shell: mkdir -p /etc/kubernetes/pki/etcd
+  become: true
 
 - name: copy the PKI keys to the other masters
   copy:
@@ -41,6 +43,7 @@
     src: templates/k8s-kube-adm-13.j2
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.12") or k8s_version is search("1.13")
+  become: true
 
 - name: copy the master_join_cmd to the other masters
   copy:

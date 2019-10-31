@@ -163,12 +163,12 @@
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
 
 - name: install docker-ce and friends on Ubuntu
-  shell: "apt-get -y install docker-ce={{ k8s_docker_version }} docker-ce-cli={{ k8s_docker_version }} containerd.io"
+  shell: "apt-get -y install docker-ce={{ k8s_docker_version }} containerd.io"
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
-  retries: 10
-  delay: 10
+  retries: 2
+  delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
 
