@@ -4,7 +4,11 @@ Release Notes
 v19.11
 ------
 
-* Added __Ubuntu 18.04__ variant of `kubeadm k8s` as `ubuntu-k8s`
+* Added __Ubuntu 18.04 LTS__ variant of `kubeadm k8s` as `ubuntu-k8s`
+* Verified HA Kubernetes __1.13__ through __1.16__ for:
+  * `centos-k8s`
+  * `fedora-k8s`
+  * `ubuntu-k8s`
 
 v19.10
 ------
