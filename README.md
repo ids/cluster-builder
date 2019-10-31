@@ -38,21 +38,21 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 4. [Setup and Environment Preparation](#setup-and-environment-preparation)
 5. [Cluster Definition Packages](#cluster-definition-packages)
 6. [General Cluster Configuration](#general-cluster-configuration)
-7. [Kubernetes KubeAdm Configuration](#kubernetes-kubeadm-configuration)
-8. [Cluster Builder Usage](#cluster-builder-usage)
-9. [Deploying a Cluster](#deploying-a-cluster)
-10. [Connecting to a Cluster](#connecting-to-a-cluster)
-11. [Kubernetes Dashboard](#kubernetes-dashboard)
-12. [Change Cluster Password](#change-cluster-password)
-13. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-14. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-15. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
-16. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-17. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-18. [Helm Setup and KEDA](#helm-setup-and-keda)
-19. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-20. [Knative and Istio](#knative-and-istio)
-21. [System Profile](#system-profile)
+7. [Kubernetes Versions and Variants](#kubernetes-versions-and-variants)
+8. [Kubernetes KubeAdm Configuration](#kubernetes-kubeadm-configuration)
+9. [Cluster Builder Usage](#cluster-builder-usage)
+10. [Deploying a Cluster](#deploying-a-cluster)
+11. [Connecting to a Cluster](#connecting-to-a-cluster)
+12. [Kubernetes Dashboard](#kubernetes-dashboard)
+13. [Change Cluster Password](#change-cluster-password)
+14. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
+15. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+16. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
+17. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+18. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+19. [Helm Setup and KEDA](#helm-setup-and-keda)
+20. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
+21. [Knative and Istio](#knative-and-istio)
 
 ### Supported Clusters
 
@@ -263,6 +263,27 @@ See the [ESXi Deployment Guide](docs/esxi_deployment_guide.md) for details about
 
 > Note that all __CentOS/Fedora__ based clusters use `admin` as the default management account and Ansible __remote_user__, where __Ubuntu__ based clusters use `sysop` as the default management account and Ansible __remote_user__. 
 
+### Kubernetes Versions and Variants
+
+With each release the default Kubernetes cluster profile (described in subsequent sections of this readme) is tested w/ the following version combinations.  Deployments are tested as both local workstation and ESXi deployments.  Recipes and template host files are readily available for most combinations in [clusters/eg] and can be tailored to your environment.
+
+| k8s version |  centos-k8s | fedora-k8s  | ubuntu-k8s  |
+|-------------|-------------|-------------|-------------|
+|     1.12    |      HA     |     HA      |     HA      |
+|   __1.13__  |      HA     |     HA      |     HA      |
+|   __1.14__  |      HA     |     HA      |     HA      |
+|   __1.15__  |      HA     |     HA      |     HA      |
+|   __1.16__  |      HA     |     HA      |     HA      |
+
+__HA__ = multi-master
+__S__ = single master
+
+__cluster-builder__ will supports the last 5 versions of Kubernetes, and with each new release, deprecates the oldest release.  There is no reason to remove the scripts, but they will fall out of the test cycle and be pruned in due course.
+
+The Kubernetes release cycle cadence seems to suggest that 5 versions approximates 18 months of coverage, which represents a sane cut-off point, though the cluster deployment variants are likely to continue working well past that point.
+
+> One of these days (soon) I will get around to automating the test matrix as a CI pipeline.
+
 ### Kubernetes KubeAdm Configuration
 
 With respect to `centos-k8s` and `fedora-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
@@ -357,7 +378,7 @@ See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and
 A stable foundation upon which to build production service deployments:
 
 * __CentOS 7.6 (1810)__ minimal OS node
-* `kubeadm`  __1.12.x__-__1.16.x__  Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* `kubeadm`  __1.13.x__-__1.16.x__  Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
@@ -383,7 +404,7 @@ See the full examples for [local deployment](clusters/eg/demo-k8s/hosts) and [ES
 The __1.15__ Kubernetes on a 5.x kernel:
 
 * __Fedora 30__ minimal OS node
-* `kubeadm` __1.12.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* `kubeadm` __1.13.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
@@ -461,7 +482,7 @@ k8sf-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 The latest HA Kubernetes on an Ubuntu foundation:
 
 * __Ubuntu 18.04.3__ minimal OS node
-* `kubeadm` __1.12.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
+* `kubeadm` __1.13.x__-__1.16.x__ Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
 * __Kubernetes Dashboard__ w/ Heapster, Grafana, InfluxDB
@@ -547,6 +568,7 @@ k8sb-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 
 * [Kubernetes 1.14 on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
+
 
 ### Cluster Builder Usage
 
@@ -998,28 +1020,7 @@ $ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/knative.yml
 
 > Experience has called into question the value of _Knative_ for on-premise deployments.  While cost containment benefits of serverless are evident in the cloud pricing model, the overhead of complexity in requiring _Istio_ in support of _Knative_ tips the value proposition over.  Should _Knative_ be built into the platform in the future the merit of serverless may emerge, but at present, simple standard containerized services appear to nullify the value of serverless in on-premise deployments with orders of magnitude less complexity to manage at the cluster level.
 
-### System Profile
 
-A general overview of the highlights:
+### A Note about this IaC
 
-#### Versions
-
-__DC/OS__: 1.12 (or latest)
-
-* centos-dcos
-
-__Stock Kubernetes__: v1.12.x to v1.16.x
-
-* centos-k8s
-* fedora-k8s
-
-#### CentOS Based Clusters
-
-* CentOS base VM image OVA template is based on the CentOS 7 Minimal 1708 iso and is  __1.1GB__, and contains one thinly provisioned SCSI based VMDK disk using __overlay2__, which is now supported on 1708 (CentOS/RHEL 7.4+).
-* CentOS base VM image is a fully functioning and ready worker node.
-* Default linux kernel is 3.10.x
-* Use __packer centric__ approach for provisioning, VM OVA based nodes are ready to be added to the clusters
-* Time synchronization of all the cluster nodes is done as part of the deployment process, and __chronyd__ or __ntpd__ services are configured and verified.
-* Metrics are enabled (a configurable option), and cAdvisor/node-exporter options are available for deployment in support of Prometheus/Grafana monitoring.  Heapster provides metrics to the Kubernetes Dashboard, though additional metric capture platforms can be added as required.
-
-> Note that all details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented within the _IaC_ codebase.
+> All details pertaining to the above exist within this codebase. The cluster-builder starts with the distribution iso file in the initial [node-packer](node-packer) phase, and everything from the initial __kickstart__ install through to the final __ansible playbook__ are documented within the _IaC_ codebase.  There is absolutely nothing hidden, and a lot to be gained from understanding the various component parts of how it achieves on-premise Kubernetes deployment.  There are many ways to design and author a cluster-builder Iac, this is one of them.
