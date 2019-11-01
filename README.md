@@ -51,8 +51,7 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 17. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 18. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
 19. [Helm Setup and KEDA](#helm-setup-and-keda)
-20. [Host Mounted NFS Storage](#host-mounted-nfs-storage)
-21. [Knative and Istio](#knative-and-istio)
+20. [Knative and Istio](#knative-and-istio)
 
 ### Supported Clusters
 
@@ -656,42 +655,7 @@ As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cle
 The __Cluster Builder__ `kubeadm` Kubernetes deployment can be paired with a __Targetd Server Appliance__ VM that can provide dynamically provisioned __PVCs__ using the __open-iscsi__ platform.
 
 For details see the [Kubernetes iSCSI Storage Guide](docs/kubernetes-iscsi-storage.md)
-
-### Host Mounted NFS Storage
-
-Place the following file in the cluster definition package folder:
-
-  nfs_shares.yml
-
-In the format:
-
-```
-  nfs_shares:
-    - folder: the name of the local mount folder
-      fstab: the fstab entry
-      group: an inventory group of hosts on which to setup this mount
-```
-
-__Eg.__
-
-```
-  nfs_shares:
-    - folder: /mnt/nfs/shared
-      fstab: "192.168.1.10:/Users/seanhig/NFS_SharedStorage  /mnt/nfs/shared   nfs      rw,sync,hard,intr  0     0"
-      group: "k8s_workers"
-    - folder: /mnt/nfs/shared
-      fstab: "192.168.1.10:/Users/seanhig/Google\\040Drive/Backups/NFS_Backups  /mnt/nfs/backups   nfs      rw,sync,hard,intr  0     0"
-      group: "k8s_workers"
-```
-
-And then run the ansible playbook for the platform:
-
-__Eg.__
-
-  ansible-playbook -i clusters/eg/esxi-k8s/hosts ansible/centos-nfs-shares.yml
-
-And it will setup the mounts according to host group membership specified in the nfs_shares.yml configuration.
-
+s
 ### Kubernetes ElasticSearch Logging
 As of release __19.04__ all _Kubernetes_ clusters are configured for `json-file` logging to support log aggregation using `fluent-bit`.
 
