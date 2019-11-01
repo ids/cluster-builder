@@ -255,7 +255,7 @@ k8s-m1.idstudios.local ansible_host=192.168.1.220
 
 ### General Cluster Configuration
 
-The following guides containe some specific setup information depending on the target deployment.
+The following guides containe some specific setup information depending on the target deployment, with configuration parameters for defining the VMware network and environment specifics.
 
 See the [Local Deployment Guide](docs/local_deployment_guide.md) for details about deploying on VMware Fusion and Workstation.
 
@@ -286,7 +286,7 @@ The Kubernetes release cycle cadence seems to suggest that 4 versions approximat
 
 ### Kubernetes KubeAdm Configuration
 
-With respect to `centos-k8s` and `fedora-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
+With respect to `centos-k8s`, `fedora-k8s` and `ubuntu-k8s` based `kubeadm` clusters there are additional configuration parameters to those described in the _general_ guides:
 
 	k8s_version=1.14.*
 
