@@ -274,8 +274,8 @@ With each release the default Kubernetes cluster profile (described in subsequen
 |   __1.15__  |      HA     |     HA      |     HA      |
 |   __1.16__  |      HA     |     HA      |     HA      |
 
-__HA__ = multi-master
-__S__ = single master
+__HA__ = multi-master and single master configurations supported
+__S__ = single master only
 
 __cluster-builder__ supports the last 4 versions of Kubernetes, and with each new release, deprecates the oldest release.  There is no reason to remove the scripts, but they will fall out of the test cycle and be pruned in due course.
 
