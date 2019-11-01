@@ -473,7 +473,7 @@ k8sf-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
 
-> Note also the use of __ansible_python_interpreter=/usr/bin/python3__ as the newest _Fedora OVA Node Image_ uses _Python3_ exclusively.  [The above example can be found in](clusters/eg/esxi-k8sf/hosts)
+> Note also the use of __ansible_python_interpreter=/usr/bin/python3__ as the newest _Fedora OVA Node Image_ uses _Python3_ exclusively.  The above example can be found in [clusters/eg/esxi-k8sf/hosts](clusters/eg/esxi-k8sf/hosts)
 
 ##### Formula: Latest Ubuntu HA Kubernetes (Stable)
 
@@ -554,7 +554,7 @@ k8sb-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 
 > Note that these examples are setup to make use of a Targetd Storage Appliance that had been previously deployed.
 
-> Note also the use of __ansible_python_interpreter=/usr/bin/python3__ as the newest _Fedora OVA Node Image_ uses _Python3_ exclusively.  [The above example can be found in](clusters/eg/esxi-k8sf/hosts)
+> Note also the use of __ansible_python_interpreter=/usr/bin/python3__ as the newest _Fedora OVA Node Image_ uses _Python3_ exclusively.  The above example can be found in [clusters/eg/esxi-k8sf/hosts](clusters/eg/esxi-k8sf/hosts)
 
 #### VMware Fusion/Workstation Complete Examples
 
@@ -565,7 +565,6 @@ k8sb-w5 numvcpus=4 memsize=5144 esxi_host=esxi-5 esxi_user=root esxi_ds=datastor
 
 * [Kubernetes 1.14 on CentOS 7.6 - ESXi ](clusters/eg/esxi-k8s/hosts)
 * [DC/OS on ESXi](clusters/eg/esxi-dcos/hosts)
-
 
 ### Cluster Builder Usage
 
