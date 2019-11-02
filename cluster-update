@@ -6,12 +6,12 @@ REMOTE_USER=root
 function k8s_patch () {
   
   echo 
-  echo -e "${TC}Verifying host access:${NC}"
+  echo -e " ${TC}Verifying host access:${NC}"
   echo
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
   echo
 
-  echo -e "${TC}Updating cluster: ${CLUSTER_TYPE_NAME}${NC}"
+  echo -e " ${TC}Updating cluster: ${CLUSTER_TYPE_NAME}${NC}"
   echo
   ansible-playbook -i $INVENTORY_FILE ansible/k8s-update.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then

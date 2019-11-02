@@ -5,7 +5,7 @@ v19.11
 ------
 
 * Added __Ubuntu 18.04 LTS__ variant of `kubeadm k8s` as `ubuntu-k8s`
-* Introduction of the `cluster-update` command.  While still experimental this command updates Kubernetes clusters in place in support of minor release upgrades.
+* Introduction of the `cluster-update` command.  While still experimental this command updates Kubernetes clusters in place (minor release upgrades and security patching).
 * Verified HA Kubernetes __1.13__ through __1.16__ for:
   * `centos-k8s`
   * `fedora-k8s`
