@@ -46,7 +46,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: unlock k8s (CentOS)
-    shell: "yum versionlock clear"
+    shell: "yum versionlock delete kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_clear_lock
