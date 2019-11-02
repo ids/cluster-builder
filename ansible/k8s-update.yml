@@ -85,7 +85,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: version lock k8s (CentOS)
-    shell: "yum -y versionlock kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "yum -y versionlock clear"
     args:
       warn: false
     register: k8s_install_lock_version
@@ -111,7 +111,7 @@
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
   - name: unlock k8s (Fedora / CentOS 8)
-    shell: "dnf -y versionlock delete kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "dnf -y versionlock clear"
     args:
       warn: false
     register: k8s_install_unlock_version
