@@ -1,0 +1,22 @@
+- name: install MetalLB manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/google/metallb/v{{ k8s_metallb_version }}/manifests/metallb.yaml
+  register: metallb_out
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ metallb_out.stdout_lines }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: generate the MetalLB configuration 
+  template:
+    src: templates/k8s-metallb-config.j2
+    dest: /tmp/metallb-config.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: apply MetalLB configuration
+  shell: kubectl apply -f /tmp/metallb-config.yml
+  register: metallb_conf_out
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ metallb_conf_out.stdout_lines }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+

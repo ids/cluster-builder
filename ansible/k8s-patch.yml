@@ -1,0 +1,235 @@
+---
+# This playbook patches in place Kubernetes
+- hosts: k8s_masters,k8s_workers
+  remote_user: "{{ remote_user }}"
+  become: true
+  any_errors_fatal: true
+  vars:
+    kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
+  roles:
+  - role: common
+  - role: k8s-settings
+
+- hosts: k8s_masters,k8s_workers
+  remote_user: "{{ remote_user }}"
+  become: true
+  serial: 1
+  any_errors_fatal: true
+  vars:
+    kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
+  tasks:
+
+  - name: drain node
+    local_action:
+      module: shell
+      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} drain {{ node_fqdn }} --ignore-daemonsets --delete-local-data"
+    become: false
+    register: node_drain_out
+
+  - debug: msg="{{ node_drain_out.stdout_lines }}"
+
+  - name: stop the kubelet service 
+    shell: systemctl stop kubelet
+    register: kubelet_stop_out
+
+  - name: install k8s version lock (CentOS)
+    shell: "yum install yum-plugin-versionlock"
+    args:
+      warn: false
+    register: k8s_install_lock
+    when: cluster_type == "centos-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_lock.rc is defined and k8s_install_lock.rc == 0
+
+  - debug: msg="{{ k8s_install_lock.stdout_lines }}"
+    when: cluster_type == "centos-k8s"
+
+  - name: unlock k8s (CentOS)
+    shell: "yum versionlock clear"
+    args:
+      warn: false
+    register: k8s_clear_lock
+    when: cluster_type == "centos-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_clear_lock.rc is defined and k8s_clear_lock.rc == 0
+
+  - debug: msg="{{ k8s_clear_lock.stdout_lines }}"
+    when: cluster_type == "centos-k8s"
+
+  - name: update k8s first (CentOS)
+    shell: "yum update && yum -y upgrade kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_update
+    when: cluster_type == "centos-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_update.rc is defined and k8s_update.rc == 0
+
+  - debug: msg="{{ k8s_update.stdout_lines }}"
+    when: cluster_type == "centos-k8s"
+
+  - name: version lock k8s (CentOS)
+    shell: "yum -y versionlock kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_install_lock_version
+    when: cluster_type == "centos-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_lock_version.rc is defined and k8s_install_lock_version.rc == 0
+
+  - debug: msg="{{ k8s_install_lock_version.stdout_lines }}"
+    when: cluster_type == "centos-k8s"
+
+  - name: install k8s versionlock plugin for DNF (Fedora / CentOS 8)
+    shell: "dnf -y install python3-dnf-plugin-versionlock"
+    args:
+      warn: false
+    register: k8s_install_lock
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_lock.rc is defined and k8s_install_lock.rc == 0
+    
+  - debug: msg="{{ k8s_install_lock.stdout_lines }}"
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+  - name: unlock k8s (Fedora / CentOS 8)
+    shell: "dnf -y versionlock delete kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_install_unlock_version
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_unlock_version.rc is defined and k8s_install_unlock_version.rc == 0
+    
+  - debug: msg="{{ k8s_install_unlock_version.stdout_lines }}"
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+  - name: update k8s first (Fedora / CentOS 8)
+    shell: "dnf makecache && dnf -y upgrade kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_update
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_update.rc is defined and k8s_update.rc == 0
+    
+  - debug: msg="{{ k8s_update.stdout_lines }}"
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+  - name: lock k8s (Fedora / CentOS 8)
+    shell: "dnf -y versionlock kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_install_lock_version
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_lock_version.rc is defined and k8s_install_lock_version.rc == 0
+    
+  - debug: msg="{{ k8s_install_lock_version.stdout_lines }}"
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+  - name: unlock k8s (Ubuntu)
+    shell: "apt-mark unhold kubectl={{ k8s_version }} kubeadm={{ k8s_version }} kubelet={{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_install_unlock
+    when: cluster_type == "ubuntu-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_unlock.rc is defined and k8s_install_unlock.rc == 0
+    
+  - debug: msg="{{ k8s_install_unlock.stdout_lines }}"
+    when: cluster_type == "ubuntu-k8s" 
+
+  - name: update k8s first (Ubuntu)
+    shell: "apt-get update && apt-get -y install kubectl={{ k8s_version }} kubeadm={{ k8s_version }} kubelet={{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_update
+    when: cluster_type == "ubuntu-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_update.rc is defined and k8s_update.rc == 0
+    
+  - debug: msg="{{ k8s_update.stdout_lines }}"
+    when: cluster_type == "ubuntu-k8s" 
+
+  - name: lock k8s (Ubuntu)
+    shell: "apt-mark hold kubectl={{ k8s_version }} kubeadm={{ k8s_version }} kubelet={{ k8s_version }}"
+    args:
+      warn: false
+    register: k8s_install_lock
+    when: cluster_type == "ubuntu-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_install_lock.rc is defined and k8s_install_lock.rc == 0
+    
+  - debug: msg="{{ k8s_install_lock.stdout_lines }}"
+    when: cluster_type == "ubuntu-k8s" 
+
+  - name: update underlying OS (Centos7) 
+    shell: yum update && yum upgrade -y 
+    register: centos7_update_out
+    when: cluster_type == "centos-k8s"
+
+  - debug: msg="{{ centos7_update_out.stdout_lines }}"
+    when: cluster_type == "centos-k8s"
+
+  - name: update underlying OS (Fedora/Centos8) 
+    shell: dnf -y upgrade 
+    register: fedora_update_out
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+  - debug: msg="{{ fedora_update_out.stdout_lines }}"
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+  - name: update underlying OS (Ubuntu) 
+    shell: apt-get update && apt-get upgrade -y 
+    register: ubuntu_update_out
+    when: cluster_type == "ubuntu-k8s" 
+
+  - debug: msg="{{ ubuntu_update_out.stdout_lines }}"
+    when: cluster_type == "ubuntu-k8s" 
+
+  - name: start the kubelet service 
+    shell: systemctl start kubelet
+    register: kubelet_start_out
+
+  - name: uncordon node
+    local_action:
+      module: shell
+      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} uncordon {{ node_fqdn }}"
+    become: false
+    register: kubelet_uncordon_out
+
+  - debug: msg="{{ kubelet_uncordon_out.stdout_lines }}"
+
+  - name: allow some time for things to settle in
+    pause:
+      seconds: 10
+
+  - name: cluster node status
+    local_action:
+      module: shell
+      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} get nodes"
+    become: false
+    register: node_status
+
+  - debug: msg="{{ node_status.stdout_lines }}"
+
+- hosts: k8s_masters
+  remote_user: "{{ remote_user }}"
+  become: true
+  any_errors_fatal: true
+  
+  roles:
+  - role: k8s-inspect
+    when: "inventory_hostname == groups['k8s_masters'][0]"

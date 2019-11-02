@@ -1,0 +1,6 @@
+- name: apply default k8s settings
+  include: defaults.yml
+  run_once: true
+
+
+

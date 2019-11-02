@@ -1,0 +1,11 @@
+- name: configure the Kubernetes workers
+  include: workers.yml
+  when: "'k8s_workers' in group_names or 'new_k8s_workers' in group_names"
+
+- name: configure log rotation
+  become: true
+  template:
+    src: templates/k8s-log-rotation.j2
+    dest: /etc/logrotate.d/containers
+
+

@@ -1,0 +1,38 @@
+
+- name: configure the remaining Kubernetes masters
+  include: masters-next.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname != groups['k8s_masters'][0]"
+
+- name: display cluster master node status
+  shell: kubectl get nodes
+  register: final_nodes_out
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ final_nodes_out.stdout_lines }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: remove the master taints (1.14+)
+  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  become: true
+  when: "(k8s_workloads_on_master|bool == True) and inventory_hostname == groups['k8s_masters'][0]"
+  ignore_errors: true
+
+- name: remove the master taints (pre 1.14)
+  shell: kubectl taint nodes --all node.kubernetes.io/unschedulable:NoSchedule-
+  become: true
+  when: "(k8s_workloads_on_master|bool == True) and inventory_hostname == groups['k8s_masters'][0]"
+  ignore_errors: true
+
+- name: remove the master taints (legacy)
+  shell:   kubectl taint nodes --all kubeadmNode-
+  become: true
+  when: "(k8s_workloads_on_master|bool == True) and inventory_hostname == groups['k8s_masters'][0]"
+  ignore_errors: true
+
+- name: configure log rotation
+  become: true
+  template:
+    src: templates/k8s-log-rotation.j2
+    dest: /etc/logrotate.d/containers
+

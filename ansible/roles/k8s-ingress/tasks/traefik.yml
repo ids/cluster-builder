@@ -1,0 +1,28 @@
+- name: install traefik ingress controller RBAC manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-rbac.yaml
+  register: traefik_rbac_out
+
+- debug: msg="{{ traefik_rbac_out.stdout_lines }}"
+
+- name: copy customized traefik manifest
+  copy:
+    src: "{{ playbook_dir | replace('/ansible', '') }}/xtras/k8s/traefik-nodeport.yml"
+    dest: /root/
+  when: k8s_ingress_controller == "traefik-nodeport" 
+
+- name: install traefik ingress controller custom NodePort manifest
+  shell: kubectl apply -f /root/traefik-nodeport.yml
+  when: k8s_ingress_controller == "traefik-nodeport" 
+  register: traefik_out
+
+- name: install traefik ingress controller daemonset manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-ds.yaml
+  register: traefik_out
+  when: k8s_ingress_controller == "traefik-daemonset" 
+
+- name: install traefik ingress controller deployment manifest
+  shell: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-deployment.yaml
+  register: traefik_out
+  when: k8s_ingress_controller == "traefik-deployment"
+
+- debug: msg="{{ traefik_out.stdout_lines }}"

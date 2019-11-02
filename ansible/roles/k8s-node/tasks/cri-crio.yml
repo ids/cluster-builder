@@ -1,0 +1,31 @@
+
+- name: add CRI-O repo to CentOS 7 
+  command: yum-config-manager --add-repo=https://cbs.centos.org/repos/paas7-crio-311-candidate/x86_64/os
+  args:
+    warn: false
+  when: cluster_type == "centos-k8s" 
+
+- name: install CRI-O on CentOS 7 
+  command: yum install -y --nogpgcheck cri-o
+  args:
+    warn: false
+  when: cluster_type == "centos-k8s" 
+
+- name: install crio on Fedora or CentOS 8
+  dnf:
+    name: cri-o
+    state: present
+  when: cluster_type == "centos8-k8s" or cluster_type == "fedora-k8s"
+
+- name: install CRI-O on Ubuntu 
+  command: apt-get -y install --nogpgcheck cri-o
+  args:
+    warn: false
+  when: cluster_type == "ubuntu-k8s" 
+
+- name: enable CRIO runtime
+  service:
+    name: crio
+    state: started
+    enabled: yes
+  

@@ -1,0 +1,20 @@
+- name: configure NFS client provisioner (optional) 
+  include: nfs-external.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+    and k8s_nfs_external_server is defined
+    and k8s_nfs_external_path is defined"
+
+- name: configure the Kubernetes Dashboard 1.x
+  include: kubernetes-dashboard-1.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+    and k8s_install_dashboard|bool == True
+    and (k8s_version is search('1.12') or k8s_version is search('1.13') or  k8s_version is search('1.14'))"
+    
+- name: configure the Kubernetes Dashboard 2.x
+  include: kubernetes-dashboard-2.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname == groups['k8s_masters'][0]
+    and k8s_install_dashboard|bool == True
+    and (k8s_version is search('1.15') or  k8s_version is search('1.16'))"

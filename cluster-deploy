@@ -3,16 +3,6 @@ INVENTORY_FILE=$1
 SERVER_WAIT=90s
 REMOTE_USER=root
 
-function check_docker_license () {
-  if [ ! -f clusters/$CLUSTER_PKG_FOLDER/docker_subscription.lic ]; then 
-    echo "** Missing Docker EE License File **"
-    echo
-    echo "To build a Docker Enterprise Edition cluster you need to have a docker_subscription.lic file located in your ${CLUSTER_PKG_FOLDER} cluster package."
-    echo
-    exit 1
-  fi
-}
-
 function esxi_deploy () {
   
   echo "Cluster node password(s) will be changed from their initial default values at the end of the deployment."
