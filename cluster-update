@@ -33,7 +33,7 @@ function cluster_info_display() {
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
-  echo -e " ${TC}Cluster Update${NC}"
+  echo -e " ${TCX}Cluster Update${NCX}"
   echo
   echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
   echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
@@ -136,10 +136,24 @@ if [ "$TERM" == "xterm-256color" ]; then
   NC='\033[0m' # No Color
 fi 
 
+TCR=''
+NCR=''
+if [ "$TERM" == "xterm-256color" ]; then
+  TCR='\033[33;4m'
+  NCR='\033[0m' # No Color
+fi 
+
+TCX=''
+NCX=''
+if [ "$TERM" == "xterm-256color" ]; then
+  TCX='\033[2;1m'
+  NCX='\033[0m' # No Color
+fi 
+
 cluster_info_display
 
 echo
-echo -e " ${TC}ATTENTION!${NC}"
+echo -e " ${TCR}ATTENTION!${NCR}"
 echo
 echo " Cluster update uses the --delete-local-data flag when draining."
 echo -e " All PODs using ${TC}local data${NC} will be re-initialized with all EXISTING DATA LOST!"
