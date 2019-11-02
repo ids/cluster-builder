@@ -58,8 +58,21 @@
   - debug: msg="{{ k8s_clear_lock.stdout_lines }}"
     when: cluster_type == "centos-k8s"
 
+  - name: update k8s repo (CentOS)
+    shell: "yum update"
+    args:
+      warn: false
+    register: k8s_update_repo
+    when: cluster_type == "centos-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
+
+  - debug: msg="{{ k8s_update_repo.stdout_lines }}"
+    when: cluster_type == "centos-k8s"
+
   - name: update k8s first (CentOS)
-    shell: "yum update && yum -y upgrade kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "yum -y upgrade kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -110,8 +123,21 @@
   - debug: msg="{{ k8s_install_unlock_version.stdout_lines }}"
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
+  - name: update k8s repo (Fedora / CentOS 8)
+    shell: "dnf makecache "
+    args:
+      warn: false
+    register: k8s_update_repo
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
+    
+  - debug: msg="{{ k8s_update_repo.stdout_lines }}"
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
   - name: update k8s first (Fedora / CentOS 8)
-    shell: "dnf makecache && dnf -y upgrade kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "dnf -y upgrade kubectl-{{ k8s_version }} kubeadm-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
