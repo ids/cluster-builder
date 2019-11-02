@@ -28,6 +28,10 @@
 
   - debug: msg="{{ node_drain_out.stdout_lines }}"
 
+  - name: allow some time for the evictions
+    pause:
+      seconds: 45
+
   - name: stop the kubelet service 
     shell: systemctl stop kubelet
     register: kubelet_stop_out
