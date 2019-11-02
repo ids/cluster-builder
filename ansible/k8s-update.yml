@@ -59,7 +59,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: update k8s repo (CentOS)
-    shell: "yum update"
+    shell: "yum makecache fast"
     args:
       warn: false
     register: k8s_update_repo
@@ -124,7 +124,7 @@
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
   - name: update k8s repo (Fedora / CentOS 8)
-    shell: "dnf makecache "
+    shell: "dnf makecache"
     args:
       warn: false
     register: k8s_update_repo
