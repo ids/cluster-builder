@@ -1,8 +1,7 @@
 #!/bin/bash
 INVENTORY_FILE=$1
 ACTION=$2
-
-export ANSIBLE_DISPLAY_SKIPPED_HOSTS=True
+ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 
 function show_usage () {
   echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop|destroy>"
