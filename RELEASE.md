@@ -5,11 +5,12 @@ v19.11
 ------
 
 * Added __Ubuntu 18.04 LTS__ variant of `kubeadm k8s` as `ubuntu-k8s`
-* Introduction of the `cluster-update` command.  While still experimental this command updates Kubernetes clusters in place (minor release upgrades and security patching).
+* Added the `cluster-update` command.  Although still experimental - this command updates Kubernetes clusters in place (minor _and_ major release upgrades and underlying OS security patching). See the [README](https://github.com/ids/cluster-builder#updating-a-cluster) for more details.
 * Verified HA Kubernetes __1.13__ through __1.16__ for:
   * `centos-k8s`
   * `fedora-k8s`
   * `ubuntu-k8s`
+* Cleaned up Ansible output with `ANSIBLE_DISPLAY_SKIPPED_HOSTS=True`
 
 v19.10
 ------
