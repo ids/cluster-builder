@@ -7,8 +7,8 @@ function k8s_patch () {
   
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
 
-  echo -e "Patching cluster: ${CLUSTER_TYPE_NAME}"
-  ansible-playbook -i $INVENTORY_FILE ansible/k8s-patch.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  echo -e "Updating cluster: ${CLUSTER_TYPE_NAME}"
+  ansible-playbook -i $INVENTORY_FILE ansible/k8s-update.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
     echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
     exit 1
@@ -19,7 +19,7 @@ function k8s_patch () {
   fi
 
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "PATCH SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo "UPDATE SUCCESS: ${CLUSTER_TYPE_NAME}!"
 }
 
 function cluster_info_display() {
@@ -27,7 +27,7 @@ function cluster_info_display() {
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
-  echo -e " ${TC}Cluster Patch${NC}"
+  echo -e " ${TC}Cluster Update${NC}"
   echo
   echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
   echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
@@ -135,14 +135,14 @@ cluster_info_display
 echo
 echo -e " ${TC}ATTENTION!${NC}"
 echo
-echo " Cluster patching uses the --delete-local-data flag when draining."
-echo -e " all PODs using ${TC}local data${NC} will be re-initialized with all EXISTING DATA LOST!"
+echo " Cluster update uses the --delete-local-data flag when draining."
+echo -e " All PODs using ${TC}local data${NC} will be re-initialized with all EXISTING DATA LOST!"
 echo
 
-read -p " Are you sure you want to begin patching this cluster? (y/n): "  patch_confirm
+read -p " Are you sure you want to begin updating this cluster? (y/n): "  patch_confirm
 if [ "$patch_confirm" != "y" ] && [ "$patch_confirm" != "Y" ]; then
   echo
-  echo -e "${TC}!! Cluster patching aborted!${NC}"
+  echo -e "${TC}!! Cluster update aborted!${NC}"
   echo
   exit 1
 fi
@@ -152,10 +152,10 @@ START_TIME=$SECONDS
 k8s_patch
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo "Cluster Patched in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo "Cluster Updated in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
-echo -e "Enjoy your patched ${TC}${CLUSTER_TYPE_NAME}${NC}!"
+echo -e "Enjoy your updated ${TC}${CLUSTER_TYPE_NAME}${NC}!"
 echo
 
   
