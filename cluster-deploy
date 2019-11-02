@@ -57,13 +57,6 @@ function esxi_deploy () {
     TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
   fi 
 
-  echo -e " ${TC} Verifying host availability${NC}"
-  ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
-  if [ $? -ne 0 ]; then
-    echo "FAIL: ${CLUSTER_TYPE_NAME} host access verification failed!"
-    exit 1
-  fi
-
   ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then
    echo "There is a problem with the ESXi init-pre script"
