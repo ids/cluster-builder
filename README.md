@@ -660,7 +660,13 @@ __Eg.__
 
 	$ bash cluster-update eg/demo-k8s
 
-> Ideally, A/B cluster deployment and service migration is always preferred and more predictable as you can pre-verify service function.  Automating that for a service catalog would be time well spent.
+If a cluster had been previously deployed using a minor version wildcard (which is the best practice), it will automatically be updated to the latest minor patch version.  A cluster deployed with __1.14.*__ as the intial version might start at __1.14.7__, but then be upgraded to __1.14.11__ over time using `cluster-update`.
+
+It can also be used for __major__ upgrades, simply by changing the __k8s_version__ value in the cluster package hosts file prior to running `cluster-update`.  
+
+This has been tested successfully with single step upgrades, such as from __1.15.x__ to __1.16.x__.  Use with caution.
+
+> Always test this process on an identical cluster profile before trying it in production. Ideally, A/B cluster deployment and service migration is preferred as it is a more predictable, verifiable upgrade strategy.  
 
 ### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
