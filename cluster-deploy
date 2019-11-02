@@ -90,7 +90,8 @@ function esxi_deploy () {
   rm $TEMP_SCRIPT_PATH/esxi-set-statics
   
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
-
+  echo
+  
   echo -e "Building cluster: ${CLUSTER_TYPE_NAME}"
   ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then

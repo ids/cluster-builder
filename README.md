@@ -660,6 +660,8 @@ __Eg.__
 
 	$ bash cluster-update eg/demo-k8s
 
+> Ideally, A/B cluster deployment and service migration is always preferred and more predictable as you can pre-verify service function.  Automating that for a service catalog would be time well spent.
+
 ### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
 As Kubernetes provides native storage support for __iSCSI__ and __NFS__, the cleanest most efficient path to providing __persistent volume ReadWriteOnce__ storage is to leverage iSCSI.
