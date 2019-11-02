@@ -212,7 +212,7 @@
 
   - debug: msg="{{ kubelet_uncordon_out.stdout_lines }}"
 
-  - name: allow some time for things to settle in
+  - name: allow some time for things to recover
     pause:
       seconds: 10
 
