@@ -202,7 +202,7 @@
     when: cluster_type == "ubuntu-k8s" 
 
   - name: update underlying OS (Centos7) 
-    shell: yum update && yum upgrade -y 
+    shell: yum upgrade -y 
     register: centos7_update_out
     when: cluster_type == "centos-k8s"
 
@@ -218,7 +218,7 @@
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
   - name: update underlying OS (Ubuntu) 
-    shell: apt-get update && apt-get upgrade -y 
+    shell: apt-get upgrade -y 
     register: ubuntu_update_out
     when: cluster_type == "ubuntu-k8s" 
 
