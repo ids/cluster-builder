@@ -25,7 +25,7 @@ function k8s_patch () {
   fi
 
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "UPDATE SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo -e "${TCX}UPDATE SUCCESS${NC}: ${CLUSTER_TYPE_NAME}!"
 }
 
 function cluster_info_display() {
@@ -33,7 +33,7 @@ function cluster_info_display() {
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
-  echo -e " ${TCX}Cluster Update${NCX}"
+  echo -e " ${TCX}Cluster Update${NC}"
   echo
   echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
   echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
@@ -137,23 +137,19 @@ if [ "$TERM" == "xterm-256color" ]; then
 fi 
 
 TCR=''
-NCR=''
 if [ "$TERM" == "xterm-256color" ]; then
   TCR='\033[33;4m'
-  NCR='\033[0m' # No Color
 fi 
 
 TCX=''
-NCX=''
 if [ "$TERM" == "xterm-256color" ]; then
   TCX='\033[2;1m'
-  NCX='\033[0m' # No Color
 fi 
 
 cluster_info_display
 
 echo
-echo -e " ${TCR}ATTENTION!${NCR}"
+echo -e " ${TCR}ATTENTION!${NC}"
 echo
 echo " Cluster update uses the --delete-local-data flag when draining."
 echo -e " All PODs using ${TC}local data${NC} will be re-initialized with all EXISTING DATA LOST!"
@@ -175,7 +171,7 @@ ELAPSED_TIME=$(($SECONDS - $START_TIME))
 echo "Cluster Updated in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
-echo -e "Enjoy your updated ${TC}${CLUSTER_TYPE_NAME}${NC}!"
+echo -e "Enjoy your updated ${TCX}${CLUSTER_TYPE_NAME}${NC}!"
 echo
 
   

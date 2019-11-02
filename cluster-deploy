@@ -114,7 +114,7 @@ function esxi_deploy () {
   fi
 
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo -e "${TC}SUCCESS${NC}: ${CLUSTER_TYPE_NAME}!"
 }
 
 function desktop_deploy () {
