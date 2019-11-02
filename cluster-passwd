@@ -4,6 +4,8 @@ INVENTORY_FILE=$1
 TARGET_USER=$2
 TARGET_PASSWORD_HASH=$3
 
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=True
+
 if [ -z INVENTORY_FILE ]; then
   read -s "Enter the target cluster folder: " INVENTORY_FILE
   echo

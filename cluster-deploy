@@ -3,6 +3,8 @@ INVENTORY_FILE=$1
 SERVER_WAIT=90s
 REMOTE_USER=root
 
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=True
+
 function esxi_deploy () {
   
   echo "Cluster node password(s) will be changed from their initial default values at the end of the deployment."
@@ -91,7 +93,7 @@ function esxi_deploy () {
   
   ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
   echo
-  
+
   echo -e "Building cluster: ${CLUSTER_TYPE_NAME}"
   ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
   if [ $? -ne 0 ]; then

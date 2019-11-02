@@ -3,6 +3,8 @@ INVENTORY_FILE=$1
 SERVER_WAIT=90s
 REMOTE_USER=root
 
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=True
+
 function k8s_patch () {
   
   echo 
