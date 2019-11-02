@@ -46,12 +46,13 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 12. [Kubernetes Dashboard](#kubernetes-dashboard)
 13. [Change Cluster Password](#change-cluster-password)
 14. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-15. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
-16. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
-17. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
-18. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
-19. [Helm Setup and KEDA](#helm-setup-and-keda)
-20. [Knative and Istio](#knative-and-istio)
+15. [Updating Cluster VM Nodes](#updating-cluster-vm-nodes)
+16. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
+17. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
+18. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
+19. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
+20. [Helm Setup and KEDA](#helm-setup-and-keda)
+21. [Knative and Istio](#knative-and-istio)
 
 ### Supported Clusters
 
@@ -638,7 +639,7 @@ Eg.
 It is intended to be run on a regular basis as per the standard operating procedures for password change management.
 
 ### Controlling Cluster VM Nodes
-There are ansible tasks that use the inventory files to execute VM control commands.
+There are ansible tasks that use the inventory files to execute VM control commands.  This is useful for __suspending__ or __restarting__ the entire cluster.  It also enables complete deletion of a cluster using the __destroy__ action directive.
 
 Use **cluster-control**:
 
@@ -647,6 +648,17 @@ Use **cluster-control**:
 __Eg.__
 
 	$ bash cluster-control eg/demo-k8s suspend
+
+### Updating Cluster VM Nodes
+New and still experimental, this command will update the cluster nodes binaries to the latest version, while retaining the Kubernetes major version.
+
+Use **cluster-update**:
+
+	bash cluster-update <inventory-package | cluster-name> 
+
+__Eg.__
+
+	$ bash cluster-update eg/demo-k8s
 
 ### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
