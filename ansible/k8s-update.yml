@@ -46,6 +46,8 @@
     kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
   tasks:
 
+  - debug: msg="starting master upgrade"
+
   - name: unlock k8s (CentOS)
     shell: "yum versionlock clear"
     args:
@@ -406,6 +408,8 @@
   vars:
     kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
   tasks:
+
+  - debug: msg="starting worker upgrade"
 
   - name: drain node
     local_action:
