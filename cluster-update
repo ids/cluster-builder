@@ -24,6 +24,11 @@ function k8s_patch () {
     exit 1
   fi
 
+  if [ -f clusters/$CLUSTER_PKG_FOLDER/kubeadm_upgrade_results ]; then
+    cat clusters/$CLUSTER_PKG_FOLDER/kubeadm_upgrade_results
+    echo
+  fi
+
   if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
     bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
   fi
