@@ -40,6 +40,15 @@
 - hosts: k8s_masters
   remote_user: "{{ remote_user }}"
   become: true
+  any_errors_fatal: true
+  
+  roles:
+  - role: k8s-inspect
+    when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- hosts: k8s_masters
+  remote_user: "{{ remote_user }}"
+  become: true
   serial: 1
   any_errors_fatal: true
   vars:
@@ -117,7 +126,7 @@
     when: cluster_type == "ubuntu-k8s" 
 
   - name: update kubeadm (CentOS)
-    shell: "yum -y upgrade kubeadm-{{ k8s_version }}"
+    shell: "yum -y update kubeadm-{{ k8s_version }}"
     args:
       warn: false
     register: kubeadm_update
@@ -233,39 +242,32 @@
 
   - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
 
-  - name: kubeadm is higher major version, running upgrade plan
+  - name: running upgrade plan
     shell: "kubeadm upgrade plan >> /tmp/kube_upgrade_plan"
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - name: display upgrade plan
     shell: "cat /tmp/kube_upgrade_plan"
     register: k8s_upgrade_plan_out
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_plan_out.stdout_lines }}"
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="running [kubeadm upgrade apply v{{ kubeadm_version_full }}]"
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade apply on first master
     shell: "kubeadm upgrade apply  v{{ kubeadm_version_full }} -y --ignore-preflight-errors=SystemVerification > /root/kubeadm_upgrade_results"
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade apply on first master
     shell: "cat /root/kubeadm_upgrade_results"
     register: k8s_upgrade_apply_out
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_apply_out.stdout_lines }}"
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - name: fetch the kubeadm results to {{ cluster_pkg_folder }}
     fetch:
@@ -274,18 +276,15 @@
       flat: yes
     become: true
     ignore_errors: true   
-    when: k8s_major_upgrade|bool == True and 
-      inventory_hostname == groups['k8s_masters'][0]
+    when: inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
-    when: k8s_major_upgrade|bool == True and
-      inventory_hostname != groups['k8s_masters'][0]
+    when: inventory_hostname != groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
-    when: k8s_major_upgrade|bool == True and
-      inventory_hostname != groups['k8s_masters'][0]
+    when: inventory_hostname != groups['k8s_masters'][0]
 
   - name: drain node
     local_action:
@@ -305,7 +304,7 @@
     register: kubelet_stop_out
 
   - name: update k8s first (CentOS)
-    shell: "yum -y upgrade kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "yum -y update kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -501,7 +500,7 @@
     when: cluster_type == "ubuntu-k8s" 
 
   - name: update kubeadm (CentOS)
-    shell: "yum -y upgrade kubeadm-{{ k8s_version }}"
+    shell: "yum -y update kubeadm-{{ k8s_version }}"
     args:
       warn: false
     register: kubeadm_update
@@ -581,7 +580,7 @@
     register: kubelet_stop_out
 
   - name: update k8s first (CentOS)
-    shell: "yum -y upgrade kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "yum -y update kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
