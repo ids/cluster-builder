@@ -249,7 +249,7 @@
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade apply on first master
-    shell: "kubeadm upgrade apply v{{ kubeadm_version_full }}"
+    shell: "kubeadm upgrade apply  v{{ kubeadm_version_full }} -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_apply_out
     when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname == groups['k8s_masters'][0]
@@ -259,7 +259,7 @@
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade node on other master
-    shell: "kubeadm upgrade node"
+    shell: "kubeadm upgrade node -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_node_out
     when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname != groups['k8s_masters'][0]
@@ -553,7 +553,7 @@
     when: cluster_type == "ubuntu-k8s" 
 
   - name: running upgrade node on worker as this is major upgrade
-    shell: "kubeadm upgrade node"
+    shell: "kubeadm upgrade node -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_node_out
     when: kubeadm_version_short != k8s_version_short 
 
