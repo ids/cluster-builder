@@ -48,6 +48,17 @@
 
   - debug: msg="starting master upgrade"
 
+  - name: get initial kubeadm version short
+    shell: 'kubeadm version -o short | sed "s/v//g" | cut -c1-4'
+    register: initial_kubeadm_version_short
+    when: "inventory_hostname == groups['k8s_masters'][0]"
+
+  - name: set initial_kubeadm_version_short fact
+    set_fact:
+      initial_kubeadm_version_short: "{{ initial_kubeadm_version_short.stdout }}"
+    run_once: true
+    when: "inventory_hostname == groups['k8s_masters'][0]"
+
   - name: unlock k8s (CentOS)
     shell: "yum versionlock clear"
     args:
@@ -214,32 +225,33 @@
     run_once: true
     when: "inventory_hostname == groups['k8s_masters'][0]"
 
+  - debug: msg="initial_kubeadm_version_short [{{ initial_kubeadm_version_short }}]"
   - debug: msg="kubeadm_version_short [{{ kubeadm_version_short }}], k8s_version_short [{{ k8s_version_short }}]"
   - debug: msg="kubeadm_version_full [{{ kubeadm_version_full }}]"
 
   - name: kubeadm is higher major version, running upgrade plan
     shell: "kubeadm upgrade plan >> /tmp/kube_upgrade_plan"
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: display upgrade plan
     shell: "cat /tmp/kube_upgrade_plan"
     register: k8s_upgrade_plan_out
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_plan_out.stdout_lines }}"
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="running [kubeadm upgrade apply v{{ kubeadm_version_full }}]"
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade apply on first master
     shell: "kubeadm upgrade apply v{{ kubeadm_version_full }}"
     register: k8s_upgrade_apply_out
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_apply_out.stdout_lines }}"
@@ -249,11 +261,11 @@
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname != groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
-    when: kubeadm_version_short != k8s_version_short and 
+    when: initial_kubeadm_version_short != k8s_version_short and 
       inventory_hostname != groups['k8s_masters'][0]
 
   - name: drain node
