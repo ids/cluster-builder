@@ -200,30 +200,25 @@
   - name: get kubeadm version full
     shell: 'kubeadm version -o short | sed "s/v//g" '
     register: kubeadm_version_full
-    when: "inventory_hostname == groups['k8s_masters'][0]"
 
   - name: set kubeadm_version_full fact
     set_fact:
       kubeadm_version_full: "{{ kubeadm_version_full.stdout }}"
     run_once: true
-    when: "inventory_hostname == groups['k8s_masters'][0]"
 
   - name: get kubeadm version short
     shell: 'kubeadm version -o short | sed "s/v//g" | cut -c1-4'
     register: kubeadm_version_short
-    when: "inventory_hostname == groups['k8s_masters'][0]"
 
   - name: set kubeadm_version_short fact
     set_fact:
       kubeadm_version_short: "{{ kubeadm_version_short.stdout }}"
     run_once: true
-    when: "inventory_hostname == groups['k8s_masters'][0]"
 
   - name: set k8s_version_short fact
     set_fact:
       k8s_version_short: "{{ k8s_version[:4] }}"
     run_once: true
-    when: "inventory_hostname == groups['k8s_masters'][0]"
 
   - debug: msg="initial_kubeadm_version_short [{{ initial_kubeadm_version_short }}]"
   - debug: msg="kubeadm_version_short [{{ kubeadm_version_short }}], k8s_version_short [{{ k8s_version_short }}]"
@@ -233,8 +228,9 @@
     set_fact:
       k8s_major_upgrade: true
     run_once: true
-    when: "inventory_hostname == groups['k8s_masters'][0] and 
-      (initial_kubeadm_version_short != k8s_version_short) or (k8s_version_upgrade is defined and k8s_version_upgrade|bool == True)"
+    when: "(initial_kubeadm_version_short != k8s_version_short) or (k8s_version_upgrade is defined and k8s_version_upgrade|bool == True)"
+
+      - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
 
   - name: kubeadm is higher major version, running upgrade plan
     shell: "kubeadm upgrade plan >> /tmp/kube_upgrade_plan"
@@ -569,7 +565,6 @@
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_node_out
-    when: k8s_major_upgrade|bool == True  
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: k8s_major_upgrade|bool == True and 
