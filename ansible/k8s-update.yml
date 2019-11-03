@@ -229,43 +229,50 @@
   - debug: msg="kubeadm_version_short [{{ kubeadm_version_short }}], k8s_version_short [{{ k8s_version_short }}]"
   - debug: msg="kubeadm_version_full [{{ kubeadm_version_full }}]"
 
+  - name: set k8s_major_upgrade fact
+    set_fact:
+      k8s_major_upgrade: true
+    run_once: true
+    when: "inventory_hostname == groups['k8s_masters'][0] and 
+      (initial_kubeadm_version_short != k8s_version_short) or k8s_version_upgrade is defined "
+
   - name: kubeadm is higher major version, running upgrade plan
     shell: "kubeadm upgrade plan >> /tmp/kube_upgrade_plan"
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: display upgrade plan
     shell: "cat /tmp/kube_upgrade_plan"
     register: k8s_upgrade_plan_out
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_plan_out.stdout_lines }}"
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="running [kubeadm upgrade apply v{{ kubeadm_version_full }}]"
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade apply on first master
     shell: "kubeadm upgrade apply  v{{ kubeadm_version_full }} -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_apply_out
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_apply_out.stdout_lines }}"
-    when: kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_node_out
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and
       inventory_hostname != groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
-    when: initial_kubeadm_version_short != k8s_version_short and 
+    when: k8s_major_upgrade|bool == True and
       inventory_hostname != groups['k8s_masters'][0]
 
   - name: drain node
@@ -555,10 +562,10 @@
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node -y --ignore-preflight-errors=SystemVerification"
     register: k8s_upgrade_node_out
-    when: kubeadm_version_short != k8s_version_short 
+    when: k8s_major_upgrade|bool == True  
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
-    when: kubeadm_version_short != k8s_version_short 
+    when: k8s_major_upgrade|bool == True and 
 
   - name: stop the kubelet service 
     shell: systemctl stop kubelet
