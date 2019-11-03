@@ -230,7 +230,7 @@
     run_once: true
     when: "(initial_kubeadm_version_short != k8s_version_short) or (k8s_version_upgrade is defined and k8s_version_upgrade|bool == True)"
 
-      - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
+  - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
 
   - name: kubeadm is higher major version, running upgrade plan
     shell: "kubeadm upgrade plan >> /tmp/kube_upgrade_plan"
