@@ -234,7 +234,7 @@
       k8s_major_upgrade: true
     run_once: true
     when: "inventory_hostname == groups['k8s_masters'][0] and 
-      (initial_kubeadm_version_short != k8s_version_short) or k8s_version_upgrade is defined "
+      (initial_kubeadm_version_short != k8s_version_short) or (k8s_version_upgrade is defined and k8s_version_upgrade|bool == True)"
 
   - name: kubeadm is higher major version, running upgrade plan
     shell: "kubeadm upgrade plan >> /tmp/kube_upgrade_plan"
@@ -262,6 +262,13 @@
       inventory_hostname == groups['k8s_masters'][0]
 
   - debug: msg="{{ k8s_upgrade_apply_out.stdout_lines }}"
+    when: k8s_major_upgrade|bool == True and 
+      inventory_hostname == groups['k8s_masters'][0]
+
+  - name: set k8s_upgrade_apply_output fact
+    set_fact:
+      k8s_upgrade_apply_output: "{{ k8s_upgrade_apply_out.stdout_lines }}"
+    run_once: true
     when: k8s_major_upgrade|bool == True and 
       inventory_hostname == groups['k8s_masters'][0]
 
@@ -705,3 +712,7 @@
   roles:
   - role: k8s-inspect
     when: "inventory_hostname == groups['k8s_masters'][0]"
+
+  tasks:
+  
+  - debug: msg="{{ k8s_upgrade_apply_output }}"
