@@ -23,10 +23,10 @@
   shell: "cat etc/kubernetes/pki/secrets.conf"
   become: true
   register: update_secrets_out
-  when: secrets_encrypted|bool == True 
+  when: secrets_encrypted|bool == True and inventory_hostname == groups['k8s_masters'][0]
 
 - debug: msg="{{ update_secrets_out.stdout_lines }}"
-  when: secrets_encrypted|bool == True 
+  when: secrets_encrypted|bool == True and inventory_hostname == groups['k8s_masters'][0]
 
 - name: force restart the api servers 
   shell: "kubectl delete pod kube-apiserver-{{ node_fqdn }} -n kube-system"
