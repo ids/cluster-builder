@@ -2,6 +2,12 @@
   stat:
     path: /etc/kubernetes/pki/secrets.conf
   register: stat_result
+  when: inventory_hostname == groups['k8s_masters'][0] 
+
+- name: set secrets_encrypted fact
+  set_fact:
+    secrets_encrypted: "{{ stat_result.stat.exists }}"
+  run_once: true
 
 - name: adjust kubernetes api server configuration for encryption
   lineinfile:
@@ -10,46 +16,42 @@
     line: "    - identity: {}"
     state: present
   become: true
-  when: k8s_version is not search("1.12") and
-    stat_result.stat.exists == True 
+  when: k8s_version is not search("1.12") and inventory_hostname == groups['k8s_masters'][0] 
+    and secrets_encrypted|bool == True 
 
-- name: restart the api server 
-  shell: kubectl delete -f /etc/kubernetes/manifests/kube-apiserver.yaml
+- name: force restart the api servers 
+  shell: "kubectl delete pod kube-apiserver-{{ node_fqdn }} -n kube-system"
   become: true
   register: update_api_out
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True 
 
 - debug: msg="{{ update_api_out.stdout_lines }}"
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True 
 
-- name: restart the api server 
-  shell: kubectl apply -f /etc/kubernetes/manifests/kube-apiserver.yaml
-  become: true
-  register: update_api_out
-  when: stat_result.stat.exists == True 
-
-- debug: msg="{{ update_api_out.stdout_lines }}"
-  when: stat_result.stat.exists == True 
-
-- name: wait for the api server to restart
+- name: wait for the api servers to settle in
   pause:
     seconds: 15
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True and 
+    inventory_hostname == groups['k8s_masters'][0] 
 
 - name: validate the api is live again 
-  shell: kubectl get nodes
+  shell: kubectl get pods -n kube-system
   become: true
   register: update_api_out
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True and 
+    inventory_hostname == groups['k8s_masters'][0] 
 
 - debug: msg="{{ update_api_out.stdout_lines }}"
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True and 
+    inventory_hostname == groups['k8s_masters'][0] 
 
 - name: update all the secrets 
   shell: kubectl get secrets --all-namespaces -o json | kubectl replace -f -
   become: true
   register: update_secrets_out
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True and 
+    inventory_hostname == groups['k8s_masters'][0] 
 
 - debug: msg="{{ update_secrets_out.stdout_lines }}"
-  when: stat_result.stat.exists == True 
+  when: secrets_encrypted|bool == True and 
+    inventory_hostname == groups['k8s_masters'][0] 

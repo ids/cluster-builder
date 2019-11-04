@@ -46,7 +46,6 @@
   - role: k8s-inspect
     when: "inventory_hostname == groups['k8s_masters'][0]"  
   - role: k8s-secrets-decrypt
-    when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - hosts: k8s_masters
   remote_user: "{{ remote_user }}"

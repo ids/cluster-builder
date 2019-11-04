@@ -662,14 +662,13 @@ __Eg.__
 
 Version upgrades that are __minor__ should work for all variants.
 
-Version upgrades that are __major__ have been tested in the following combinations:
+Version upgrades that are __major__ have been tested in the following combinations for all variants:
 
-| k8s variant |  initial version | upgraded version  |   status      |
-|-------------|------------------|-------------------|---------------|
-| ubuntu-k8s  |      1.14.*      |      1.15.*       |   success     |
-| ubuntu-k8s  |      1.15.*      |      1.16.*       |   success     |
-
-
+|  initial version | upgraded version  |  
+|------------------|-------------------|
+|      1.13.*      |      1.14.*       |
+|      1.14.*      |      1.15.*       |
+|      1.15.*      |      1.16.*       |
 
 You can set the wait time, in seconds for the pause after each node is drained as __k8s_version_upgrade_eviction_seconds__ and the wait after each node is uncordoned as __k8s_version_upgrade_node_recovery_seconds__, or not specify them and go with the defaults.
 

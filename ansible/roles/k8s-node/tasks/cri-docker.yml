@@ -194,3 +194,62 @@
   register: docker_info
 
 - debug: msg="{{ docker_info.stdout_lines }}"
+
+- name: install k8s version lock (CentOS)
+  shell: "yum install yum-plugin-versionlock"
+  args:
+    warn: false
+  register: k8s_install_lock
+  when: cluster_type == "centos-k8s"
+  retries: 5
+  delay: 10
+  until: k8s_install_lock.rc is defined and k8s_install_lock.rc == 0
+
+- debug: msg="{{ k8s_install_lock.stdout_lines }}"
+  when: cluster_type == "centos-k8s"
+
+- name: install k8s versionlock plugin for DNF (Fedora / CentOS 8)
+  shell: "dnf -y install python3-dnf-plugin-versionlock"
+  args:
+    warn: false
+  register: k8s_install_lock
+  when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+  retries: 5
+  delay: 10
+  until: k8s_install_lock.rc is defined and k8s_install_lock.rc == 0
+  
+- debug: msg="{{ k8s_install_lock.stdout_lines }}"
+  when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+- name: version lock docker-ce (CentOS)
+  shell: "yum -y versionlock docker-ce-{{ k8s_docker_version }} docker-ce-cli-{{ k8s_docker_version }} containerd.io"
+  args:
+    warn: false
+  register: docker_install_lock_version
+  when: cluster_type == "centos-k8s"
+  retries: 5
+  delay: 10
+  until: docker_install_lock_version.rc is defined and docker_install_lock_version.rc == 0
+
+- debug: msg="{{ docker_install_lock_version.stdout_lines }}"
+  when: cluster_type == "centos-k8s"
+
+- name: lock docker-ce (Fedora / CentOS 8)
+  shell: "dnf -y versionlock docker-ce-{{ k8s_docker_version }} docker-ce-cli-{{ k8s_docker_version }} containerd.io"
+  args:
+    warn: false
+  register: docker_install_lock_version
+  when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+- debug: msg="{{ docker_install_lock_version.stdout_lines }}"
+  when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
+
+- name: lock docker-ce (Ubuntu)
+  shell: "apt-mark hold docker-ce={{ k8s_docker_version }}"
+  args:
+    warn: false
+  register: docker_install_lock
+  when: cluster_type == "ubuntu-k8s"
+  
+- debug: msg="{{ docker_install_lock.stdout_lines }}"
+  when: cluster_type == "ubuntu-k8s" 
