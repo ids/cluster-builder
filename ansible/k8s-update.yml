@@ -55,6 +55,16 @@
     kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
   tasks:
 
+  - name: set k8s_version_upgrade_eviction_seconds fact
+    set_fact:
+      k8s_version_upgrade_eviction_seconds: 45
+    run_once: true
+
+  - name: set k8s_version_upgrade_node_recovery_seconds fact
+    set_fact:
+      k8s_version_upgrade_node_recovery_seconds: 20
+    run_once: true
+
   - debug: msg="starting master upgrade"
 
   - name: get initial kubeadm version short
@@ -297,7 +307,7 @@
 
   - name: allow some time for the evictions
     pause:
-      seconds: 45
+      seconds: "{{ k8s_version_upgrade_eviction_seconds }}"
 
   - name: stop the kubelet service 
     shell: systemctl stop kubelet
@@ -418,7 +428,7 @@
 
   - name: allow some time for things to recover
     pause:
-      seconds: 10
+      seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
 
   - name: cluster node status
     local_action:

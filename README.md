@@ -660,6 +660,20 @@ __Eg.__
 
 	$ bash cluster-update eg/demo-k8s
 
+Version upgrades that are __minor__ should work for all variants.
+
+Version upgrades that are __major__ have been tested in the following combinations:
+
+| k8s variant |  initial version | upgraded version  |   status      |
+|-------------|------------------|-------------------|---------------|
+| ubuntu-k8s  |      1.15.*      |      1.16.*       |   success     |
+
+
+
+You can set the wait time, in seconds for the pause after each node is drained as __k8s_version_upgrade_eviction_seconds__ and the wait after each node is uncordoned as __k8s_version_upgrade_node_recovery_seconds__, or not specify them and go with the defaults.
+
+For __ubuntu-k8s__, when specifying specific minor version you may use the wildcard, such as __1.15.3*__.
+
 If a cluster had been previously deployed using a minor version wildcard (which is the best practice), it will automatically be updated to the latest minor patch version.  A cluster deployed with __1.14.*__ as the intial version might start at __1.14.7__, but then be upgraded to __1.14.11__ over time using `cluster-update`.
 
 It can also be used for __major__ upgrades, simply by changing the __k8s_version__ value in the cluster package hosts file prior to running `cluster-update`.  
