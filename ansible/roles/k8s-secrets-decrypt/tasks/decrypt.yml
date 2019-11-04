@@ -9,10 +9,28 @@
     secrets_encrypted: "{{ stat_result.stat.exists }}"
   run_once: true
 
-- name: adjust kubernetes api server configuration for encryption
+- name: remove identity from secrets.conf
   lineinfile:
     dest: /etc/kubernetes/pki/secrets.conf
-    insertafter: "    providers:"
+    regexp: "%identity%"
+    state: absent
+  become: true
+  when: k8s_version is not search("1.12") and inventory_hostname == groups['k8s_masters'][0] 
+    and secrets_encrypted|bool == True 
+
+- name: display adjusted secrets.conf 
+  shell: "cat /etc/kubernetes/pki/secrets.conf"
+  become: true
+  register: update_secrets_out
+  when: secrets_encrypted|bool == True and inventory_hostname == groups['k8s_masters'][0]
+
+- debug: msg="{{ update_secrets_out.stdout_lines }}"
+  when: secrets_encrypted|bool == True and inventory_hostname == groups['k8s_masters'][0]
+
+- name: re-insert identity as primary configuration for encryption
+  lineinfile:
+    dest: /etc/kubernetes/pki/secrets.conf
+    insertbefore: "    - aescbc:"
     line: "    - identity: {}"
     state: present
   become: true
