@@ -250,7 +250,8 @@
     set_fact:
       k8s_major_upgrade: true
     run_once: true
-    when: "(initial_kubeadm_version_short != k8s_version_short)"
+    when: "(initial_kubeadm_version_short != k8s_version_short) or 
+      (k8s_version_upgrade_minor_as_major is defined and k8s_version_upgrade_minor_as_major|bool == True)"
 
   - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
 
@@ -274,7 +275,7 @@
       k8s_major_upgrade|bool == true
 
   - name: running upgrade apply on first master
-    shell: "kubeadm upgrade apply  v{{ kubeadm_version_full }} -y --ignore-preflight-errors=SystemVerification > /root/kubeadm_upgrade_results"
+    shell: "kubeadm upgrade apply v{{ kubeadm_version_full }} -y --certificate-renewal=false --ignore-preflight-errors=SystemVerification > /root/kubeadm_upgrade_results"
     when: inventory_hostname == groups['k8s_masters'][0] and 
       k8s_major_upgrade|bool == true
 
@@ -299,7 +300,7 @@
       k8s_major_upgrade|bool == true
 
   - name: running upgrade node on other master
-    shell: "kubeadm upgrade node"
+    shell: "kubeadm upgrade node --certificate-renewal=false"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
       k8s_version is not search('1.14') and k8s_version is not search('1.13') and 
@@ -663,7 +664,8 @@
     set_fact:
       k8s_major_upgrade: true
     run_once: true
-    when: "(initial_kubeadm_version_short != k8s_version_short)"
+    when: "(initial_kubeadm_version_short != k8s_version_short) or 
+      (k8s_version_upgrade_minor_as_major is defined and k8s_version_upgrade_minor_as_major|bool == True)"
 
   - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
 
