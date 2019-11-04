@@ -1,0 +1,4 @@
+- name: re-encrypt the Kubernetes secrets
+  include: recrypt.yml
+  when: "k8s_encrypt_secrets|bool == True"
+

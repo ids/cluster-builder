@@ -7,49 +7,11 @@
   set_fact:
     secrets_encrypted: "{{ stat_result.stat.exists }}"
 
-- name: move secrets.conf to secrets-identity.conf
-  shell: "cp /etc/kubernetes/pki/secrets.conf /etc/kubernetes/pki/secrets-identity.conf"
-  become: true
-  when: secrets_encrypted|bool == True 
-
-- name: remove adjusted secrets.conf 
-  shell: "sed -i '/identity/d' /etc/kubernetes/pki/secrets-identity.conf"
-  become: true
-  when: secrets_encrypted|bool == True 
-
-- name: display adjusted secrets.conf 
-  shell: "cat /etc/kubernetes/pki/secrets-identity.conf"
-  become: true
-  register: update_secrets_out
-  when: secrets_encrypted|bool == True 
-
-- debug: msg="{{ update_secrets_out.stdout_lines }}"
-  when: secrets_encrypted|bool == True 
-
-- name: re-insert identity as primary configuration for encryption
-  lineinfile:
-    dest: /etc/kubernetes/pki/secrets-identity.conf
-    insertbefore: "    - aescbc:"
-    line: "    - identity: {}"
-    state: present
-  become: true
-  when: k8s_version is not search("1.12")  
-    and secrets_encrypted|bool == True 
-
-- name: display adjusted secrets-identity.conf 
-  shell: "cat /etc/kubernetes/pki/secrets-identity.conf"
-  become: true
-  register: update_secrets_out
-  when: secrets_encrypted|bool == True 
-
-- debug: msg="{{ update_secrets_out.stdout_lines }}"
-  when: secrets_encrypted|bool == True 
-
 - name: adjust kubernetes api server configuration for encryption
   lineinfile:
     dest: /etc/kubernetes/manifests/kube-apiserver.yaml
     insertafter: " - --secure-port=6443"
-    line: "    - --encryption-provider-config=/etc/kubernetes/pki/secrets-identity.conf"
+    line: "    - --encryption-provider-config=/etc/kubernetes/pki/secrets.conf"
     state: present
   become: true
   when: k8s_version is not search("1.12") and secrets_encrypted|bool == True
@@ -58,7 +20,7 @@
   lineinfile:
     dest: /etc/kubernetes/manifests/kube-apiserver.yaml
     insertafter: " - --secure-port=6443"
-    line: "    - --experimental-encryption-provider-config=/etc/kubernetes/pki/secrets-identity.conf"
+    line: "    - --experimental-encryption-provider-config=/etc/kubernetes/pki/secrets.conf"
     state: present
   become: true
   when: k8s_version is search("1.12") and secrets_encrypted|bool == True

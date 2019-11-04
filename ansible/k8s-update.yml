@@ -827,7 +827,6 @@
   
   roles:
   - role: k8s-cluster-addons
-  - role: k8s-secrets
-    when: "inventory_hostname == groups['k8s_masters'][0]"
+  - role: k8s-secrets-recrypt
   - role: k8s-inspect
     when: "inventory_hostname == groups['k8s_masters'][0]"
