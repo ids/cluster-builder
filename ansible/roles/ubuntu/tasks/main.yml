@@ -4,3 +4,6 @@
 
 - name: configure chronyd
   include: chronyd.yml
+
+- name: update Ubuntu
+  shell: "apt-get -y upgrade"  

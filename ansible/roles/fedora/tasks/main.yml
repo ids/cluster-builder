@@ -4,3 +4,6 @@
 
 - name: configure chronyd
   include: chronyd.yml
+
+- name: update Fedora
+  shell: "dnf -y upgrade"  
