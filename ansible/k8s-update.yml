@@ -678,7 +678,7 @@
       k8s_major_upgrade|bool == true
 
   - name: running upgrade node on worker as this is major upgrade
-    shell: "kubeadm upgrade node config --kubelet-version={{ k8s_kubeadm_version_full }}"
+    shell: "kubeadm upgrade node config --kubelet-version={{ kubeadm_version_full }}"
     register: kubeadm_upgrade_node_out
     when: (k8s_version is search("1.14") or k8s_version is search('1.13')) and 
       k8s_major_upgrade|bool == true
