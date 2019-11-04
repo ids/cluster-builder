@@ -40,6 +40,13 @@
 - debug: msg="{{ update_secrets_out.stdout_lines }}"
   when: secrets_encrypted|bool == True 
 
+- name: restart the kubelet 
+  shell: "systemctl restart kubelet"
+  become: true
+  register: kubelet_restart_out
+
+- debug: msg="{{ kubelet_restart_out.stdout_lines }}"
+
 - name: force restart the api servers 
   shell: "kubectl delete pod kube-apiserver-{{ node_fqdn }} -n kube-system"
   become: true
