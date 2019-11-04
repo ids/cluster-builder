@@ -12,9 +12,3 @@
   
 - debug: msg="{{ canal_out.stdout_lines }}"
   
-#- name: install flannel CNI manifest
-#  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-#  register: flannel_out
-  
-#- debug: msg="{{ flannel_out.stdout_lines }}"
-  
