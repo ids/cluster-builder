@@ -240,3 +240,12 @@
 
 - debug: msg="{{ k8s_advertise_addr }}"
   run_once: true
+
+- name: set k8s_encrypt_secrets default
+  set_fact:
+    k8s_encrypt_secrets: true
+  run_once: true
+  when: k8s_encrypt_secrets is undefined 
+
+- debug: msg="{{ k8s_encrypt_secrets }}"
+  run_once: true
