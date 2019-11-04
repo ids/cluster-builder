@@ -20,7 +20,7 @@
     and secrets_encrypted|bool == True 
 
 - name: display adjusted secrets.conf 
-  shell: "cat etc/kubernetes/pki/secrets.conf"
+  shell: "cat /etc/kubernetes/pki/secrets.conf"
   become: true
   register: update_secrets_out
   when: secrets_encrypted|bool == True and inventory_hostname == groups['k8s_masters'][0]
