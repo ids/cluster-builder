@@ -608,7 +608,7 @@
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node"
     register: kubeadm_upgrade_node_out
-    when: k8s_version is search("1.14") and k8s_version is not search('1.13')
+    when: k8s_version is not search("1.14") and k8s_version is not search('1.13')
 
   - debug: msg="{{ kubeadm_upgrade_node_out.stdout_lines }}"
     when: k8s_version is not search('1.14') and k8s_version is not search('1.13')
