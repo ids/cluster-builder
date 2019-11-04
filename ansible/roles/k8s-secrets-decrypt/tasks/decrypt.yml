@@ -19,6 +19,15 @@
   when: k8s_version is not search("1.12") and inventory_hostname == groups['k8s_masters'][0] 
     and secrets_encrypted|bool == True 
 
+- name: display adjusted secrets.conf 
+  shell: "cat etc/kubernetes/pki/secrets.conf"
+  become: true
+  register: update_secrets_out
+  when: secrets_encrypted|bool == True 
+
+- debug: msg="{{ update_secrets_out.stdout_lines }}"
+  when: secrets_encrypted|bool == True 
+
 - name: force restart the api servers 
   shell: "kubectl delete pod kube-apiserver-{{ node_fqdn }} -n kube-system"
   become: true
