@@ -294,11 +294,11 @@
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version not in search("1.14")
+      k8s_version is not search('1.14')
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version not in search("1.14")
+      k8s_version is not search('1.14')
 
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node experimental-control-plane"
@@ -608,10 +608,10 @@
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node"
     register: kubeadm_upgrade_node_out
-    when: k8s_version not in search("1.14")
+    when: k8s_version is not search('1.14')
 
   - debug: msg="{{ kubeadm_upgrade_node_out.stdout_lines }}"
-    when: k8s_version not in search("1.14")
+    when: k8s_version is not search('1.14')
 
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node config"
