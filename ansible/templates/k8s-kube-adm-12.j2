@@ -26,13 +26,15 @@ etcd:
   serverCertSANs:
     - "{{ k8s_advertise_addr }}"  
 {% for host in groups['k8s_masters'] %}
-    - "{{ hostvars[host].inventory_hostname }}"
+    - "{{ hostvars[host].node_fqdn }}"
 {% endfor %}
     - "{{ k8s_control_plane_uri }}"
   peerCertSANs:
 {% for host in groups['k8s_masters'] %}
     - "{{ hostvars[host].ansible_host }}"
 {% endfor %}
+    - "127.0.0.1"
+    - "10.96.0.1"
 imageRepository: k8s.gcr.io
 kubernetesVersion: v1.12.3
 networking:

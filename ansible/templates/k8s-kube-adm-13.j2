@@ -3,14 +3,12 @@ kind: ClusterConfiguration
 clusterName: "{{ cluster_name }}"
 apiServerCertSANs:
 {% for host in groups['k8s_masters'] %}
-  - "{{ hostvars[host].ansible_host }}"
-{% endfor %}
-{% for host in groups['k8s_masters'] %}
   - "{{ hostvars[host].node_fqdn }}"
 {% endfor %}
   - "127.0.0.1"
   - "10.96.0.1"
   - "{{ k8s_advertise_addr }}"
+  - "{{ k8s_control_plane_uri }}"
 auditPolicy:
   logDir: /var/log/kubernetes/audit
   logMaxAge: 2
