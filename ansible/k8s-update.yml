@@ -314,12 +314,12 @@
     shell: "kubeadm upgrade node experimental-control-plane"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is search("1.14") or k8s_version is search('1.13') and 
+      (k8s_version is search("1.14") or k8s_version is search('1.13')) and 
       k8s_major_upgrade|bool == true
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is search("1.14") or k8s_version is search('1.13') and 
+      (k8s_version is search("1.14") or k8s_version is search('1.13')) and 
       k8s_major_upgrade|bool == true
 
   - name: drain node
@@ -680,12 +680,11 @@
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node config"
     register: kubeadm_upgrade_node_out
-    when: k8s_version is search("1.14") or k8s_version is search('1.13') and 
+    when: (k8s_version is search("1.14") or k8s_version is search('1.13')) and 
       k8s_major_upgrade|bool == true
 
-
   - debug: msg="{{ kubeadm_upgrade_node_out.stdout_lines }}"
-    when: k8s_version is search("1.14") or k8s_version is search('1.13') and 
+    when: (k8s_version is search("1.14") or k8s_version is search('1.13')) and 
       k8s_major_upgrade|bool == true
 
   - name: stop the kubelet service 
