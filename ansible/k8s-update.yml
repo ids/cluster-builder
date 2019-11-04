@@ -653,6 +653,20 @@
   - debug: msg="kubeadm_version_short [{{ kubeadm_version_short }}], k8s_version_short [{{ k8s_version_short }}]"
   - debug: msg="kubeadm_version_full [{{ kubeadm_version_full }}]"
 
+  - name: set k8s_major_upgrade fact
+    set_fact:
+      k8s_major_upgrade: false
+    run_once: true
+    when: "(initial_kubeadm_version_short == k8s_version_short)"
+
+  - name: set k8s_major_upgrade fact
+    set_fact:
+      k8s_major_upgrade: true
+    run_once: true
+    when: "(initial_kubeadm_version_short != k8s_version_short)"
+
+  - debug: msg="k8s_major_upgrade [{{ k8s_major_upgrade }}]"
+
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node"
     register: kubeadm_upgrade_node_out
