@@ -59,12 +59,14 @@
     set_fact:
       k8s_version_upgrade_eviction_seconds: 45
     run_once: true
+    when: k8s_version_upgrade_eviction_seconds is undefined
 
   - name: set k8s_version_upgrade_node_recovery_seconds fact
     set_fact:
       k8s_version_upgrade_node_recovery_seconds: 20
     run_once: true
-
+    when: k8s_version_upgrade_node_recovery_seconds is undefined
+    
   - debug: msg="starting master upgrade"
 
   - name: get initial kubeadm version short
