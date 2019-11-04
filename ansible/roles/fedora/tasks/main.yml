@@ -7,3 +7,6 @@
 
 - name: update Fedora
   shell: "dnf -y upgrade"  
+  register: upgrade_out
+
+- debug: msg="{{ upgrade_out.stdout_lines }}"

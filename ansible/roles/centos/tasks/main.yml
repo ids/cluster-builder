@@ -11,3 +11,6 @@
 
 - name: update CentOS
   shell: "yum -y upgrade"  
+  register: upgrade_out
+
+- debug: msg="{{ upgrade_out.stdout_lines }}"
