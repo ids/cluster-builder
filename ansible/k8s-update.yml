@@ -138,7 +138,7 @@
     when: cluster_type == "ubuntu-k8s" 
 
   - name: update kubeadm (CentOS)
-    shell: "yum -y update kubeadm-{{ k8s_version }}"
+    shell: "yum -y upgrade-to kubeadm-{{ k8s_version }}"
     args:
       warn: false
     register: kubeadm_update
@@ -294,21 +294,21 @@
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is not search('1.14')
+      k8s_version is not search('1.14') and k8s_version is not search('1.13')
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is not search('1.14')
+      k8s_version is not search('1.14') and k8s_version is not search('1.13')
 
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node experimental-control-plane"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is search("1.14")
+      k8s_version is search("1.14") or k8s_version is search('1.13')
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is search("1.14")
+      k8s_version is search("1.14") or k8s_version is search('1.13')
 
   - name: drain node
     local_action:
@@ -608,18 +608,19 @@
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node"
     register: kubeadm_upgrade_node_out
-    when: k8s_version is not search('1.14')
+    when: k8s_version is search("1.14") and k8s_version is not search('1.13')
 
   - debug: msg="{{ kubeadm_upgrade_node_out.stdout_lines }}"
-    when: k8s_version is not search('1.14')
+    when: k8s_version is not search('1.14') and k8s_version is not search('1.13')
 
   - name: running upgrade node on worker as this is major upgrade
     shell: "kubeadm upgrade node config"
     register: kubeadm_upgrade_node_out
-    when: k8s_version is search("1.14")
+    when: k8s_version is search("1.14") or k8s_version is search('1.13')
+
 
   - debug: msg="{{ kubeadm_upgrade_node_out.stdout_lines }}"
-    when: k8s_version is search("1.14")
+    when: k8s_version is search("1.14") or k8s_version is search('1.13')
 
   - name: stop the kubelet service 
     shell: systemctl stop kubelet
