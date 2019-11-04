@@ -63,10 +63,10 @@
 
   - name: set k8s_version_upgrade_node_recovery_seconds fact
     set_fact:
-      k8s_version_upgrade_node_recovery_seconds: 20
+      k8s_version_upgrade_node_recovery_seconds: 30
     run_once: true
     when: k8s_version_upgrade_node_recovery_seconds is undefined
-    
+
   - debug: msg="starting master upgrade"
 
   - name: get initial kubeadm version short
@@ -164,7 +164,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: update kubeadm first (Fedora / CentOS 8)
-    shell: "dnf -y upgrade kubeadm-{{ k8s_version }}"
+    shell: "dnf -y upgrade-to kubeadm-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -316,7 +316,7 @@
     register: kubelet_stop_out
 
   - name: update k8s first (CentOS)
-    shell: "yum -y update kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "yum -y upgrade-to kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -342,7 +342,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: update k8s first (Fedora / CentOS 8)
-    shell: "dnf -y upgrade kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "dnf -y upgrade-to kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -512,7 +512,7 @@
     when: cluster_type == "ubuntu-k8s" 
 
   - name: update kubeadm (CentOS)
-    shell: "yum -y update kubeadm-{{ k8s_version }}"
+    shell: "yum -y upgrade-to kubeadm-{{ k8s_version }}"
     args:
       warn: false
     register: kubeadm_update
@@ -532,7 +532,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: update kubeadm first (Fedora / CentOS 8)
-    shell: "dnf -y upgrade kubeadm-{{ k8s_version }}"
+    shell: "dnf -y upgrade-to kubeadm-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -592,7 +592,7 @@
     register: kubelet_stop_out
 
   - name: update k8s first (CentOS)
-    shell: "yum -y update kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "yum -y upgrade-to kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -618,7 +618,7 @@
     when: cluster_type == "centos-k8s"
 
   - name: update k8s first (Fedora / CentOS 8)
-    shell: "dnf -y upgrade kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
+    shell: "dnf -y upgrade-to kubectl-{{ k8s_version }} kubelet-{{ k8s_version }}"
     args:
       warn: false
     register: k8s_update
@@ -706,7 +706,7 @@
 
   - name: allow some time for things to recover
     pause:
-      seconds: 30
+      seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
 
   - name: cluster node status
     local_action:

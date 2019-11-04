@@ -666,6 +666,7 @@ Version upgrades that are __major__ have been tested in the following combinatio
 
 | k8s variant |  initial version | upgraded version  |   status      |
 |-------------|------------------|-------------------|---------------|
+| ubuntu-k8s  |      1.14.*      |      1.15.*       |   success     |
 | ubuntu-k8s  |      1.15.*      |      1.16.*       |   success     |
 
 
