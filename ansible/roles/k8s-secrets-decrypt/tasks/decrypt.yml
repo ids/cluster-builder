@@ -9,14 +9,10 @@
     secrets_encrypted: "{{ stat_result.stat.exists }}"
   run_once: true
 
-- name: remove identity from secrets.conf
-  lineinfile:
-    dest: /etc/kubernetes/pki/secrets.conf
-    regexp: "%identity%"
-    state: absent
+- name: display adjusted secrets.conf 
+  shell: "sed -i '/identity/d' /etc/kubernetes/pki/secrets.conf"
   become: true
-  when: k8s_version is not search("1.12") and inventory_hostname == groups['k8s_masters'][0] 
-    and secrets_encrypted|bool == True 
+  when: secrets_encrypted|bool == True and inventory_hostname == groups['k8s_masters'][0]
 
 - name: display adjusted secrets.conf 
   shell: "cat /etc/kubernetes/pki/secrets.conf"
