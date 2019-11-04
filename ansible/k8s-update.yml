@@ -467,14 +467,14 @@
 
   - debug: msg="{{ node_status.stdout_lines }}"
 
-- hosts: k8s_masters
-  remote_user: "{{ remote_user }}"
-  become: true
-  any_errors_fatal: true
+#- hosts: k8s_masters
+#  remote_user: "{{ remote_user }}"
+#  become: true
+#  any_errors_fatal: true
   
-  roles:
-  - role: k8s-cni
-    when: "inventory_hostname == groups['k8s_masters'][0]"
+#  roles:
+#  - role: k8s-cni
+#    when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - hosts: k8s_workers
   remote_user: "{{ remote_user }}"
