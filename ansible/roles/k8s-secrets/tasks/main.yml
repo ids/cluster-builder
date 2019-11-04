@@ -1,4 +1,5 @@
 - name: encrypt the Kubernetes secrets
   include: secrets.yml
-  when: "k8s_encrypt_secrets|bool == True"
+  when: "k8s_encrypt_secrets|bool == True and
+     'k8s_masters' in group_names"
 

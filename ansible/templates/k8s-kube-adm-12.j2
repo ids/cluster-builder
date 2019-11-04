@@ -51,6 +51,9 @@ bootstrapTokens:
   usages:
   - signing
   - authentication
+apiEndpoint:
+  advertiseAddress: "{{ k8s_advertise_addr }}"
+  bindPort: 6443
 nodeRegistration:
   name: {{ node_fqdn }}
 {% if k8s_container_runtime == 'cri-o' %}

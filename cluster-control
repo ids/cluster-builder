@@ -1,7 +1,9 @@
 #!/bin/bash
 INVENTORY_FILE=$1
 ACTION=$2
-ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
+
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
+export ANSIBLE_CONFIG=./ansible.cfg
 
 function show_usage () {
   echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop|destroy>"

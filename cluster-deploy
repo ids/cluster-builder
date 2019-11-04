@@ -3,7 +3,8 @@ INVENTORY_FILE=$1
 SERVER_WAIT=90s
 REMOTE_USER=root
 
-ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
+export ANSIBLE_CONFIG=./ansible.cfg
 
 function esxi_deploy () {
   

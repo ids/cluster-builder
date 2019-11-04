@@ -256,6 +256,6 @@
 
 - debug: msg="{{ master_node_out.stdout_lines }}"
 
-- name: ensure the Kubelet is enabled
+- name: ensure the kubelet is enabled
   shell: systemctl enable kubelet
 

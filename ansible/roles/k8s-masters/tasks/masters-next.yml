@@ -85,5 +85,5 @@
 - name: master join result
   debug: msg="{{ master_join.stdout_lines }}"
 
-- name: ensure the Kubelet is enabled
+- name: ensure the kubelet is enabled
   shell: systemctl enable kubelet
