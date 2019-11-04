@@ -294,21 +294,21 @@
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is not in search("1.14")
+      k8s_version not in search("1.14")
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is not in search("1.14")
+      k8s_version not in search("1.14")
 
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node experimental-control-plane"
     register: k8s_upgrade_node_out
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is in search("1.14")
+      k8s_version in search("1.14")
 
   - debug: msg="{{ k8s_upgrade_node_out.stdout_lines }}"
     when: inventory_hostname != groups['k8s_masters'][0] and
-      k8s_version is in search("1.14")
+      k8s_version in search("1.14")
 
   - name: drain node
     local_action:
