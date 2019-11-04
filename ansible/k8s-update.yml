@@ -324,6 +324,10 @@
       (k8s_version is search("1.14") or k8s_version is search('1.13')) and 
       k8s_major_upgrade|bool == true
 
+  - name: pause after the upgrade
+    pause:
+      seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
+
   - name: drain node
     local_action:
       module: shell
