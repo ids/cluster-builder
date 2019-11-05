@@ -801,6 +801,26 @@
   - debug: msg="{{ k8s_install_lock.stdout_lines }}"
     when: cluster_type == "ubuntu-k8s" 
 
+  - name: re-version lock docker-ce (CentOS)
+    shell: "yum -y versionlock docker-ce"
+    args:
+      warn: false
+    ignore_errors: true
+    when: cluster_type == "centos-k8s" and k8s_docker_version != "distro"
+
+  - name: re-version lock docker-ce (Ubuntu)
+    shell: "apt-mark hold docker-ce"
+    args:
+      warn: false
+    when: cluster_type == "ubuntu-k8s" and k8s_docker_version != "distro"
+
+  - name: re-version lock docker-ce (Fedora / CentOS 8)
+    shell: "dnf -y versionlock docker-ce"
+    args:
+      warn: false
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s" 
+       and k8s_docker_version != "distro"
+
   - name: update underlying OS (Centos7) 
     shell: yum -y upgrade 
     register: centos7_update_out
