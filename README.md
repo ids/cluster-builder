@@ -46,7 +46,7 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 12. [Kubernetes Dashboard](#kubernetes-dashboard)
 13. [Change Cluster Password](#change-cluster-password)
 14. [Controlling Cluster VM Nodes](#controlling-cluster-vm-nodes)
-15. [Updating Cluster VM Nodes](#updating-cluster-vm-nodes)
+15. [Updating Clusters](#updating-clusters)
 16. [Kubernetes iSCSI Provisioner and Targetd Storage Appliance](kubernetes-iscsi-provisioner-and-targetd-storage-appliance)
 17. [Kubernetes ElasticSearch Logging](#kubernetes-elasticsearch-logging)
 18. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
@@ -649,7 +649,7 @@ __Eg.__
 
 	$ bash cluster-control eg/demo-k8s suspend
 
-### Updating Cluster VM Nodes
+### Updating Clusters
 This command will update the cluster nodes binaries to the latest version, as well as orchestrate a controlled __minor__update or controlled __major__update of a Kubernetes cluster.
 
 Use **cluster-update**:
@@ -673,6 +673,7 @@ __Major__ Kubernetes version upgrades have been tested in the following combinat
 | ubuntu-k8s  |      1.13.*      |      1.14.*       |
 | ubuntu-k8s  |      1.14.*      |      1.15.*       |
 | ubuntu-k8s  |      1.15.*      |      1.16.*       |
+| centos-k8s  |      1.13.*      |      1.14.*       |
 | centos-k8s  |      1.14.*      |      1.15.*       |
 | centos-k8s  |      1.15.*      |      1.16.*       |
 | fedora-k8s  |      1.14.*      |      1.15.*       |
