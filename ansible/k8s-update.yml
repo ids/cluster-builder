@@ -312,18 +312,6 @@
     when: inventory_hostname == groups['k8s_masters'][0] and 
       k8s_major_upgrade|bool == true
 
-  - name: update the CNI on major upgrades
-    include_role:
-      name: k8s-cni
-    when: inventory_hostname == groups['k8s_masters'][0] and 
-      k8s_major_upgrade|bool == true
-
-  - name: pause to allow CNI upgrades to complete
-    pause:
-      seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
-    when: inventory_hostname == groups['k8s_masters'][0] and 
-      k8s_major_upgrade|bool == true
-
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
@@ -481,6 +469,12 @@
     register: kubelet_uncordon_out
 
   - debug: msg="{{ kubelet_uncordon_out.stdout_lines }}"
+
+  - name: update the CNI on major upgrades
+    include_role:
+      name: k8s-cni
+    when: inventory_hostname == groups['k8s_masters'][0] and 
+      k8s_major_upgrade|bool == true
 
   - name: allow some time for things to recover
     pause:
