@@ -19,7 +19,7 @@ __Cluster Builder__ enables both local and remote deployment, leveraging the sam
 
 ### Enterprise Hybrid-Cloud On-Premise Deployment
 
-__Cluster Builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__ abd __DC/OS__ clusters.
+__Cluster Builder__ provides a production grade on-premise deployment and operating model for __Kubernetes__ and __DC/OS__ clusters.
 
 ![cluster-builder Enterprise Usage](docs/images/cluster-builder-enterprise-usage.png)
 

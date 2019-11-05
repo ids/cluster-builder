@@ -498,6 +498,12 @@
   - role: k8s-cni
     when: "inventory_hostname == groups['k8s_masters'][0]"  
 
+  tasks:
+  - name: pause to allow CNI upgrades to complete
+  pause:
+    seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
+
+
 - hosts: k8s_workers
   remote_user: "{{ remote_user }}"
   become: true
