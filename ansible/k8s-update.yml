@@ -312,12 +312,6 @@
     when: inventory_hostname == groups['k8s_masters'][0] and 
       k8s_major_upgrade|bool == true
 
-  - name: update the CNI on major upgrades
-    include_role:
-      name: k8s-cni
-    when: inventory_hostname == groups['k8s_masters'][0] and 
-      k8s_major_upgrade|bool == true
-
   - name: running upgrade node on other master
     shell: "kubeadm upgrade node"
     register: k8s_upgrade_node_out
@@ -476,6 +470,12 @@
 
   - debug: msg="{{ kubelet_uncordon_out.stdout_lines }}"
 
+  - name: update the CNI on major upgrades
+    include_role:
+      name: k8s-cni
+    when: inventory_hostname == groups['k8s_masters'][0] and 
+      k8s_major_upgrade|bool == true
+
   - name: allow some time for things to recover
     pause:
       seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
@@ -488,15 +488,6 @@
     register: node_status
 
   - debug: msg="{{ node_status.stdout_lines }}"
-
-- hosts: k8s_masters
-  remote_user: "{{ remote_user }}"
-  become: true
-  any_errors_fatal: true
-  
-  roles:
-  - role: k8s-cni
-    when: "inventory_hostname == groups['k8s_masters'][0]"  
 
 - hosts: k8s_workers
   remote_user: "{{ remote_user }}"
@@ -809,6 +800,26 @@
     
   - debug: msg="{{ k8s_install_lock.stdout_lines }}"
     when: cluster_type == "ubuntu-k8s" 
+
+  - name: re-version lock docker-ce (CentOS)
+    shell: "yum -y versionlock docker-ce"
+    args:
+      warn: false
+    ignore_errors: true
+    when: cluster_type == "centos-k8s" and k8s_docker_version != "distro"
+
+  - name: re-version lock docker-ce (Ubuntu)
+    shell: "apt-mark hold docker-ce"
+    args:
+      warn: false
+    when: cluster_type == "ubuntu-k8s" and k8s_docker_version != "distro"
+
+  - name: re-version lock docker-ce (Fedora / CentOS 8)
+    shell: "dnf -y versionlock docker-ce"
+    args:
+      warn: false
+    when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s" 
+       and k8s_docker_version != "distro"
 
   - name: update underlying OS (Centos7) 
     shell: yum -y upgrade 
