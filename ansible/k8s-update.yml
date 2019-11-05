@@ -37,6 +37,15 @@
   - debug: msg="{{ k8s_install_lock.stdout_lines }}"
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
+  - name: uncordon node
+    local_action:
+      module: shell
+      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} uncordon {{ node_fqdn }}"
+    become: false
+    register: kubelet_uncordon_out
+
+  - debug: msg="{{ kubelet_uncordon_out.stdout_lines }}"
+
 - hosts: k8s_masters
   remote_user: "{{ remote_user }}"
   become: true
