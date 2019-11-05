@@ -500,8 +500,8 @@
 
   tasks:
   - name: pause to allow CNI upgrades to complete
-  pause:
-    seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
+    pause:
+      seconds: "{{ k8s_version_upgrade_node_recovery_seconds }}"
 
 
 - hosts: k8s_workers
