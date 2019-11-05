@@ -25,7 +25,7 @@ __Cluster Builder__ provides a production grade on-premise deployment and operat
 
 > Emphasis is on __Kubernetes__ now that it has won the container orchestration wars.
 
-> See [here](docs/images/cluster-builder-overview.png) for a diagramtic depiction of the __Cluster Builder__ components.
+> See [here](docs/images/cluster-builder-overview.png) for a visual depiction of the __Cluster Builder__ components.
 
 
 ## Usage Guide
