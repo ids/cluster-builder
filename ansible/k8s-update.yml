@@ -593,7 +593,7 @@
     when: cluster_type == "ubuntu-k8s"
     retries: 5
     delay: 10
-    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
+    until: repo_update.rc is defined and repo_update.rc == 0
    
   - debug: msg="{{ repo_update.stdout_lines }}"
     when: cluster_type == "ubuntu-k8s" 

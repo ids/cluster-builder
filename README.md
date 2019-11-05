@@ -650,7 +650,7 @@ __Eg.__
 	$ bash cluster-control eg/demo-k8s suspend
 
 ### Updating Cluster VM Nodes
-New and still experimental, this command will update the cluster nodes binaries to the latest version, while retaining the Kubernetes major version.
+This command will update the cluster nodes binaries to the latest version, as well as orchestrate a controlled __minor__update or controlled __major__update of a Kubernetes cluster.
 
 Use **cluster-update**:
 
@@ -660,9 +660,13 @@ __Eg.__
 
 	$ bash cluster-update eg/demo-k8s
 
-Version upgrades that are __minor__ should work for all variants.
+When the __k8s_version__ format `1.xx.*` is used (eg. 1.14.*), the `cluster-update` command will update Kubernetes to the latest __minor__ version in the series.
 
-Version upgrades that are __major__ have been tested in the following combinations:
+To perform a __major__ Kubernetes version upgrade, update the __k8s_version__ in the hosts file to the next major version of Kubernetes (eg. 1.15.*), and then run `cluster-update`.
+
+__Minor__ Kubernetes version upgrades should work for all variants.
+
+__Major__ Kubernetes version upgrades have been tested in the following combinations:
 
 |  variant    |  initial version |   final version   |  
 |-------------|------------------|-------------------|
@@ -674,18 +678,13 @@ Version upgrades that are __major__ have been tested in the following combinatio
 | fedora-k8s  |      1.14.*      |      1.15.*       |
 | fedora-k8s  |      1.15.*      |      1.16.*       |
 
-
 You can set the wait time, in seconds for the pause after each node is drained as __k8s_version_upgrade_eviction_seconds__ and the wait after each node is uncordoned as __k8s_version_upgrade_node_recovery_seconds__, or not specify them and go with the defaults.
 
-For __ubuntu-k8s__, when specifying specific minor version you may use the wildcard, such as __1.15.3*__.
+When specifying specific minor version you may use the wildcard, such as __1.15.3*__, as version specification formats can vary between distributions.
 
-If a cluster had been previously deployed using a minor version wildcard (which is the best practice), it will automatically be updated to the latest minor patch version.  A cluster deployed with __1.14.*__ as the intial version might start at __1.14.7__, but then be upgraded to __1.14.11__ over time using `cluster-update`.
+If the `cluster-update` script fails during the upgrade process, in can be restarted.  If it fails to complete the upgrade successfully after several tries, the upgrade will need to be completed manually.
 
-It can also be used for __major__ upgrades, simply by changing the __k8s_version__ value in the cluster package hosts file prior to running `cluster-update`.  
-
-This has been tested successfully with single step upgrades, such as from __1.15.x__ to __1.16.x__.  Use with caution.
-
-> Always test this process on an identical cluster profile before trying it in production. Ideally, A/B cluster deployment and service migration is preferred as it is a more predictable, verifiable upgrade strategy.  
+> Always test this process on an identical cluster profile before trying it in production. Ideally, A/B cluster deployment and service migration is preferred as it is a more predictable, verifiable upgrade strategy.  In-place cluster upgrades are always risky business.
 
 ### Kubernetes iSCSI Provisioner and Targetd Storage Appliance
 
