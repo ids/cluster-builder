@@ -346,7 +346,7 @@
   - name: drain node
     local_action:
       module: shell
-      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} drain {{ node_fqdn }} --ignore-daemonsets --delete-local-data"
+      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} drain {{ node_fqdn }} --force --ignore-daemonsets --delete-local-data"
     become: false
     register: node_drain_out
 
@@ -530,7 +530,7 @@
   - name: drain node
     local_action:
       module: shell
-      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} drain {{ node_fqdn }} --ignore-daemonsets --delete-local-data"
+      _raw_params: "kubectl --kubeconfig {{ kube_config_file }} drain {{ node_fqdn }} --force --ignore-daemonsets --delete-local-data"
     become: false
     register: node_drain_out
  
