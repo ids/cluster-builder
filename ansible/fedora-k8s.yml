@@ -15,8 +15,8 @@
   - role: k8s-settings 
   - role: k8s-node
   - role: k8s-init
-  - role: k8s-masters
   - role: k8s-cni
+  - role: k8s-masters
   - role: k8s-secrets
   - role: k8s-workers
   - role: k8s-ingress

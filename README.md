@@ -679,8 +679,6 @@ __Major__ Kubernetes version upgrades have been tested in the following combinat
 | fedora-k8s  |      1.14.*      |      1.15.*       |
 | fedora-k8s  |      1.15.*      |      1.16.*       |
 
-> The `centos-k8s` cluster has been tested going from version __1.13__ all the way to __1.16__ using `cluster-update`.
-
 You can set the wait time, in seconds for the pause after each node is drained as __k8s_version_upgrade_eviction_seconds__ and the wait after each node is uncordoned as __k8s_version_upgrade_node_recovery_seconds__, or not specify them and go with the defaults.
 
 When specifying specific minor version you may use the wildcard, such as __1.15.3*__, as version specification formats can vary between distributions.

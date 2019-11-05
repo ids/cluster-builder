@@ -1,8 +1,0 @@
-- name: configure Canal CNI network plugin
-  include: cni-canal.yml
-  when: k8s_network_cni == "canal"
-
-- name: configure Calico CNI network plugin
-  include: cni-calico.yml
-  when: k8s_network_cni == "calico" or k8s_network_cni == "calico-policy"
-
