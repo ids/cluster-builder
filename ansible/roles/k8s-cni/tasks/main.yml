@@ -2,6 +2,10 @@
   include: cni.yml
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
+- name: allow the CNI time to deploy
+  pause:
+    seconds: 20
+
 - name: display cluster master node status
   shell: kubectl get nodes
   register: final_nodes_out
