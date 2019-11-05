@@ -143,7 +143,10 @@
       warn: false
     register: k8s_update_repo
     when: cluster_type == "ubuntu-k8s"
-    
+    retries: 5
+    delay: 10
+    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
+  
   - debug: msg="{{ k8s_update_repo.stdout_lines }}"
     when: cluster_type == "ubuntu-k8s" 
 
@@ -552,6 +555,9 @@
       warn: false
     register: k8s_update_repo
     when: cluster_type == "centos-k8s"
+    retries: 5
+    delay: 10
+    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
 
   - debug: msg="{{ k8s_update_repo.stdout_lines }}"
     when: cluster_type == "centos-k8s"
@@ -572,7 +578,10 @@
       warn: false
     register: k8s_update_repo
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
-    
+    retries: 5
+    delay: 10
+    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
+   
   - debug: msg="{{ k8s_update_repo.stdout_lines }}"
     when: cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s"
 
@@ -582,7 +591,10 @@
       warn: false
     register: repo_update
     when: cluster_type == "ubuntu-k8s"
-    
+    retries: 5
+    delay: 10
+    until: k8s_update_repo.rc is defined and k8s_update_repo.rc == 0
+   
   - debug: msg="{{ repo_update.stdout_lines }}"
     when: cluster_type == "ubuntu-k8s" 
 
