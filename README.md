@@ -650,7 +650,7 @@ __Eg.__
 	$ bash cluster-control eg/demo-k8s suspend
 
 ### Updating Clusters
-This command will update the cluster nodes binaries to the latest version, as well as orchestrate a controlled __minor__update or controlled __major__update of a Kubernetes cluster.
+This command will update the cluster nodes binaries to the latest version, as well as orchestrate a controlled __minor__ update or controlled __major__ update of a Kubernetes cluster.
 
 Use **cluster-update**:
 
