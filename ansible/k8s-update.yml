@@ -461,6 +461,10 @@
     shell: systemctl start kubelet
     register: kubelet_start_out
 
+  - name: wait for kubelet to finish starting before uncording
+    pause:
+      seconds: 10
+
   - name: uncordon node
     local_action:
       module: shell
@@ -848,6 +852,10 @@
   - name: start the kubelet service 
     shell: systemctl start kubelet
     register: kubelet_start_out
+
+  - name: wait for kubelet to finish starting before uncording
+    pause:
+      seconds: 10
 
   - name: uncordon node
     local_action:
