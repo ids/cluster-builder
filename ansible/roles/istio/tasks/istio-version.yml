@@ -1,0 +1,92 @@
+- name: download Istio {{ k8s_istio_version }}
+  local_action:
+    module: shell
+    _raw_params: "curl -L https://git.io/getLatestIstio | ISTIO_VERSION={{ k8s_istio_version }} sh -"
+    chdir: /tmp
+  become: false
+
+- name: list download results
+  local_action:
+    module: shell
+    _raw_params: ls -al
+    chdir: /tmp
+  become: false
+  register: istio_down_out
+
+- debug: msg="{{ istio_down_out.stdout_lines }}"
+
+- name: generate istio namespace template
+  template:
+    src: templates/k8s-istio-ns.j2
+    dest: "/tmp/istio-ns.yml"
+    mode: 0711
+
+- name: create istio-system namespace
+  shell: kubectl apply -f /tmp/istio-ns.yml 
+  register: istio_ns_out
+
+- debug: msg="{{ istio_ns_out.stdout_lines }}"
+
+- name: install Istio CRDs first
+  local_action:
+    module: shell
+    _raw_params: "for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl --kubeconfig={{ kube_config_file }} apply -f $i; done"
+    chdir: "/tmp/istio-{{ k8s_istio_version }}"
+  become: false
+  register: istio_crd_out
+
+- debug: msg="{{ istio_crd_out.stdout_lines }}"
+
+- name: wait for Istio CRDs to settle in
+  pause:
+    seconds: 15
+
+- name: use helm to generate istio manifest
+  local_action:
+    module: shell
+    _raw_params: |
+      helm template --namespace=istio-system \
+        --set sidecarInjectorWebhook.enabled=true \
+        --set sidecarInjectorWebhook.enableNamespacesByDefault=true \
+        --set global.proxy.autoInject=disabled \
+        --set global.disablePolicyChecks=true \
+        --set prometheus.enabled=false \
+        --set mixer.adapters.prometheus.enabled=false \
+        --set global.disablePolicyChecks=true \
+        --set gateways.istio-ingressgateway.autoscaleMin=1 \
+        --set gateways.istio-ingressgateway.autoscaleMax=2 \
+        --set gateways.istio-ingressgateway.resources.requests.cpu=500m \
+        --set gateways.istio-ingressgateway.resources.requests.memory=256Mi \
+        --set pilot.autoscaleMin=2 \
+        --set pilot.traceSampling=100 \
+        install/kubernetes/helm/istio \
+        > ./istio.yaml  
+    chdir: "/tmp/istio-{{ k8s_istio_version }}"
+  become: false
+  register: istio_helm_out
+
+- debug: msg="{{ istio_helm_out.stdout_lines }}"
+
+- name: apply istio manifest
+  local_action:
+    module: shell
+    _raw_params:  "kubectl --kubeconfig={{ kube_config_file }} apply -f istio.yaml"
+    chdir: "/tmp/istio-{{ k8s_istio_version }}"
+  become: false
+  register: istio_manifest_out
+
+- debug: msg="{{ istio_manifest_out.stdout_lines }}"
+
+- name: wait for the istio installation to complete
+  shell: "kubectl get pods --all-namespaces | grep -E 'Pending|ContainerCreating|PodInitializing' | wc -l  | xargs"
+  register: pending_pods
+  until: "pending_pods.stdout == '0'"
+  retries: 75
+  delay: 10    
+
+- name: clean up Istio download
+  local_action:
+    module: shell
+    _raw_params:  "rm -rf istio*"
+    chdir: "/tmp"
+  become: false
