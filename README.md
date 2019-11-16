@@ -58,7 +58,7 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 
 * CentOS 7.6 DC/OS
 * CentOS 7.6 Kubernetes (Stock `kubeadm`)
-* Fedora 29 Kubernetes (Stock `kubeadm`)
+* Fedora 30 Kubernetes (Stock `kubeadm`)
 * Ubuntu 18.04 LTS Kubernetes (Stock `kubeadm`)
 
 ### Deployment Options
@@ -97,13 +97,13 @@ These `kubeadm` __Kubernetes__ cluster builds come pre-configured with a core to
 * [Canal/Flannel](https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/flannel) CNI network plugin with _Network Policy_ support
 * [MetalLB](https://metallb.universe.tf/) the on-premise load balancer
 * NGINX or Traefik for ingress and inbound traffic routing
-* [Knative](https://cloud.google.com/knative/) serverless platform integration
 * The Kubernetes Dashboard w/ Heapster integration and dashboard graphics (soon to support Metrics Server)
 * iSCSI Provisioner integration and with an external Targetd Storage Appliance VM for PVC storage
+* As well as a variety of support Kubernetes platforms in [[xtras/k8s/](xtras/k8s)
 
 > The __CentOS7 K8s__ cluster has been load tested to perform near the performance of Tectonic CoreOS w/ Canal CNI and with similar stability.  Recent builds out perform past CoreOS benchmarks.
 
-The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 4.x kernel.
+The __Fedora K8s__ cluster is the bleeding edge and targetted for experimentation and/or those who want a current 5.x kernel.
 
 #### Extras
 
