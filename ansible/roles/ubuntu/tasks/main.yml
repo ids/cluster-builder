@@ -6,7 +6,10 @@
   include: chronyd.yml
 
 - name: update Ubuntu
-  shell: "apt-get -y upgrade"  
+  apt: 
+    name: "*"
+    state: latest
+  become: true
   register: upgrade_out
 
 - debug: msg="{{ upgrade_out.stdout_lines }}"
