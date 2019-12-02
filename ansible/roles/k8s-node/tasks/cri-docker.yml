@@ -180,7 +180,13 @@
   template:
     src: templates/k8s-docker-daemon.j2
     dest: /etc/docker/daemon.json
-  when: (cluster_type == "centos8-k8s" and k8s_docker_version != 'distro') or cluster_type != "centos8-k8s"
+  when: cluster_type != "ubuntu-k8s" and k8s_docker_version != 'distro'
+
+- name: configure the default k8s docker daemon.json with json-file logging on ubuntu
+  template:
+    src: templates/k8s-docker-daemon-ubuntu.j2
+    dest: /etc/docker/daemon.json
+  when: cluster_type == "ubuntu-k8s"
 
 - name: start docker daemon
   service:
