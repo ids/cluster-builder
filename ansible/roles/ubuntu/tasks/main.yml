@@ -6,13 +6,9 @@
   include: chronyd.yml
 
 - name: update Ubuntu
-  apt: 
-    name: "*"
-    state: latest
-    force_apt_get: true
-  become: true
-  ignore_errors: true
+  shell: apt-get update && apt-get -qq -y upgrade
+  become : true
   register: upgrade_out
  
 - debug: msg="{{ upgrade_out.stdout_lines }}"
-  ignore_errors: true
+ 
