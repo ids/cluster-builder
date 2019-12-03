@@ -9,7 +9,9 @@
   apt: 
     name: "*"
     state: latest
+    force_apt_get: true
   become: true
+  ignore_errors: true
   register: upgrade_out
 
 - debug: msg="{{ upgrade_out.stdout_lines }}"
