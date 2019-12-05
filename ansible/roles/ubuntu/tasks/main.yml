@@ -5,6 +5,12 @@
 - name: configure chronyd
   include: chronyd.yml
 
+- name: ensure gnupg2 is installed
+  apt:
+      name: "gnupg2"
+      state: present
+  become : true
+
 - name: update Ubuntu
   apt:
       name: "*"

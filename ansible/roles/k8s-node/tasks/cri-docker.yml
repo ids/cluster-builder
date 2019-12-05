@@ -47,7 +47,7 @@
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version == 'distro'
 
 - name: install base distro docker on Ubuntu
-  command: apt-get -y install docker.io gnupg-agent apt-transport-https ca-certificates curl software-properties-common
+  command: apt-get -y install docker.io 
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version == 'distro'

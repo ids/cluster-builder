@@ -6,7 +6,7 @@ set -o pipefail
 
 echo '>>> Installing base dependencies'
 apt-get -y install python3.6 python3-dev libssl-dev gcc open-vm-tools \
-  ansible chrony curl bash tar nano unzip ipset nfs-common aptitude
+  ansible chrony curl bash tar nano unzip ipset nfs-common aptitude gnupg2
 
 mkdir -p /home/sysop/.ssh
 chown -R sysop:sysop /home/sysop/.ssh

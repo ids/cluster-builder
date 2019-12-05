@@ -142,7 +142,7 @@ For more information on Targetd [see the Kubernetes Storage Readme](docs/kuberne
 * VMware ESXi 6.5+ (optional)
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible 2.3+ `brew install/upgrade ansible`
-* Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+* Hashicorp [Packer 1.4+](https://www.packer.io/downloads.html)
 * __kubectl__ 1.13+ (Kubernetes - `brew install/upgrade kubernetes-cli`)
 * Docker for Mac or __docker-ce__ 
 * Python3 and  `pip3`
@@ -171,7 +171,7 @@ __macOS Workstation Setup Notes__
 * __Ansible__ installed in the WSL via apt-get
 * __kubectl__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
 * __docker-ce__ installed via the [xtras/wsl/install-kubectl](xtras/wsl/install-kubectl) script
-* Hashicorp [Packer 1.04+](https://www.packer.io/downloads.html)
+* Hashicorp [Packer 1.4+](https://www.packer.io/downloads.html)
 * Python2 and `pip3` installed in the WSL
 
 __Windows Workstation Setup Notes__
