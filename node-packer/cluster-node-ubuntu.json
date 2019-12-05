@@ -9,7 +9,14 @@
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "script": "bin/ubuntu-bootstrap.sh"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "bin/zerodisk.sh",
+      "valid_exit_codes": "0,1"
     }
+
   ],
 
   "post-processors": [

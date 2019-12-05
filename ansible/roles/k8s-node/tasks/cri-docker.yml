@@ -60,7 +60,7 @@
   lineinfile:
     path: /etc/sysconfig/docker
     regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
-    line: "OPTIONS='--selinux-enabled --signature-verification=false'"
+    line: "OPTIONS='--selinux-enabled --log-driver=json-file --signature-verification=false'"
   when: k8s_docker_version == 'distro'
   ignore_errors: true
 
@@ -136,24 +136,40 @@
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
+  retries: 5
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: install docker repo key on Ubuntu
   shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
+  retries: 5
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: register docker repo on Ubuntu
   command: 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"'
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
+  retries: 5
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: update repo metadata on Ubuntu
   command: apt-get update
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s"  and k8s_docker_version != 'distro'
+  retries: 5
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: purge distro docker on Ubuntu
   command: "apt-get -y remove docker docker-engine docker.io containerd runc"
@@ -161,13 +177,17 @@
     warn: false
   ignore_errors: true
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
+  retries: 5
+  delay: 5
+  register: result
+  until: result.rc is defined and result.rc == 0
 
 - name: install docker-ce and friends on Ubuntu
   shell: "apt-get -y install docker-ce={{ k8s_docker_version }} containerd.io"
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
-  retries: 2
+  retries: 5
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
@@ -255,7 +275,7 @@
   args:
     warn: false
   register: docker_install_lock
-  when: cluster_type == "ubuntu-k8s"
+  when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
   
 - debug: msg="{{ docker_install_lock.stdout_lines }}"
-  when: cluster_type == "ubuntu-k8s" 
+  when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
