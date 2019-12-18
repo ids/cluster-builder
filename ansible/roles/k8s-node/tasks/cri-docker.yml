@@ -47,14 +47,12 @@
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version == 'distro'
 
 - name: install base distro docker on Ubuntu
-  command: apt-get -y install docker.io 
-  args:
-    warn: false
+  apt:
+      name: "docker.io"
+      state: present
+      update_cache: yes
+  become : true
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version == 'distro'
-  retries: 10
-  delay: 10
-  register: result
-  until: result.rc is defined and result.rc == 0
 
 - name: re-configure the /etc/sysconfig/docker (where applicable)
   lineinfile:
@@ -182,15 +180,14 @@
   register: result
   until: result.rc is defined and result.rc == 0
 
-- name: install docker-ce and friends on Ubuntu
-  shell: "apt-get -y install docker-ce={{ k8s_docker_version }} containerd.io"
-  args:
-    warn: false
+
+- name: install containerd on Ubuntu
+  apt:
+      name: "containerd.io"
+      state: present
+      update_cache: yes
+  become : true
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version != 'distro'
-  retries: 5
-  delay: 5
-  register: result
-  until: result.rc is defined and result.rc == 0
 
 - name: prep /etc/docker 
   shell: "mkdir /etc/docker"

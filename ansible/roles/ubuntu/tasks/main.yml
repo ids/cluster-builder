@@ -9,15 +9,20 @@
   apt:
       name: "gnupg2"
       state: present
+      update_cache: yes
   become : true
 
-- name: update Ubuntu
+#- name: update Ubuntu apt-get sources urls
+#  shell: "sed -i -e 's/:\\/\\/(archive.ubuntu.com\\|security.ubuntu.com)/old-releases.ubuntu.com/g' /etc/apt/sources.list" 
+
+- name: upgrade Ubuntu
   apt:
       name: "*"
       state: present
+      update_cache: yes
   become : true
- 
-- name: Add elevator=deadline to boot to improve I/O performance on VMware ESXi
+   
+- name: Add elevator=noop to boot to improve I/O performance on VMware ESXi
   lineinfile:
     dest: /etc/default/grub
     regexp: "{{ item.regx }}"
