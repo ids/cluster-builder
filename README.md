@@ -270,17 +270,18 @@ With each release the default Kubernetes cluster profile (described in subsequen
 | k8s version |  centos-k8s | fedora-k8s  | ubuntu-k8s  |
 |-------------|-------------|-------------|-------------|
 |     1.12    |      S      |     S       |     S       |
-|   __1.13__  |      HA     |     HA      |     HA      |
+|     1.13    |      HA     |     HA      |     HA      |
 |   __1.14__  |      HA     |     HA      |     HA      |
 |   __1.15__  |      HA     |     HA      |     HA      |
 |   __1.16__  |      HA     |     HA      |     HA      |
+|   __1.17__  |      HA     |     HA      |     HA      |
 
 __HA__ = multi-master and single master configurations supported
 __S__ = single master only
 
 __cluster-builder__ supports the last 4 versions of Kubernetes, and with each new release, deprecates the oldest release.  There is no reason to remove the scripts, but they will fall out of the test cycle and be pruned in due course.
 
-The Kubernetes release cycle cadence seems to suggest that 4 versions approximates 18 months of coverage, which represents a sane cut-off point, though the cluster deployment variants are likely to continue working well past that point.
+The Kubernetes release cycle cadence seems to suggest that 4 versions approximates 12-18 months of coverage, which represents a sane cut-off point, though the cluster deployment variants are likely to continue working well past that point.
 
 > One of these days (soon) I will get around to automating the test matrix as a CI pipeline.
 
@@ -666,18 +667,8 @@ To perform a __major__ Kubernetes version upgrade, update the __k8s_version__ in
 
 __Minor__ Kubernetes version upgrades should work for all variants.
 
-__Major__ Kubernetes version upgrades have been tested in the following combinations:
+__Major__ Kubernetes version upgrades have been tested migrating up one version at a time (eg. 1.15 -> 1.16).
 
-|  variant    |  initial version |   final version   |  
-|-------------|------------------|-------------------|
-| ubuntu-k8s  |      1.13.*      |      1.14.*       |
-| ubuntu-k8s  |      1.14.*      |      1.15.*       |
-| ubuntu-k8s  |      1.15.*      |      1.16.*       |
-| centos-k8s  |      1.13.*      |      1.14.*       |
-| centos-k8s  |      1.14.*      |      1.15.*       |
-| centos-k8s  |      1.15.*      |      1.16.*       |
-| fedora-k8s  |      1.14.*      |      1.15.*       |
-| fedora-k8s  |      1.15.*      |      1.16.*       |
 
 You can set the wait time, in seconds for the pause after each node is drained as __k8s_version_upgrade_eviction_seconds__ and the wait after each node is uncordoned as __k8s_version_upgrade_node_recovery_seconds__, or not specify them and go with the defaults.
 

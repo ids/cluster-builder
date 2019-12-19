@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+v19.12
+------
+
+* Added support for Kubernetes __1.17__
+* Adjusted and updated defaults, including updating the default cluster version to __1.15__.
+
 v19.11
 ------
 
