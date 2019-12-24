@@ -380,7 +380,7 @@ See the full examples for [local deployment](clusters/eg/demo-targetd/hosts) and
 
 A stable foundation upon which to build production service deployments:
 
-* __CentOS 7.6 (1810)__ minimal OS node
+* __CentOS 7.6 (1908)__ minimal OS node
 * `kubeadm`  __1.13.x__-__1.16.x__  Kubernetes w/ __Canal CNI__ network plugin w/ Network Policy
 * __MetalLB__ baremetal load balancer
 * __NGINX Ingress Controller__
