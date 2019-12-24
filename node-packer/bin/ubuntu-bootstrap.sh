@@ -4,6 +4,9 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+echo '>>> Updating Ubuntu'
+apt-get update --fix-missing
+
 echo '>>> Installing base dependencies'
 apt-get -y install python3.6 python3-dev libssl-dev gcc open-vm-tools \
   ansible chrony curl bash tar nano unzip ipset nfs-common aptitude gnupg2 software-properties-common

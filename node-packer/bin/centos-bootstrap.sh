@@ -18,4 +18,8 @@ echo '>>> Cleaning yum cache'
 yum clean all
 
 echo '>>> Installing base dependencies'
-yum install -y python3-devel libffi-devel openssl-devel gcc redhat-rpm-config open-vm-tools ansible
+yum install -y python3 python3-pip python3-devel libffi-devel openssl-devel gcc redhat-rpm-config open-vm-tools
+
+echo '>>> Installing ansible'
+pip3 install ansible
+
