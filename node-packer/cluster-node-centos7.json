@@ -43,7 +43,7 @@
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos.cfg<enter><wait>"
       ],
-      "boot_wait": "10s",
+      "boot_wait": "15s",
       "disk_size": 256000,
       "guest_os_type": "rhel7-64",
       "headless": true,
