@@ -52,7 +52,6 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 18. [Kubernetes CI Job Service Accounts](#kubernetes-ci-job-service-accounts)
 19. [Kubernetes Load Testing Sample Stack](#kubernetes-load-testing-sample-stack)
 20. [Helm Setup and KEDA](#helm-setup-and-keda)
-21. [Knative and Istio](#knative-and-istio)
 
 ### Supported Clusters
 
@@ -974,42 +973,6 @@ kubectl --namespace kube-system create serviceaccount tiller
 kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
 helm init --service-account tiller --upgrade
 ```
-
-### Knative and Istio
-
-Once inline to cluster-builder, _Istio_ and _Knative_ deployments have been moved into their own ansible playbooks to keep the cluster deployment clean.
-
-Versions are specified using the following:
-
-		k8s_knative_version= 0.3.0 | 0.4.0
-		k8s_knative_install_monitoring= true | false
-
-and 
-
-		k8s_istio_version=1.0.1 | 1.0.2 | 1.0.4 | latest
-
-__Defaults:__
-
-		k8s_knative_version=0.3.0
-		k8s_knative_install_monitoring=false
-		k8s_istio_version=1.0.2
-
-The playbooks can be executed:
-
-```
-$ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/istio.yml
-```
-
-and/or
-
-```
-$ ansible-playbook -i <path to cluster pkg folder>/hosts ansible/knative.yml
-```
-
-> __Knative 0.3.0 and 0.4.0__ work best with __Istio 1.0.1 or 1.0.2__ at the present time.  Install __Istio__ first.
-
-> Experience has called into question the value of _Knative_ for on-premise deployments.  While cost containment benefits of serverless are evident in the cloud pricing model, the overhead of complexity in requiring _Istio_ in support of _Knative_ tips the value proposition over.  Should _Knative_ be built into the platform in the future the merit of serverless may emerge, but at present, simple standard containerized services appear to nullify the value of serverless in on-premise deployments with orders of magnitude less complexity to manage at the cluster level.
-
 
 ### A Note about this IaC
 
