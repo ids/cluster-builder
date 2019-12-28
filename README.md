@@ -55,7 +55,7 @@ __Cluster Builder__ is designed to handle ~all~ most of the complexity associate
 
 ### Supported Clusters
 
-* CentOS 7.6 DC/OS
+* CentOS 7.6 DC/OS 2.0
 * CentOS 7.6 Kubernetes (Stock `kubeadm`)
 * Fedora 30 Kubernetes (Stock `kubeadm`)
 * Ubuntu 18.04 LTS Kubernetes (Stock `kubeadm`)
@@ -82,6 +82,8 @@ Production usage targets:
 #### DC/OS Cluster Types
 
 * centos-dcos
+
+> DC/OS continues to be reliable and stable and is now deploying version 2.0.  Even as they upgraded to their 2.x release series there were no changes required for the cluster installation process, which has remained stable for the life of cluster-builder.
 
 #### Kubernetes Cluster Types
 

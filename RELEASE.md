@@ -7,6 +7,9 @@ v19.12
 * Added support for Kubernetes __1.17__
 * Updated defaults, including updating the default cluster version to __1.15__.
 * Upgraded __CentOS7__ nodes to __1908__.
+* Verified that __DC/OS__ installation is still working fine, even with the switch to __2.0__. Added kernel modules for __raid1__ and __dm_raid__ in support of new DC/OS Storage Service.
+
+> I can't deprecate __DC/OS__ when it just keeps working.  Mesosphere sets the bar.
 
 v19.11
 ------

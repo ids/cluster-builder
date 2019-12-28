@@ -37,3 +37,24 @@
   
 - name: attempt to reconfigure sysctl net.bridge.bridge-nf-call-iptables
   shell: sysctl -p /etc/sysctl.conf
+
+- name: configure dm_raid
+  shell: echo 'options dm_raid' > /etc/modprobe.d/dm_raid.conf
+
+- name: configure raid1
+  shell: echo 'options raid1' > /etc/modprobe.d/raid1.conf
+
+- name: configure dm_raid and raid1
+  shell: modprobe raid1 && modprobe dm_raid
+  register: modprobe_out 
+
+- debug: msg="{{ modprobe_out.stdout_lines }}"
+
+- name: restart machines with kernel configurations
+  shell: sleep 2 && shutdown -r now
+  async: 1
+  poll: 0
+
+- name: waiting 30 secs for VMs to come online
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=600
+  become: false

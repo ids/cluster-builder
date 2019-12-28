@@ -4,3 +4,10 @@
 
 - name: install DC/OS Dependencies
   include: dcos-deps.yml
+
+- name: configure dm_raid
+  shell: echo 'options dm_raid' > /etc/modprobe.d/dm_raid.conf
+
+- name: configure raid1
+  shell: echo 'options raid1' > /etc/modprobe.d/raid1.conf
+  
