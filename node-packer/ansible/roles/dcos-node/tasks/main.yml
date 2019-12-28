@@ -5,9 +5,14 @@
 - name: install DC/OS Dependencies
   include: dcos-deps.yml
 
+- name: setup dm_raid kernel module
+  template:
+    src: ../../templates/dcos-centos-dracut.j2
+    dest: /etc/dracut.conf
+
 - name: configure dm_raid
-  shell: echo 'options dm_raid' > /etc/modprobe.d/dm_raid.conf
+  shell: echo 'dm_raid' > /etc/modules-load.d/dm_raid.conf
 
 - name: configure raid1
-  shell: echo 'options raid1' > /etc/modprobe.d/raid1.conf
+  shell: echo 'raid1' > /etc/modules-load.d/raid1.conf
   

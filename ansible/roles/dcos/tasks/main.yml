@@ -32,6 +32,17 @@
     regexp: '^net.bridge.bridge-nf-call-ip6tables =\s'
     line: 'net.bridge.bridge-nf-call-ip6tables = 1'
 
+- name: check if dracut file exists
+  stat: 
+    path: /etc/dracut.conf
+  register: dmraid_config
+
+- name: setup dm_raid kernel module
+  template:
+    src: ../../templates/dcos-centos-dracut.j2
+    dest: /etc/dracut.conf
+  when: dmraid_config.stat.exists != true
+
 - name: configure sysctl for ip4
   shell: sysctl net.bridge.bridge-nf-call-iptables=1
   
@@ -39,16 +50,13 @@
   shell: sysctl -p /etc/sysctl.conf
 
 - name: configure dm_raid
-  shell: echo 'options dm_raid' > /etc/modprobe.d/dm_raid.conf
+  shell: echo 'dm_raid' > /etc/modules-load.d/dm_raid.conf
 
 - name: configure raid1
-  shell: echo 'options raid1' > /etc/modprobe.d/raid1.conf
+  shell: echo 'raid1' > /etc/modules-load.d/raid1.conf
 
 - name: configure dm_raid and raid1
   shell: modprobe raid1 && modprobe dm_raid
-  register: modprobe_out 
-
-- debug: msg="{{ modprobe_out.stdout_lines }}"
 
 - name: restart machines with kernel configurations
   shell: sleep 2 && shutdown -r now
