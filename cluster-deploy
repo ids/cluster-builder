@@ -12,7 +12,7 @@ function esxi_deploy () {
   echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
   echo
   echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-  sudo -H pip install passlib
+  sudo -H pip3 install passlib
 
   if [ -z $CB_NODE_ROOT_PASSWORD ]; then
     echo
@@ -276,7 +276,7 @@ cluster_info_display
 if [ "$VMWARE_TARGET" == "esxi" ]; then
   if [ -z $CB_ESXI_USER_PASSWORD ]; then
     echo "The ESXi user password is used by ovftool to deploy OVA node images to ESXi hypervisors."
-    echo "You can also provide this by creating a .passwords ENV file in the cluster package folder with the export CB_EXSI_ROOT_PASSWORD"
+    echo "You can also provide this by creating a .passwords ENV file in the cluster package folder with the export CB_ESXI_USER_PASSWORD"
     echo 
     read -s -p "Enter ESXi root password for ovftool: " OVF_PASSWORD
     CB_ESXI_USER_PASSWORD=$OVF_PASSWORD
