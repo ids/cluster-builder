@@ -58,7 +58,9 @@ fi
 
 if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/$VMWARE_TARGET-control-vms.yml --e "vm_action=$ACTION"
-  ${VMRUN_CMD} list
+  if [ "$VMWARE_TARGET" == "desktop" ]; then 
+    ${VMRUN_CMD} list
+  fi
 else
   echo
   echo "Invalid: You must specify an action that is one of: start, stop, suspend or destroy"
