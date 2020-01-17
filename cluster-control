@@ -14,6 +14,7 @@ function show_usage () {
 if [ -z $INVENTORY_FILE ]; then 
   echo
   echo "Cluster package not specified!"
+  echo
   show_usage
 fi
 
@@ -28,6 +29,7 @@ fi
 if [ -z $ACTION ]; then 
   echo
   echo "Action not specified!"
+  echo
   show_usage
 fi
 
