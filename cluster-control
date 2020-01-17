@@ -6,7 +6,7 @@ export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 export ANSIBLE_CONFIG=./ansible.cfg
 
 function show_usage () {
-  echo "usage: $ bash esxi-control <inventory-file> <action: start|suspend|stop|destroy>"
+  echo "usage: $ bash cluster-control <inventory-file> <action: start|suspend|stop|destroy>"
   echo
   exit 1
 }
