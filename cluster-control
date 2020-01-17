@@ -9,11 +9,11 @@ function show_usage () {
   echo "usage: $ bash cluster-control <inventory-file> <action: start|suspend|stop|destroy>"
   echo
   echo "eg."
+  echo
   echo "$ bash cluster-control ids/k8s1 suspend"
   echo 
-  echo "or"
-  echo 
   echo "$ bash cluster-control ids/k8s1 start"
+  echo
   exit 1
 }
 
