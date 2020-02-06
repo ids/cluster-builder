@@ -58,7 +58,7 @@
   lineinfile:
     path: /etc/sysconfig/docker
     regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
-    line: "OPTIONS='--selinux-enabled --log-driver=json-file --signature-verification=false'"
+    line: "OPTIONS='--selinux-enabled --log-driver=json-file --extra-config=kubelet.cgroup-driver=systemd --signature-verification=false'"
   when: k8s_docker_version == 'distro'
   ignore_errors: true
 
@@ -179,7 +179,6 @@
   delay: 5
   register: result
   until: result.rc is defined and result.rc == 0
-
 
 - name: install containerd on Ubuntu
   apt:
