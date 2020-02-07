@@ -207,7 +207,7 @@
 - name: start docker daemon
   service:
     name: docker
-    state: started
+    state: restarted
     enabled: yes
   when: (cluster_type == "centos8-k8s" and k8s_docker_version != 'distro') or cluster_type != "centos8-k8s"
 
