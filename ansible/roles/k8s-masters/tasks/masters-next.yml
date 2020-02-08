@@ -77,7 +77,7 @@
     enabled: yes
   become: true
 
-- name: pause to give kubelet time to associate
+- name: pause to give kubelet time to initialize
   pause:
     seconds: 30
 
