@@ -22,7 +22,7 @@ nodeRegistration:
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 controlPlaneEndpoint: "{{ k8s_control_plane_uri }}:6443"
-kubernetesVersion: stable
+kubernetesVersion: {{ k8s_kubeadm_kubernetes_version }}
 apiServer:
   certSANs:
   - "{{ k8s_advertise_addr }}"  

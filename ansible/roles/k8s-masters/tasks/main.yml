@@ -1,4 +1,3 @@
-
 - name: configure the remaining Kubernetes masters
   include: masters-next.yml
   when: "'k8s_masters' in group_names

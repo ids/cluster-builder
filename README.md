@@ -295,6 +295,11 @@ With respect to `centos-k8s`, `fedora-k8s` and `ubuntu-k8s` based `kubeadm` clus
 The __k8s_version__ setting controls what version of the kubernetes binaries are installed on the nodes.  
 This can be used to set a specific version of __1.13__ or __1.14__, or it can be set to the latest patch release in the series using the __*__ wildcard.
 
+	k8s_kubeadm_kubernetes_version="v1.14.5"
+
+The __k8s_kubeadm_kubernetes_version__ setting controls the value used for the kubeadm config file section of _ClusterConfiguration_ for the value of __kubernetesVersion__.  The _default_ for this setting is __stable__, but this sometimes results in beta deployments for reasons yet unknown.  To circumvent this, it is possible to set the explicit version in the format: __v1.14.5__, for example.  It is up to the operator to ensure the version settings are aligned.
+
+
 	k8s_network_cni=calico-policy
 
 The __k8s_network_cni__ setting can be one of: __canal__ or __calico__.  It defaults to __canal__.

@@ -54,12 +54,12 @@
   become : true
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version == 'distro'
 
-- name: re-configure the /etc/sysconfig/docker (where applicable)
+- name: re-configure the /etc/sysconfig/docker (where applicable) for CentOS / Fedora
   lineinfile:
     path: /etc/sysconfig/docker
     regexp: "^%OPTIONS='--selinux-enabled --log-driver=journald"
-    line: "OPTIONS='--selinux-enabled --log-driver=json-file --extra-config=kubelet.cgroup-driver=systemd --signature-verification=false'"
-  when: k8s_docker_version == 'distro'
+    line: "OPTIONS='--selinux-enabled --log-driver=json-file  --signature-verification=false'"
+  when: k8s_docker_version == 'distro' and cluster_type != "ubuntu-k8s"
   ignore_errors: true
 
 - name: register docker repo on CentOS 7
