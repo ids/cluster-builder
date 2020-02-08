@@ -21,6 +21,8 @@ nodeRegistration:
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
+controlPlaneEndpoint: "{{ k8s_control_plane_uri }}:6443"
+kubernetesVersion: stable
 apiServer:
   certSANs:
   - "{{ k8s_advertise_addr }}"  
@@ -36,7 +38,6 @@ apiServer:
   timeoutForControlPlane: 4m0s
 certificatesDir: /etc/kubernetes/pki
 clusterName: "{{ cluster_name }}"
-controlPlaneEndpoint: "{{ k8s_control_plane_uri }}:6443"
 controllerManager: {}
 dns:
   type: CoreDNS
@@ -44,7 +45,6 @@ etcd:
   local:
     dataDir: /var/lib/etcd
 imageRepository: k8s.gcr.io
-kubernetesVersion: stable
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ k8s_cluster_cidr }}
