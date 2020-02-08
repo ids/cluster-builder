@@ -73,7 +73,7 @@
 - name: start kubelet on other master nodes
   service:
     name: kubelet
-    state: stopped
+    state: restarted
     enabled: yes
   become: true
 
