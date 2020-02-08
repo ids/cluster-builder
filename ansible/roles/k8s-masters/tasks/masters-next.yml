@@ -77,6 +77,10 @@
     enabled: yes
   become: true
 
+- name: pause to give kubelet time to associate
+  pause:
+    seconds: 30
+
 - name: join other master to cluster
   shell: "/root/master_join_cmd"
   become: true   
