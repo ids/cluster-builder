@@ -20,6 +20,10 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 [KEDA](https://github.com/kedacore/keda) providing an _Event Driven Serverless_ programming model for reacting to and enriching the data via customized stream processing and micro-services.
 
+# StreamSets
+
+_Todo_
+
 # Dremio
 
 > Ensure you have __Helm 3__ installed.
@@ -75,3 +79,6 @@ zk-hs                ClusterIP      None             <none>          2181/TCP,28
 
 In the above example, browse to http://192.168.1.181:9047 for the Dremio Web UI.
 
+# Kubeflow
+
+_Todo_
