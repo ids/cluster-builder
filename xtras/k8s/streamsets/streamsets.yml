@@ -3,7 +3,6 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: streamsets-dc-data-volume-claim
-  namespace: streamsets
   annotations:
     volume.beta.kubernetes.io/storage-class: "iscsi-targetd-vg-targetd"  
 spec:
@@ -17,7 +16,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: streamsets-dc-service
-  namespace: streamsets
 spec:
   selector:
     app: streamsets-dc
@@ -32,7 +30,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: streamsets-dc
-  namespace: streamsets
 spec:
   replicas: 1
   selector:
@@ -45,7 +42,7 @@ spec:
     spec:
       containers:
       - name: streamsets-dc
-        image: idstudios/streamsets-dc:latest
+        image: streamsets/datacollector:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 18630

@@ -22,7 +22,36 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 # StreamSets
 
-_Todo_
+StreamSets is a [platform](https://streamsets.com) based on open source, and their supported [data collector](https://hub.docker.com/layers/streamsets/datacollector/) docker container is free to use.  
+
+In the [xtras/k8s/streamsets](./xtras/k8s/streamsets/streamsets.yml) folder there is a `streamsets.yml` designed to use `targetd`.
+
+Installation is straightforward:
+
+```
+kubectl create ns <anything>
+kubectl apply -f xtras/k8s/streamsets/streamsets.yml -n <anything>
+```
+
+In a few minutes the service will be deployed:
+
+```
+kubectl get all -n streamsets
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/streamsets-dc-5647db8dc4-2mnhj   1/1     Running   0          2m9s
+
+NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)           AGE
+service/streamsets-dc-service   LoadBalancer   10.106.83.83   192.168.1.182   18630:31729/TCP   2m9s
+
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/streamsets-dc   1/1     1            1           2m9s
+
+NAME                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/streamsets-dc-5647db8dc4   1         1         1       2m9s
+```
+
+The _StreamSets Web UI_ should then be available at https://EXTERNAL-IP:18630, which enables both pipeline design and management.
+
 
 # Dremio
 
@@ -81,4 +110,22 @@ In the above example, browse to http://192.168.1.181:9047 for the Dremio Web UI.
 
 # Kubeflow
 
-_Todo_
+Kubeflow installation is so involved and the management so complex, they built a special binary to do it.
+
+There is a script called [install-kfctl.sh](../xtras/k8s/kubeflow/install-kfctl.sh) available in [../xtras/k8s/kubeflow] that will install the tool in __BASH__. Simply execute it with the correct OS parameter for your workstation:
+
+```
+bash install-kfctl.sh darwin
+```
+
+> If you are installing this on __Windows__ it is assumed it is within the __WSL__, in which case the parameter to the script will still be __linux__.
+
+
+> __Note__ that at the present time the version of `kfctl` returned as __latest__ is not aligned with the documentation.  If `kfctl version` does not return `kfctl v1.0-rc.3-1-g24b60e8` or greater, you may need to download it and install it manually.
+
+
+Once `kfctl` is installed, a second script from the [Kubeflow documentation]() called [create-project.sh](../xtras/k8s/kubeflow/create-project.sh) can be used to initiate a __Kubeflow__ instance within a cluster:
+
+```
+bash create-project.sh kflow-main
+```
