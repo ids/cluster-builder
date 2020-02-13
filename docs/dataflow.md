@@ -120,7 +120,7 @@ In the above example, browse to http://192.168.1.181:9047 for the Dremio Web UI.
 
 StreamSets is a _DataOps_ [platform](https://streamsets.com) based on open source, and their supported [data collector](https://hub.docker.com/layers/streamsets/datacollector/) docker container is free to use.  
 
-> While [DataOps](https://en.wikipedia.org/wiki/DataOps) has some useful principles and best practices in the wikipedia article, the [manifesto](https://www.dataopsmanifesto.org/) is as painful to read as any other, and completely pointless and toxic to the industry.
+> While [DataOps](https://en.wikipedia.org/wiki/DataOps) has some useful principles and best practices in the wikipedia article, the [manifesto](https://www.dataopsmanifesto.org/) is as painful to read as any other. I find the _manifesto_ nonsense completely pointless and potentially toxic to the industry.
 
 In the [xtras/k8s/streamsets](../xtras/k8s/streamsets/streamsets.yml) folder there is a `streamsets.yml` designed to use `targetd`.
 
