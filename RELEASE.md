@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+v20.02
+------
+
+* Improvements to the stability of the `ubuntu-k8s` deployment.
+* Updated `metrics-server` version.
+* Added [docs/dataflow.md] recipe with updates to Kubeflow, Streamsets and Dremio guidance.
+
 v19.12
 ------
 
