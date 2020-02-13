@@ -52,7 +52,7 @@ Once `kfctl` is installed, a second script called [create-project.sh](../xtras/k
 bash create-project.sh kf-main
 ```
 
-This will create a set of configuration files in a folder called __kf-main__, the use of which has yet to be determined.  They are generally kept within the _cluster-builder_ cluster definition folders.
+This will create a set of configuration files in a folder called __kf-main__, the use of which has yet to be determined.  They are generally kept within the _cluster-builder_ cluster definition folders, and the folder can be moved there after the _Kubeflow_ installation.
 
 When the installation completes, and it does take awhile, the command should end successfully with output similar to the following:
 
