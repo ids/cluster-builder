@@ -4,8 +4,6 @@ A _Kubernetes_ based data science and business intelligence platform.
 
 ![dataflow](images/dataflow.png)
 
-> The diagram doesn't really do justice to the capabilities within the _Kubeflow_ platform, as it also includes an integrated _Knative_ serverless platform and _Tensoflow_ training.
-
 Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.io) VMware based _Kubernetes_ environment, __Dataflow__ layers on a unifed _platform of platforms_:
 
 ## Core Components 
