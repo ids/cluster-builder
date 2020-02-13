@@ -28,7 +28,7 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 ## Dataflow Installation on Cluster-Builder Clusters
 
-#### Kubeflow
+### Kubeflow
 
 Kubeflow installation is so involved and the management so complex, they built a special binary to do it, called `kfctl`.
 
