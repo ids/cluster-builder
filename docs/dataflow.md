@@ -8,7 +8,7 @@ A _Kubernetes_ based data science and business intelligence platform.
 
 Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.io) VMware based _Kubernetes_ environment, __Dataflow__ layers on a unifed _platform of platforms_:
 
-## Core
+## Core Components 
 
 [StreamSets](https://streamsets.com) provides a full DataOps toolset for both ELT and streaming use cases.
 
@@ -18,17 +18,19 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 > _Kubeflow_ is such a large platform in itself that it arguably warrants a dedicated Kubernetes cluster, and this may prove to be the recommended deployment model.
 
-## Optional
+## Optional Components
 
-[Kafka](https://kafka.apache.org/) as an optional intermediary stream engine to fascilitate event driven stateful streaming workflows and audit trails.  With additional components from the [Confluent OSS Platform](https://www.confluent.io/download)
+[Kafka](https://kafka.apache.org/) as an optional intermediary stream engine to fascilitate event driven stateful streaming workflows and message history.  With additional components from the [Confluent OSS Platform](https://www.confluent.io/download)
 
 [Gitlab](https://gitlab.org) offering integrated, in-cluster team development and SCM Ci/CD tooling for storing all pre and post deployment artifacts.  Also provides the in-cluster private container registry.
 
 [KEDA](https://github.com/kedacore/keda) providing an _Event Driven Serverless_ programming model for reacting to and enriching the data via customized stream processing and micro-services.
 
-# Kubeflow
+## Dataflow Installation on Cluster-Builder Clusters
 
-Kubeflow installation is so involved and the management so complex, they built a special binary to do it, called `kfctl`.   
+#### Kubeflow
+
+Kubeflow installation is so involved and the management so complex, they built a special binary to do it, called `kfctl`.
 
 Kubeflow is a compilation of a lot of fast moving projects, and tends to be fairly volatile from version to version.  However as it is approaching _1.0_ there is cause for optimism that things may stabilize.
 
@@ -59,7 +61,7 @@ INFO[0138] Successfully applied application seldon-core-operator  filename="kust
 INFO[0139] Applied the configuration Successfully!       filename="cmd/apply.go:72"
 ```
 
-# Dremio
+### Dremio
 
 > Ensure you have __Helm 3__ installed.
 
@@ -69,7 +71,7 @@ __Note__ that due to a gap in the current Helm chart the `values.yaml` _storageC
 * Use the `targetd-default-sc` script in `cluster-builder/xtras/k8s` to make an associated __targetd__ server the default storage class for the cluster.
 * Set another storage class as default.
 
-## Dremio Helm Installation Steps
+#### Dremio Helm Installation Steps
 
 1. Clone the [dremio-cloud-tools](https://github.com/dremio/dremio-cloud-tools) repo.
 2. Make a copy of the `charts/dremio/values.yaml` file and store it in your cluster folder as `dremio-values.yaml`.  Adjust the file to support the capacity of your cluster.
@@ -114,7 +116,7 @@ zk-hs                ClusterIP      None             <none>          2181/TCP,28
 
 In the above example, browse to http://192.168.1.181:9047 for the Dremio Web UI.
 
-# StreamSets
+### StreamSets
 
 StreamSets is a [platform](https://streamsets.com) based on open source, and their supported [data collector](https://hub.docker.com/layers/streamsets/datacollector/) docker container is free to use.  
 
