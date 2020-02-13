@@ -158,7 +158,9 @@ replicaset.apps/streamsets-dc-5647db8dc4   1         1         1       2m9s
 
 The _StreamSets Web UI_ should then be available at https://EXTERNAL-IP:18630, which enables both pipeline design and management.
 
-> Something like Microsoft SQL Server, with an example available in [../xtras/k8s/mssql/mssql.yml](../xtras/k8s/mssql/mssql.yml) can serve as a good _RDBMS_ to play with with respect to _CDC_ and data pipelines.
+> To get the most from _StreamSets_ it is best to build your own __Docker Container__ based on their base image, and include whatever JDBC drivers are necessary for your environment.
+
+> You may also consider installing something like Microsoft SQL Server for Linux into your cluster, with an example available in [../xtras/k8s/mssql/mssql.yml](../xtras/k8s/mssql/mssql.yml) can serve as a good _RDBMS_ to play with with respect to _Change Data Capture_ and the associated data pipelines, which is salient to many modern corporate data sources and ingestion strategies.
 
 ### Completion
 
