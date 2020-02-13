@@ -951,9 +951,9 @@ This will generate the template yaml files and install the stack.
 
 ### Dataflow
 
-With a working Kubernetes cluster [Dataflow](docs/dataflow.md) is a good platform of components to explore.
+A Kubernetes cluster deployed, [Dataflow](docs/dataflow.md) combines an impressive platform of components to explore for both development and production use.
 
-You can also check out some of the other _cluster-builder ready_ services in [xtras](xtras).
+You can also check out some of the other _cluster-builder ready_ services in [xtras/k8s](xtras/k8s).
 
 ### A Note about this IaC
 
