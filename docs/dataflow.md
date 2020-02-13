@@ -14,7 +14,7 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 [Kubeflow](https://kubeflow.org) provides a large and integrated Machine Learning and Jupyter analysis platform in its own right.  Integrated __Istio__ service mesh provides a direct notebook-to-containerized-predictive-service work flow.
 
-> _Kubeflow_ is such a large platform in itself that it arguably warrants a dedicated Kubernetes cluster, and this may prove to be the recommended deployment model.
+> _Kubeflow_ is such a large platform in itself that it makes sense to host it in a dedicated Kubernetes cluster (as depicted in the diagram).
 
 ## Optional Components
 
