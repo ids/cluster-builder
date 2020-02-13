@@ -34,7 +34,7 @@ Kubeflow installation is so involved and the management so complex, they built a
 
 Kubeflow is a compilation of a lot of fast moving projects, and tends to be fairly volatile from version to version.  However as it is approaching _1.0_ there is cause for optimism that things may stabilize.
 
-There is a script called [install-kfctl.sh](../xtras/k8s/kubeflow/install-kfctl.sh) available in [../xtras/k8s/kubeflow] that will install the tool in __BASH__. Simply execute it with the correct OS parameter for your workstation:
+There is a script called [install-kfctl.sh](../xtras/k8s/kubeflow/install-kfctl.sh) available in [../xtras/k8s/kubeflow](../xtras/k8s/kubeflow) that will install the tool in __BASH__. Simply execute it with the correct OS parameter for your workstation:
 
 ```
 bash install-kfctl.sh darwin
