@@ -46,7 +46,7 @@ bash install-kfctl.sh darwin
 > __Note__ that at the present time the version of `kfctl` returned as __latest__ is not aligned with the documentation.  If `kfctl version` does not return `kfctl v1.0-rc.3-1-g24b60e8` or greater, you may need to download it and install it manually.
 
 
-Once `kfctl` is installed, a second script from the [Kubeflow documentation]() called [create-project.sh](../xtras/k8s/kubeflow/create-project.sh) can be used to initiate a __Kubeflow__ instance within a cluster:
+Once `kfctl` is installed, a second script called [create-project.sh](../xtras/k8s/kubeflow/create-project.sh) can be used to initiate a __Kubeflow__ instance within a cluster:
 
 ```
 bash create-project.sh kf-main
