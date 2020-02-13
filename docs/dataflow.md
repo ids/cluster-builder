@@ -118,7 +118,7 @@ In the above example, browse to http://192.168.1.181:9047 for the Dremio Web UI.
 
 ### StreamSets
 
-StreamSets is a [platform](https://streamsets.com) based on open source, and their supported [data collector](https://hub.docker.com/layers/streamsets/datacollector/) docker container is free to use.  
+StreamSets is a  [DataOps](https://en.wikipedia.org/wiki/DataOps) [platform](https://streamsets.com) based on open source, and their supported [data collector](https://hub.docker.com/layers/streamsets/datacollector/) docker container is free to use.  
 
 In the [xtras/k8s/streamsets](../xtras/k8s/streamsets/streamsets.yml) folder there is a `streamsets.yml` designed to use `targetd`.
 
