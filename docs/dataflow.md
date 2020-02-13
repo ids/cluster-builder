@@ -1,22 +1,30 @@
 # Dataflow
 
-A _Kubernetes_ based data science and business intelligence platform.  
+Dataflow is a _Kubernetes_ based data science and business intelligence platform.  
+
+Let's start with a napkin sketch:
 
 ![dataflow](images/dataflow.png)
 
-Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.io) VMware based _Kubernetes_ environment, __Dataflow__ layers on a unifed _platform of platforms_:
+Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.io) VMware based _Kubernetes_ environment, __Dataflow__ layers on a unifed _platform of platforms_, with the following components:
 
 ## Core Components 
 
-[StreamSets](https://streamsets.com) provides a full DataOps toolset for both ELT and streaming use cases.
+The following three __core__ components/platforms enable the primary workflow of __Injest >> Curate >> Analyze__:
 
-[Dremio](https://dremio.com) _The Data Lake Engine_ offers a unifed curation layer with distributed query engine and in-memory query optimization using columnar database technology while leveraging _cloud provider storage_.  Dremio is the core curated _data source_ for the entire _Dataflow_ system, available directly to most modern Bi tools, but also as _ODBC_, _JDBC_ and _Apache Flight_.
+[StreamSets](https://streamsets.com) provides a full DataOps toolset for both ELT and streaming __ingestion__ use cases.
 
-[Kubeflow](https://kubeflow.org) provides a large and integrated Machine Learning and Jupyter analysis platform in its own right.  Integrated __Istio__ service mesh provides a direct notebook-to-containerized-predictive-service work flow.
+[Dremio](https://dremio.com) _The Data Lake Engine_ offers __a unifed curation layer__ with distributed query engine and in-memory query optimization using columnar database technology while leveraging _cloud provider storage_.  Dremio is the core curated _data source_ for the entire _Dataflow_ system, available directly to most modern Bi tools, but also as _ODBC_, _JDBC_ and _Apache Flight_.
 
-> _Kubeflow_ is such a large platform in itself that it makes sense to host it in a dedicated Kubernetes cluster (as depicted in the diagram).
+[Kubeflow](https://kubeflow.org) provides a large and integrated Machine Learning and Jupyter __analysis platform__ in its own right.  Integrated __Istio__ service mesh  and the __KNative Serving__ serverless hosting engine provide a direct notebook-to-containerized-predictive-service work flow.
+
+> _Kubeflow_ is such a large platform in itself that it seems sensible to host it in a dedicated Kubernetes cluster (as depicted in the diagram).
+
+While the _Kubeflow_ platform provides a comprehensive environment for deploying _Machine Learning_ solutions, the benefits are not limited to A.I. alone.  Generalized reporting and business intelligence activity can take advantage of the __curation layer__ to provide more consistent, accurate reporting, with _Dremio_ acting as the semantic layer and __single source of truth__ for the organization.
 
 ## Optional Components
+
+Depending on the use cases involved in the __Dataflow__, and/or the organization service profile, the following components may also play a role in the _flow_:
 
 [Kafka](https://kafka.apache.org/) as an optional intermediary stream engine to fascilitate event driven stateful streaming workflows and message history.  With additional components from the [Confluent OSS Platform](https://www.confluent.io/download)
 
@@ -25,6 +33,8 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 [KEDA](https://github.com/kedacore/keda) providing an _Event Driven Serverless_ programming model for reacting to and enriching the data via customized stream processing and micro-services.
 
 ## Dataflow Installation on Cluster-Builder Clusters
+
+The following sections walk through the steps required to install the core components on a [cluster-builder](https://scluster-builder.idstudios.io) K8s cluster:
 
 ### Kubeflow
 
@@ -149,3 +159,7 @@ replicaset.apps/streamsets-dc-5647db8dc4   1         1         1       2m9s
 The _StreamSets Web UI_ should then be available at https://EXTERNAL-IP:18630, which enables both pipeline design and management.
 
 > Something like Microsoft SQL Server, with an example available in [../xtras/k8s/mssql/mssql.yml](../xtras/k8s/mssql/mssql.yml) can serve as a good _RDBMS_ to play with with respect to _CDC_ and data pipelines.
+
+### Completion
+
+When the components have been installed successfully you will be able to engage in your own __Dataflow__.  Enjoy.
