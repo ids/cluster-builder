@@ -10,7 +10,13 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 ## Core Components 
 
-The following three __core__ components/platforms enable the primary workflow of __Injest >> Curate >> Analyze__:
+The following __core__ platform components enable the primary workflow of:
+
+ 1. __Injest__
+ 2. __Curate__
+ 3. __Analyze__
+
+They are:
 
 [StreamSets](https://streamsets.com) provides a full DataOps toolset for both ELT and streaming __ingestion__ use cases.
 
