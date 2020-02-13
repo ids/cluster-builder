@@ -4,7 +4,7 @@ A _Kubernetes_ based data science and business intelligence platform.
 
 ![dataflow](images/dataflow.png)
 
-> The diagram doesn't really do justice to the capabilities with the _Kubeflow_ platform.
+> The diagram doesn't really do justice to the capabilities within the _Kubeflow_ platform, as it also includes an integrated _Knative_ serverless platform and _Tensoflow_ training.
 
 Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.io) VMware based _Kubernetes_ environment, __Dataflow__ layers on a unifed _platform of platforms_:
 
@@ -118,7 +118,7 @@ In the above example, browse to http://192.168.1.181:9047 for the Dremio Web UI.
 
 StreamSets is a [platform](https://streamsets.com) based on open source, and their supported [data collector](https://hub.docker.com/layers/streamsets/datacollector/) docker container is free to use.  
 
-In the [xtras/k8s/streamsets](./xtras/k8s/streamsets/streamsets.yml) folder there is a `streamsets.yml` designed to use `targetd`.
+In the [xtras/k8s/streamsets](../xtras/k8s/streamsets/streamsets.yml) folder there is a `streamsets.yml` designed to use `targetd`.
 
 Installation is straightforward:
 
@@ -146,4 +146,4 @@ replicaset.apps/streamsets-dc-5647db8dc4   1         1         1       2m9s
 
 The _StreamSets Web UI_ should then be available at https://EXTERNAL-IP:18630, which enables both pipeline design and management.
 
-> Something like Microsoft SQL Server, with an example available in [../xtras/k8s/mssql](../xtras/k8s/mssql.yaml) can serve as a good _RDBMS_ to play with with respect to _CDC_ and data pipelines.
+> Something like Microsoft SQL Server, with an example available in [../xtras/k8s/mssql/mssql.yml](../xtras/k8s/mssql/mssql.yml) can serve as a good _RDBMS_ to play with with respect to _CDC_ and data pipelines.
