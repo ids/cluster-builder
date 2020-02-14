@@ -12,7 +12,7 @@ Leveraging the open source [cluster-builder](https://cluster-builder.idstudios.i
 
 The following __core__ platform components enable the primary workflow of:
 
- 1. __Injest__
+ 1. __Ingest__
  2. __Curate__
  3. __Analyze__
 
