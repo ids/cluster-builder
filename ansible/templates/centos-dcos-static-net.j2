@@ -1,5 +1,5 @@
-cat > /etc/sysconfig/network-scripts/ifcfg-ens32 << EOF
-DEVICE="ens32"
+cat > /etc/sysconfig/network-scripts/ifcfg-{{ primary_network_device }} << EOF
+DEVICE="{{ primary_network_device }}"
 ONBOOT="yes"
 BOOTPROTO=static
 IPADDR={{ hostvars[inventory_hostname]['ansible_host'] }}

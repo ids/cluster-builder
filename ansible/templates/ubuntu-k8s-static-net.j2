@@ -5,7 +5,7 @@ network:
   version: 2
   renderer: networkd 
   ethernets:
-    ens32:
+    {{ primary_network_device }}:
       dhcp4: no
       dhcp6: no
       addresses: [{{ hostvars[inventory_hostname]['ansible_host'] }}{{ network_cidr }}, ]

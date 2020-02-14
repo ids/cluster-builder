@@ -169,3 +169,12 @@
 
 - debug: msg="{{ targetd_server_account_password }}"
   run_once: true
+
+- name: set primary_network_device default
+  set_fact:
+    primary_network_device: "ens160"
+  run_once: true
+  when: primary_network_device is undefined
+
+- debug: msg="{{ primary_network_device }}"
+  run_once: true  
