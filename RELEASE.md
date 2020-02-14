@@ -7,6 +7,7 @@ v20.02
 * Improvements to the stability of the `ubuntu-k8s` deployment.
 * Updated `metrics-server` version.
 * Added [docs/dataflow.md] recipe with updates to Kubeflow, Streamsets and Dremio guidance.
+* Switched default VMware VMX template to use the virtual nic driver `vmxnet3` instead of `e1000`.
 
 v19.12
 ------
