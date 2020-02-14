@@ -6,7 +6,7 @@ v20.02
 
 * Improvements to the stability of the `ubuntu-k8s` deployment.
 * Updated `metrics-server` version.
-* Added [docs/dataflow.md] recipe with updates to Kubeflow, Streamsets and Dremio guidance.
+* Added [Dataflow](docs/dataflow.md) recipe with updates to Kubeflow, Streamsets and Dremio installation guidance.
 * Switched default VMware VMX template to use the virtual nic driver `vmxnet3` instead of `e1000`.
 
 > Due to the switch from `e1000` to `vmxnet3` the network device id changed from `ens32` to `ens160` and it is wise to rebuild all node _ovas_ to take advantage of the faster and more stable virtual network driver.  To continue to work with legacy nodes built with `e1000` add `primary_network_device=ens32` to your cluster inventory _hosts_ file.
