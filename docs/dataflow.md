@@ -40,7 +40,7 @@ Depending on the use cases involved in the __Dataflow__, and/or the organization
 
 ## Dataflow Installation on Cluster-Builder Clusters
 
-The following sections walk through the steps required to install the core components on a [cluster-builder](https://scluster-builder.idstudios.io) K8s cluster:
+The following sections walk through the steps required to install the core components on a [cluster-builder](https://cluster-builder.idstudios.io) K8s cluster:
 
 ### Kubeflow
 
