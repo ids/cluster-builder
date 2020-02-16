@@ -6,3 +6,5 @@ keys/authorized_keys
 packer_cache
 **/*.retry
 *.retry
+.vscode
+
