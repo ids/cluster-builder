@@ -60,7 +60,6 @@
       "ssh_username": "sysop",
       "ssh_password": "TempPass2017",
       "ssh_port": 22,
-      "ssh_wait_timeout": "100000s",
       "shutdown_command": "echo 'TempPass2017'|sudo -S /sbin/halt -h -p",
       "output_directory": "output_ubuntu_vmx",
       "vmx_template_path": "cluster-node-template.vmx",

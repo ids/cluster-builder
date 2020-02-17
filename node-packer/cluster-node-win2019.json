@@ -11,7 +11,6 @@
       "boot_command": [ "a<wait>a<wait>a<wait>a<wait>a<wait>a<wait>a" ],
       "ssh_username": "admin",
       "ssh_password": "Fender2000",
-      "ssh_wait_timeout": "6h",
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "guest_os_type": "windows9srv-64",
       "tools_upload_flavor": "windows",
