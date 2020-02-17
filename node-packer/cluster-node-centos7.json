@@ -56,6 +56,7 @@
       "iso_checksum": "9a2c47d97b9975452f7d582264e9fc16d108ed8252ac6816239a3b58cef5c53d",
       "ssh_username": "admin",
       "ssh_password": "TempPass2017",
+      "ssh_timeout": "10m",
       "ssh_port": 22,
       "shutdown_command": "echo 'TempPass2017'|sudo -S /sbin/halt -h -p",
       "output_directory": "output_centos7_vmx",
