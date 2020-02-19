@@ -3,6 +3,8 @@ cluster_type=targetd-server
 cluster_name=targetd
 remote_user=admin
 
+ansible_python_interpreter=/usr/bin/python3
+
 vmware_target=esxi
 overwrite_existing_vms=true
 

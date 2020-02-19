@@ -3,6 +3,8 @@ cluster_type=centos-k8s
 cluster_name=k8s-demo
 remote_user=admin
 
+ansible_python_interpreter=/usr/bin/python3
+
 vmware_target=desktop
 desktop_vm_folder="../virtuals"
 
