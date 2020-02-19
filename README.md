@@ -215,11 +215,11 @@ VMs for provisioning.
 
 The three most common issues initially encountered are:
 	
-	* DNS entries are not correct for the cluster deployment, in particular the __ingress__ and __control-plane__ URIs specified should resolve to the worker and master nodes respectively in a round-robin fashion.  This is critical to proper external access to the cluster and mis-configuration can result in `kubectl` failures during deployment.
-	
-	* __VMware__ licensing has expired.  It is always good to verify your VMware tools are functional before you begin.
+* DNS entries are not correct for the cluster deployment, in particular the __ingress__ and __control-plane__ URIs specified should resolve to the worker and master nodes respectively in a round-robin fashion.  This is critical to proper external access to the cluster and mis-configuration can result in `kubectl` failures during deployment.
 
-	* __Python2/3__ transition issues.  While cluster-builder is python3 ready, it still relies on the underly distro __ansible__, which at the present time is __python 2.7.5__ in CentOS7.  Attempts to use __python3__ exclusively with Ansible at the present time are likely to result in issues during deployment.
+* __VMware__ licensing has expired.  It is always good to verify your VMware tools are functional before you begin.
+
+* __Python2/3__ transition issues.  While cluster-builder is python3 ready, it still relies on the underly distro __ansible__, which at the present time is __python 2.7.5__ in CentOS7.  Attempts to use __python3__ exclusively with Ansible at the present time are likely to result in issues during deployment.
 
 
 ### Cluster Definition Packages
