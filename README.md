@@ -211,8 +211,16 @@ VMs for provisioning.
 
 * The cluster provisioning scripts rely on a **VM template OVA** that corresponds to the cluster type.  These are built by packer and located in **node-packer/output_ovas**.  See the cluster node packer [readme](https://github.com/ids/cluster-builder/blob/master/node-packer/README.md).  The **cluster-deploy** script will attempt to build the ova if it isn't found where expected.
 
-__Note for Red Hat Deployments__
-The cluster definition package (folder) you create in the __clusters__ folder will need to contain a valid __rhel7-setup.sh__ file and __rhel.lic__ file. Additionally, the ISO needs to be manually downloaded and place in **node-packer/iso**.
+##### Troubleshooting
+
+The three most common issues initially encountered are:
+	
+	* DNS entries are not correct for the cluster deployment, in particular the __ingress__ and __control-plane__ URIs specified should resolve to the worker and master nodes respectively in a round-robin fashion.  This is critical to proper external access to the cluster and mis-configuration can result in `kubectl` failures during deployment.
+	
+	* __VMware__ licensing has expired.  It is always good to verify your VMware tools are functional before you begin.
+
+	* __Python2/3__ transition issues.  While cluster-builder is python3 ready, it still relies on the underly distro __ansible__, which at the present time is __python 2.7.5__ in CentOS7.  Attempts to use __python3__ exclusively with Ansible at the present time are likely to result in issues during deployment.
+
 
 ### Cluster Definition Packages
 
