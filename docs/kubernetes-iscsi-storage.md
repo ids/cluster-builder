@@ -90,19 +90,21 @@ Make sure to copy the __targetd__ configuration into the `kubeadm` cluster packa
 
 These same settings will be used to create the corresponding __ISCSI provisioner manifests__ that will bind the provisioner to the __Targetd Storage Appliance__.
 
-With the __Targetd Storage Appliance configuration__ values in our cluster configuration file we can run the __cluster-builder__ `cluster-deploy` command to deploy your cluster.  New clusters deployed with the targetd parameters in their `hosts` file will automatically install and configure the `iscsi-provisioner`.
+With the __Targetd Storage Appliance configuration__ values in the cluster configuration file runing the __cluster-builder__ `cluster-deploy` command will automatically install and configure the `iscsi-provisioner` as it deploys the new cluster.  This is the recommended way to link a cluster to a _Targetd Storage Appliance_.  Also note that many clusters can share the same appliance.
 
 __You must setup your `kubectl` configuration before proceeding to validate the iscsi installation - ensure you can connect to your `kubeadm` cluster__
 
-To verify: 
+To verify your cluster's iscsi-provisioner is correctly installed: 
 
     kubectl get sc
 
-Will show the storage class.
+This command should output the name of the iscsi storage class, including the name specified in the parameter `targetd_server_volume_group`.
+
+Also:
 
     kubectl get pods -n kube-system
 
-Will show the running iscsi-provisioner.  Check the logs for the pod and you should see something like this:
+Should show the running iscsi-provisioner pod.  Check the logs for the pod and you should see something like this:
 
     time="2018-05-31T23:30:11Z" level=debug msg="start called"
     time="2018-05-31T23:30:11Z" level=debug msg="creating in cluster default kube client config"
@@ -114,7 +116,7 @@ Will show the running iscsi-provisioner.  Check the logs for the pod and you sho
 
 The iSCSI provisioner is now ready to deploy iSCSI PVC volumes.
 
-As an example, you may deploy a test volume (PVC and PV combined):
+As an example, you can deploy a test volume (PVC and PV combined):
 
         kind: PersistentVolumeClaim
         apiVersion: v1
@@ -129,7 +131,7 @@ As an example, you may deploy a test volume (PVC and PV combined):
             requests:
                 storage: 1Gi
 
-And you can run a benchmark test job on the Targetd iSCSI volumes:
+And then run a benchmark test job on the Targetd iSCSI volumes:
 
         kubectl apply -f iscsi-bench-pvc.yml
         (wait 10 secs)
@@ -137,13 +139,13 @@ And you can run a benchmark test job on the Targetd iSCSI volumes:
         kubectl get pv
         kubectl apply -f iscsi-bench-job.yml
 
-Once your pod is running and you see the the PVCs are showinf as __bound__, your `kubeadm` cluster is ready to use iSCSI PVC provisioning and storage.
+Once the pod is running and the the PVCs are showing as __bound__, the `kubeadm` cluster is ready to use iSCSI PVC provisioning and storage.
 
 Enjoy :)
 
 ## Viewing the Targetd PVC Volumes
 
-On the __Targetd Storage Appliance__ you can view the allocated volumes using the `targetcli ls` command (as root).
+On the __Targetd Storage Appliance__ view the allocated volumes using the `targetcli ls` command (as root).
 
 ![Targetd targetcli ls example](images/targetcli-ls-example.png)
 
