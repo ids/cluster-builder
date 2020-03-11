@@ -90,29 +90,19 @@ Make sure to copy the __targetd__ configuration into the `kubeadm` cluster packa
 
 These same settings will be used to create the corresponding __ISCSI provisioner manifests__ that will bind the provisioner to the __Targetd Storage Appliance__.
 
-With the __Targetd Storage Appliance configuration__ values in our cluster configuration file we can run the __cluster-builder__ ansible script to configure k8s for iSCSI direct:
+With the __Targetd Storage Appliance configuration__ values in our cluster configuration file we can run the __cluster-builder__ `cluster-deploy` command to deploy your cluster.  New clusters deployed with the targetd parameters in their `hosts` file will automatically install and configure the `iscsi-provisioner`.
 
-    ansible-playbook -i clusters/ids/core ansible/centos-iscsi.yml
+__You must setup your `kubectl` configuration before proceeding to validate the iscsi installation - ensure you can connect to your `kubeadm` cluster__
 
-__At this stage you must setup your `kubectl` configuration before proceeding - ensure you can connect to your `kubeadm` cluster__
-
-We will then install the iSCSI Provisioner:
-
-    ./iscsi-secret.sh
-
-This will create the secret credentials that the iSCSI provisioner will use to connect to the Targetd server.
-
-    kubectl apply -f iscsi.yml
-
-This will create the necessary roles, as well as install the __iscsi-provisioner__ deployment and the corresponding storage class.
+To verify: 
 
     kubectl get sc
 
 Will show the storage class.
 
-    kubectl get pods
+    kubectl get pods -n kube-system
 
-Will show the running iscsi-provisioner.  Check the logs and you should see something like this:
+Will show the running iscsi-provisioner.  Check the logs for the pod and you should see something like this:
 
     time="2018-05-31T23:30:11Z" level=debug msg="start called"
     time="2018-05-31T23:30:11Z" level=debug msg="creating in cluster default kube client config"
@@ -122,7 +112,9 @@ Will show the running iscsi-provisioner.  Check the logs and you should see some
     time="2018-05-31T23:30:11Z" level=debug msg="targed URL http://admin:ciao@192.168.1.205:18700/targetrpc"
     time="2018-05-31T23:30:11Z" level=debug msg="iscsi provisioner created"
 
-The iSCSI provisioner is now ready to deploy iSCSI PVC volumes:
+The iSCSI provisioner is now ready to deploy iSCSI PVC volumes.
+
+As an example, you may deploy a test volume (PVC and PV combined):
 
         kind: PersistentVolumeClaim
         apiVersion: v1
@@ -145,9 +137,7 @@ And you can run a benchmark test job on the Targetd iSCSI volumes:
         kubectl get pv
         kubectl apply -f iscsi-bench-job.yml
 
-> For better performance consider using Thickly provisioned VMware VMDK volumes.
-
-Once your pod is running and you see the the PVCs are bound, your `kubeadm` cluster is ready to use dynamic iSCSI PVC provisioning and static iSCSI PVC storage.
+Once your pod is running and you see the the PVCs are showinf as __bound__, your `kubeadm` cluster is ready to use iSCSI PVC provisioning and storage.
 
 Enjoy :)
 
