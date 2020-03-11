@@ -16,7 +16,7 @@ By combining these two approaches we achieve a lightweight, minimalist and robus
 
 __cluster-builder__ supports the automated deployment of dedicated Kubernetes Cluster Targetd storage appliances.  As depicted in the diagram above, these can be paired with Kubernetes Clusters to provide controlled dynamic storage.
 
-> The __Targetd Storage Appliance__ supports up to 255 persistent volumes per server instance.  If this is insufficient, multiple provisioners can be deployed with multiple targetd storage appliance backends in the same Kubernetes cluster.
+> The __Targetd Storage Appliance__ supports up to 255 persistent volumes per server instance.  If this is insufficient, multiple provisioners can be deployed with multiple targetd storage appliance backends in the same Kubernetes cluster. Targetd is __not__ a good choice for a production storage solution.  It can be an effective pre-production tool if used carefully, but it does not offer redundancy out of the box.
 
 The default configuration of the appliance is a __1 TB thinly provisioned LVM volume on VMDK__.  This can be resized as needed but represents a solid initial storage footprint for a pre-production environment.
 

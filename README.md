@@ -219,7 +219,7 @@ The three most common issues initially encountered are:
 
 * __VMware__ licensing has expired.  It is always good to verify your VMware tools are functional before you begin.
 
-* __Python2/3__ transition issues.  While cluster-builder is python3 ready, it still relies on the underly distro __ansible__, which at the present time is __python 2.7.5__ in CentOS7.  Attempts to use __python3__ exclusively with Ansible at the present time are likely to result in issues during deployment.
+* __Python2/3__ transition issues.  While cluster-builder is python3 ready, it still relies on the underlying distro __ansible__, which at the present time is __python 2.7.5__ in CentOS 7.6.  Attempts to use __python3__ exclusively with Ansible are likely to result in issues during deployment and this is not currently supported.
 
 
 ### Cluster Definition Packages
