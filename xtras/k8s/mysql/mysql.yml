@@ -1,35 +1,32 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-kafka
+  name: mysql
 spec:
   ports:
   - port: 3306
   selector:
-    app: mysql-kafka
+    app: mysql
   type: LoadBalancer
-  loadBalancerIP: 192.168.1.197
-status:
-  loadBalancer:
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: mysql-kafka
+  name: mysql
 spec:
   selector:
     matchLabels:
-      app: mysql-kafka
+      app: mysql
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql-kafka
+        app: mysql
     spec:
       containers:
       - image: mysql:5.6
-        name: mysql-kafka
+        name: mysql
         env:
           # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD

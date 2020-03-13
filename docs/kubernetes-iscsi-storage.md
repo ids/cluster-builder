@@ -131,15 +131,15 @@ As an example, you can deploy a test volume (PVC and PV combined):
             requests:
                 storage: 1Gi
 
-And then run a benchmark test job on the Targetd iSCSI volumes:
+And then run a benchmark test job on the Targetd iSCSI volume.  Example __YAML__ manifests can be found in [xtras/disk-bench](../xtras/disk-bench/).
 
-        kubectl apply -f iscsi-bench-pvc.yml
+        kubectl apply -f iscsi-diskbench-pvc.yml
         (wait 10 secs)
         kubectl get pvc
         kubectl get pv
-        kubectl apply -f iscsi-bench-job.yml
+        kubectl apply -f iscsi-diskbench-job.yml
 
-Once the pod is running and the the PVCs are showing as __bound__, the `kubeadm` cluster is ready to use iSCSI PVC provisioning and storage.
+Once the pod is running and the the PVCs are showing as __bound__, the `kubeadm` cluster is ready to use iSCSI PVC provisioning and storage, and the disk-bench job will give you an indication of your available IOPs and storage performance.
 
 Enjoy :)
 
