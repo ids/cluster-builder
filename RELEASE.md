@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+v20.04
+------
+
+* Added support for Kubernetes __1.18__.
+
+
 v20.02
 ------
 

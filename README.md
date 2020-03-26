@@ -283,6 +283,7 @@ With each release the default Kubernetes cluster profile (described in subsequen
 |   __1.15__  |      HA     |     HA      |     HA      |
 |   __1.16__  |      HA     |     HA      |     HA      |
 |   __1.17__  |      HA     |     HA      |     HA      |
+|   __1.18__  |      HA     |     HA      |     HA      |
 
 __HA__ = multi-master and single master configurations supported
 __S__ = single master only
