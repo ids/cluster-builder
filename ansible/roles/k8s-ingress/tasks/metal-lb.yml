@@ -1,15 +1,39 @@
+- name: install MetalLB namespace for 0.9.3+
+  shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ k8s_metallb_version }}/manifests/namespace.yaml
+  register: metallb_ns_out
+  when: "inventory_hostname == groups['k8s_masters'][0] and k8s_metallb_version == '0.9.3'"
+
+- debug: msg="{{ metallb_ns_out.stdout_lines }}"
+  when: "inventory_hostname == groups['k8s_masters'][0] and k8s_metallb_version == '0.9.3'"
+
 - name: install MetalLB manifest
-  shell: kubectl apply -f https://raw.githubusercontent.com/google/metallb/v{{ k8s_metallb_version }}/manifests/metallb.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ k8s_metallb_version }}/manifests/metallb.yaml
   register: metallb_out
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ metallb_out.stdout_lines }}"
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
-- name: generate the MetalLB configuration 
+- name: create MetalLB memberlist secret
+  shell: kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+  register: metallb_secret_out
+  when: "inventory_hostname == groups['k8s_masters'][0] and k8s_metallb_version == '0.9.3'"
+
+- debug: msg="{{ metallb_secret_out.stdout_lines }}"
+  when: "inventory_hostname == groups['k8s_masters'][0] and k8s_metallb_version == '0.9.3'"
+
+- name: generate the MetalLB layer2 configuration 
   template:
     src: templates/k8s-metallb-config.j2
     dest: /tmp/metallb-config.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: display MetalLB configuration
+  shell: cat /tmp/metallb-config.yml
+  register: metallb_config_out
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ metallb_config_out.stdout_lines }}"
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: apply MetalLB configuration
