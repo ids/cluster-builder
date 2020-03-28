@@ -277,9 +277,8 @@ With each release the default Kubernetes cluster profile (described in subsequen
 
 | k8s version |  centos-k8s | fedora-k8s  | ubuntu-k8s  |
 |-------------|-------------|-------------|-------------|
-|     1.12    |      S      |     S       |     S       |
 |     1.13    |      HA     |     HA      |     HA      |
-|   __1.14__  |      HA     |     HA      |     HA      |
+|     1.14    |      HA     |     HA      |     HA      |
 |   __1.15__  |      HA     |     HA      |     HA      |
 |   __1.16__  |      HA     |     HA      |     HA      |
 |   __1.17__  |      HA     |     HA      |     HA      |
