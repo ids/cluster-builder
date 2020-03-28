@@ -5,6 +5,8 @@ v20.04
 ------
 
 * Added support for Kubernetes __1.18__.
+* Updated __MetalLB__ to __0.9.3__.
+* Updated all Kubernetes clusters from __1.16__ on to use Canal/Calico __3.12__.
 
 
 v20.02
