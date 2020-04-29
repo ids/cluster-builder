@@ -85,6 +85,7 @@ udpIdleTimeout: 250ms
 nodePortAddresses: null
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
 address: 0.0.0.0
 authentication:
   anonymous:
@@ -135,7 +136,6 @@ imageGCLowThresholdPercent: 80
 imageMinimumGCAge: 2m0s
 iptablesDropBit: 15
 iptablesMasqueradeBit: 14
-kind: KubeletConfiguration
 kubeAPIBurst: 10
 kubeAPIQPS: 5
 makeIPTablesUtilChains: true

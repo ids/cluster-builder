@@ -7,7 +7,7 @@
 - name: install base distro docker on CentOS 7
   command: yum -y install docker
   when: cluster_type == "centos-k8s" and k8s_docker_version == 'distro'
-  retries: 10
+  retries: 5
   delay: 10
   register: result
   until: result.rc is defined and result.rc == 0
@@ -31,11 +31,11 @@
   when: (cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s") and k8s_docker_version == 'distro'
 
 - name: install base distro docker for Fedora or CentOS 8
-  shell: "dnf install -y docker"
+  shell: "dnf install -y moby-engine"
   args:
     warn: false
   when: (cluster_type == "fedora-k8s" or cluster_type == "centos8-k8s") and k8s_docker_version == 'distro'
-  retries: 10
+  retries: 5
   delay: 10
   register: result
   until: result.rc is defined and result.rc == 0
@@ -86,7 +86,7 @@
   args:
     warn: false
   when: cluster_type == "centos-k8s" and k8s_docker_version != 'distro'
-  retries: 10
+  retries: 5
   delay: 10
   register: result
   until: result.rc is defined and result.rc == 0
@@ -98,7 +98,7 @@
   when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
 
 - name: purge distro docker on Fedora
-  command: "dnf -y remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
+  command: "dnf -y remove docker docker-client moby-engine docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
   args:
     warn: false
   ignore_errors: true
@@ -109,7 +109,7 @@
   args:
     warn: false
   when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
-  retries: 10
+  retries: 5
   delay: 10
   register: result
   until: result.rc is defined and result.rc == 0
@@ -197,6 +197,18 @@
     src: templates/k8s-docker-daemon.j2
     dest: /etc/docker/daemon.json
   when: cluster_type != "ubuntu-k8s" and k8s_docker_version != 'distro'
+
+- name: configure the default k8s /etc/sysconfig/docker settings for Fedora
+  template:
+    src: templates/k8s-sysconfig-docker.j2
+    dest: /etc/sysconfig/docker
+  when: cluster_type == "fedora-k8s" and k8s_docker_version == 'distro'
+
+- name: configure the default k8s /etc/docker/daemon.json settings for Fedora
+  template:
+    src: templates/k8s-docker-daemon-fedora-distro.j2
+    dest: /etc/docker/daemon.json
+  when: cluster_type == "fedora-k8s" and k8s_docker_version == 'distro'
 
 - name: configure the default k8s docker daemon.json with json-file logging on ubuntu
   template:

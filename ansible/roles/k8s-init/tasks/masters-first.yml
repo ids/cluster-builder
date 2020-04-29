@@ -46,6 +46,9 @@
     dest: /root/kube-adm.yml
   when: k8s_version is search("1.18")
 
+- name: ensure the kubelet is enabled
+  shell: systemctl enable kubelet
+
 - name: initialize cluster on first master (1.12) CentOS 
   shell: "kubeadm init --config kube-adm.yml > /tmp/kube-status"
   args:
@@ -82,7 +85,7 @@
   when: k8s_version is search("1.14") 
 
 - name: initialize cluster on first master (1.15+)
-  shell: "kubeadm init --config kube-adm.yml --upload-certs > /tmp/kube-status"
+  shell: "kubeadm init --config kube-adm.yml --upload-certs --v=5 > /tmp/kube-status"
   args:
     chdir: /root
   ignore_errors: false
@@ -193,25 +196,33 @@
   become: true   
 
 - name: clean the existing PKI directory
-  shell: "rm -rf {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
-  args:
-    warn: false
+  local_action:
+    module: shell
+    _raw_params: "rm -rf {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
+  become: false
+  run_once: true
   ignore_errors: true 
 
 - name: setup the PKI directory
-  shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
-  args:
-    warn: false
+  local_action:
+    module: shell
+    _raw_params: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki"
+  become: false
+  run_once: true
+  ignore_errors: true 
 
 - name: setup the PKI etcd directory
-  shell: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/etcd"
-  args:
-    warn: false
+  local_action:
+    module: shell
+    _raw_params: "mkdir -p {{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/etcd"
+  become: false
+  run_once: true
+  ignore_errors: true 
 
 - name: fetch the PKI certs to the local {{ cluster_pkg_folder }}/pki
   fetch:
     src: /etc/kubernetes/pki/{{ item }}
-    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/"
     flat: yes
   become: true   
   with_items:
@@ -221,15 +232,17 @@
     - front-proxy-ca.key  
     - sa.key
     - sa.pub
-    - etcd/ca.crt  
-    - etcd/ca.key  
-#    - front-proxy-client.crt  
-#    - front-proxy-client.key  
-#    - apiserver.crt  
-#    - apiserver-kubelet-client.crt  
-#    - apiserver.key  
-#    - apiserver-kubelet-client.key  
- 
+
+- name: fetch the ETCD PKI certs to the local {{ cluster_pkg_folder }}/pki/etcd
+  fetch:
+    src: /etc/kubernetes/pki/etcd/{{ item }}
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/etcd/"
+    flat: yes
+  become: true   
+  with_items:
+    - ca.crt  
+    - ca.key  
+
 - name: setup Kubectl configuration on first master
   shell: kubectl get nodes
   register: nodes_out

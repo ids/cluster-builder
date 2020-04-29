@@ -25,7 +25,6 @@
     {
       "type": "shell",
       "execute_command": "echo 'TempPass2017' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "expect_disconnect": true,
       "script": "bin/zerodisk.sh"
     }
   ],
@@ -42,7 +41,7 @@
     {
       "type": "vmware-iso",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-fedora.cfg<enter><wait>"
+        "<tab> inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-fedora-alt.cfg<enter><wait>"
       ],
       "boot_wait": "10s",
       "disk_size": 256000,
@@ -50,11 +49,11 @@
       "headless": true,
       "http_directory": "http",
       "iso_urls": [
-        "iso/Fedora-Server-dvd-x86_64-29-1.2.iso",
-        "https://download.fedoraproject.org/pub/fedora/linux/releases/29/Server/x86_64/iso/Fedora-Server-dvd-x86_64-29-1.2.iso"
+        "iso/Fedora-Server-dvd-x86_64-32-1.6.iso",
+        "https://download.fedoraproject.org/pub/fedora/linux/releases/32/Server/x86_64/iso/Fedora-Server-dvd-x86_64-32-1.6.iso"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "129d131a55e5bd518f593f0eacdce095f7c795fe7ccbef1f3f6aeb2ff9f99f35",
+      "iso_checksum": "cd2aefdbe1b5042865a39c49d32f5d21a9537c719aa87dde34d08ca06bc6681c",
       "ssh_username": "admin",
       "ssh_password": "TempPass2017",
       "ssh_port": 22,

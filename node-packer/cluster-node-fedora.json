@@ -41,19 +41,19 @@
     {
       "type": "vmware-iso",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-fedora.cfg<enter><wait>"
+        "<tab> inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-fedora.cfg<enter><wait>"
       ],
       "boot_wait": "10s",
       "disk_size": 256000,
       "guest_os_type": "fedora-64",
-      "headless": true,
+      "headless": false,
       "http_directory": "http",
       "iso_urls": [
-        "iso/Fedora-Server-dvd-x86_64-30-1.2.iso",
-        "https://download.fedoraproject.org/pub/fedora/linux/releases/30/Server/x86_64/iso/Fedora-Server-dvd-x86_64-30-1.2.iso"
+        "iso/Fedora-Server-dvd-x86_64-31-1.9.iso",
+        "http://mirror.csclub.uwaterloo.ca/fedora/linux/releases/31/Server/x86_64/iso/Fedora-Server-dvd-x86_64-31-1.9.iso"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "bb0622b78449298e24a96b90b561b429edec71aae72b8f7a8c3da4d81e4df5b7",
+      "iso_checksum": "225ebc160e40bb43c5de28bad9680e3a78a9db40c9e3f4f42f3ee3f10f95dbeb",
       "ssh_username": "admin",
       "ssh_password": "TempPass2017",
       "ssh_port": 22,

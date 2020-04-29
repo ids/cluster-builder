@@ -6,9 +6,6 @@
 
 - debug: msg="Fedora base image at {{ kernel_version.stdout }}"
 
-- name: register docker repo 
-  command: "dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
-
   # Upgrade/Update all packages to latest version
 - name: upgrade Fedora
   dnf: >
@@ -18,6 +15,9 @@
 
 - name: install required base packages
   command: "dnf -y install curl bash iputils tar xz nano unzip ipset nfs-utils open-vm-tools dnf-plugins-core"
+
+- name: register docker repo 
+  command: "dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo"
 
 - name: install docker-ce and friends
   command: "dnf -y install docker-ce docker-ce-cli containerd.io"
