@@ -8,7 +8,7 @@ v20.04
 * Updated __MetalLB__ to __0.9.3__.
 * Updated all Kubernetes clusters from __1.15__ on to use Canal/Calico __3.12__.
 * Updated `fedora-k8s` base nodes to __Fedora 31__.
-* __FIX__ for broken __NGINX__ manifest paths to the 2.x series paths, relevant when `k8s_nginx_version` is set to `master` or a recent version of `ingress-nginx`.  This upgrades all deployments of `ingress-nginx` to __2.0.1__ or better.
+* __FIX__ for broken __NGINX__ manifest paths to the 2.x series path changes, relevant when `k8s_nginx_version` is set to `master` or a recent version of `ingress-nginx`.  This upgrades all deployments of `ingress-nginx` to __2.0.1__ or better, and requires future `k8s_nginx_version` specifications do the same.  The default will be `master` for the time being, but is easily overriden with `k8s_nginx_version` in the cluster hosts file.
 * __FIX__ for broken __Metrics Server__ manifest paths and update to the __0.3.6__ release.
 
 > Fedora 31 implements the new __CGroupsV2__, which of course is not supported by docker at this time. For now Fedora node images are set to use _CGroupsV1_ while the container engines catch up - Red Hat seems to be driving this for their CRI-O.
