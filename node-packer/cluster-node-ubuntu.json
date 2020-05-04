@@ -49,14 +49,14 @@
       "boot_wait": "5s",
       "disk_size": 256000,
       "guest_os_type": "ubuntu-64",
-      "headless": true,
+      "headless": false,
       "http_directory": "http",
       "iso_urls": [
-        "iso/ubuntu-18.04.3-server-amd64.iso",
-        "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.3-server-amd64.iso"
+        "iso/ubuntu-20.04-legacy-server-amd64.iso",
+        "http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04-legacy-server-amd64.iso"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "7d8e0055d663bffa27c1718685085626cb59346e7626ba3d3f476322271f573e",
+      "iso_checksum": "36f15879bd9dfd061cd588620a164a82972663fdd148cce1f70d57d314c21b73",
       "ssh_username": "sysop",
       "ssh_password": "TempPass2017",
       "ssh_port": 22,

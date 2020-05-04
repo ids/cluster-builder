@@ -1,6 +1,11 @@
 Release Notes
 =============
 
+vNext
+-----
+
+* Updated `ubuntu-k8s` base nodes to __Ubuntu 20.04 LTS__.
+
 v20.04
 ------
 

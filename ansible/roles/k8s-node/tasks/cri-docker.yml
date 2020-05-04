@@ -41,7 +41,7 @@
   until: result.rc is defined and result.rc == 0
 
 - name: remove any updated docker-ce if it exists on Ubuntu
-  command: apt-get -y remove docker docker-engine docker.io containerd runc
+  command: apt-get -y remove docker docker.io containerd runc
   args:
     warn: false
   when: cluster_type == "ubuntu-k8s" and k8s_docker_version == 'distro'
@@ -75,7 +75,7 @@
   when: cluster_type == "centos-k8s" and k8s_docker_version != 'distro'
 
 - name: purge distro docker on CentOS 7
-  command: "yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
+  command: "yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux"
   args:
     warn: false
   ignore_errors: true
@@ -98,7 +98,7 @@
   when: cluster_type == "fedora-k8s" and k8s_docker_version != 'distro'
 
 - name: purge distro docker on Fedora
-  command: "dnf -y remove docker docker-client moby-engine docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
+  command: "dnf -y remove docker docker-client moby-engine docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux"
   args:
     warn: false
   ignore_errors: true
@@ -119,7 +119,7 @@
   when: cluster_type == "centos8-k8s" and k8s_docker_version != 'distro'
 
 - name: purge distro docker on CentOS 8
-  command: "dnf -y remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine"
+  command: "dnf -y remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux"
   ignore_errors: true
   when: cluster_type == "centos8-k8s" and k8s_docker_version != 'distro'
 
@@ -170,7 +170,7 @@
   until: result.rc is defined and result.rc == 0
 
 - name: purge distro docker on Ubuntu
-  command: "apt-get -y remove docker docker-engine docker.io containerd runc"
+  command: "apt-get -y remove docker docker.io containerd runc"
   args:
     warn: false
   ignore_errors: true
