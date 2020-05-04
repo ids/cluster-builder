@@ -49,7 +49,7 @@
       "boot_wait": "5s",
       "disk_size": 256000,
       "guest_os_type": "ubuntu-64",
-      "headless": false,
+      "headless": true,
       "http_directory": "http",
       "iso_urls": [
         "iso/ubuntu-20.04-legacy-server-amd64.iso",
