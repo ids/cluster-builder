@@ -22,12 +22,12 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 [cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following container orchestration clusters:
 
 * [Kubernetes](https://kubernetes.io/):
-  * `centos-k8s` - `kubeadm` on CentOS 7.6
-  * `fedora-k8s` - `kubeadm` on Fedora 30 (5.x kernel)  
-  * `ubuntu-k8s` - `kubeadm` on Ubuntu 18.04 LTS (under development)
+  * `centos-k8s` - `kubeadm` on __CentOS 7.7__ (baseline)
+  * `fedora-k8s` - `kubeadm` on __Fedora 31__ (5.x kernel)  
+  * `ubuntu-k8s` - `kubeadm` on __Ubuntu 20.04 LTS__
 
 * [DC/OS](https://dcos.io/) 
-  * `centos-dcos` - CentOS 7.6
+  * `centos-dcos` - __CentOS 7.7__
 
 [cluster-builder](https://github.com/ids/cluster-builder) can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent iSCSI block storage, and NFS shared file volume persistent storage for K8s clusters.  This is especially useful in pre-production cluster environments.
 
