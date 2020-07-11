@@ -6,7 +6,7 @@ v20.07
 
 * Updated `ubuntu-k8s` base nodes to __Ubuntu 20.04 LTS__.
 * Updated `centos-k8s` base nodes to __Centos 7.8 (2003)__.
-* Updated to __Packer 1.6__, and updated json node templates removing deprecated `iso_checksum_type`.  Please upgrade to __Packer 1.6__ for this release.
+* Updated to __Packer 1.6__, with changes to json node templates (removing deprecated `iso_checksum_type`). Please upgrade to Packer 1.6 for compatibility with this release.
 
 
 v20.04
