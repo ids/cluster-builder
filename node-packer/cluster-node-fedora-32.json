@@ -52,7 +52,6 @@
         "iso/Fedora-Server-dvd-x86_64-32-1.6.iso",
         "https://download.fedoraproject.org/pub/fedora/linux/releases/32/Server/x86_64/iso/Fedora-Server-dvd-x86_64-32-1.6.iso"
       ],
-      "iso_checksum_type": "sha256",
       "iso_checksum": "cd2aefdbe1b5042865a39c49d32f5d21a9537c719aa87dde34d08ca06bc6681c",
       "ssh_username": "admin",
       "ssh_password": "TempPass2017",
