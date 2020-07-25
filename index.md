@@ -19,11 +19,11 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 
 [cluster-builder](https://github.com/ids/cluster-builder) follows an [immutable infrastructure](https://www.digitalocean.com/community/tutorials/what-is-immutable-infrastructure) philosophy at the cluster node level.  Container orchestration clusters are defined in a simple text file and then deployed using a single command.  Always repeatable and documented, this re-usable framework can deploy numerous and varied orchestration clusters with a clear separation of configuration and deployment artifacts.
 
-[cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following __Kubernetes__ container orchestration clusters:
+[cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following __Kubernetes__ container orchestration clusters using __kubeadm__:
 
-* `centos-k8s` - `kubeadm` on __CentOS 7.8__ (baseline)
-* `fedora-k8s` - `kubeadm` on __Fedora 31__ (5.x kernel)  
-* `ubuntu-k8s` - `kubeadm` on __Ubuntu 20.04 LTS__
+* `centos-k8s` - __CentOS 7.8__ VM nodes (baseline)
+* `fedora-k8s` - __Fedora 31__ VM nodes (5.x kernel)  
+* `ubuntu-k8s` - __Ubuntu 20.04 LTS__ VM nodes
 
 [cluster-builder](https://github.com/ids/cluster-builder) can also deploy associated __Targetd Storage Appliance__ and __iSCSI Provisioners__ to provide backing persistent iSCSI block storage, and NFS shared file volume persistent storage for K8s clusters.  This is especially useful in pre-production cluster environments.
 
