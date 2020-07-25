@@ -21,7 +21,7 @@ With freely available tools and only an annotated Ansible inventory file [cluste
 
 [cluster-builder](https://github.com/ids/cluster-builder) is currently deploying the following __Kubernetes__ container orchestration clusters:
 
-* `centos-k8s` - `kubeadm` on __CentOS 7.7__ (baseline)
+* `centos-k8s` - `kubeadm` on __CentOS 7.8__ (baseline)
 * `fedora-k8s` - `kubeadm` on __Fedora 31__ (5.x kernel)  
 * `ubuntu-k8s` - `kubeadm` on __Ubuntu 20.04 LTS__
 

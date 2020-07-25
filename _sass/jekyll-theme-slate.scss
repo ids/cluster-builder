@@ -268,18 +268,16 @@ Full-Width Styles
 
 #project_title {
   margin: 0;
-  color: #fff;
+  color: #222;
   font-size: 42px;
   font-weight: 700;
-  text-shadow: #111 0px 0px 10px;
 }
 
-#project_tagline {
-  color: #fff;
+#project_tagline2 {
+  color: #555;
   font-size: 24px;
   font-weight: 300;
   background: none;
-  text-shadow: #111 0px 0px 10px;
 }
 
 #downloads {
@@ -347,17 +345,17 @@ a:hover, a:focus {
 }
 
 #header_wrap {
-  background-color: #393f4d;
+  background-color: #FFF;
 }
 
 #footer_wrap {
   background-color: #1d1e22;
-  background-color: #393f4d;
+  background-color: #FFF;
 }
 
 #main_content_wrap { 
-  background-color: #393f4d;
-  color: #ccc;
+  background-color: #FFF;
+  color: #333;
 }
 
 #title-flash {
@@ -366,7 +364,7 @@ a:hover, a:focus {
 }
 
 #project_title,
-#project_tagline {
+#project_tagline2 {
   margin-left: 10px;
 }
 

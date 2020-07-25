@@ -24,6 +24,8 @@
   margin-left: auto;
   margin-right: 10px;
   background-image: url(../images/cbMascot-150.png);
+  filter: brightness(150%);
+
   background-repeat: no-repeat;
   background-position: 10px 0px;
   cursor: pointer;
@@ -41,9 +43,9 @@
 }
 
 .idstudios-logo {
-  width: 60px;
-  min-height: 60px;
-  min-width: 60px;
+  width: 50px;
+  min-height: 50px;
+  min-width: 50px;
   cursor: pointer;
   border: none;
   box-shadow: none;
