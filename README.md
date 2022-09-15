@@ -1,5 +1,6 @@
 Cluster Builder
 ===============
+> This project has been deprecated since 2020 and has likely fallen out of date.  A newer cloud based approach is starting up over at [cluster-builder-cloud](github.com/ids/cluster-builder-cloud), for those that like to play with `kubeadm`.
 
 [Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure [DC/OS](https://dcos.io/) and [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) container orchestration clusters and deploy them into VMware environments using simple Ansible inventory host file declarations and a minimal toolset.
 
