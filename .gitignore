@@ -1,9 +1,1 @@
-.terraform/
-clusters/
-docs/
-generated/
-node-packer/
-terraform.tfstate
-tmp/
-virtuals/
-_site*
+.DS_Store

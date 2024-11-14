@@ -56,7 +56,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   margin: 10px 0;
   font-weight: 700;
-  color:#222222;
+  color:#CCC;
   font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
   letter-spacing: -1px;
 }
@@ -135,8 +135,8 @@ p img {
 }
 
 pre, code {
-  color: #222;
-  background-color: #fff;
+  color: #CCC;
+  background-color: #1E1E1E;
 
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   font-size: 14px;
@@ -164,7 +164,7 @@ pre code {
 }
 
 blockquote {
-  color: #666;
+  color: #999;
   margin-bottom: 20px;
   padding: 0 0 0 20px;
   border-left: 3px solid #bbb;
@@ -268,13 +268,13 @@ Full-Width Styles
 
 #project_title {
   margin: 0;
-  color: #222;
+  color: #AAA;
   font-size: 42px;
   font-weight: 700;
 }
 
 #project_tagline2 {
-  color: #555;
+  color: #666;
   font-size: 24px;
   font-weight: 300;
   background: none;
@@ -345,17 +345,17 @@ a:hover, a:focus {
 }
 
 #header_wrap {
-  background-color: #FFF;
+  background-color: #1E1E1E;
 }
 
 #footer_wrap {
   background-color: #1d1e22;
-  background-color: #FFF;
+  background-color: #1E1E1E;
 }
 
 #main_content_wrap { 
-  background-color: #FFF;
-  color: #333;
+  background-color: #1E1E1E;
+  color: #CCC;
 }
 
 #title-flash {
