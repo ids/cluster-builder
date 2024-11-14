@@ -1,2 +1,0 @@
-curl -X DELETE http://kafka-connect.onprem.idstudios.io:8083/connectors/jdbc_source_mysql
-

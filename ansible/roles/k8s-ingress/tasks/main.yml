@@ -1,4 +1,0 @@
-- name: configure ingress and load balancing 
-  include: ingress.yml
-  when: "inventory_hostname == groups['k8s_masters'][0]"
-

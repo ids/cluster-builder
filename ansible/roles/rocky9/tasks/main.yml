@@ -1,0 +1,9 @@
+---
+- name: set Hostname
+  become: true
+  shell: hostnamectl set-hostname {{ node_fqdn }}
+
+- name: configure chronyd
+  include_tasks: chronyd.yml
+  
+

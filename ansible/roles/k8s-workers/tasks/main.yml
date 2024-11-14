@@ -1,5 +1,5 @@
 - name: configure the Kubernetes workers
-  include: workers.yml
+  include_tasks: workers.yml
   when: "'k8s_workers' in group_names or 'new_k8s_workers' in group_names"
 
 - name: configure log rotation

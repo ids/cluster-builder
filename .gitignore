@@ -17,5 +17,7 @@ terraform.tfstate.backup
 nohup.out
 .passwords
 .vscode
+scratch.txt
 
+.DS_Store
 

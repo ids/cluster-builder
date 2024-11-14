@@ -1,8 +1,0 @@
----
-- hosts: all
-  remote_user: admin
-  become: true
-  any_errors_fatal: true
-  roles:
-  - role: common
-  - role: nfs-shares

@@ -1,5 +1,3 @@
+---
 - name: ensure all inventory host names resolve via DNS
-  local_action:
-    module: shell
-    _raw_params: "host {{ inventory_hostname }}"
-  become: false
+  ansible.builtin.ping:
