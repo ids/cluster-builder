@@ -16,6 +16,7 @@
   - role: k8s-cni
   - role: k8s-masters
   - role: k8s-workers
+#  - role: k8s-dash
   - role: k8s-inspect
 
 

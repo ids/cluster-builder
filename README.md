@@ -1,12 +1,14 @@
 Cluster Builder
 ===============
 
-[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure  [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) on [Rocky Linux 9]()
+[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure  [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) on [Rocky Linux 9](https://rockylinux.org)
 
 ## Usage Scenarios
 
-- Deploy locally to VMware Fusion or VMware Workstation
-- Deploy to ESXi servers directly
+- Deploy Kubernetes clusters locally to VMware Fusion or VMware Workstation
+- Deploy Kubernetes clusters to ESXi servers directly
+
+A simple `ansible hosts` file describes the size and shape of the cluster, and `cluster-builder` does all the rest!
 
 ### Requirements
 
@@ -67,8 +69,62 @@ clusters
 	 - hosts
 ```
 
+The files are as follows:
+
+```
+[all:vars]
+cluster_type=rocky9-k8s
+cluster_name=k8s-vm
+remote_user=admin
+
+ansible_python_interpreter=/usr/bin/python3
+
+vmware_target=fusion
+desktop_vm_folder="../virtuals"
+
+desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux
+desktop_net_type="custom"    # this should be nat for Windows and Linux
+
+network_mask=255.255.255.0
+network_gateway=192.168.42.1
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=vm.idstudios.io
+
+k8s_metallb_address_range=192.168.42.160-192.168.42.179
+
+k8s_control_plane_uri=k8s-m1.vm.idstudios.io
+k8s_ingress_url=k8s-ingress.vm.idstudios.io
+
+[k8s_masters]
+k8s-m1.vm.idstudios.io ansible_host=192.168.42.200 
+
+[k8s_workers]
+k8s-w1.vm.idstudios.io ansible_host=192.168.42.210
+k8s-w2.vm.idstudios.io ansible_host=192.168.42.211
+
+[vmware_vms]
+k8s-m1.vm.idstudios.io numvcpus=4 memsize=2048
+k8s-w1.vm.idstudios.io numvcpus=4 memsize=4096
+k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
+
+```
+
+- The `cluster_type` is currently `rocky9-k8s`.
+- `remote_user` is always `admin`, as this is configured in the packer build.
+- `desktop_vm_folder` places the k8s VM files in `./virtuals` by default.
+- `k8s_metallb_address_range` defines a set of address to for the `MetalLB`
+
+Other settings are fairly self explanatory.
+
+## Setup Notes - Important
+
+- Make sure that all of the hosts in your `inventory hosts` file resolve.  Deployment requires the DNS names resolve.
+
+- Make sure that `node-packer/build` is using the correct `authorized_key`.  This should happen automatically, but deployment relies on `passwordless ssh`.
+
 ## Deploying Clusters
-The following command would deploy the cluster:
+The following command would deploy example cluster from above:
 
 ```
 $ bash cluster-deploy acme/demo-k8s
@@ -82,7 +138,7 @@ k8s-m1.idstudios.local ansible_host=192.168.1.220
 ``` 
 > In the example, the inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
 
-> The **demo** series of local deployments use DNS names hosted by __idstudios.io__, which resolve to local private network addresses.  These domain names can be used for local deployments if the subnet/addressing is also used in your local environments.
+> The **demo** series of local deployments use DNS names hosted by __idstudios.io__, which resolve to local private network addresses.  These domain names can be used for local deployments if the same subnet/addressing is also used in your local environments.
 
 ### Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.  This is useful for __suspending__ or __restarting__ the entire cluster.  It also enables complete deletion of a cluster using the __destroy__ action directive.
