@@ -18,51 +18,6 @@
 - debug: var=cluster_pkg_folder
   run_once: true
 
-- name: determine dns settings for docker daemon (override)
-  set_fact:
-    docker_daemon_dns: '{{ docker_daemon_dns_override }}'
-  when: docker_daemon_dns_override is defined 
-  run_once: true
-
-- name: determine dns settings for docker daemon (data network w/ single)
-  set_fact:
-    docker_daemon_dns: '"{{ data_network_dns }}"'
-  when: docker_daemon_dns_override is undefined 
-    and data_network_dns is defined
-    and data_network_dns2 is undefined
-  run_once: true
-
-- name: determine dns settings for docker daemon (data network w/ 2 entries)
-  set_fact:
-    docker_daemon_dns: '"{{ data_network_dns }}", "{{ data_network_dns2 }}"'
-  when: docker_daemon_dns_override is undefined 
-    and data_network_dns is defined
-    and data_network_dns2 is defined
-  run_once: true
-
-- name: determine dns settings for docker daemon (main network w/ single)
-  set_fact:
-    docker_daemon_dns: '"{{ network_dns }}"'
-  when: docker_daemon_dns_override is undefined 
-    and data_network_dns is undefined
-    and network_dns is defined
-    and network_dns2 is undefined
-  run_once: true
-
-- name: determine dns settings for docker daemon (main network w/ 2 entries)
-  set_fact:
-    docker_daemon_dns: '"{{ network_dns }}", "{{ network_dns2 }}"'
-  when: docker_daemon_dns_override is undefined 
-    and data_network_dns is undefined
-    and network_dns is defined
-    and network_dns2 is defined
-  run_once: true
-
-- name: calculated dns settings for docker daemon
-  debug: var=docker_daemon_dns
-  run_once: true
-  when: network_dn is defined
-
 - name: determine FQDN node name
   set_fact:
     node_fqdn: "{{ inventory_hostname | replace('.' + network_dn, '') + '.' + network_dn}}"
@@ -143,36 +98,9 @@
     ovftool_parallel: false
   when: ovftool_parallel is undefined
 
-- name: set targetd_server_namespace default
-  set_fact:
-    targetd_server_namespace: "kube-system"
-  run_once: true
-  when: targetd_server_namespace is undefined
-
-- debug: msg="{{ targetd_server_namespace }}"
-  run_once: true
-
-- name: set targetd_server_account_username default
-  set_fact:
-    targetd_server_account_username: "admin"
-  run_once: true
-  when: targetd_server_account_username is undefined
-
-- debug: msg="{{ targetd_server_account_username }}"
-  run_once: true
-
-- name: set targetd_server_account_password default
-  set_fact:
-    targetd_server_account_password: "caio"
-  run_once: true
-  when: targetd_server_account_password is undefined
-
-- debug: msg="{{ targetd_server_account_password }}"
-  run_once: true
-
 - name: set primary_network_device default
   set_fact:
-    primary_network_device: "ens160"
+    primary_network_device: "ens33"
   run_once: true
   when: primary_network_device is undefined
 

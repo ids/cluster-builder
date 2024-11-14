@@ -21,7 +21,7 @@ fi
 
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 if [ -z $REMOTE_USER ]; then 
-  REMOTE_USER=root
+  REMOTE_USER=admin
 fi 
 
 if [ -z $TARGET_USER ]; then 

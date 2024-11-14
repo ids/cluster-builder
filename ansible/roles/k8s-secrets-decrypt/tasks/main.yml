@@ -1,4 +1,0 @@
-- name: encrypt the Kubernetes secrets
-  include: decrypt.yml
-  when: "k8s_encrypt_secrets|bool == True"
-

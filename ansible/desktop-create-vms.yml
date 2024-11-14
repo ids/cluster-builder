@@ -3,385 +3,405 @@
   gather_facts: false
 
   vars:
-    desktop_vm_folder: ../virtuals
-    ova_template_path: "../{{ ova_template }}"
-    gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
+      desktop_vm_folder: ../virtuals
+      ova_template_path: "../{{ ova_template }}"
+      gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   roles:
-    - role: common
+      - role: common
 
-  tasks:    
-  - name: set default desktop network to vmnet2
-    set_fact:
-      desktop_net: "vmnet2"
-    run_once: true
-    when: desktop_net is undefined
+  tasks:
+      - name: set default desktop network to vmnet2
+        set_fact:
+            desktop_net: "vmnet2"
+        run_once: true
+        when: desktop_net is undefined
 
-  - name: set vmware dhcpd configuration location for linux
-    set_fact:
-      vmware_dhcpd_base_path: "/etc/vmware/{{ desktop_net }}/dhcpd"
-      vmware_dhcpd_filename: "dhcpd.conf"
-    run_once: true
-    when: platform == "linux"
+      - name: set vmware dhcpd configuration location for linux
+        set_fact:
+            vmware_dhcpd_base_path: "/etc/vmware/{{ desktop_net }}/dhcpd"
+            vmware_dhcpd_filename: "dhcpd.conf"
+        run_once: true
+        when: platform == "linux"
 
-  - name: set vmware dhcpd configuration location for macOS
-    set_fact:
-      vmware_dhcpd_base_path: "/Library/Preferences/VMware\ Fusion/{{ desktop_net }}"
-      vmware_dhcpd_filename: "dhcpd.conf"
-    run_once: true
-    when: platform == "darwin"
+      - name: set vmware dhcpd configuration location for macOS
+        set_fact:
+            vmware_dhcpd_base_path: "/Library/Preferences/VMware\ Fusion/{{ desktop_net }}"
+            vmware_dhcpd_filename: "dhcpd.conf"
+        run_once: true
+        when: platform == "darwin"
 
-  - name: set vmware dhcpd configuration location for Windows
-    set_fact:
-      vmware_dhcpd_base_path: "/mnt/c/ProgramData/VMware"
-      vmware_dhcpd_filename: "vmnetdhcp.conf"
-    run_once: true
-    when: platform == "windows"
+      - name: set vmware dhcpd configuration location for Windows
+        set_fact:
+            vmware_dhcpd_base_path: "/mnt/c/ProgramData/VMware"
+            vmware_dhcpd_filename: "vmnetdhcp.conf"
+        run_once: true
+        when: platform == "windows"
 
-  - debug: msg="{{ vmware_dhcpd_base_path }}"
-    run_once: true
+      - debug: msg="{{ vmware_dhcpd_base_path }}"
+        run_once: true
 
-  - name: set server_static_ip_wait_seconds if undefined
-    set_fact:
-      server_static_ip_wait_seconds: 30
-    run_once: true
-    when: server_static_ip_wait_seconds is undefined
+      - name: set server_static_ip_wait_seconds if undefined
+        set_fact:
+            server_static_ip_wait_seconds: 30
+        run_once: true
+        when: server_static_ip_wait_seconds is undefined
 
-  - name: ensure the target desktop_vm_folder exists
-    local_action:
-      module: file
-      path: "{{ desktop_vm_folder }}"
-      state: directory
+      - name: ensure the target desktop_vm_folder exists
+        local_action:
+            module: file
+            path: "{{ desktop_vm_folder }}"
+            state: directory
 
-  - name: ensure the target folder for generated scripts exists
-    local_action:
-      module: file
-      path: "{{ gen_script_folder }}"
-      state: directory
+      - name: ensure the target folder for generated scripts exists
+        local_action:
+            module: file
+            path: "{{ gen_script_folder }}"
+            state: directory
 
-  - name: stop the existing VMs on macOS and Linux (If they aren't running the errors will be ignored).
-    local_action:
-      module: shell
-      _raw_params: vmrun stop {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx
-    ignore_errors: true
-    when: platform == "linux" or platform == "darwin"
-    retries: 5
-    delay: 5
+      - name: stop the existing VMs on macOS and Linux (If they aren't running the errors will be ignored).
+        local_action:
+            module: shell
+            _raw_params: vmrun stop {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx
+        ignore_errors: true
+        when: platform == "linux" or platform == "darwin"
+        retries: 5
+        delay: 5
 
-  - name: calculate windows path using wslpath.
-    local_action:
-      module: shell
-      _raw_params: "wslpath -w {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-    register: windows_vm_start_path
-    ignore_errors: true
-    when: platform == "windows"
+      - name: calculate windows path using wslpath.
+        local_action:
+            module: shell
+            _raw_params: "wslpath -w {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+        register: windows_vm_start_path
+        ignore_errors: true
+        when: platform == "windows"
 
-  - name: stop the existing VMs on Windows (If they aren't running the errors will be ignored).
-    local_action:
-      module: shell
-      _raw_params: "vmrun.exe stop {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-    ignore_errors: true
-    when: platform == "windows"
+      - name: stop the existing VMs on Windows (If they aren't running the errors will be ignored).
+        local_action:
+            module: shell
+            _raw_params: "vmrun.exe stop {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+        ignore_errors: true
+        when: platform == "windows"
 
-  - name: use ovftool to deploy cluster-node ova to Workstation/Fusion Desktop VMX on macOS/Linux.
-    local_action:
-      module: shell
-      _raw_params: ovftool -tt=vmx -o --network={{ desktop_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ desktop_vm_folder }}/
-    when: platform == "linux" or platform == "darwin"
+      - name: use ovftool to deploy cluster-node ova to Workstation/Fusion Desktop VMX on macOS/Linux.
+        local_action:
+            module: shell
+            _raw_params: ovftool -tt=vmx -o --network={{ desktop_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ desktop_vm_folder }}/
+        when: platform == "linux" or platform == "darwin"
 
-  - name: remove existing VMs if they exist
-    local_action:
-      module: shell
-      _raw_params: "rm -rf {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-    when: platform == "windows" and overwrite_existing_vms
-    ignore_errors: true
+      - name: remove existing VMs if they exist
+        local_action:
+            module: shell
+            _raw_params: "rm -rf {{ desktop_vm_folder }}/{{ vm_folder_name }}"
+        when: platform == "windows" and overwrite_existing_vms
+        ignore_errors: true
 
-  - name: use ovftool to deploy cluster-node ova to Workstation/Fusion Desktop VMX on Windows.
-    local_action:
-      module: shell
-      _raw_params: "ovftool.exe -tt=vmx --overwrite --network={{ desktop_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ desktop_vm_folder }}"
-    when: platform == "windows" 
+      - name: use ovftool to deploy cluster-node ova to Workstation/Fusion Desktop VMX on Windows.
+        local_action:
+            module: shell
+            _raw_params: "ovftool.exe -tt=vmx --overwrite --network={{ desktop_net }} --powerOffTarget --name={{ inventory_hostname }} {{ ova_template_path }} {{ desktop_vm_folder }}"
+        when: platform == "windows"
 
-  - name: assign the VM CPU count
-    local_action:
-      module: lineinfile
-      path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-      state: present
-      regexp: '^numvcpus =\s'
-      line: 'numvcpus = "{{ numvcpus }}"'
-    when: numvcpus is defined
+      - name: assign the VM CPU count
+        local_action:
+            module: lineinfile
+            path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+            state: present
+            regexp: '^numvcpus =\s'
+            line: 'numvcpus = "{{ numvcpus }}"'
+        when: numvcpus is defined
 
-  - name: assign the VM memory
-    local_action:
-      module: lineinfile
-      path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-      state: present
-      regexp: '^memsize =\s'
-      line: 'memsize = "{{ memsize }}"'
-    when: memsize is defined
+      - name: assign the VM memory
+        local_action:
+            module: lineinfile
+            path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+            state: present
+            regexp: '^memsize =\s'
+            line: 'memsize = "{{ memsize }}"'
+        when: memsize is defined
 
-  - name: start the VMs to get the generated MAC addresses on macOS/Linux
-    local_action:
-      module: shell
-      _raw_params: vmrun start {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
-    become: false
-    when: platform == "linux" or platform == "darwin"
-    retries: 5
-    delay: 5
-    register: result
-    until: result.rc is defined and result.rc == 0
+      - name: start the VMs to get the generated MAC addresses on macOS/Linux
+        local_action:
+            module: shell
+            _raw_params: vmrun start {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
+        become: false
+        when: platform == "linux" or platform == "darwin"
+        delegate_to: 127.0.0.1
+        retries: 5
+        delay: 5
+        register: result
+        until: result.rc is defined and result.rc == 0
 
-  - name: start the VMs to get the generated MAC addresses on Windows
-    local_action:
-      module: shell
-      _raw_params: "vmrun.exe start {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
-    become: false
-    when: platform == "windows"
+      - name: start the VMs to get the generated MAC addresses on Windows
+        local_action:
+            module: shell
+            _raw_params: "vmrun.exe start {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
+        become: false
+        when: platform == "windows"
 
-  - name: waiting for VMs to generate MAC addresses
-    pause:
-      seconds: 5
-    
-  - name: scan the VMX files for the mac addresses
-    local_action:
-      module: shell
-      _raw_params: cat {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
-    register: vm_mac
-  
-  - debug: msg="{{ vm_mac.stdout }}"
+      - name: waiting for VMs to generate MAC addresses
+        pause:
+            seconds: 5
 
-  - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
-    when: vm_mac is not defined
+      - name: scan the VMX files for the mac addresses
+        local_action:
+            module: shell
+            _raw_params: cat {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx | grep "ethernet0.generatedAddress = " | sed -e 's/ethernet0.generatedAddress = //g' -e 's/"//g'
+        register: vm_mac
 
-  - name: generate the DHCPD configuration entries for macOS
-    local_action:
-      module: template
-      src: templates/dhcpd_entry.j2
-      dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
-    when: platform == "darwin"
+      - debug: msg="{{ vm_mac.stdout }}"
 
-  - name: generate the DHCPD configuration entries for Linux
-    local_action:
-      module: template
-      src: templates/dhcpd_entry_linux.j2
-      dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
-    when: platform == "linux"
+      - fail: msg="No MAC Found! Unable to get the MAC address from the VMX!"
+        when: vm_mac is not defined
 
-  - name: generate the DHCPD configuration entries for Windows
-    local_action:
-      module: template
-      src: templates/dhcpd_entry_win.j2
-      dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
-    when: platform == "windows"
+      - name: generate the DHCPD configuration entries for macOS
+        local_action:
+            module: template
+            src: templates/dhcpd_entry.j2
+            dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
+        when: platform == "darwin"
 
-  - name: stop the VMs on macOS/Linux
-    local_action:
-      module: shell
-      _raw_params: vmrun stop {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
-    when: platform == "linux" or platform == "darwin"
-    retries: 5
-    delay: 5
-    register: result
-    until: result.rc is defined and result.rc == 0
+      - name: generate the DHCPD configuration entries for Linux
+        local_action:
+            module: template
+            src: templates/dhcpd_entry_linux.j2
+            dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
+        when: platform == "linux"
 
-  - name: stop the VMs on Windows
-    local_action:
-      module: shell
-      _raw_params: "vmrun.exe stop {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
-    when: platform == "windows"
+      - name: generate the DHCPD configuration entries for Windows
+        local_action:
+            module: template
+            src: templates/dhcpd_entry_win.j2
+            dest: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
+        when: platform == "windows"
 
-  - name: assign the desktop network connection type
-    local_action:
-      module: lineinfile
-      path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-      state: present
-      regexp: '^ethernet0.connectionType =\s'
-      line: 'ethernet0.connectionType = "{{ desktop_net_type }}"'
+      - name: stop the VMs on macOS/Linux
+        local_action:
+            module: shell
+            _raw_params: vmrun stop {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
+        when: platform == "linux" or platform == "darwin"
+        retries: 5
+        delay: 5
+        register: result
+        until: result.rc is defined and result.rc == 0
 
-  - name: assign the desktop network interface
-    local_action:
-      module: lineinfile
-      path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
-      state: present
-      regexp: '^ethernet0.vnet =\s'
-      line: 'ethernet0.vnet = "{{ desktop_net }}"'
+      - name: stop the VMs on Windows
+        local_action:
+            module: shell
+            _raw_params: "vmrun.exe stop {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
+        when: platform == "windows"
 
-  - name: remove the DHCPD fragment file
-    local_action:
-      module: shell
-      _raw_params: rm {{ gen_script_folder }}/dhcpd_frag.conf
-    ignore_errors: true
-    run_once: true
+      - name: assign the desktop network connection type
+        local_action:
+            module: lineinfile
+            path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+            state: present
+            regexp: '^ethernet0.connectionType =\s'
+            line: 'ethernet0.connectionType = "{{ desktop_net_type }}"'
 
-  - name: concatenate the DHCPD entry header
-    local_action:
-      module: shell
-      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_frag.conf
-    run_once: true
+      - name: assign the desktop network interface
+        local_action:
+            module: lineinfile
+            path: "{{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx"
+            state: present
+            regexp: '^ethernet0.vnet =\s'
+            line: 'ethernet0.vnet = "{{ desktop_net }}"'
 
-  - name: concatenate the new DHCPD entries
-    local_action:
-      module: shell
-      _raw_params: cat {{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf >> {{ gen_script_folder }}/dhcpd_frag.conf
+      - name: remove the DHCPD fragment file
+        local_action:
+            module: shell
+            _raw_params: rm {{ gen_script_folder }}/dhcpd_frag.conf
+        ignore_errors: true
+        run_once: true
 
-  - name: concatenate the DHCPD entry footer
-    local_action:
-      module: shell
-      _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_frag.conf
-    run_once: true
+      - name: concatenate the DHCPD entry header
+        local_action:
+            module: shell
+            _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:start' >> {{ gen_script_folder }}/dhcpd_frag.conf
+        run_once: true
 
-  - name: stop the VM network on macOS
-    local_action:
-      module: shell
-      _raw_params: 'vmnet-cli --stop'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-    when: platform == "darwin"
+      - name: concatenate the new DHCPD entries
+        local_action:
+            module: shell
+            _raw_params: cat {{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf >> {{ gen_script_folder }}/dhcpd_frag.conf
 
-  - name: stop the VM network on Windows
-    local_action:
-      module: shell
-      _raw_params: '/mnt/c/Windows/System32/net.exe stop vmnetdhcp'
-    delegate_to: 127.0.0.1
-    ignore_errors: true
-    become: true
-    run_once: true
-    when: platform == "windows"
+      - name: concatenate the DHCPD entry footer
+        local_action:
+            module: shell
+            _raw_params: echo '### {{ cluster_type }}:{{ cluster_name }}:end' >> {{ gen_script_folder }}/dhcpd_frag.conf
+        run_once: true
 
-  - name: stop the VM network on Linux
-    local_action:
-      module: shell
-      _raw_params: 'systemctl stop vmware'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-    when: platform =="linux"
+      - name: stop the VM network on macOS
+        local_action:
+            module: shell
+            _raw_params: '/Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --stop'
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
+        when: platform == "darwin"
 
-  - name: remove any DHCPD block for the current cluster on macOS/Linux
-    local_action:
-      module: shell
-      _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}' > '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-  
-  - name: load DHCPD block into memory
-    local_action:
-      module: shell
-      _raw_params: cat '{{ gen_script_folder }}/dhcpd_frag.conf'
-    delegate_to: 127.0.0.1
-    register: vmware_dhcp_control_block
-    become: true
-    run_once: true
-  
-  - name: load DHCPD block into memory
-    local_action:
-      module: shell
-      _raw_params: cat '{{ gen_script_folder }}/dhcpd_frag.conf'
-    delegate_to: 127.0.0.1
-    register: vmware_dhcp_control_block
-    become: true
-    run_once: true
+      - name: stop the VM network on Windows
+        local_action:
+            module: shell
+            _raw_params: "/mnt/c/Windows/System32/net.exe stop vmnetdhcp"
+        delegate_to: 127.0.0.1
+        ignore_errors: true
+        become: true
+        run_once: true
+        when: platform == "windows"
 
-  - name: view DHCPD block
-    debug: msg="{{ vmware_dhcp_control_block.stdout_lines }}"
-    run_once: true
+      - name: stop the VM network on Linux
+        local_action:
+            module: shell
+            _raw_params: "systemctl stop vmware"
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
+        when: platform =="linux"
 
-#  - name: Update Windows vmnet file
-#    local_action:
-#      module: shell
-#      _raw_params: sed -n -i -e '/host VMnet8/r {{ gen_script_folder }}/dhcpd_frag.conf' -e 1x -e '2,${x;p}' -e '${x;p}' {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
-#    delegate_to: 127.0.0.1
-#    become: true
-#    run_once: true
-#    when: platform == "windows"
+      - name: remove any DHCPD block for the current cluster on macOS/Linux
+        local_action:
+            module: shell
+            _raw_params: sed '/### {{ cluster_type }}:{{ cluster_name }}:start/,/### {{ cluster_type }}:{{ cluster_name }}:end/d' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}' > '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
 
-#  - name: Update Windows vmnet file
-#    local_action: 
-#      module: lineinfile
-#      dest: '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
-#      insertbefore: "host VMnet2"
-#      line: "{{ item.line }}"
-#    with_items:  
-#      - "{{ vmware_dhcp_control_block.stdout_lines }}"
-#    run_once: true
-#    when: platform == "windows"
+      - name: load DHCPD block into memory
+        local_action:
+            module: shell
+            _raw_params: cat '{{ gen_script_folder }}/dhcpd_frag.conf'
+        delegate_to: 127.0.0.1
+        register: vmware_dhcp_control_block
+        become: true
+        run_once: true
 
-  - name: add current DHCP block for cluster
-    local_action:
-      module: shell
-      _raw_params: cat {{ gen_script_folder }}/dhcpd_frag.conf >> '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-#    when: platform != "windows"
+      - name: load DHCPD block into memory
+        local_action:
+            module: shell
+            _raw_params: cat '{{ gen_script_folder }}/dhcpd_frag.conf'
+        delegate_to: 127.0.0.1
+        register: vmware_dhcp_control_block
+        become: true
+        run_once: true
 
-  - name: backup current DHCP settings file
-    local_action:
-      module: shell
-      _raw_params: cp '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}.backup'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
+      - name: view DHCPD block
+        debug: msg="{{ vmware_dhcp_control_block.stdout_lines }}"
+        run_once: true
 
-  - name: replace current DHCP settings file
-    local_action:
-      module: shell
-      _raw_params: mv '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
+      #  - name: Update Windows vmnet file
+      #    local_action:
+      #      module: shell
+      #      _raw_params: sed -n -i -e '/host VMnet8/r {{ gen_script_folder }}/dhcpd_frag.conf' -e 1x -e '2,${x;p}' -e '${x;p}' {{ vmware_dhcpd_base_path }}/dhcpd-temp.conf
+      #    delegate_to: 127.0.0.1
+      #    become: true
+      #    run_once: true
+      #    when: platform == "windows"
 
-  - name: start the VM network on macOS
-    local_action:
-      module: shell
-      _raw_params: 'vmnet-cli --start'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-    when: platform == "darwin"
+      #  - name: Update Windows vmnet file
+      #    local_action:
+      #      module: lineinfile
+      #      dest: '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
+      #      insertbefore: "host VMnet2"
+      #      line: "{{ item.line }}"
+      #    with_items:
+      #      - "{{ vmware_dhcp_control_block.stdout_lines }}"
+      #    run_once: true
+      #    when: platform == "windows"
 
-  - name: start the VM network on Windows
-    local_action:
-      module: shell
-      _raw_params: '/mnt/c/Windows/System32/net.exe start vmnetdhcp'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-    when: platform == "windows"
+      - name: add current DHCP block for cluster
+        local_action:
+            module: shell
+            _raw_params: cat {{ gen_script_folder }}/dhcpd_frag.conf >> '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf'
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
+      #    when: platform != "windows"
 
-  - name: start the VM network on Linux
-    local_action:
-      module: shell
-      _raw_params: 'systemctl start vmware'
-    delegate_to: 127.0.0.1
-    become: true
-    run_once: true
-    when: platform == "linux"
-    
-  - name: remove the DHCPD configuration file fragments
-    local_action:
-      module: file
-      path: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
-      state: absent
-    delegate_to: 127.0.0.1
-    
-  - name: start the VMs on macOS/Linux
-    local_action:
-      module: shell
-      _raw_params: vmrun start {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
-    when: platform == "darwin" or platform == "linux"
-    retries: 5
-    delay: 5
-    register: result
-    until: result.rc is defined and result.rc == 0
+      - name: backup current DHCP settings file
+        local_action:
+            module: shell
+            _raw_params: cp '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}.backup'
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
 
-  - name: start the VMs on Windows
-    local_action:
-      module: shell
-      _raw_params: "vmrun.exe start {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
-    when: platform == "windows"
+      - name: replace current DHCP settings file
+        local_action:
+            module: shell
+            _raw_params: mv '{{ vmware_dhcpd_base_path }}/dhcpd-temp.conf' '{{ vmware_dhcpd_base_path }}/{{ vmware_dhcpd_filename }}'
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
 
-  - name: waiting {{ server_static_ip_wait_seconds }} seconds for servers to start up and fetch their permanent ip addresses
-    local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay={{ server_static_ip_wait_seconds }} timeout=600
-    become: false
+      - name: start the VM network on macOS
+        local_action:
+            module: shell
+            _raw_params: '/Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --start'
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
+        when: platform == "darwin"
+
+      - name: start the VM network on Windows
+        local_action:
+            module: shell
+            _raw_params: "/mnt/c/Windows/System32/net.exe start vmnetdhcp"
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
+        when: platform == "windows"
+
+      - name: start the VM network on Linux
+        local_action:
+            module: shell
+            _raw_params: "systemctl start vmware"
+        delegate_to: 127.0.0.1
+        become: true
+        run_once: true
+        when: platform == "linux"
+
+      - name: remove the DHCPD configuration file fragments
+        local_action:
+            module: file
+            path: "{{ gen_script_folder }}/{{ inventory_hostname }}_dhcpd.conf"
+            state: absent
+        delegate_to: 127.0.0.1
+
+      - name: start the VMs on macOS/Linux
+        local_action:
+            module: shell
+            _raw_params: vmrun start {{ desktop_vm_folder }}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui
+        become: false
+        when: platform == "linux" or platform == "darwin"
+        delegate_to: 127.0.0.1
+        retries: 5
+        delay: 5
+        register: result
+        until: result.rc is defined and result.rc == 0
+
+      - name: start the VMs on Windows
+        local_action:
+            module: shell
+            _raw_params: "vmrun.exe start {{ desktop_vm_folder}}/{{ vm_folder_name }}/{{ inventory_hostname }}.vmx nogui"
+        delegate_to: 127.0.0.1
+        become: true
+        when: platform == "windows"
+
+      - name: waiting {{ server_static_ip_wait_seconds }} seconds for servers to start up and fetch their permanent ip addresses
+        ansible.builtin.wait_for: 
+            host={{ inventory_hostname }}
+            port=22
+            state=started
+            delay={{ server_static_ip_wait_seconds }}
+            timeout=300
+        delegate_to: 127.0.0.1
+        become: false
+
+#      - name: Wait for VMs to be available
+#        ansible.builtin.wait_for_connection:
+#        delay: 5
+#        timeout: 120
+
+#      - name: waiting for 10 seconds
+#        pause:
+#            seconds: 10

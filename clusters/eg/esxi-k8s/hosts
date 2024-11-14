@@ -1,5 +1,5 @@
 [all:vars]
-cluster_type=centos-k8s
+cluster_type=rocky9-k8s
 cluster_name=k8s
 remote_user=admin
 
@@ -19,22 +19,9 @@ network_dns=8.8.8.8
 network_dns2=8.8.4.4
 network_dn=onprem.idstudios.io
 
-targetd_server=192.168.1.205
-targetd_server_iqn=iqn.2003-01.org.linux-iscsi.minishift:targetd
-targetd_server_volume_group=vg-targetd
-targetd_server_provisioner_name=iscsi-targetd
-targetd_server_account_credentials=targetd-account
-targetd_server_account_username=admin
-targetd_server_account_password=ciao
-targetd_server_namespace=kube-system
-
-k8s_version=1.14.*
-k8s_knative_version=0.3.0
-k8s_network_cni=canal
 k8s_metallb_address_range=192.168.1.160-192.168.1.179
 k8s_control_plane_uri=k8s-admin-single.onprem.idstudios.io
 k8s_ingress_url=k8s-ingress.onprem.idstudios.io
-k8s_cluster_token=9aeb42.99b7540a5833866a
 
 [k8s_masters]
 k8s-m1 ansible_host=192.168.1.220 

@@ -1,9 +1,0 @@
----
-- name: set RHEL hostname
-  include: hostname.yml
-
-- name: register with satellite server
-  include: register.yml
-
-- name: configure chronyd
-  include: chronyd.yml

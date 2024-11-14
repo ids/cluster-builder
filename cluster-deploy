@@ -1,7 +1,7 @@
 #!/bin/bash
 INVENTORY_FILE=$1
 SERVER_WAIT=90s
-REMOTE_USER=root
+REMOTE_USER=admin
 
 export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 export ANSIBLE_CONFIG=./ansible.cfg
@@ -128,14 +128,14 @@ function desktop_deploy () {
   sudo date
 
   echo "Creating the ${VMWARE_APP} VMs and configuring the network for static IP assignment..."
-  ansible-playbook -i $INVENTORY_FILE ansible/desktop-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}'"
+  ansible-playbook -i $INVENTORY_FILE ansible/desktop-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
     exit 1
   fi
   
   echo "Configuring the ${CLUSTER_TYPE_NAME} Cluster..."
-  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} cluster_type=${CLUSTER_TYPE}"
   if [ $? -ne 0 ]; then
     echo "FAIL: ${VMWARE_APP} ${CLUSTER_TYPE_NAME} creation failed!"
     exit 1
@@ -160,20 +160,6 @@ function cluster_info_display() {
   echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
   echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
-  if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ] || [ "$CLUSTER_TYPE" == "ubuntu-k8s" ]; then
-  if [ "$K8S_VERSION" == "" ]; then
-    K8S_VERSION=default
-  fi
-  if [ "$K8S_CNI" == "" ]; then
-    K8S_CNI=default
-  fi
-  if [ "$K8S_CRI" == "" ]; then
-    K8S_CRI=default
-  fi
-  echo -e " K8s Version     : ${TC}${K8S_VERSION}${NC}"
-  echo -e " K8s CRI         : ${TC}${K8S_CRI}${NC}"
-  echo -e " K8s CNI         : ${TC}${K8S_CNI}${NC}"
-  fi
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
@@ -229,40 +215,9 @@ fi
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
 
-if [ "$CLUSTER_TYPE" == 'centos-dcos' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-dcos-x86_64.ova
-  CLUSTER_TYPE_NAME='DC/OS Cluster'
-  OVA_BUILD_TYPE=centos7-dcos
-  SERVER_WAIT=360s
-  REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'centos-k8s' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos7-x86_64.ova
-  CLUSTER_TYPE_NAME='CentOS 7 Kubernetes'
-  OVA_BUILD_TYPE=centos7
-  REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'centos8-k8s' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-centos8-x86_64.ova
-  CLUSTER_TYPE_NAME='CentOS 8 Kubernetes'
-  OVA_BUILD_TYPE=centos8
-  REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'fedora-k8s' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-fedora-x86_64.ova
-  CLUSTER_TYPE_NAME='Fedora Kubernetes'
-  OVA_BUILD_TYPE=fedora
-  REMOTE_USER=admin
-elif [ "$CLUSTER_TYPE" == 'ubuntu-k8s' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-ubuntu-x86_64.ova
-  CLUSTER_TYPE_NAME='Ubuntu Kubernetes'
-  OVA_BUILD_TYPE=ubuntu
-  REMOTE_USER=sysop
-elif [ "$CLUSTER_TYPE" == 'targetd-server' ]; then
-  OVA_TEMPLATE_FILE=node-packer/output_ovas/targetd-server-x86_64.ova
-  CLUSTER_TYPE_NAME='Targetd iSCSI Storage Appliance'
-  OVA_BUILD_TYPE=targetd-server
-  SERVER_WAIT=90s
-  REMOTE_USER=admin
-fi
-
+OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-x86_64.ova
+CLUSTER_TYPE_NAME='Rocky 9.4 Kubernetes'
+REMOTE_USER=admin
 
 TC=''
 NC=''
@@ -291,7 +246,7 @@ if [ ! -f $OVA_TEMPLATE_FILE ]; then
   echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
   echo "Attempting to build: ${OVA_BUILD_TYPE}"
   cd node-packer
-  bash build $OVA_BUILD_TYPE $CLUSTER_PKG_FOLDER $RHEL_LIC 
+  bash build 
   cd ..
 fi
 
@@ -311,8 +266,6 @@ echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec"
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
-if [ "$CLUSTER_TYPE" == "centos-k8s" ] || [ "$CLUSTER_TYPE" == "centos8-k8s" ] || [ "$CLUSTER_TYPE" == "fedora-k8s" ] || [ "$CLUSTER_TYPE" == "ubuntu-k8s" ]; then
-
 echo -e "The ${TC}kube-config${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
 echo 
 echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces${NC}"
@@ -322,14 +275,6 @@ echo
 echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
 echo
 
-if [[ $K8S_VERSION == 1.12* ]] || [[ $K8S_VERSION == 1.13* ]] || [[ $K8S_VERSION == 1.14* ]]; then
-  echo -e "Open ${TC}http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login${NC}"
-  echo
-else
-  echo -e "Open ${TC}http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login${NC}"
-  echo
-fi
-
 echo -e "Authenticate using the token found in clusters/${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
 echo
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
@@ -337,5 +282,5 @@ echo
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
-fi
+
   

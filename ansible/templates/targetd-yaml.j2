@@ -1,9 +1,0 @@
-password: {{ targetd_server_account_password }}
-
-# defaults below; uncomment and edit
-# if using a thin pool, use <volume group name>/<thin pool name>
-# e.g vg-targetd/pool
-pool_name: {{ targetd_server_volume_group }}
-user: {{ targetd_server_account_username }}
-ssl: false
-target_name: {{ targetd_server_iqn }}

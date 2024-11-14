@@ -1,4 +1,0 @@
-- name: install targetd service and CLI
-  command: "yum install -y targetd targetcli"
-  args:
-    warn: false

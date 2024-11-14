@@ -1,6 +1,27 @@
-- name: install the CNI
-  include: cni.yml
+- name: install calico CNI Operator
+  shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/tigera-operator.yaml
   when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install calico CNI 
+  shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.0/manifests/custom-resources.yaml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install metalLB 
+  shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
+  when: "inventory_hostname == groups['k8s_masters'][0] 
+    and k8s_metallb_address_range is defined"
+
+- name: generate the metalLB pool
+  template:
+    src: templates/k8s-metallb-pool.j2
+    dest: /home/{{ remote_user }}/metallb-pool.yml
+  when: "inventory_hostname == groups['k8s_masters'][0] 
+    and k8s_metallb_address_range is defined" 
+
+- name: install metalLB IP Pool
+  shell: kubectl apply -f /home/{{ remote_user }}/metallb-pool.yml
+  when: "inventory_hostname == groups['k8s_masters'][0] 
+    and k8s_metallb_address_range is defined"
 
 - name: allow the CNI time to deploy
   pause:
