@@ -64,10 +64,10 @@ echo "Setup K8s Repo..."
 sudo tee /etc/yum.repos.d/k8s.repo<<EOF
 [kubernetes] 
 name=Kubernetes 
-baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/ 
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/ 
 enabled=1 
 gpgcheck=1 
-gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key 
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key 
 EOF
 
 echo "Install Kubernetes Binaries..."

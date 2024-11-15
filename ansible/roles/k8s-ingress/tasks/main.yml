@@ -13,7 +13,7 @@
     seconds: 5
 
 - name: wait for metallb 
-  shell: kubectl wait -n metallb-system pod -l app=metallb --for condition=Ready --timeout=600s
+  shell: kubectl wait -n metallb-system pod -l app=metallb --for condition=Ready --timeout={{ pod_readiness_timeout }}
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: generate the metalLB pool

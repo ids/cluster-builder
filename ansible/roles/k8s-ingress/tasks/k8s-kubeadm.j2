@@ -11,7 +11,7 @@ networking:
   serviceSubnet: "10.96.0.0/16"
   podSubnet: "10.244.0.0/16"
   dnsDomain: "cluster.local"
-kubernetesVersion: "{{ kubernetes_version }}"
+kubernetesVersion: "v1.30"
 clusterName: "{{ cluster_name }}"
 ---
 kind: KubeletConfiguration
