@@ -1,8 +1,15 @@
 Cluster Builder
 ===============
-> This project has been deprecated since 2020 and has likely fallen out of date.  A newer cloud based approach is starting up over at [cluster-builder-cloud](https://github.com/ids/cluster-builder-cloud), for those that like to play with `kubeadm`.
 
-[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure  [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) on [Rocky Linux 9](https://rockylinux.org)
+[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure  [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) on [Rocky Linux 9](https://rockylinux.org) with:
+
+- [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
+- [MetalLB](https://metallb.universe.tf) Load Balancer
+- [Longhorn](https://longhorn.io/) PV Storage
+- [NGINX](https://github.com/kubernetes/ingress-nginx) Ingress
+- [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
+
+> Updated for 2024! VMware on macOS still provides the fastest and most accurate way to run and test Kubernetes clusters in development.  And Kubernetes on-premise on ESXi is still a great story.
 
 ## Usage Scenarios
 
@@ -124,12 +131,102 @@ Other settings are fairly self explanatory.
 
 - Make sure that `node-packer/build` is using the correct `authorized_key`.  This should happen automatically, but deployment relies on `passwordless ssh`.
 
+- Watch out for `dockerhub` __rate limits__ if you are doing a lot of deployments, and consider using a `VPN`.
+
 ## Deploying Clusters
 The following command would deploy example cluster from above:
 
 ```
 $ bash cluster-deploy acme/demo-k8s
 ```
+
+When the cluster is deployed a message will be displayed, such as:
+
+```
+------------------------------------------------------------
+SUCCESS: VMware Fusion Rocky 9.4 Kubernetes!
+Deployed in: 10 min 7 sec
+------------------------------------------------------------
+
+The kube-config file can be found at clusters/acme/demo-k8s/kube-config
+
+kubectl --kubeconfig=clusters/acme/demo-k8s/kube-config get pods --all-namespaces
+
+To connect to the Kubernetes Dashboard:
+
+kubectl --kubeconfig=clusters/acme/demo-k8s/kube-config proxy
+
+Then open:
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+Enjoy your Rocky 9.4 Kubernetes!
+
+------------------------------------------------------------
+
+```
+
+At this point your cluster is up and running.
+
+__Longhorn__ can take some time, depending on your network connection, but eventually it will settle and:
+
+```
+ kubectl --kubeconfig=clusters/acme/demo-k8s/kube-config get pods --all-namespaces
+```
+
+Should result in:
+
+```
+NAMESPACE              NAME                                                    READY   STATUS      RESTARTS        AGE
+ingress-nginx          ingress-nginx-admission-create-tg7md                    0/1     Completed   0               12m
+ingress-nginx          ingress-nginx-admission-patch-99lt9                     0/1     Completed   0               12m
+ingress-nginx          ingress-nginx-controller-7f9bbf6ddd-jtgcl               1/1     Running     0               12m
+kube-system            calico-kube-controllers-8d95b6db8-jz4tj                 1/1     Running     1 (2m47s ago)   16m
+kube-system            canal-4mhlf                                             2/2     Running     0               15m
+kube-system            canal-6zgk5                                             2/2     Running     0               16m
+kube-system            canal-zptbs                                             2/2     Running     0               15m
+kube-system            coredns-76f75df574-8mdng                                1/1     Running     0               16m
+kube-system            coredns-76f75df574-rgh2n                                1/1     Running     1 (2m47s ago)   16m
+kube-system            etcd-k8s-m1.vm.idstudios.io                             1/1     Running     0               16m
+kube-system            kube-apiserver-k8s-m1.vm.idstudios.io                   1/1     Running     0               16m
+kube-system            kube-controller-manager-k8s-m1.vm.idstudios.io          1/1     Running     1 (2m47s ago)   16m
+kube-system            kube-proxy-bpv9x                                        1/1     Running     0               15m
+kube-system            kube-proxy-kqtkc                                        1/1     Running     0               15m
+kube-system            kube-proxy-l7qbf                                        1/1     Running     0               16m
+kube-system            kube-scheduler-k8s-m1.vm.idstudios.io                   1/1     Running     1 (2m47s ago)   16m
+kubernetes-dashboard   kubernetes-dashboard-api-67c5cffbb6-xs7dz               1/1     Running     0               12m
+kubernetes-dashboard   kubernetes-dashboard-auth-cf8c45468-4lglm               1/1     Running     0               12m
+kubernetes-dashboard   kubernetes-dashboard-kong-75bb76dd5f-vns4v              1/1     Running     0               12m
+kubernetes-dashboard   kubernetes-dashboard-metrics-scraper-5f645f778c-6pk46   1/1     Running     0               12m
+kubernetes-dashboard   kubernetes-dashboard-web-5bf7668478-52h5t               1/1     Running     0               12m
+longhorn-system        csi-attacher-7966f6d44c-jj5j5                           1/1     Running     5 (4m35s ago)   9m33s
+longhorn-system        csi-attacher-7966f6d44c-qxq4q                           1/1     Running     5 (2m52s ago)   9m33s
+longhorn-system        csi-attacher-7966f6d44c-rwxtj                           1/1     Running     4 (5m34s ago)   9m33s
+longhorn-system        csi-provisioner-c79d98559-8q4l4                         1/1     Running     5 (4m22s ago)   9m33s
+longhorn-system        csi-provisioner-c79d98559-l2hvl                         1/1     Running     4 (2m52s ago)   9m33s
+longhorn-system        csi-provisioner-c79d98559-sh4pv                         1/1     Running     5 (4m12s ago)   9m33s
+longhorn-system        csi-resizer-5885f7bb5f-7m4w2                            1/1     Running     5 (2m52s ago)   9m33s
+longhorn-system        csi-resizer-5885f7bb5f-tm794                            1/1     Running     2 (3m28s ago)   9m33s
+longhorn-system        csi-resizer-5885f7bb5f-wkjgt                            1/1     Running     2 (3m32s ago)   9m33s
+longhorn-system        csi-snapshotter-54946f7f44-vdvcn                        1/1     Running     5 (3m57s ago)   9m33s
+longhorn-system        csi-snapshotter-54946f7f44-wdwqb                        1/1     Running     4 (2m48s ago)   9m33s
+longhorn-system        csi-snapshotter-54946f7f44-xbkx9                        1/1     Running     5 (3m47s ago)   9m33s
+longhorn-system        engine-image-ei-51cc7b9c-4f2g9                          1/1     Running     0               10m
+longhorn-system        engine-image-ei-51cc7b9c-xp94x                          1/1     Running     0               10m
+longhorn-system        instance-manager-7abf2155155ca9be5d4067b024cc0aaa       1/1     Running     0               9m44s
+longhorn-system        instance-manager-b6af5be1cdfb875481def9f9657ab159       1/1     Running     0               9m44s
+longhorn-system        longhorn-csi-plugin-k75b8                               3/3     Running     1 (7m19s ago)   9m33s
+longhorn-system        longhorn-csi-plugin-ls6wm                               3/3     Running     1 (7m12s ago)   9m33s
+longhorn-system        longhorn-driver-deployer-799445c664-tsjjl               1/1     Running     0               12m
+longhorn-system        longhorn-manager-gjplc                                  2/2     Running     0               12m
+longhorn-system        longhorn-manager-qnmhw                                  2/2     Running     0               12m
+longhorn-system        longhorn-ui-757d79dd7f-b8xdw                            1/1     Running     0               12m
+longhorn-system        longhorn-ui-757d79dd7f-qv5g9                            1/1     Running     0               12m
+metallb-system         controller-77676c78d9-5qfhj                             1/1     Running     0               13m
+metallb-system         speaker-f2cq2                                           1/1     Running     1 (2m47s ago)   13m
+metallb-system         speaker-j6675                                           1/1     Running     0               13m
+metallb-system         speaker-kwt6r                                           1/1     Running     0               13m
+```
+
 
 > __Note__ that for all the cluster definition package examples you will need to ensure that the network specified, and DNS names used resolve correctly to the _IP Addresses_ specified in the __hosts__ files.
 > Eg.  
@@ -151,3 +248,9 @@ Use **cluster-control**:
 __Eg.__
 
 	$ bash cluster-control eg/demo-k8s suspend
+
+## Kubernetes Dashboard
+
+`kubectl --kubeconfig <mycluster-kube-config> proxy`
+
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/

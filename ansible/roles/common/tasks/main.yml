@@ -106,3 +106,13 @@
 
 - debug: msg="{{ primary_network_device }}"
   run_once: true  
+
+- name: set pod_readiness_timeout
+  set_fact:
+    pod_readiness_timeout: 600s
+  run_once: true
+  when: pod_readiness_timeout is undefined
+
+- debug: msg="{{ pod_readiness_timeout }}"
+  run_once: true  
+

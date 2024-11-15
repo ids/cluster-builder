@@ -1,15 +1,12 @@
 - name: install Dashboard Helm Repo
-  become: false
-  shell: helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+  shell: /usr/local/bin/helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: install Kubernetes Dashboard
-  become: false
-  shell: helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+  shell: /usr/local/bin/helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
   when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: list all running pods
-  become: false
   shell: kubectl get pods --all-namespaces
   register: final_pods_out
   when: "inventory_hostname == groups['k8s_masters'][0]"

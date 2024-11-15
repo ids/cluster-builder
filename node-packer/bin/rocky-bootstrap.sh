@@ -17,6 +17,9 @@ sudo dnf -y install mlocate net-tools unzip wget sudo tar xz curl bind-utils sed
 echo "Install base dependencies..."
 sudo dnf install -y python3 python3-devel python3-pip libffi-devel openssl-devel gcc 
 
+echo "Install iscsiadm..."
+sudo dnf install -y iscsi-initiator-utils
+
 echo "Install ansible..."
 sudo dnf -y install epel-release
 sudo dnf -y install ansible
@@ -71,6 +74,12 @@ echo "Install Kubernetes Binaries..."
 sudo dnf makecache
 sudo dnf install -y {kubelet,kubeadm,kubectl} --disableexcludes=kubernetes
 #sudo yum -y install kubeadm kubelet kubectl
+
+echo "Install Helm..."
+#sudo dnf install -y helm 
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
 
 echo "Delete the files ks.cfg..."
 sudo rm -f /root/anaconda-ks.cfg /root/original-ks.cfg

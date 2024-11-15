@@ -8,3 +8,4 @@ packer_cache
 *.retry
 .vscode
 
+cluster-node

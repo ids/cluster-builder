@@ -1,6 +1,6 @@
 - name: generate the kubeadm yaml configuration
   template:
-    src: templates/k8s-kubeadm2.j2
+    src: templates/k8s-kubeadm.j2
     dest: /home/{{ remote_user }}/kube-adm.yml
 
 - name: ensure the kubelet is enabled

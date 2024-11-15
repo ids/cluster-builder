@@ -274,9 +274,10 @@ echo -e "To connect to the Kubernetes Dashboard:"
 echo
 echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
 echo
-
-echo -e "Authenticate using the token found in clusters/${TC}${CLUSTER_PKG_FOLDER}/web-ui-token${NC}"
+echo -e "Then open:"
+echo -e "${TC}http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/${NC}"
 echo
+
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
 echo
 echo -e "${TC}------------------------------------------------------------${NC}"
