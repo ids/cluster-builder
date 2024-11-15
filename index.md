@@ -18,7 +18,7 @@ Using only freely available tools and only an annotated Ansible inventory file [
 
 [cluster-builder](https://github.com/ids/cluster-builder) uses [Packer](https://www.packer.io), [Ansible](https://www.ansible.com),  Bash and VMware tools to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) into VMware environments.  
 
-[cluster-builder](https://github.com/ids/cluster-builder) has been updated for __2024__ with `Kubernetes 1.29` and `rocky9-k8s`, using `Rocky Linux 9.4` with:
+[cluster-builder](https://github.com/ids/cluster-builder) has been updated for __2024__ with `Kubernetes 1.30` and `rocky9-k8s`, using `Rocky Linux 9.4` with:
 
 - [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
 - [MetalLB](https://metallb.universe.tf) Load Balancer
