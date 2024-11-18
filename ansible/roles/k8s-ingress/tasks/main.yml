@@ -19,12 +19,12 @@
 - name: generate the metalLB pool
   template:
     src: templates/k8s-metallb-pool.j2
-    dest: /home/{{ remote_user }}/metallb-pool.yml
+    dest: "{{ target_dest_folder }}/metallb-pool.yml"
   when: "inventory_hostname == groups['k8s_masters'][0] 
     and k8s_metallb_address_range is defined" 
 
 - name: install metalLB IP Pool
-  shell: kubectl apply -f /home/{{ remote_user }}/metallb-pool.yml
+  shell: kubectl apply -f {{ target_dest_folder }}/metallb-pool.yml
   when: "inventory_hostname == groups['k8s_masters'][0] 
     and k8s_metallb_address_range is defined"
 

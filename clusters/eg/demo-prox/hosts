@@ -1,0 +1,39 @@
+
+[all:vars]
+cluster_type=proxmox-k8s
+cluster_name=k8s-prox
+remote_user=root
+
+proxmox_user=root
+proxmox_host=192.168.1.167
+
+ansible_python_interpreter=/usr/bin/python3
+
+deploy_target=proxmox
+build_template=false
+
+network_mask=255.255.255.0
+network_gateway=192.168.1.1
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=home.idstudios.io
+
+k8s_metallb_address_range=192.168.1.7-192.168.1.10
+
+k8s_control_plane_uri=k8s-m1.home.idstudios.io
+k8s_ingress_url=k8s-ingress.home.idstudios.io
+
+pod_readiness_timeout=600s
+use_longhorn_storage=false
+
+[proxmox_hosts]
+192.168.1.167 ansible_ssh_user=root 
+
+[k8s_masters]
+k8s-m1.home.idstudios.io ansible_host=192.168.1.11 numvcpus=2 memsize=4096
+
+[k8s_workers]
+k8s-w1.home.idstudios.io ansible_host=192.168.1.14 numvcpus=4 memsize=6128
+k8s-w2.home.idstudios.io ansible_host=192.168.1.15 numvcpus=4 memsize=6128
+
+

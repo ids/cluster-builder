@@ -9,12 +9,14 @@ Cluster Builder
 - [NGINX](https://github.com/kubernetes/ingress-nginx) Ingress
 - [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 
-> Updated for 2024! VMware on macOS still provides the fastest and most accurate way to run and test Kubernetes clusters in development.  And Kubernetes on-premise on ESXi is still a great story.
+> Updated for 2024! 
+
+> Broadcom's choice to end Free ESXI is the final nail in VMware's coffin.  The good news is that there are better choices anyway, such as [Proxmox VE](https://www.proxmox.com/en/).  Having no way to test against ESXi, I wondered what everyone was doing these days in the home lab, and sure enough, there are better choices. [XCP-ng]() was also evaluated but `proxmox` had the polish, and `AWS` did switch to `KVM`.
 
 ## Usage Scenarios
 
 - Deploy Kubernetes clusters locally to VMware Fusion or VMware Workstation
-- Deploy Kubernetes clusters to ESXi servers directly
+- Deploy Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) servers directly (work in progress)
 
 A simple `ansible hosts` file describes the size and shape of the cluster, and `cluster-builder` does all the rest!
 
@@ -23,7 +25,7 @@ A simple `ansible hosts` file describes the size and shape of the cluster, and `
 #### macOS / Linux
 
 * VMware Fusion Pro / Workstation Pro
-* VMware ESXi 6.5+ (optional)
+* Proxmox VE Host(s) (optional)
 * VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
 * Ansible `brew install/upgrade ansible`
 * Hashicorp [Packer](https://www.packer.io/downloads.html)
@@ -43,14 +45,10 @@ A simple `ansible hosts` file describes the size and shape of the cluster, and `
 4. Provision DNS entries
 5. Follow the steps in the readme below to start deploying clusters!
 
-#### ESXi/vSphere
+#### Proxmox VE
 
 1. Ensure you have one or more VMware ESXi hypervisors available.
-2. Configure the ESXi hypervisors to support __passwordless SSH__, and the ansible host from which you deply is in the `authorized_keys`  (and make sure SSH is enabled for the ESXi hosts).
-2. Make sure all required software is installed and in the __PATH__:
-	- `vmrun`
-	- `ansible`
-	- `ovftool`
+2. Configure the Proxmox Host(s) to support __passwordless SSH__, and the ansible host from which you deply is in the `authorized_keys`  (and make sure SSH is enabled for the ESXi hosts).
 4. Make sure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`.
 5. Provision DNS entries
 6. Follow the steps in the readme below to start deploying clusters!
@@ -77,7 +75,7 @@ clusters
 	 - hosts
 ```
 
-The files are as follows:
+The following is an example of a `VMware fusion` deployment:
 
 ```
 [all:vars]
@@ -87,7 +85,7 @@ remote_user=admin
 
 ansible_python_interpreter=/usr/bin/python3
 
-vmware_target=fusion
+deploy_target=fusion
 desktop_vm_folder="../virtuals"
 
 desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux
@@ -117,11 +115,51 @@ k8s-w1.vm.idstudios.io numvcpus=4 memsize=4096
 k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
 
 ```
-
-- The `cluster_type` is currently `rocky9-k8s`.
-- `remote_user` is always `admin`, as this is configured in the packer build.
+- `deploy_target` is either `fusion`, `workstation` (windows), or `proxmox`
+- The `cluster_type` is currently `rocky9-k8s` or `proxmox-k8s` which is Ubuntu 24.04 LTS.
+- `remote_user` is `admin` locally, or `root` for `proxmox`.
 - `desktop_vm_folder` places the k8s VM files in `./virtuals` by default.
 - `k8s_metallb_address_range` defines a set of address to for the `MetalLB`
+
+This is an example of a `proxmox` deployment:
+
+```
+[all:vars]
+cluster_type=proxmox-k8s
+cluster_name=k8s-prox
+remote_user=root
+
+ansible_python_interpreter=/usr/bin/python3
+
+deploy_target=proxmox
+build_template=true
+
+network_mask=255.255.255.0
+network_gateway=192.168.1.1
+network_dns=8.8.8.8
+network_dns2=8.8.4.4
+network_dn=home.idstudios.io
+
+k8s_metallb_address_range=192.168.1.7-192.168.1.10
+
+k8s_control_plane_uri=k8s-m1.home.idstudios.io
+k8s_ingress_url=k8s-ingress.home.idstudios.io
+
+pod_readiness_timeout=600s
+use_longhorn_storage=false
+
+[proxmox_hosts]
+192.168.1.167 ansible_ssh_user=root 
+
+[k8s_masters]
+k8s-m1.home.idstudios.io ansible_host=192.168.1.11 numvcpus=2 memsize=4096
+
+[k8s_workers]
+k8s-w1.home.idstudios.io ansible_host=192.168.1.14 numvcpus=4 memsize=6128
+k8s-w2.home.idstudios.io ansible_host=192.168.1.15 numvcpus=4 memsize=6128
+```
+
+Once a template has been built on `proxmox`, setting the `build_template` to `false` will re-use the existing template.
 
 Other settings are fairly self explanatory.
 

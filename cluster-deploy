@@ -1,133 +1,17 @@
 #!/bin/bash
 INVENTORY_FILE=$1
 SERVER_WAIT=90s
-REMOTE_USER=admin
+REMOTE_USER=root
 
 export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
 export ANSIBLE_CONFIG=./ansible.cfg
-
-function esxi_deploy () {
-  
-  echo "Cluster node password(s) will be changed from their initial default values at the end of the deployment."
-  echo "These passwords are only used in emergency situations as all access should be via passwordless SSH via the cluster management control station or jump box."
-  echo
-  echo "Verifying passlib is installed (you may be prompted for a SUDO password)..."
-  sudo -H pip3 install passlib
-
-  if [ -z $CB_NODE_ROOT_PASSWORD ]; then
-    echo
-    echo "Note that you can also provide the node ROOT password by creating a .passwords ENV file in the cluster package folder with the export CB_NODE_ROOT_PASSWORD"
-    echo
-    read -s -p "Enter the new Cluster node root password: " NEW_PASSWORD
-    echo
-    read -s -p "Confirm NEW root password: " CONFIRM_PASSWORD
-    echo
-    if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
-      echo
-      echo "** Passwords do not match!"
-      exit 1
-    else
-      CB_NODE_ROOT_PASSWORD=$NEW_PASSWORD
-    fi 
-  else
-    echo -e "Using cluster node root password found in package .passwords"
-  fi
-  PYTHON_CMD="from passlib.hash import sha512_crypt; print(sha512_crypt.hash('${CB_NODE_ROOT_PASSWORD}'))"
-  TARGET_ROOT_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
-  
-  if [ "$REMOTE_USER" != "root" ] && [ ! -z $REMOTE_USER ]; then 
-    if [ -z $CB_NODE_ADMIN_PASSWORD ]; then
-      echo
-      echo "Note that you can also provide the node ADMIN password by creating a .passwords ENV file in the cluster package folder  with the export CB_NODE_ADMIN_PASSWORD"
-      echo
-      read -s -p "Enter the new Cluster node ${REMOTE_USER} password: " NEW_PASSWORD
-      echo
-      read -s -p "Confirm NEW ${REMOTE_USER} password: " CONFIRM_PASSWORD
-      echo
-      if [ "$NEW_PASSWORD" != "$CONFIRM_PASSWORD" ]; then
-        echo
-        echo "** Passwords do not match!"
-        exit 1
-      else
-        CB_NODE_ADMIN_PASSWORD=$NEW_PASSWORD
-      fi 
-    else
-      echo -e "Using cluster node ${REMOTE_USER} password found in package .passwords"
-    fi
-    PYTHON_CMD="from passlib.hash import sha512_crypt; print(sha512_crypt.hash('${CB_NODE_ADMIN_PASSWORD}'))"
-    TARGET_REMOTE_USER_PASSWORD_HASH=`sudo python3 -c "${PYTHON_CMD}"`
-  fi 
-
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-start.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-  if [ $? -ne 0 ]; then
-   echo "There is a problem with the ESXi init-pre script"
-   exit 1
-  fi
-
-  bash $TEMP_SCRIPT_PATH/esxi-create-vms $CB_ESXI_USER_PASSWORD
-  if [ $? -ne 0 ]; then
-    echo "There was a problem deploying the VMs using ovftool"
-    exit 1
-  fi
-
-  echo "Finishing up ESXi VM Configuration..."
-  ansible-playbook -i $INVENTORY_FILE ansible/esxi-create-vms-finish.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-  if [ $? -ne 0 ]; then
-   echo "There was a problem in the ESXi deployment finalization script"
-   exit 1
-  fi
-  
-  echo -e "Assigning VM static IPs"
-  bash $TEMP_SCRIPT_PATH/esxi-set-statics
-  
-  echo "Waiting for the VMs to come up with their permanent IPs..."
-  sleep 5s
-  ansible-playbook -i $INVENTORY_FILE ansible/wait-for-vms.yml 
-  if [ $? -ne 0 ]; then
-    echo "FAIL: All the VMs were not responsive at their permanent IPs within the timeout period."
-    exit 1
-  fi
-
-  rm $TEMP_SCRIPT_PATH/*_static.sh
-  rm $TEMP_SCRIPT_PATH/esxi-create-vms
-  rm $TEMP_SCRIPT_PATH/esxi-set-statics
-  
-  ansible all -i $INVENTORY_FILE -m ping -u $REMOTE_USER
-  if [ $? -ne 0 ]; then
-    echo "FAIL: ${CLUSTER_TYPE_NAME} host access verification failed!"
-    exit 1
-  fi
-  
-  echo
-  echo -e "Building cluster: ${CLUSTER_TYPE_NAME}"
-  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml  --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER}"
-  if [ $? -ne 0 ]; then
-    echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
-    exit 1
-  fi
-
-  echo "Change the initial ROOT password on VM Nodes..."
-  bash cluster-passwd $CLUSTER_PKG_FOLDER root $TARGET_ROOT_PASSWORD_HASH
-
-  if [ "$REMOTE_USER" != "root" ] && [ ! -z "${REMOTE_USER}" ]; then 
-    echo "Change remote user [${REMOTE_USER}] password on VM Nodes..."
-    bash cluster-passwd $CLUSTER_PKG_FOLDER $REMOTE_USER $TARGET_REMOTE_USER_PASSWORD_HASH
-  fi 
-
-  if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
-    bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
-  fi
-
-  echo -e "${TC}------------------------------------------------------------${NC}"
-  echo -e "${TC}SUCCESS${NC}: ${CLUSTER_TYPE_NAME}!"
-}
 
 function desktop_deploy () {
 
   echo "Validating SUDO session (Enter local SUDO password for VMware network management if prompted)"
   sudo date
 
-  echo "Creating the ${VMWARE_APP} VMs and configuring the network for static IP assignment..."
+  echo "Creating the ${VIRT_APP} VMs and configuring the network for static IP assignment..."
   ansible-playbook -i $INVENTORY_FILE ansible/desktop-create-vms.yml --extra-vars "ova_template=${OVA_TEMPLATE_FILE} cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VMs"
@@ -137,7 +21,7 @@ function desktop_deploy () {
   echo "Configuring the ${CLUSTER_TYPE_NAME} Cluster..."
   ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} cluster_type=${CLUSTER_TYPE}"
   if [ $? -ne 0 ]; then
-    echo "FAIL: ${VMWARE_APP} ${CLUSTER_TYPE_NAME} creation failed!"
+    echo "FAIL: ${VIRT_APP} ${CLUSTER_TYPE_NAME} creation failed!"
     exit 1
   fi
 
@@ -146,7 +30,41 @@ function desktop_deploy () {
   fi 
 
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${VMWARE_APP} ${CLUSTER_TYPE_NAME}!"
+  echo "SUCCESS: ${VIRT_APP} ${CLUSTER_TYPE_NAME}!"
+
+}
+
+function proxmox_deploy () {
+
+  if [ "$BUILD_TEMPLATE" == "true" ]; then
+    echo "Deploying the Proxmox VM Template..."
+    ansible-playbook -i $INVENTORY_FILE ansible/proxmox-deploy-template.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
+    if [ $? -ne 0 ]; then
+      echo "There was a problem deploying the VM Template to Proxmox VE"
+      exit 1
+    fi
+  fi
+
+  echo "Creating the Proxmox VMs and configuring the network for static IP assignment..."
+  ansible-playbook -i $INVENTORY_FILE ansible/proxmox-deploy-cluster.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
+  if [ $? -ne 0 ]; then
+    echo "There was a problem creating the VM cluster in Proxmox VE"
+    exit 1
+  fi
+
+  echo "Configuring the ${CLUSTER_TYPE_NAME} Cluster..."
+  ansible-playbook -i $INVENTORY_FILE ansible/$CLUSTER_TYPE.yml --extra-vars="cluster_pkg_folder=${CLUSTER_PKG_FOLDER} cluster_type=${CLUSTER_TYPE}"
+  if [ $? -ne 0 ]; then
+    echo "FAIL: ${CLUSTER_TYPE_NAME} creation failed!"
+    exit 1
+  fi
+
+  if [ -f clusters/$CLUSTER_PKG_FOLDER/test-cluster ]; then
+    bash clusters/$CLUSTER_PKG_FOLDER/test-cluster
+  fi 
+
+  echo -e "${TC}------------------------------------------------------------${NC}"
+  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
 
 }
 
@@ -159,7 +77,7 @@ function cluster_info_display() {
   echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
   echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
-  echo -e " VMware Target   : ${TC}${VMWARE_TARGET}${NC}"
+  echo -e " VMware Target   : ${TC}${DEPLOY_TARGET}${NC}"
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
@@ -167,11 +85,12 @@ function cluster_info_display() {
 }
 
 PLATFORM=`uname -ra`
-VMWARE_APP="VMware Workstation"
+VIRT_APP="VMware Workstation"
 if [[ $PLATFORM == *"Microsoft"* ]]; then 
+  VIRT_APP="VMware Fusion"
   export ANSIBLE_CONFIG=$PWD/ansible.cfg
 elif [[ $PLATFORM == *"Darwin"* ]]; then
-  VMWARE_APP="VMware Fusion"
+  VIRT_APP="VMware Fusion"
 fi
 
 if [ -z "${INVENTORY_FILE}" ]; then
@@ -187,7 +106,8 @@ if [ ! -f $INVENTORY_FILE ]; then
 fi
 
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+BUILD_TEMPLATE=`sed -n '/^build_template=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+DEPLOY_TARGET=`sed -n '/^deploy_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
@@ -214,10 +134,12 @@ if [ -f clusters/$CLUSTER_PKG_FOLDER/.passwords ]; then
 fi
 
 TEMP_SCRIPT_PATH=./tmp/$CLUSTER_PKG_FOLDER
-
-OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-x86_64.ova
-CLUSTER_TYPE_NAME='Rocky 9.4 Kubernetes'
-REMOTE_USER=admin
+if [ "$DEPLOY_TARGET" == "proxmox" ]; then
+  CLUSTER_TYPE_NAME='Proxmox VE Ubuntu 24.04 Kubernetes'
+else
+  OVA_TEMPLATE_FILE=node-packer/output_ovas/cluster-node-x86_64.ova
+  CLUSTER_TYPE_NAME='Rocky 9.4 Kubernetes'
+fi
 
 TC=''
 NC=''
@@ -228,37 +150,25 @@ fi
 
 cluster_info_display
 
-if [ "$VMWARE_TARGET" == "esxi" ]; then
-  if [ -z $CB_ESXI_USER_PASSWORD ]; then
-    echo "The ESXi user password is used by ovftool to deploy OVA node images to ESXi hypervisors."
-    echo "You can also provide this by creating a .passwords ENV file in the cluster package folder with the export CB_ESXI_USER_PASSWORD"
-    echo 
-    read -s -p "Enter ESXi root password for ovftool: " OVF_PASSWORD
-    CB_ESXI_USER_PASSWORD=$OVF_PASSWORD
-  else
-    echo -e "Using ESXI root password for ovftool found in package .passwords"
-  fi
-fi
-
 START_TIME=$SECONDS
 
-if [ ! -f $OVA_TEMPLATE_FILE ]; then
-  echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
-  echo "Attempting to build: ${OVA_BUILD_TYPE}"
-  cd node-packer
-  bash build 
-  cd ..
-fi
+if [ "$DEPLOY_TARGET" != "proxmox" ]; then
+  if [ ! -f $OVA_TEMPLATE_FILE ]; then
+    echo "Unable to locate template file @: ${OVA_TEMPLATE_FILE}"
+    echo "Attempting to build: ${OVA_BUILD_TYPE}"
+    cd node-packer
+    bash build 
+    cd ..
+  fi
 
-if [ ! -f $OVA_TEMPLATE_FILE ]; then
-  echo "Unable to build template ova: ${OVA_BUILD_TYPE}"
-  exit 1
-fi
+  if [ ! -f $OVA_TEMPLATE_FILE ]; then
+    echo "Unable to build template ova: ${OVA_BUILD_TYPE}"
+    exit 1
+  fi
 
-if [ "$VMWARE_TARGET" == "esxi" ]; then
-  esxi_deploy
-elif [ "$VMWARE_TARGET" == "fusion" ] || [ "$VMWARE_TARGET" == "desktop" ]; then
   desktop_deploy
+else
+  proxmox_deploy
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))

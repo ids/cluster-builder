@@ -1,52 +1,51 @@
 - name: generate the kubeadm yaml configuration
   template:
     src: templates/k8s-kubeadm.j2
-    dest: /home/{{ remote_user }}/kube-adm.yml
+    dest: "{{ target_dest_folder }}/kube-adm.yml"
 
 - name: ensure the kubelet is enabled
   shell: sudo systemctl enable kubelet
   become: true
 
 - name: initialize cluster on first master
-  shell: "sudo kubeadm init --config /home/{{ remote_user }}/kube-adm.yml --upload-certs"
+  shell: "sudo kubeadm init --config {{ target_dest_folder }}/kube-adm.yml --upload-certs"
   ignore_errors: false
-  become: true
 
 - name: get worker join command
   shell: "kubeadm token create --print-join-command"
   register: kubeadm_join_cmd
-  become: true
 
 - name: kubeadm worker join command
   debug: msg="{{ kubeadm_join_cmd.stdout }}"
 
-- name: export worker join command to /home/{{ remote_user }}/join_cmd
-  shell: "kubeadm token create --print-join-command > /home/{{ remote_user }}/join_cmd "
-  become: true
+- name: export worker join command to {{ target_dest_folder }}/join_cmd
+  shell: "kubeadm token create --print-join-command > /root/join_cmd "
+  when: "remote_user == 'root'"
+
+- name: export worker join command to {{ target_dest_folder }}/join_cmd
+  shell: "kubeadm token create --print-join-command > {{ target_dest_folder }}/join_cmd "
+  when: "remote_user != 'root'"
 
 - name: setup kubectl configuration
   shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
 
 - name: fetch the join_cmd file
   fetch:
-    src: /home/{{ remote_user }}/join_cmd
+    src: "{{ target_dest_folder }}/join_cmd"
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
-  become: true   
 
 - name: fetch the admin.conf file
   fetch:
     src: /etc/kubernetes/admin.conf
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
-  become: true   
 
 - name: fetch the kube config from the first master
   fetch:
     src: /etc/kubernetes/admin.conf
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
     flat: yes     
-  become: true   
 
 - name: get master node status
   shell: kubectl get nodes

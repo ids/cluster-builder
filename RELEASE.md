@@ -86,7 +86,7 @@ v19.09
 
 __Old__
 ```
-vmware_target=fusion
+deploy_target=fusion
 fusion_vm_folder="../virtuals"
 
 fusion_net="vmnet2"         # this should be vmnet8 for Windows and Linux
@@ -95,7 +95,7 @@ fusion_net_type="custom"    # this should be nat for Windows and Linux
 
 __New__
 ```
-vmware_target=desktop
+deploy_target=desktop
 desktop_vm_folder="../virtuals"
 
 desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux

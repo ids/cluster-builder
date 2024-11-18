@@ -47,11 +47,11 @@ if [[ $PLATFORM == *"Microsoft"* ]]; then
 fi 
 
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-VMWARE_TARGET=`sed -n '/^vmware_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+DEPLOY_TARGET=`sed -n '/^deploy_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
-if [ "$VMWARE_TARGET" == "fusion" ]; then
-  VMWARE_TARGET=desktop
+if [ "$DEPLOY_TARGET" == "fusion" ]; then
+  DEPLOY_TARGET=desktop
 fi
 
 if [ "$ACTION" == "destroy" ] && [ "$CLUSTER_PROTECTED" == "true" ]; then
@@ -64,8 +64,9 @@ if [ "$ACTION" == "destroy" ] && [ "$CLUSTER_PROTECTED" == "true" ]; then
 fi  
 
 if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
-  ansible-playbook -i $INVENTORY_FILE ansible/$VMWARE_TARGET-control-vms.yml --e "vm_action=$ACTION"
-  if [ "$VMWARE_TARGET" == "desktop" ]; then 
+  echo "running ansible/${DEPLOY_TARGET}-control-vms.yml"
+  ansible-playbook -i $INVENTORY_FILE ansible/$DEPLOY_TARGET-control-vms.yml --e "vm_action=$ACTION"
+  if [ "$DEPLOY_TARGET" == "desktop" ]; then 
     ${VMRUN_CMD} list
   fi
 else

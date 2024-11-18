@@ -5,7 +5,7 @@ remote_user=admin
 
 ansible_python_interpreter=/usr/bin/python3
 
-vmware_target=desktop
+deploy_target=desktop
 desktop_vm_folder="../virtuals"
 
 desktop_net="vmnet2"         # this should be vmnet8 for Windows and Linux

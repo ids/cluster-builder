@@ -1,0 +1,49 @@
+---
+- hosts: k8s_masters:k8s_workers
+  remote_user: root
+  gather_facts: false
+  tasks:  
+
+  - name: scan the VMs for the VM ID
+    local_action:
+      module: shell
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} qm list | grep {{ inventory_hostname }} | awk '{print $1}'
+    register: vm_id
+  
+  - debug: msg="{{ vm_id.stdout }}"
+
+  - name: start the VMs
+    local_action:
+      module: shell
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} qm start {{ vm_id.stdout }}
+    when: vm_id.stdout is defined and vm_action == 'start'
+    register: result
+    until: result.rc is defined and result.rc == 0
+
+  - name: stop the VMs
+    local_action:
+      module: shell
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} qm shutdown {{ vm_id.stdout }}
+    when: vm_id.stdout is defined and vm_action == 'stop'
+    register: result
+    until: result.rc is defined and result.rc == 0
+
+  - name: suspend the VMs
+    local_action:
+      module: shell
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} qm suspend {{ vm_id.stdout}}
+    when: vm_id.stdout is defined and vm_action == 'suspend'
+
+  - name: kill the VMs 
+    local_action:
+      module: shell
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} qm stop {{ vm_id.stdout }}
+    ignore_errors: true
+    when: vm_id.stdout is defined and vm_action == 'destroy'
+  
+  - name: destroy the VMs 
+    local_action:
+      module: shell
+      _raw_params: ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} qm destroy {{ vm_id.stdout }}
+    when: vm_id.stdout is defined and vm_action == 'destroy'
+

@@ -1,4 +1,7 @@
 # Cluster Builder Node Packer
+
+> Proxmox doesn't use packer at all, so this section is only useful for VMware desktop builds.  For Proxmox there are ansible scripts that will build the node template on the Proxmox host(s) directly using `cloud-init`, very much in the style of a cloud provider.  A lot cleaner then the `ova` template model.
+
 Packer builds VMware cluster nodes for use by `cluster-builder`.
 
 > Note: To save time you may want to seed the __iso__ folder with `Rocky-94-x86_64-minimal.iso`.

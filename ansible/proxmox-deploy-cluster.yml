@@ -1,0 +1,18 @@
+---
+- hosts: proxmox_hosts
+  remote_user: root
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Set core vmid facts
+      set_fact:
+          template_vmid: 999
+          base_cluster_vmid: 1000
+    - name: Create the cluster deployment script
+      template:
+          src: ./templates/deploy-ubuntu-cluster.j2
+          dest: /root/deploy-{{ cluster_name }}.sh
+          mode: "0755"
+    - name: Deploy the cluster VMs
+      shell: /root/deploy-{{ cluster_name }}.sh
+

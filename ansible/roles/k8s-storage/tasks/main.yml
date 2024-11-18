@@ -1,3 +1,3 @@
 - name: install Longhorn
   shell: kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/deploy/longhorn.yaml
-  when: "inventory_hostname == groups['k8s_masters'][0]"
+  when: "inventory_hostname == groups['k8s_masters'][0] and use_longhorn_storage == true"
