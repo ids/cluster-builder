@@ -26,14 +26,24 @@ A simple `ansible hosts` file describes the size and shape of the cluster, and `
 
 #### macOS / Linux
 
-* VMware Fusion Pro / Workstation Pro
-* Proxmox VE Host(s) (optional)
-* VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH
+For __VMware Fusion/Desktop__ local workstation deployment:
+
+* VMware Fusion Pro / Workstation Pro 
+* VMware's [ovftool](https://my.vmware.com/web/vmware/details?productId=614&downloadGroup=OVFTOOL420) in $PATH 
 * Ansible `brew install/upgrade ansible`
-* Hashicorp [Packer](https://www.packer.io/downloads.html)
+* Hashicorp [Packer](https://www.packer.io/downloads.html) 
 * __kubectl__ (Kubernetes - `brew install/upgrade kubernetes-cli`)
 * Docker Desktop for Mac or __docker-ce__ 
 * Python3 and `pip3`
+
+For __Proxmox VE__ remote deployment:
+
+* Proxmox VE Host(s)
+* Ansible `brew install/upgrade ansible`
+* __kubectl__ (Kubernetes - `brew install/upgrade kubernetes-cli`)
+* Docker Desktop for Mac or __docker-ce__ 
+* Python3 and `pip3`
+
 ### Quick Start Steps
 
 #### Local Workstation
