@@ -53,17 +53,16 @@ For __Proxmox VE__ remote deployment:
 	- `vmrun`
 	- `ansible`
 	- `ovftool`
-3. Make sure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`.
+3. Make sure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`, as this will be built int the `Packer` node template as the `authorized_keys` for __passwordless SSH__ to the node
 4. Provision DNS entries
-5. Follow the steps in the readme below to start deploying clusters!
+5. Follow the steps in the readme below to start deploying clusters
 
 #### Proxmox VE
 
-1. Ensure you have one or more [Proxmox VE](https://www.proxmox.com/en/proxmox-virtual-environment/overview) hypervisors available.
-2. Configure the Proxmox Host(s) to support __passwordless SSH__, and the ansible host from which you deply is in the `authorized_keys`  (and make sure SSH is enabled for the ESXi hosts).
-4. Make sure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`.
-5. Provision DNS entries
-6. Follow the steps in the readme below to start deploying clusters!
+1. Ensure you have one or more [Proxmox VE](https://www.proxmox.com/en/proxmox-virtual-environment/overview) hypervisors available
+2. Configure the Proxmox Host(s) to support __passwordless SSH__, and the ansible host from which you deply is in the `authorized_keys`  (and make sure SSH is enabled for the ESXi hosts)
+3. Provision DNS entries for each cluster node and ensure the resolve
+4. Follow the steps in the readme below to start deploying clusters
 
 ### Cluster Definition Packages
 
