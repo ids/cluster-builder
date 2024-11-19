@@ -1,18 +1,101 @@
 ---
-- hosts: proxmox_hosts
+- hosts: k8s_masters:k8s_workers
   remote_user: root
-  become: true
   gather_facts: false
   tasks:
-    - name: Set core vmid facts
-      set_fact:
-          template_vmid: 999
-          base_cluster_vmid: 1000
-    - name: Create the cluster deployment script
-      template:
-          src: ./templates/deploy-ubuntu-cluster.j2
-          dest: /root/deploy-{{ cluster_name }}.sh
-          mode: "0755"
-    - name: Deploy the cluster VMs
-      shell: /root/deploy-{{ cluster_name }}.sh
+    - name: stop existing vm
+      ignore_errors: true
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm stop {{ vmid }} 
+    
+    - name: destroy existing vm
+      ignore_errors: true
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm destroy {{ vmid }}
+
+- hosts: k8s_masters:k8s_workers
+  remote_user: root
+  gather_facts: false
+  serial: 1
+  tasks:
+    - name: clone the template
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm clone {{ template_vmid }} {{ vmid }}
+
+    - name: set the node name
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm set {{ vmid }} --name {{ inventory_hostname }}
+
+    - name: set the static ip for the node
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm set {{ vmid }} --ipconfig0 'ip={{ ansible_host }}/24,gw={{ network_gateway }}'
+
+    - name: configure the node vm CPU
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm set {{ vmid }} --cores {{ numvcpus }}
+
+    - name: configure the node network nameserver
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm set {{ vmid }} --nameserver '8.8.8.8' 
+
+    - name: configure the node vm memory
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm set {{ vmid }} --memory {{ memsize }}
+
+    
+    - name: start the vm for cloud-init regen
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm start {{ vmid }} 
+
+    - name: wait for the node cloud-init to complete and shutdown
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm wait {{ vmid }} 
+
+    - name: start the node
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm start {{ vmid }} 
+
+    - name: list the running vms
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm list 
+      register: vm_list
+    
+    - debug: msg="{{ vm_list.stdout_lines }}"
+
 

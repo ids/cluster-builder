@@ -1,7 +1,7 @@
 Cluster Builder
 ===============
 
-[Ansible](https://www.ansible.com/) and [Packer](https://www.packer.io) IaC() scripts to configure  [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) on [Rocky Linux 9](https://rockylinux.org) with:
+[Ansible](https://www.ansible.com/) scripts to configure  [KubeAdm Stock Kubernetes](https://kubernetes.io/docs/setup/independent/) with:
 
 - [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
 - [MetalLB](https://metallb.universe.tf) Load Balancer
@@ -11,14 +11,16 @@ Cluster Builder
 
 > Updated for 2024! 
 
-> Broadcom's choice to end Free ESXI is the final nail in VMware's coffin.  The good news is that there are better choices anyway, such as [Proxmox VE](https://www.proxmox.com/en/).  Having no way to test against ESXi, I wondered what everyone was doing these days in the home lab, and sure enough, there are better choices. [XCP-ng]() was also evaluated but `proxmox` had the polish, and `AWS` did switch to `KVM`.
+> Many of the tips and how-to articles I used came from ex-VMware pros who migrated their home labs to [Proxmox VE](https://www.proxmox.com/en/) after Broadcom decided to kill ESXi and anyone's interest in it. The good news is that `Proxmox` is __a big step up__, in so many ways.  Migrating to the `kvm hypervisor` also meant tossing out `Packer` in favor of `cloud-init`, which offers a much more cloud centric deployment model, and has greatly simplified the deployment model. With the `proxmox` deployment, everything happens on the `proxmox hosts`.  The proxmox CLI is simple and effective, and creating the necessary plays took only a few days.  
+
+[Proxmox VE](https://www.proxmox.com/en/) feels like a private cloud, and no one misses ESXi.  
 
 ## Usage Scenarios
 
-- Deploy Kubernetes clusters locally to VMware Fusion or VMware Workstation
-- Deploy Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) servers directly (work in progress)
+- Deploy [Rocky Linux 9](https://rockylinux.org) Kubernetes clusters on VMware Fusion/Desktop
+- Deploy [Ubuntu 24.04 LTS](https://ubuntu.com/blog/tag/ubuntu-24-04-lts) Kubernetes clusters on [Proxmox VE](https://www.proxmox.com/en/)
 
-A simple `ansible hosts` file describes the size and shape of the cluster, and `cluster-builder` does all the rest!
+A simple `ansible hosts` file describes the size and shape of the cluster, and `cluster-builder` does the rest.
 
 ### Requirements
 
@@ -124,6 +126,7 @@ k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
 This is an example of a `proxmox` deployment:
 
 ```
+
 [all:vars]
 cluster_type=proxmox-k8s
 cluster_name=k8s-prox
@@ -132,7 +135,7 @@ remote_user=root
 ansible_python_interpreter=/usr/bin/python3
 
 deploy_target=proxmox
-build_template=true
+build_template=false
 
 network_mask=255.255.255.0
 network_gateway=192.168.1.1
@@ -148,18 +151,28 @@ k8s_ingress_url=k8s-ingress.home.idstudios.io
 pod_readiness_timeout=600s
 use_longhorn_storage=false
 
+# could also be set at the node level
+proxmox_user=root
+proxmox_host=192.168.1.167
+
+template_vmid=777
+
 [proxmox_hosts]
-192.168.1.167 ansible_ssh_user=root 
+192.168.1.167 ansible_ssh_user=root #template_vmid=?
 
 [k8s_masters]
-k8s-m1.home.idstudios.io ansible_host=192.168.1.11 numvcpus=2 memsize=4096
+k8s-m1.home.idstudios.io vmid=1001 ansible_host=192.168.1.11 numvcpus=2 memsize=4096 #template_vmid=? proxmox_host=?
 
 [k8s_workers]
-k8s-w1.home.idstudios.io ansible_host=192.168.1.14 numvcpus=4 memsize=6128
-k8s-w2.home.idstudios.io ansible_host=192.168.1.15 numvcpus=4 memsize=6128
-```
+k8s-w1.home.idstudios.io vmid=1002 ansible_host=192.168.1.14 numvcpus=4 memsize=6128
+k8s-w2.home.idstudios.io vmid=1003 ansible_host=192.168.1.15 numvcpus=4 memsize=6128
 
-Once a template has been built on `proxmox`, setting the `build_template` to `false` will re-use the existing template.
+```
+Once a template has been built on `proxmox`, setting `build_template` to `false` will re-use the existing template, reduce downloads and speed up deployment.
+
+- The `template_vmid` can be set at the `proxmox_hosts` level if there is more then one.  It should then align with the `node` level `proxmox_host` setting, such that when deployed to a `proxmox host`, the node will use the locally available template.  Proxmox `template ids` must be unique across hosts (but this has not yet been tested and verified).
+
+- the `vmid` must be set at the `node` level, and it must be unique within the proxmox cluster.
 
 Other settings are fairly self explanatory.
 
@@ -170,6 +183,10 @@ Other settings are fairly self explanatory.
 - Make sure that `node-packer/build` is using the correct `authorized_key`.  This should happen automatically, but deployment relies on `passwordless ssh`.
 
 - Watch out for `dockerhub` __rate limits__ if you are doing a lot of deployments, and consider using a `VPN`.
+
+- When using `proxmox` deployment, ensure all `promox hosts` have been configured for `passwordless ssh`.
+
+- Proxmox template builds, and vm deployment progress can be viewed in the Proxmox GUI, as they tend to take a long time with no feedback to ansible.
 
 ## Deploying Clusters
 The following command would deploy example cluster from above:
@@ -265,17 +282,6 @@ metallb-system         speaker-j6675                                           1
 metallb-system         speaker-kwt6r                                           1/1     Running     0               13m
 ```
 
-
-> __Note__ that for all the cluster definition package examples you will need to ensure that the network specified, and DNS names used resolve correctly to the _IP Addresses_ specified in the __hosts__ files.
-> Eg.  
-```
-[k8s_masters]
-k8s-m1.idstudios.local ansible_host=192.168.1.220
-``` 
-> In the example, the inventory host name __k8s-m1.idstudios.local__ must resolve to __192.168.1.220__, and the subnet used must align with either the subnet of the local assigned VMware network interface, or the subnet of the assigned ESXi VLAN.
-
-> The **demo** series of local deployments use DNS names hosted by __idstudios.io__, which resolve to local private network addresses.  These domain names can be used for local deployments if the same subnet/addressing is also used in your local environments.
-
 ### Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.  This is useful for __suspending__ or __restarting__ the entire cluster.  It also enables complete deletion of a cluster using the __destroy__ action directive.
 
@@ -292,3 +298,15 @@ __Eg.__
 `kubectl --kubeconfig <mycluster-kube-config> proxy`
 
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+
+## Longhorn Storage
+
+Longhorn is a meaty deployment that uses a fair portion of cluster resources, and for this reason is optional, and off by default.
+To include it in the cluster deployment add the following line to your cluster `hosts` file:
+
+```
+use_longhorn=true
+```
+
+An updated `targetd` solution is in the works.

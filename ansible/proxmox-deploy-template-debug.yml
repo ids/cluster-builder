@@ -1,0 +1,19 @@
+---
+- hosts: proxmox_hosts
+  remote_user: root
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Set incremented value for each host
+      set_fact:
+          build_vmid: 998
+          template_vmid: 999
+          base_cluster_vmid: 1000
+    - name: Create a cluster-node template script
+      template:
+          src: ./templates/create-ubuntu-template.j2
+          dest: /root/create-ubuntu-template.sh
+          mode: "0755"
+    - name: Build the cluster-node
+      shell: /root/create-ubuntu-template.sh
+
