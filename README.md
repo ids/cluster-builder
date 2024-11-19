@@ -311,7 +311,8 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 
 ## Longhorn Storage
 
-Longhorn is a meaty deployment that uses a fair portion of cluster resources, and for this reason is optional, and off by default.
+Longhorn is a meaty deployment that appears to bump `CPU utilization` on the cluster by about `2%` (which is not bad), but for this reason it is off by default.
+
 To include it in the cluster deployment add the following line to your cluster `hosts` file:
 
 ```
