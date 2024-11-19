@@ -11,7 +11,7 @@ Cluster Builder
 
 > Updated for 2024! 
 
-> Many of the tips and how-to articles I used came from ex-VMware pros who migrated their home labs to [Proxmox VE](https://www.proxmox.com/en/) after Broadcom decided to kill ESXi and anyone's interest in it. The good news is that `Proxmox` is __a big step up__, in so many ways.  Migrating to the `kvm hypervisor` also meant tossing out `Packer` in favor of `cloud-init`, which offers a much more cloud centric deployment model, and has greatly simplified the deployment model. With the `proxmox` deployment, everything happens on the `proxmox hosts`.  The proxmox CLI is simple and effective, and creating the necessary plays took only a few days.  
+> Many of the tips and how-to articles I used came from ex-VMware pros who migrated their home labs to [Proxmox VE](https://www.proxmox.com/en/) after Broadcom decided to kill ESXi and anyone's interest in it. The good news is that `Proxmox` is __a big step up__, in so many ways.  Migrating to the `kvm hypervisor` also meant tossing out `Packer` in favor of `cloud-init`, which offers a much more cloud centric deployment model, and has greatly simplified the codebase. With the `proxmox` deployment, everything happens on the `proxmox hosts`, including the node template build.  The proxmox CLI is simple and effective, and creating the necessary plays took only a few days.  
 
 [Proxmox VE](https://www.proxmox.com/en/) feels like a private cloud, and no one misses ESXi.  
 
