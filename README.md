@@ -59,7 +59,7 @@ For __Proxmox VE__ remote deployment:
 
 #### Proxmox VE
 
-1. Ensure you have one or more VMware ESXi hypervisors available.
+1. Ensure you have one or more [Proxmox VE](https://www.proxmox.com/en/proxmox-virtual-environment/overview) hypervisors available.
 2. Configure the Proxmox Host(s) to support __passwordless SSH__, and the ansible host from which you deply is in the `authorized_keys`  (and make sure SSH is enabled for the ESXi hosts).
 4. Make sure you have your SSH key setup and that it exists as `~/.ssh/id_rsa.pub`.
 5. Provision DNS entries
