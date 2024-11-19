@@ -4,9 +4,10 @@
 
 Packer builds VMware cluster nodes for use by `cluster-builder`.
 
-> Note: To save time you may want to seed the __iso__ folder with `Rocky-94-x86_64-minimal.iso`.
+## Important Setup
 
-> Make sure to have an rsa key found in **~/.ssh/id_rsa.pub**.
+- Make sure to download the  `Rocky-94-x86_64-minimal.iso` and place it in the __iso__ folder.
+- Make sure to have an rsa key found in **~/.ssh/id_rsa.pub** that can be used for __authorized_keys__.
 
 ## Building cluster-node.ova
 
@@ -16,7 +17,6 @@ Packer builds VMware cluster nodes for use by `cluster-builder`.
 
 ## Output
 The builder creates `cluster-node-x86_64.ova` in the [output_ovas](./output_ovas/) folder.
-
 
 > This script will be called by [cluster-deploy](../cluster-deploy) if the `ova` does not exist.
 
