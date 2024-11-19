@@ -38,7 +38,7 @@ function proxmox_deploy () {
 
   if [ "$BUILD_TEMPLATE" == "true" ]; then
     echo "Deploying the Proxmox VM Template..."
-    ansible-playbook -i $INVENTORY_FILE ansible/proxmox-deploy-template.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
+    ansible-playbook -i $INVENTORY_FILE ansible/proxmox-deploy-template2.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
     if [ $? -ne 0 ]; then
       echo "There was a problem deploying the VM Template to Proxmox VE"
       exit 1
@@ -46,7 +46,7 @@ function proxmox_deploy () {
   fi
 
   echo "Creating the Proxmox VMs and configuring the network for static IP assignment..."
-  ansible-playbook -i $INVENTORY_FILE ansible/proxmox-deploy-cluster.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
+  ansible-playbook -i $INVENTORY_FILE ansible/proxmox-deploy-cluster2.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
   if [ $? -ne 0 ]; then
     echo "There was a problem creating the VM cluster in Proxmox VE"
     exit 1

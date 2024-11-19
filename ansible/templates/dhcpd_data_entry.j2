@@ -1,6 +1,0 @@
-
-host {{ inventory_hostname }}-data {
-    hardware ethernet {{ vm_data_mac.stdout }};
-    fixed-address {{ data_host }};
-    option host-name "{{ inventory_hostname }}-data";
-}

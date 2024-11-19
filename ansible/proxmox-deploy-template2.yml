@@ -1,0 +1,78 @@
+---
+- hosts: proxmox_hosts
+  remote_user: root
+  gather_facts: false
+  tasks:
+    - name: verify the Ubuntu img file exists
+      shell: |
+        if [ ! -f /root/noble-server-cloudimg-amd64.img ]; then
+          cd /root
+          echo "Downloading Ubuntu 24.04 Img file"
+          wget -qN https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+          qemu-img resize noble-server-cloudimg-amd64.img 128G
+        fi
+
+    - name: destroy existing template
+      shell: qm stop {{ template_vmid }} && qm destroy {{ template_vmid }}
+      ignore_errors: true
+
+    - name: create initial template
+      shell: |
+        qm create {{ template_vmid }} --name "ubuntu-2404-template" --ostype l26 \
+            --memory 2048 --balloon 0 \
+            --agent 1 \
+            --bios ovmf --machine q35 --efidisk0 local-lvm:0,pre-enrolled-keys=0 \
+            --cpu host --cores 2 --numa 1 \
+            --vga serial0 --serial0 socket  \
+            --net0 virtio,bridge=vmbr0,mtu=1
+
+    - name: import the ubuntu img
+      shell: qm importdisk {{ template_vmid }} noble-server-cloudimg-amd64.img local-lvm
+
+    - name: configure disk
+      shell: qm set {{ template_vmid }} --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-{{ template_vmid }}-disk-1,discard=on
+
+    - name: configure boot order
+      shell: qm set {{ template_vmid }} --boot order=virtio0
+
+    - name: configure cloud init drive
+      shell: qm set {{ template_vmid }}  --ide2 local-lvm:cloudinit
+
+    - name: setup template directory
+      shell: mkdir -p /var/lib/vz/snippets
+
+    - name: generate the kubeadm yaml configuration
+      template:
+        src: templates/ubuntu-cloud-init.j2
+        dest: "/var/lib/vz/snippets/ubuntu.yaml"
+
+    - name: configure the template image cloud init
+      shell: qm set {{ template_vmid }} --cicustom "vendor=local:snippets/ubuntu.yaml"
+
+    - name: configure the template image cloud init user
+      shell: qm set {{ template_vmid }}  --ciuser root
+
+    - name: add proxmox server root authorized_keys to the image
+      shell: qm set {{ template_vmid }} --sshkeys ~/.ssh/authorized_keys
+
+    - name: set template to dhcp
+      shell: qm set {{ template_vmid }} --ipconfig0 ip=dhcp
+
+    - name: set template name
+      shell: qm set {{ template_vmid }} --name "cluster-node-template"
+
+    - name: start template image for intial cloud-init conifguration and software downloads
+      shell: qm start {{ template_vmid }}
+
+    - name: wait for the template vm to shutdown upon completion
+      shell: qm wait {{ template_vmid }}
+
+    - name: mark the vm as a template
+      shell: qm template {{ template_vmid }}
+
+
+
+
+
+
+

@@ -1,6 +1,0 @@
-
-host {{ inventory_hostname }} {
-    hardware ethernet {{ vm_mac.stdout }};
-    fixed-address {{ ansible_host }};
-    option host-name "{{ inventory_hostname }}";
-}
