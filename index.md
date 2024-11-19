@@ -5,7 +5,7 @@ layout: default
 
 ##### Updated for 2024!
 
-Using only freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to vSphere/ESXi hypervisors and local VMware Workstation/Fusion Pro environments.
+Using only freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE kvm](https://www.proxmox.com/en/) hypervisors and local legacy VMware Workstation/Fusion environments.
 
 > One command... and the cluster is deployed!
 
@@ -16,10 +16,15 @@ Using only freely available tools and only an annotated Ansible inventory file [
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-[cluster-builder](https://github.com/ids/cluster-builder) uses [Packer](https://www.packer.io), [Ansible](https://www.ansible.com),  Bash and VMware tools to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) into VMware environments.  
+[cluster-builder](https://github.com/ids/cluster-builder) uses primarily [Ansible](https://www.ansible.com) and Bash (and sometimes [Packer](https://www.packer.io)) to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) into [Proxmox VE](https://www.proxmox.com/en/) and VMware desktop environments.  
 
-[cluster-builder](https://github.com/ids/cluster-builder) has been updated for __2024__ with `Kubernetes 1.30` and `rocky9-k8s`, using `Rocky Linux 9.4` with:
+[cluster-builder](https://github.com/ids/cluster-builder) has been updated for __2024__ with:
 
+- [Proxmox VE](https://www.proxmox.com/en/) `Ubuntu 24.04 LTS Kubernetes 1.30`
+- VMware Fusion/Desktop `Rocky Linux 9.4 Kubernetes 1.30`
+- VMware ESXi is gone.
+
+[cluster-builder](https://github.com/ids/cluster-builder) clusters include:
 - [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
 - [MetalLB](https://metallb.universe.tf) Load Balancer
 - [Longhorn](https://longhorn.io/) PV Storage

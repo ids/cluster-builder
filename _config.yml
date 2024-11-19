@@ -20,7 +20,7 @@
 
 title: Cluster Builder
 email: admin@idstudios.io
-description: 'Automatically Deploy Kubernetes Clusters into VMware Environments.'
+description: 'Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop'
 url: 'https://cluster-builder.idstudios.io'
 github_username: ids
 future: true

@@ -25,12 +25,12 @@
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Cluster Builder | Automatically Deploy Kubernetes Clusters into VMware Environments.</title>
+<title>Cluster Builder | Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop</title>
 <meta name="generator" content="Jekyll v4.3.4" />
 <meta property="og:title" content="Cluster Builder" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Automatically Deploy Kubernetes Clusters into VMware Environments." />
-<meta property="og:description" content="Automatically Deploy Kubernetes Clusters into VMware Environments." />
+<meta name="description" content="Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop" />
+<meta property="og:description" content="Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop" />
 <link rel="canonical" href="http://localhost:4000/" />
 <meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Cluster Builder" />
@@ -38,7 +38,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Cluster Builder" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Automatically Deploy Kubernetes Clusters into VMware Environments.","headline":"Cluster Builder","name":"Cluster Builder","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/logo-2018-icon.png"}},"url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","description":"Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop","headline":"Cluster Builder","name":"Cluster Builder","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/logo-2018-icon.png"}},"url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="col project-cell">
                         <h1 id="project_title">Cluster Builder</h1>
-                        <h2 id="project_tagline2">Automatically Deploy Kubernetes Clusters into VMware Environments.</h2>
+                        <h2 id="project_tagline2">Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop</h2>
                     </div>
                     <div class="col col-1 col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     </div>
@@ -76,7 +76,7 @@
       <section id="main_content" class="inner">
           <h5 id="updated-for-2024">Updated for 2024!</h5>
 
-<p>Using only freely available tools and only an annotated Ansible inventory file <a href="https://github.com/ids/cluster-builder">cluster-builder</a> enables the configuration and deployment of Kubernetes clusters to vSphere/ESXi hypervisors and local VMware Workstation/Fusion Pro environments.</p>
+<p>Using only freely available tools and only an annotated Ansible inventory file <a href="https://github.com/ids/cluster-builder">cluster-builder</a> enables the configuration and deployment of Kubernetes clusters to <a href="https://www.proxmox.com/en/">Proxmox VE kvm</a> hypervisors and local legacy VMware Workstation/Fusion environments.</p>
 
 <blockquote>
   <p>One command… and the cluster is deployed!</p>
@@ -86,10 +86,17 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> uses <a href="https://www.packer.io">Packer</a>, <a href="https://www.ansible.com">Ansible</a>,  Bash and VMware tools to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> into VMware environments.</p>
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> uses primarily <a href="https://www.ansible.com">Ansible</a> and Bash (and sometimes <a href="https://www.packer.io">Packer</a>) to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> into <a href="https://www.proxmox.com/en/">Proxmox VE</a> and VMware desktop environments.</p>
 
-<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> has been updated for <strong>2024</strong> with <code class="language-plaintext highlighter-rouge">Kubernetes 1.30</code> and <code class="language-plaintext highlighter-rouge">rocky9-k8s</code>, using <code class="language-plaintext highlighter-rouge">Rocky Linux 9.4</code> with:</p>
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> has been updated for <strong>2024</strong> with:</p>
 
+<ul>
+  <li><a href="https://www.proxmox.com/en/">Proxmox VE</a> <code class="language-plaintext highlighter-rouge">Ubuntu 24.04 LTS Kubernetes 1.30</code></li>
+  <li>VMware Fusion/Desktop <code class="language-plaintext highlighter-rouge">Rocky Linux 9.4 Kubernetes 1.30</code></li>
+  <li>VMware ESXi is gone.</li>
+</ul>
+
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> clusters include:</p>
 <ul>
   <li><a href="https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel">Canal</a> Networking &amp; Policy</li>
   <li><a href="https://metallb.universe.tf">MetalLB</a> Load Balancer</li>
