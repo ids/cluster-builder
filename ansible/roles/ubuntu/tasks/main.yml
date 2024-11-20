@@ -1,0 +1,5 @@
+---
+- name: configure chronyd
+  include_tasks: chronyd.yml
+  
+

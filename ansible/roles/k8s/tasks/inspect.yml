@@ -2,23 +2,17 @@
 - name: list cluster nodes
   shell: kubectl get nodes
   register: final_nodes_out
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_nodes_out.stdout_lines }}"
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: list all running pods
   shell: kubectl get pods --all-namespaces
   register: final_pods_out
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_pods_out.stdout_lines }}"
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: list all services
   shell: kubectl get svc --all-namespaces
   register: final_svc_out
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_svc_out.stdout_lines }}"
-  when: "inventory_hostname == groups['k8s_masters'][0]"

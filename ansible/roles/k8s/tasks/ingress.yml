@@ -1,41 +1,36 @@
+---
 #- name: set strict Arp
 #  shell: "kubectl get configmap kube-proxy -n kube-system -o yaml | sed -e 's/strictARP: false/strictARP: true/' | kubectl apply -f - -n kube-system"
-#  when: "inventory_hostname == groups['k8s_masters'][0] 
-#    and k8s_metallb_address_range is defined"
+#  when: "k8s_metallb_address_range is defined"
 
 - name: install metallb
   shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
-  when: "inventory_hostname == groups['k8s_masters'][0] 
-    and k8s_metallb_address_range is defined"
+  when: "k8s_metallb_address_range is defined"
 
 - name: give metalLB a few seconds
   pause:
     seconds: 5
+  when: "k8s_metallb_address_range is defined" 
 
 - name: wait for metallb 
   shell: kubectl wait -n metallb-system pod -l app=metallb --for condition=Ready --timeout={{ pod_readiness_timeout }}
-  when: "inventory_hostname == groups['k8s_masters'][0]"
+  when: "k8s_metallb_address_range is defined" 
 
 - name: generate the metalLB pool
   template:
     src: templates/k8s-metallb-pool.j2
     dest: "{{ target_dest_folder }}/metallb-pool.yml"
-  when: "inventory_hostname == groups['k8s_masters'][0] 
-    and k8s_metallb_address_range is defined" 
+  when: "k8s_metallb_address_range is defined" 
 
 - name: install metalLB IP Pool
   shell: kubectl apply -f {{ target_dest_folder }}/metallb-pool.yml
-  when: "inventory_hostname == groups['k8s_masters'][0] 
-    and k8s_metallb_address_range is defined"
+  when: "k8s_metallb_address_range is defined"
 
 - name: install NGINX
   shell: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0-beta.0/deploy/static/provider/cloud/deploy.yaml
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - name: list all running pods
   shell: kubectl get pods --all-namespaces
   register: final_pods_out
-  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 - debug: msg="{{ final_pods_out.stdout_lines }}"
-  when: "inventory_hostname == groups['k8s_masters'][0]"

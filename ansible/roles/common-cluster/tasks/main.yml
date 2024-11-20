@@ -1,3 +1,0 @@
----
-- name: ensure all inventory host names resolve via DNS
-  ansible.builtin.ping:

@@ -1,0 +1,32 @@
+
+---
+- name: enable chrony
+  shell: apt install -y chrony
+
+- name: configure the chrony time servers
+  template:
+    src: templates/chrony-conf.j2
+    dest: /etc/chrony/chrony.conf
+  run_once: true
+
+- name: enable chrony
+  shell: systemctl enable chrony
+
+- name: start chrony
+  shell: systemctl start chrony
+
+- name: wait for chrony to sync
+  pause:
+      seconds: 5
+
+- name: ensure network time sync is setup
+  shell: timedatectl set-ntp true
+  retries: 3
+  delay: 5
+
+- name: verify chrony sources
+  shell: chronyc sources
+  register: chrony_out
+
+- debug: msg="{{ chrony_out.stdout_lines }}"
+

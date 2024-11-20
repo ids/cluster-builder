@@ -1,17 +1,14 @@
 - name: ensure pki folder exists
   shell: mkdir -p /etc/kubernetes/pki/
-  become: true
 
 - name: ensure pki/etcd folder exists
   shell: mkdir -p /etc/kubernetes/pki/etcd
-  become: true
 
 - name: copy the PKI certs to the other masters
   copy:
     dest: /etc/kubernetes/pki/{{ item }}
     src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
     mode: 644
-  become: true   
   with_items:
     - ca.crt  
     - front-proxy-ca.crt  
@@ -25,32 +22,27 @@
     dest: /root/master_join_cmd
     src: ../clusters/{{ cluster_pkg_folder }}/master_join_cmd
     mode: 766
-  become: true   
  
 - name: copy the admin.conf to the other masters
   copy:
     dest: /etc/kubernetes/
     src: ../clusters/{{ cluster_pkg_folder }}/admin.conf
     mode: 766
-  become: true   
 
 - name: ensure the /root/.kube folder exists
   shell: mkdir -p /root/.kube
-  become: true   
 
 - name: copy the admin.conf to the other masters root ~/.kube/config
   copy:
     dest: /root/.kube/config
     src: ../clusters/{{ cluster_pkg_folder }}/admin.conf
     mode: 766
-  become: true   
 
 - name: start kubelet on other master nodes
   service:
     name: kubelet
     state: restarted
     enabled: yes
-  become: true
 
 - name: pause to give kubelet time to initialize
   pause:
@@ -58,7 +50,6 @@
 
 - name: join other master to cluster
   shell: "/root/master_join_cmd"
-  become: true   
   register: master_join
 
 - name: master join result

@@ -1,6 +1,11 @@
 pool ca.pool.ntp.org iburst
 pool pool.ntp.org iburst
-{% for host in groups['all'] %}
+{% for host in groups['k8s_masters'] %}
+  {% if hostvars[host].inventory_hostname != inventory_hostname %}
+peer {{ hostvars[host].ansible_host }}
+  {% endif %}
+{% endfor %}
+{% for host in groups['k8s_workers'] %}
   {% if hostvars[host].inventory_hostname != inventory_hostname %}
 peer {{ hostvars[host].ansible_host }}
   {% endif %}

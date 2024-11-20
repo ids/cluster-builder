@@ -1,4 +1,0 @@
-- name: configure the first Kubernetes master
-  include_tasks: masters-first.yml
-  when: "inventory_hostname == groups['k8s_masters'][0]"
-  

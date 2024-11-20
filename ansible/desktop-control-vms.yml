@@ -2,7 +2,7 @@
 - hosts: vmware_vms
   gather_facts: false
   roles: 
-    - common
+    - config
 
   tasks:    
   - name: start/stop/suspend the VMs on macOS/Linux

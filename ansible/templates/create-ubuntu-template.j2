@@ -1,8 +1,6 @@
 #! /bin/bash
 
-INIT_VMID={{ build_vmid }}
-FINAL_VMID={{ template_vmid }}
-BASE_CLUSTER_VMID={{ base_cluster_vmid }}
+TEMPLATE_VMID={{ template_vmid }}
 
 STORAGE=local-lvm
 
@@ -17,20 +15,19 @@ if [ ! -f $IMG_FILE ]; then
   qemu-img resize noble-server-cloudimg-amd64.img 128G
 fi
 
-qm destroy $INIT_VMID
-qm destroy $FINAL_VMID
+qm destroy $TEMPLATE_VMID
 
-qm create $INIT_VMID --name "ubuntu-2404-template" --ostype l26 \
+qm create $TEMPLATE_VMID --name "ubuntu-2404-template" --ostype l26 \
     --memory 2048 --balloon 0 \
     --agent 1 \
     --bios ovmf --machine q35 --efidisk0 $STORAGE:0,pre-enrolled-keys=0 \
     --cpu host --cores 2 --numa 1 \
     --vga serial0 --serial0 socket  \
     --net0 virtio,bridge=vmbr0,mtu=1
-qm importdisk $INIT_VMID noble-server-cloudimg-amd64.img $STORAGE
-qm set $INIT_VMID --scsihw virtio-scsi-pci --virtio0 $STORAGE:vm-$INIT_VMID-disk-1,discard=on
-qm set $INIT_VMID --boot order=virtio0
-qm set $INIT_VMID --ide2 $STORAGE:cloudinit
+qm importdisk $TEMPLATE_VMID noble-server-cloudimg-amd64.img $STORAGE
+qm set $TEMPLATE_VMID --scsihw virtio-scsi-pci --virtio0 $STORAGE:vm-$TEMPLATE_VMID-disk-1,discard=on
+qm set $TEMPLATE_VMID --boot order=virtio0
+qm set $TEMPLATE_VMID --ide2 $STORAGE:cloudinit
 
 mkdir -p /var/lib/vz/snippets
 cat << EOF | tee /var/lib/vz/snippets/ubuntu.yaml
@@ -101,17 +98,15 @@ runcmd:
 # Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772
 EOF
 
-qm set $INIT_VMID --cicustom "vendor=local:snippets/ubuntu.yaml"
-qm set $INIT_VMID --ciuser root
-qm set $INIT_VMID --sshkeys ~/.ssh/authorized_keys
-qm set $INIT_VMID --ipconfig0 ip=dhcp
-qm template $INIT_VMID
+qm set $TEMPLATE_VMID --cicustom "vendor=local:snippets/ubuntu.yaml"
+qm set $TEMPLATE_VMID --ciuser root
+qm set $TEMPLATE_VMID --sshkeys ~/.ssh/authorized_keys
+qm set $TEMPLATE_VMID --ipconfig0 ip=dhcp
+qm set $TEMPLATE_VMID --name "cluster-node-template"
 
-qm clone $INIT_VMID $FINAL_VMID
-qm set $FINAL_VMID --name "cluster-node-template"
-qm start $FINAL_VMID
-qm wait $FINAL_VMID
+qm start $TEMPLATE_VMID
+qm wait $TEMPLATE_VMID
 
-qm destroy $INIT_VMID
+qm template $TEMPLATE_VMID
 
 echo "The Cluster Node Template Completed!"

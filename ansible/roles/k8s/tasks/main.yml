@@ -1,0 +1,55 @@
+---
+- name: ensure all hosts are reachable
+  ansible.builtin.ping:
+
+- name: configure the first Kubernetes master
+  include_tasks: first-master.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: configure the CNI
+  include_tasks: cni.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: configure the remaining Kubernetes masters
+  include_tasks: masters-next.yml
+  when: "'k8s_masters' in group_names
+    and inventory_hostname != groups['k8s_masters'][0]"
+
+- name: display cluster master node status
+  shell: kubectl get nodes
+  register: final_nodes_out
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- debug: msg="{{ final_nodes_out.stdout_lines }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: configure the Kubernetes workers
+  include_tasks: workers.yml
+  when: "'k8s_workers' in group_names or 'new_k8s_workers' in group_names"
+
+- name: configure log rotation on all nodes
+  template:
+    src: templates/k8s-log-rotation.j2
+    dest: /etc/logrotate.d/containers
+
+- name: wait for canal CNI on all workers
+  shell: kubectl wait -n kube-system  pod -l k8s-app=canal --for condition=Ready --timeout={{ pod_readiness_timeout }}
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install Ingress
+  include_tasks: ingress.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install Kubernetes Dashboard
+  include_tasks: dashboard.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install Storage
+  include_tasks: storage.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: inspect cluster
+  include_tasks: inspect.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+

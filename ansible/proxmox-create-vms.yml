@@ -74,12 +74,20 @@
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm start {{ vmid }} 
 
+    - name: wait before waiting
+      pause:
+          seconds: 3
+
     - name: wait for the node cloud-init to complete and shutdown
       local_action:
         module: shell
         _raw_params: > 
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm wait {{ vmid }} 
+
+    - name: wait before starting again
+      pause:
+          seconds: 5
 
     - name: start the node
       local_action:

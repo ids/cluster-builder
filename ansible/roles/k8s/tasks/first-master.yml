@@ -4,11 +4,10 @@
     dest: "{{ target_dest_folder }}/kube-adm.yml"
 
 - name: ensure the kubelet is enabled
-  shell: sudo systemctl enable kubelet
-  become: true
+  shell: systemctl enable kubelet
 
 - name: initialize cluster on first master
-  shell: "sudo kubeadm init --config {{ target_dest_folder }}/kube-adm.yml --upload-certs"
+  shell: "kubeadm init --config {{ target_dest_folder }}/kube-adm.yml --upload-certs"
   ignore_errors: false
 
 - name: get worker join command

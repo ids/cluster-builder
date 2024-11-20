@@ -7,7 +7,7 @@
       ova_template_path: "../{{ ova_template }}"
       gen_script_folder: ../tmp/{{ cluster_pkg_folder }}
   roles:
-      - role: common
+      - role: config
 
   tasks:
       - name: set default desktop network to vmnet2

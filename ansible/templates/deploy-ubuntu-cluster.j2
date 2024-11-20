@@ -4,18 +4,16 @@
 # Stop all the VMS
 #
 {% for node in groups["k8s_masters"] %}
-  {% set vmidcount = base_cluster_vmid + loop.index %}
 
-qm stop {{ vmidcount }}
-qm destroy {{ vmidcount }}
+qm stop {{ vmid }}
+qm destroy {{ vmid }}
 
 {% endfor %}
 
 {% for node in groups["k8s_workers"] %}
-  {% set vmidcount = base_cluster_vmid + groups["k8s_masters"] | length + loop.index %}
 
-qm stop {{ vmidcount }}
-qm destroy {{ vmidcount }}
+qm stop {{ vmidc }}
+qm destroy {{ vmid }}
 
 {% endfor %}
 
@@ -24,36 +22,34 @@ qm destroy {{ vmidcount }}
 #
 
 {% for node in groups["k8s_masters"] %}
-  {% set vmidcount = base_cluster_vmid + loop.index %}
 
-qm stop {{ vmidcount }}
-qm destroy {{ vmidcount }}
-qm clone {{ template_vmid }} {{ vmidcount }}
-qm set {{ vmidcount }} --name {{ hostvars[node].inventory_hostname }}
-qm set {{ vmidcount }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/24,gw={{ network_gateway }}'
-qm set {{ vmidcount }} --cores {{ hostvars[node].numvcpus }}
-qm set {{ vmidcount }} --memory {{ hostvars[node].memsize }}
-qm set {{ vmidcount }} --nameserver '8.8.8.8 8.8.4.4'
-qm start {{ vmidcount }}
-qm wait {{ vmidcount }}
-qm start {{ vmidcount }}
+qm stop {{ vmid }}
+qm destroy {{ vmid }}
+qm clone {{ template_vmid }} {{ vmid }}
+qm set {{ vmid }} --name {{ hostvars[node].inventory_hostname }}
+qm set {{ vmid }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/24,gw={{ network_gateway }}'
+qm set {{ vmid }} --cores {{ hostvars[node].numvcpus }}
+qm set {{ vmid }} --memory {{ hostvars[node].memsize }}
+qm set {{ vmid }} --nameserver '8.8.8.8 8.8.4.4'
+qm start {{ vmid }}
+qm wait {{ vmid }}
+qm start {{ vmid }}
 
 {% endfor %}
 
 {% for node in groups["k8s_workers"] %}
-  {% set vmidcount = base_cluster_vmid + groups["k8s_masters"] | length + loop.index %}
 
-qm stop {{ vmidcount }}
-qm destroy {{ vmidcount }}
-qm clone {{ template_vmid }} {{ vmidcount }}
-qm set {{ vmidcount }} --name {{ hostvars[node].inventory_hostname }}
-qm set {{ vmidcount }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/24,gw={{ network_gateway }}'
-qm set {{ vmidcount }} --cores {{ hostvars[node].numvcpus }}
-qm set {{ vmidcount }} --memory {{ hostvars[node].memsize }}
-qm set {{ vmidcount }} --nameserver '8.8.8.8 8.8.4.4'
-qm start {{ vmidcount }}
-qm wait {{ vmidcount }}
-qm start {{ vmidcount }}
+qm stop {{ vmid }}
+qm destroy {{ vmid }}
+qm clone {{ template_vmid }} {{ vmid }}
+qm set {{ vmid }} --name {{ hostvars[node].inventory_hostname }}
+qm set {{ vmid }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/24,gw={{ network_gateway }}'
+qm set {{ vmid }} --cores {{ hostvars[node].numvcpus }}
+qm set {{ vmid }} --memory {{ hostvars[node].memsize }}
+qm set {{ vmid }} --nameserver '8.8.8.8 8.8.4.4'
+qm start {{ vmid }}
+qm wait {{ vmid }}
+qm start {{ vmid }}
 
 {% endfor %}
 

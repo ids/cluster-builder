@@ -9,7 +9,6 @@
           cd /root
           echo "Downloading Ubuntu 24.04 Img file"
           wget -qN https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
-          qemu-img resize noble-server-cloudimg-amd64.img 128G
         fi
 
     - name: destroy existing template
@@ -25,6 +24,9 @@
             --cpu host --cores 2 --numa 1 \
             --vga serial0 --serial0 socket  \
             --net0 virtio,bridge=vmbr0,mtu=1
+
+    - name: resize ubuntu img
+      shell: qemu-img resize noble-server-cloudimg-amd64.img 128G
 
     - name: import the ubuntu img
       shell: qm importdisk {{ template_vmid }} noble-server-cloudimg-amd64.img local-lvm

@@ -1,5 +1,5 @@
 ---
-# This playbook creates Ubuntu 24.04 on Proxmox
+# This playbook creates Ubuntu 24.04 on Proxmox VE
 
 - hosts: k8s_masters:k8s_workers
   become: true
@@ -9,16 +9,9 @@
   vars:
     kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
   roles:
-    - role: common
-    - role: common-cluster
-    - role: k8s-init
-    - role: k8s-cni
-    - role: k8s-masters
-    - role: k8s-workers
-    - role: k8s-ingress
-    - role: k8s-dash
-    - role: k8s-storage
-    - role: k8s-inspect
+    - role: config
+    - role: ubuntu
+    - role: k8s
 
 
   
