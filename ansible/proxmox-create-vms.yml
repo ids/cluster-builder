@@ -2,6 +2,8 @@
 - hosts: k8s_masters:k8s_workers
   remote_user: root
   gather_facts: false
+  vars:
+    proxmox_storage: local-lvm
   tasks:
     - name: stop existing vm
       ignore_errors: true
@@ -11,6 +13,14 @@
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm stop {{ vmid }} 
     
+    - name: unlock existing vm
+      ignore_errors: true
+      local_action:
+        module: shell
+        _raw_params: > 
+          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+          qm unlock {{ vmid }} 
+
     - name: destroy existing vm
       ignore_errors: true
       local_action:
@@ -29,7 +39,7 @@
         module: shell
         _raw_params: > 
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-          qm clone {{ template_vmid }} {{ vmid }}
+          qm clone {{ template_vmid }} {{ vmid }} --full --storage {{ proxmox_storage }}
 
     - name: set the node name
       local_action:
@@ -79,6 +89,7 @@
           seconds: 3
 
     - name: wait for the node cloud-init to complete and shutdown
+      ignore_errors: true
       local_action:
         module: shell
         _raw_params: > 
@@ -90,11 +101,16 @@
           seconds: 5
 
     - name: start the node
+      ignore_errors: true
       local_action:
         module: shell
         _raw_params: > 
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm start {{ vmid }} 
+
+    - name: give the node 10 seconds to boot
+      pause:
+          seconds: 10
 
     - name: list the running vms
       local_action:

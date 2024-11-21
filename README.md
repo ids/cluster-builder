@@ -135,13 +135,10 @@ k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
 This is an example of a `proxmox` deployment:
 
 ```
-
 [all:vars]
 cluster_type=proxmox-k8s
 cluster_name=k8s-prox
 remote_user=root
-
-ansible_python_interpreter=/usr/bin/python3
 
 deploy_target=proxmox
 build_template=false
@@ -153,33 +150,33 @@ network_dns2=8.8.4.4
 network_dn=home.idstudios.io
 
 k8s_metallb_address_range=192.168.1.7-192.168.1.10
-
 k8s_control_plane_uri=k8s-m1.home.idstudios.io
 k8s_ingress_url=k8s-ingress.home.idstudios.io
 
 pod_readiness_timeout=600s
 use_longhorn_storage=false
 
-# could also be set at the node level
 proxmox_user=root
-proxmox_host=192.168.1.167
-
 template_vmid=777
+proxmox_storage=vm-thinpool
 
 [proxmox_hosts]
-192.168.1.167 ansible_ssh_user=root #template_vmid=?
+scs-1.lab.idstudios.io ansible_ssh_user=root  #template_vmid
 
 [k8s_masters]
-k8s-m1.home.idstudios.io vmid=1001 ansible_host=192.168.1.11 numvcpus=2 memsize=4096 #template_vmid=? proxmox_host=?
+k8s-m1.home.idstudios.io vmid=1001 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.1.11 numvcpus=2 memsize=4096 #template_vmid 
 
 [k8s_workers]
-k8s-w1.home.idstudios.io vmid=1002 ansible_host=192.168.1.14 numvcpus=4 memsize=6128
-k8s-w2.home.idstudios.io vmid=1003 ansible_host=192.168.1.15 numvcpus=4 memsize=6128
+k8s-w1.home.idstudios.io vmid=1002 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.1.14 numvcpus=4 memsize=6128
+k8s-w2.home.idstudios.io vmid=1003 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.1.15 numvcpus=4 memsize=6128
+
 
 ```
-Once a template has been built on `proxmox`, setting `build_template` to `false` will re-use the existing template, reduce downloads and speed up deployment.
+Once a template has been built on the `proxmox` host, setting `build_template` to `false` will re-use the existing template, reduce downloads and speed up deployment.  This can be set on a per host basis.
 
-- The `template_vmid` can be set at the `proxmox_hosts` level if there is more then one.  It should then align with the `node` level `proxmox_host` setting, such that when deployed to a `proxmox host`, the node will use the locally available template.  Proxmox `template ids` must be unique across hosts (but this has not yet been tested and verified).
+- The `template_vmid` can be set at the `proxmox_hosts` level.  If it differs per host, it should then align with the `node` level `proxmox_host` setting, such that when deployed to a `proxmox host`, the node will use the locally available template.  
+
+- `proxmox_storage` can be used on the `proxmox_hosts` to specify where the template is stored, and at the `k8s` node level to specify where the VM will be stored.  It may also be set globally to place everything on the same disk/storage device.
 
 - the `vmid` must be set at the `node` level, and it must be unique within the proxmox cluster.
 

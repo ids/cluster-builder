@@ -3,6 +3,8 @@
   remote_user: root
   become: true
   gather_facts: false
+  vars:
+    proxmox_storage: local-lvm
   tasks:
     - name: Set core vmid facts
       set_fact:

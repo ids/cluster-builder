@@ -76,8 +76,10 @@ function cluster_info_display() {
   echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
   echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
   echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
+if [[ $DEPLOY_TARGET != "proxmox" ]]; then 
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
-  echo -e " VMware Target   : ${TC}${DEPLOY_TARGET}${NC}"
+fi
+  echo -e " Deploy Target   : ${TC}${DEPLOY_TARGET}${NC}"
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
@@ -143,9 +145,11 @@ fi
 
 TC=''
 NC=''
+EMOJI=''
 if [ "$TERM" == "xterm-256color" ]; then
   TC='\033[1;34m'
   NC='\033[0m' # No Color
+  EMOJI='👷 '
 fi 
 
 cluster_info_display
@@ -172,7 +176,7 @@ else
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo "${EMOJI}Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 

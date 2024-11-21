@@ -17,11 +17,11 @@
 
 - name: wait for chrony to sync
   pause:
-      seconds: 5
+      seconds: 30
 
 - name: ensure network time sync is setup
   shell: timedatectl set-ntp true
-  retries: 3
+  retries: 5
   delay: 5
 
 - name: verify chrony sources

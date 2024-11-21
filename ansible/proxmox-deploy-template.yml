@@ -2,6 +2,8 @@
 - hosts: proxmox_hosts
   remote_user: root
   gather_facts: false
+  vars:
+    proxmox_storage: local-lvm
   tasks:
     - name: verify the Ubuntu img file exists
       shell: |
@@ -20,7 +22,7 @@
         qm create {{ template_vmid }} --name "ubuntu-2404-template" --ostype l26 \
             --memory 2048 --balloon 0 \
             --agent 1 \
-            --bios ovmf --machine q35 --efidisk0 local-lvm:0,pre-enrolled-keys=0 \
+            --bios ovmf --machine q35 --efidisk0 {{ proxmox_storage }}0,pre-enrolled-keys=0 \
             --cpu host --cores 2 --numa 1 \
             --vga serial0 --serial0 socket  \
             --net0 virtio,bridge=vmbr0,mtu=1
@@ -29,16 +31,16 @@
       shell: qemu-img resize noble-server-cloudimg-amd64.img 128G
 
     - name: import the ubuntu img
-      shell: qm importdisk {{ template_vmid }} noble-server-cloudimg-amd64.img local-lvm
+      shell: qm importdisk {{ template_vmid }} noble-server-cloudimg-amd64.img {{ proxmox_storage }}
 
     - name: configure disk
-      shell: qm set {{ template_vmid }} --scsihw virtio-scsi-pci --virtio0 local-lvm:vm-{{ template_vmid }}-disk-1,discard=on
+      shell: qm set {{ template_vmid }} --scsihw virtio-scsi-pci --virtio0 {{ proxmox_storage }}:vm-{{ template_vmid }}-disk-1,discard=on
 
     - name: configure boot order
       shell: qm set {{ template_vmid }} --boot order=virtio0
 
     - name: configure cloud init drive
-      shell: qm set {{ template_vmid }}  --ide2 local-lvm:cloudinit
+      shell: qm set {{ template_vmid }}  --ide2 {{ proxmox_storage }}:cloudinit
 
     - name: setup template directory
       shell: mkdir -p /var/lib/vz/snippets
