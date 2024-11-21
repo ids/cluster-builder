@@ -30,7 +30,7 @@ function desktop_deploy () {
   fi 
 
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${VIRT_APP} ${CLUSTER_TYPE_NAME}!"
+  echo "${EMOJI}SUCCESS: ${VIRT_APP} ${CLUSTER_TYPE_NAME}!"
 
 }
 
@@ -64,7 +64,7 @@ function proxmox_deploy () {
   fi 
 
   echo -e "${TC}------------------------------------------------------------${NC}"
-  echo "SUCCESS: ${CLUSTER_TYPE_NAME}!"
+  echo "${EMOJI}SUCCESS: ${CLUSTER_TYPE_NAME}!"
 
 }
 
@@ -72,7 +72,8 @@ function cluster_info_display() {
 
   echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
-  echo
+  echo -e "${EMOJI}Cluster Builder Deployment"
+  echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
   echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
   echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
@@ -80,7 +81,6 @@ if [[ $DEPLOY_TARGET != "proxmox" ]]; then
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
 fi
   echo -e " Deploy Target   : ${TC}${DEPLOY_TARGET}${NC}"
-  echo
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
 
@@ -176,7 +176,7 @@ else
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo "${EMOJI}Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
