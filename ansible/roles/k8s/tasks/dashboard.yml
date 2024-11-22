@@ -2,8 +2,14 @@
 - name: install Dashboard Helm Repo
   shell: /usr/local/bin/helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 
+- name: install Metrics Server Helm Repo
+  shell: /usr/local/bin/helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+
 - name: install Kubernetes Dashboard
-  shell: /usr/local/bin/helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+  shell: "/usr/local/bin/helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --set=resources.limits.cpu=200m,metricsScraper.enabled=true"
+
+- name: install Metrics Server
+  shell: "/usr/local/bin/helm upgrade --install metrics-server metrics-server/metrics-server --namespace kubernetes-dashboard --set=args={--kubelet-insecure-tls=true}"
 
 - name: generate the dashboard user & role binding manifest
   template:
