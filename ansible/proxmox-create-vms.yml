@@ -108,9 +108,9 @@
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm start {{ vmid }} 
 
-    - name: give the node 10 seconds to boot
+    - name: give the node 15 seconds to boot
       pause:
-          seconds: 10
+          seconds: 15
 
     - name: list the running vms
       local_action:

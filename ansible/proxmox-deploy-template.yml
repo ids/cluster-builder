@@ -7,8 +7,8 @@
   tasks:
     - name: verify the Ubuntu img file exists
       shell: |
-        if [ ! -f /root/noble-server-cloudimg-amd64.img ]; then
-          cd /root
+        if [ ! -f /var/lib/vz/template/iso/noble-server-cloudimg-amd64.img ]; then
+          cd /var/lib/vz/template/iso
           echo "Downloading Ubuntu 24.04 Img file"
           wget -qN https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
         fi
@@ -22,16 +22,16 @@
         qm create {{ template_vmid }} --name "ubuntu-2404-template" --ostype l26 \
             --memory 2048 --balloon 0 \
             --agent 1 \
-            --bios ovmf --machine q35 --efidisk0 {{ proxmox_storage }}0,pre-enrolled-keys=0 \
+            --bios ovmf --machine q35 --efidisk0 {{ proxmox_storage }}:0,pre-enrolled-keys=0 \
             --cpu host --cores 2 --numa 1 \
             --vga serial0 --serial0 socket  \
             --net0 virtio,bridge=vmbr0,mtu=1
 
     - name: resize ubuntu img
-      shell: qemu-img resize noble-server-cloudimg-amd64.img 128G
+      shell: qemu-img resize /var/lib/vz/template/iso/noble-server-cloudimg-amd64.img 128G
 
     - name: import the ubuntu img
-      shell: qm importdisk {{ template_vmid }} noble-server-cloudimg-amd64.img {{ proxmox_storage }}
+      shell: qm importdisk {{ template_vmid }} /var/lib/vz/template/iso/noble-server-cloudimg-amd64.img {{ proxmox_storage }}
 
     - name: configure disk
       shell: qm set {{ template_vmid }} --scsihw virtio-scsi-pci --virtio0 {{ proxmox_storage }}:vm-{{ template_vmid }}-disk-1,discard=on
@@ -68,8 +68,16 @@
     - name: start template image for intial cloud-init conifguration and software downloads
       shell: qm start {{ template_vmid }}
 
+    - name: wait before waiting
+      pause:
+          seconds: 3
+
     - name: wait for the template vm to shutdown upon completion
       shell: qm wait {{ template_vmid }}
+
+    - name: wait for shutdown
+      pause:
+          seconds: 3
 
     - name: mark the vm as a template
       shell: qm template {{ template_vmid }}

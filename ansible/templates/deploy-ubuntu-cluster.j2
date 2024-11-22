@@ -27,7 +27,7 @@ qm stop {{ vmid }}
 qm destroy {{ vmid }}
 qm clone {{ template_vmid }} {{ vmid }}
 qm set {{ vmid }} --name {{ hostvars[node].inventory_hostname }}
-qm set {{ vmid }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/24,gw={{ network_gateway }}'
+qm set {{ vmid }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/{{ network_cidr }},gw={{ network_gateway }}'
 qm set {{ vmid }} --cores {{ hostvars[node].numvcpus }}
 qm set {{ vmid }} --memory {{ hostvars[node].memsize }}
 qm set {{ vmid }} --nameserver '8.8.8.8 8.8.4.4'
@@ -43,7 +43,7 @@ qm stop {{ vmid }}
 qm destroy {{ vmid }}
 qm clone {{ template_vmid }} {{ vmid }}
 qm set {{ vmid }} --name {{ hostvars[node].inventory_hostname }}
-qm set {{ vmid }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/24,gw={{ network_gateway }}'
+qm set {{ vmid }} --ipconfig0 'ip={{ hostvars[node].ansible_host }}/{{ network_cidr }},gw={{ network_gateway }}'
 qm set {{ vmid }} --cores {{ hostvars[node].numvcpus }}
 qm set {{ vmid }} --memory {{ hostvars[node].memsize }}
 qm set {{ vmid }} --nameserver '8.8.8.8 8.8.4.4'

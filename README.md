@@ -132,9 +132,10 @@ k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
 - `desktop_vm_folder` places the k8s VM files in `./virtuals` by default.
 - `k8s_metallb_address_range` defines a set of address to for the `MetalLB`
 
-This is an example of a `proxmox` deployment:
+The following is an example of a `proxmox multi-host` deployment using __two__ Proxmox VE hosts joined to a `proxmox cluster` with no shared storage:
 
 ```
+
 [all:vars]
 cluster_type=proxmox-k8s
 cluster_name=k8s-prox
@@ -143,42 +144,44 @@ remote_user=root
 deploy_target=proxmox
 build_template=false
 
-network_mask=255.255.255.0
-network_gateway=192.168.1.1
+network_cidr=24
+network_gateway=192.168.2.1
 network_dns=8.8.8.8
 network_dns2=8.8.4.4
-network_dn=home.idstudios.io
+network_dn=lab.idstudios.io
 
-k8s_metallb_address_range=192.168.1.7-192.168.1.10
-k8s_control_plane_uri=k8s-m1.home.idstudios.io
-k8s_ingress_url=k8s-ingress.home.idstudios.io
+k8s_metallb_address_range=192.168.2.220-192.168.2.235
+k8s_control_plane_uri=k8s-m1.lab.idstudios.io
+k8s_ingress_url=k8s-ingress.lab.idstudios.io
 
 pod_readiness_timeout=600s
 use_longhorn_storage=false
 
+# could also be set at the node level
 proxmox_user=root
-template_vmid=777
 proxmox_storage=vm-thinpool
 
 [proxmox_hosts]
-scs-1.lab.idstudios.io ansible_ssh_user=root  #template_vmid
+scs-1.lab.idstudios.io template_vmid=777 #ansible_ssh_user=root  
+scs-2.lab.idstudios.io template_vmid=778 #ansible_ssh_user=root  
 
 [k8s_masters]
-k8s-m1.home.idstudios.io vmid=1001 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.1.11 numvcpus=2 memsize=4096 #template_vmid 
+k8s-m1.lab.idstudios.io vmid=1001 template_vmid=777 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.2.101 numvcpus=2 memsize=4096 
 
 [k8s_workers]
-k8s-w1.home.idstudios.io vmid=1002 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.1.14 numvcpus=4 memsize=6128
-k8s-w2.home.idstudios.io vmid=1003 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.1.15 numvcpus=4 memsize=6128
-
+k8s-w1.lab.idstudios.io vmid=1002 template_vmid=778 proxmox_host=scs-2.lab.idstudios.io ansible_host=192.168.2.111 numvcpus=4 memsize=6128
+k8s-w2.lab.idstudios.io vmid=1003 template_vmid=777 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.2.112 numvcpus=4 memsize=6128
 
 ```
-Once a template has been built on the `proxmox` host, setting `build_template` to `false` will re-use the existing template, reduce downloads and speed up deployment.  This can be set on a per host basis.
+> Note that in the above example, each `proxmox host` in the `proxmox cluster` specifies a unique `template_vmid`, which is then also referenced by the nodes deployed on that host.
 
 - The `template_vmid` can be set at the `proxmox_hosts` level.  If it differs per host, it should then align with the `node` level `proxmox_host` setting, such that when deployed to a `proxmox host`, the node will use the locally available template.  
 
+Once a template has been built on the `proxmox` host, setting `build_template` to `false` will re-use the existing template, reduce downloads and speed up deployment.  This can be set on a per host basis.
+
 - `proxmox_storage` can be used on the `proxmox_hosts` to specify where the template is stored, and at the `k8s` node level to specify where the VM will be stored.  It may also be set globally to place everything on the same disk/storage device.
 
-- the `vmid` must be set at the `node` level, and it must be unique within the proxmox cluster.
+- the `vmid` must be set at the `node` level, and should be unique within the `proxmox cluster`.
 
 Other settings are fairly self explanatory.
 

@@ -74,13 +74,13 @@ function cluster_info_display() {
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo -e "${EMOJI}Cluster Builder Deployment"
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
-  echo -e " Cluster Name    : ${TC}${CLUSTER_NAME}${NC}"
-  echo -e " Cluster Package : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
-  echo -e " Cluster Type    : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
+  echo -e " Name            : ${TC}${CLUSTER_NAME}${NC}"
+  echo -e " Package         : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
+  echo -e " Type            : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
 if [[ $DEPLOY_TARGET != "proxmox" ]]; then 
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
 fi
-  echo -e " Deploy Target   : ${TC}${DEPLOY_TARGET}${NC}"
+  echo -e " Target          : ${TC}${DEPLOY_TARGET}${NC}"
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo
 
@@ -146,10 +146,12 @@ fi
 TC=''
 NC=''
 EMOJI=''
+EMOJIPRE=''
 if [ "$TERM" == "xterm-256color" ]; then
   TC='\033[1;34m'
   NC='\033[0m' # No Color
   EMOJI='👷 '
+  EMOJIPRE='   '
 fi 
 
 cluster_info_display
@@ -176,7 +178,7 @@ else
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-echo "Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
+echo "${EMOJIPRE}Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) sec" 
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
