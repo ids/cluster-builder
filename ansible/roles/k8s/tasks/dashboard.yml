@@ -5,3 +5,19 @@
 - name: install Kubernetes Dashboard
   shell: /usr/local/bin/helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 
+- name: generate the dashboard user & role binding manifest
+  template:
+    src: templates/dashboard-user.j2
+    dest: "{{ target_dest_folder }}/dashboard-user.yml"
+
+- name: create dashboard admin user
+  shell: "kubectl apply -f {{ target_dest_folder }}/dashboard-user.yml"
+
+- name: generate token
+  shell: "kubectl -n kubernetes-dashboard create token admin-user > {{ target_dest_folder }}/dashboard_token"
+
+- name: fetch the dashboard authentication token
+  fetch:
+    src: "{{ target_dest_folder }}/dashboard_token"
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     

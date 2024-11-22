@@ -188,12 +188,17 @@ echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config ge
 echo 
 echo -e "To connect to the Kubernetes Dashboard:"
 echo
-echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config proxy${NC}"
+echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443${NC}"
 echo
 echo -e "Then open:"
-echo -e "${TC}http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/${NC}"
+echo -e "${TC}https://localhost:8443${NC}"
 echo
-
+echo -e "use the following token:"
+echo
+echo -e `cat clusters/${CLUSTER_PKG_FOLDER}/dashboard_token`
+echo
+echo -e "(the token can be found in the clusters/${CLUSTER_PKG_FOLDER}/dashboard_token file)
+echo
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
 echo
 echo -e "${TC}------------------------------------------------------------${NC}"
