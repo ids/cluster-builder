@@ -108,7 +108,7 @@ network_dns=8.8.8.8
 network_dns2=8.8.4.4
 network_dn=vm.idstudios.io
 
-k8s_metallb_address_range=192.168.42.160-192.168.42.179
+metallb_address_range=192.168.42.160-192.168.42.179
 
 k8s_control_plane_uri=k8s-m1.vm.idstudios.io
 k8s_ingress_url=k8s-ingress.vm.idstudios.io
@@ -130,7 +130,7 @@ k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
 - The `cluster_type` is currently `rocky9-k8s` or `proxmox-k8s` which is Ubuntu 24.04 LTS.
 - `remote_user` is `admin` locally, or `root` for `proxmox`.
 - `desktop_vm_folder` places the k8s VM files in `./virtuals` by default.
-- `k8s_metallb_address_range` defines a set of address to for the `MetalLB`
+- `metallb_address_range` defines a set of address to for the `MetalLB`
 
 The following is an example of a `proxmox multi-host` deployment using __two__ Proxmox VE hosts joined to a `proxmox cluster` with no shared storage:
 
@@ -150,7 +150,7 @@ network_dns=8.8.8.8
 network_dns2=8.8.4.4
 network_dn=lab.idstudios.io
 
-k8s_metallb_address_range=192.168.2.220-192.168.2.235
+metallb_address_range=192.168.2.220-192.168.2.235
 k8s_control_plane_uri=k8s-m1.lab.idstudios.io
 k8s_ingress_url=k8s-ingress.lab.idstudios.io
 
@@ -296,27 +296,61 @@ There are ansible tasks that use the inventory files to execute VM control comma
 
 Use **cluster-control**:
 
-	bash cluster-control <inventory-package | cluster-name> <action: one of stop|suspend|start|destroy>
+	bash cluster-control <inventory-spec | cluster-name> <action: one of stop|suspend|start|destroy>
 
 __Eg.__
 
 	$ bash cluster-control eg/demo-k8s suspend
 
-## Kubernetes Dashboard
+## Extra Packages
+The following packages can be included with the cluster deployment using the `install_package_xxx` directives, or can be added after deployment using the `install-package <cluster spec folder> <package name>` script.
 
-`kubectl --kubeconfig <mycluster-kube-config> proxy`
+Default settings for deployments are:
 
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+```
+install_package_metallb		= true 
+install_package_nginx		= true
+install_package_dashboard	= true
+install_packqge_longhorn	= false
+```
 
+These can be overriden in the `hosts` file and added after the fact using the `install-package` script.
 
-## Longhorn Storage
+### MetalLB
+Can be controlled with the option `install_package_metallb=true | false`.
+
+When `true`, the `hosts` file must also contain a list of addresses for the pool.
+
+Eg.
+
+```
+metallb_address_range=192.168.2.220-192.168.2.235
+```
+
+If not specified, `metallb` will not be installed.
+
+### NGINX
+Can be controlled with the option `install_package_nginx=true | false`.
+
+### Kubernetes Dashboard
+Can be controlled with the option `install_package_dashboard=true | false`.
+
+Launch the proxy:
+
+`kubectl --kubeconfig <mycluster-kube-config>  -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443`
+
+Browse to `https://localhost:8443`
+
+Enter the token found in the cluster spec folder, or use the `dashboard-token.sh` script to retrieve it.
+
+### Longhorn Storage
+Can be controlled with the option `install_package_longhorn=true | false`.
 
 Longhorn is a meaty deployment that appears to bump `CPU utilization` on the cluster by about `2%` (which is not bad), but for this reason it is off by default.
 
 To include it in the cluster deployment add the following line to your cluster `hosts` file:
 
 ```
-use_longhorn=true
+install_package_longhorn=true
 ```
 
-An updated `targetd` solution is in the works.

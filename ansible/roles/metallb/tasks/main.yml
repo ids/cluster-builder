@@ -1,0 +1,14 @@
+---
+- name: MetalLB config option
+  debug: msg="install_package_metallb = {{ install_package_metallb }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: MetalLB config option
+  debug: msg="{{ install_package_metallb|bool }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install MetalLB
+  include_tasks: metallb.yml
+  when: "inventory_hostname == groups['k8s_masters'][0] and install_package_metallb|bool"
+
+

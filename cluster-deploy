@@ -75,7 +75,7 @@ function cluster_info_display() {
   echo -e "${EMOJI}Cluster Builder Deployment"
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
   echo -e " Name            : ${TC}${CLUSTER_NAME}${NC}"
-  echo -e " Package         : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
+  echo -e " Spec Folder     : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
   echo -e " Type            : ${TC}${CLUSTER_TYPE} - ${CLUSTER_TYPE_NAME}${NC}"
 if [[ $DEPLOY_TARGET != "proxmox" ]]; then 
   echo -e " OVA Template    : ${TC}${OVA_TEMPLATE_FILE}${NC}"
@@ -113,9 +113,8 @@ DEPLOY_TARGET=`sed -n '/^deploy_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-K8S_VERSION=`sed -n '/^k8s_version=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-K8S_CRI=`sed -n '/^k8s_container_runtime=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-K8S_CNI=`sed -n '/^k8s_network_cni=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+INSTALL_DASHBOARD=`sed -n '/^install_package_dashboard=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+
 
 if [ "$CLUSTER_PROTECTED" == "true" ]; then
   echo
@@ -185,6 +184,8 @@ echo
 echo -e "The ${TC}kube-config${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
 echo 
 echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces${NC}"
+
+if [ "$INSTALL_DASHBOARD" == "true" ]; then
 echo 
 echo -e "To connect to the Kubernetes Dashboard:"
 echo
@@ -193,11 +194,8 @@ echo
 echo -e "Then open:"
 echo -e "${TC}https://localhost:8443${NC}"
 echo
-echo -e "use the following token:"
-echo
-echo -e `cat clusters/${CLUSTER_PKG_FOLDER}/dashboard_token`
-echo
-echo -e "(the token can be found in the clusters/${CLUSTER_PKG_FOLDER}/dashboard_token file)
+echo -e "(the token can be found in the clusters/${CLUSTER_PKG_FOLDER}/dashboard_token file)"
+fi
 echo
 echo -e "Enjoy your ${TC}${CLUSTER_TYPE_NAME}${NC}!"
 echo

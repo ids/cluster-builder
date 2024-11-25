@@ -1,0 +1,107 @@
+#!/bin/bash
+INVENTORY_FILE=$1
+SERVER_WAIT=90s
+
+export ANSIBLE_DISPLAY_SKIPPED_HOSTS=false
+export ANSIBLE_CONFIG=./ansible.cfg
+
+PACKAGE_NAME=$2
+if [ -z "${PACKAGE_NAME}" ]; then
+  echo -e "Package name must be specified.  Usage:"
+  echo 
+  echo -e "install-package <cluster spec folder> <package name>"
+fi
+
+function install_package () {
+
+  echo "Installing package to ${CLUSTER_NAME}..."
+  ansible-playbook -i $INVENTORY_FILE ansible/package-${PACKAGE_NAME}.yml --extra-vars "cluster_pkg_folder='${CLUSTER_PKG_FOLDER}' cluster_type=${CLUSTER_TYPE}"
+  if [ $? -ne 0 ]; then
+    echo "There was a problem installing the k8s package"
+    exit 1
+  fi
+
+  echo -e "${TC}------------------------------------------------------------${NC}"
+  echo "${EMOJI}SUCCESS: ${PACKAGE_NAME} Installed!"
+
+}
+
+function package_info_display() {
+
+  echo
+  echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
+  echo -e "${EMOJI}Install K8s Package"
+  echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
+  echo -e " Cluster         : ${TC}${CLUSTER_NAME}${NC}"
+  echo -e " Spec Folder     : ${TC}${CLUSTER_PKG_FOLDER}${NC}"
+  echo -e " Package Name    : ${TC}${PACKAGE_NAME}${NC}"
+  echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
+  echo
+
+}
+
+PLATFORM=`uname -ra`
+VIRT_APP="VMware Workstation"
+if [[ $PLATFORM == *"Microsoft"* ]]; then 
+  VIRT_APP="VMware Fusion"
+  export ANSIBLE_CONFIG=$PWD/ansible.cfg
+elif [[ $PLATFORM == *"Darwin"* ]]; then
+  VIRT_APP="VMware Fusion"
+fi
+
+if [ -z "${INVENTORY_FILE}" ]; then
+  read -s "Enter the target cluster folder: " INVENTORY_FILE
+fi
+
+INVENTORY_FILE=./clusters/$INVENTORY_FILE/hosts
+
+if [ ! -f $INVENTORY_FILE ]; then
+  echo
+  echo "Unable to find inventory file @: ${INVENTORY_FILE}"
+  exit 1
+fi
+
+CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+BUILD_TEMPLATE=`sed -n '/^build_template=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+DEPLOY_TARGET=`sed -n '/^deploy_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+K8S_VERSION=`sed -n '/^k8s_version=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+K8S_CRI=`sed -n '/^k8s_container_runtime=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+K8S_CNI=`sed -n '/^k8s_network_cni=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+
+if [ "$CLUSTER_PROTECTED" == "true" ]; then
+  echo
+  echo -e "${TC}Deployment Blocked!${NC}"
+  echo "The cluster has been marked protected=true" 
+  echo
+  echo "Changes are not allowed for ${CLUSTER_NAME}"
+  echo "remove the flag from the ${CLUSTER_PKG_FOLDER}/hosts file to make changes."
+  echo
+  exit 1
+fi  
+
+CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
+CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
+
+
+TC=''
+NC=''
+EMOJI=''
+EMOJIPRE=''
+if [ "$TERM" == "xterm-256color" ]; then
+  TC='\033[1;34m'
+  NC='\033[0m' # No Color
+  EMOJI='👷 '
+  EMOJIPRE='   '
+fi 
+
+package_info_display
+
+START_TIME=$SECONDS
+
+install_package
+
+
+  

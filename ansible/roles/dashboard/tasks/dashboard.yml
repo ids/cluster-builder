@@ -19,11 +19,25 @@
 - name: create dashboard admin user
   shell: "kubectl apply -f {{ target_dest_folder }}/dashboard-user.yml"
 
-- name: generate token
-  shell: "kubectl -n kubernetes-dashboard create token admin-user > {{ target_dest_folder }}/dashboard_token"
+- name: generate secret token
+  shell: kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d > {{ target_dest_folder }}/dashboard_token
 
 - name: fetch the dashboard authentication token
   fetch:
     src: "{{ target_dest_folder }}/dashboard_token"
     dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
     flat: yes     
+
+- name: generate the dashboard proxy script
+  template:
+    src: templates/dashboard-proxy.j2
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/dashboard-proxy.sh"
+  run_once: true
+  delegate_to: 127.0.0.1
+
+- name: generate the dashboard get token script
+  template:
+    src: templates/dashboard-token.j2
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/dashboard-token.sh"
+  run_once: true
+  delegate_to: 127.0.0.1

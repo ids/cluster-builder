@@ -1,0 +1,1 @@
+kubectl --kubeconfig ./kube-config get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d

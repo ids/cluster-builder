@@ -1,0 +1,9 @@
+---
+- name: NGINX config option
+  debug: msg="install_package_nginx = {{ install_package_nginx }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install NGINX
+  include_tasks: nginx.yml
+  when: "inventory_hostname == groups['k8s_masters'][0] and install_package_nginx|bool"
+

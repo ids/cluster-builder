@@ -1,4 +1,3 @@
-
 - name: list cluster nodes
   shell: kubectl get nodes
   register: final_nodes_out

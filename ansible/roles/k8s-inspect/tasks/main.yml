@@ -1,0 +1,5 @@
+---
+- name: inspect cluster
+  include_tasks: inspect.yml
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+

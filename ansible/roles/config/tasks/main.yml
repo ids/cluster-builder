@@ -140,12 +140,38 @@
 - debug: msg="target_dest_folder = {{ target_dest_folder }}"
   run_once: true  
 
-- name: set use_longhorn
+- name: set install_package_longhorn
   set_fact:
-    use_longhorn: false
+    install_package_longhorn: false
   run_once: true
-  when: use_longhorn is undefined
+  when: install_package_longhorn is undefined
 
-- debug: msg="use_longhorn = {{ use_longhorn }}"
+- debug: msg="install_package_longhorn = {{ install_package_longhorn }}"
   run_once: true  
 
+- name: set install_package_nginx
+  set_fact:
+    install_package_nginx: true
+  run_once: true
+  when: install_package_nginx is undefined
+
+- debug: msg="install_package_nginx = {{ install_package_nginx }}"
+  run_once: true  
+
+- name: set install_package_metallb
+  set_fact:
+    install_package_metallb: true
+  run_once: true
+  when: install_package_metallb is undefined
+
+- debug: msg="install_package_metallb = {{ install_package_metallb }}"
+  run_once: true  
+
+- name: set install_package_dashboard
+  set_fact:
+    install_package_dashboard: true
+  run_once: true
+  when: install_package_dashboard is undefined
+
+- debug: msg="install_package_dashboard = {{ install_package_dashboard }}"
+  run_once: true  

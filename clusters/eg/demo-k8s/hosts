@@ -17,7 +17,7 @@ network_dns=8.8.8.8
 network_dns2=8.8.4.4
 network_dn=demo.idstudios.io
 
-k8s_metallb_address_range=192.168.1.160-192.168.1.179
+metallb_address_range=192.168.1.160-192.168.1.179
 
 k8s_control_plane_uri=k8s-admin-single.demo.idstudios.io
 k8s_ingress_url=k8s-ingress.demo.idstudios.io

@@ -19,7 +19,7 @@ function show_usage () {
 
 if [ -z $INVENTORY_FILE ]; then 
   echo
-  echo "Cluster package not specified!"
+  echo "Cluster specification folder not specified!"
   echo
   show_usage
 fi
