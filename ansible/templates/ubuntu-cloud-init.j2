@@ -36,7 +36,7 @@ write_files:
 runcmd:
     - apt install -y qemu-guest-agent
     - apt update
-    - apt install -y software-properties-common apt-transport-https 
+    - apt install -y software-properties-common apt-transport-https nfs-common
     - add-apt-repository --yes --update ppa:ansible/ansible
     - apt install -y ansible
     - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
