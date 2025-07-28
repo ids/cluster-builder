@@ -9,7 +9,7 @@
   shell: "/usr/local/bin/helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --set=resources.limits.cpu=200m,metricsScraper.enabled=true"
 
 - name: install Metrics Server
-  shell: "/usr/local/bin/helm upgrade --install metrics-server metrics-server/metrics-server --namespace kubernetes-dashboard --set=args={--kubelet-insecure-tls=true}"
+  shell: "/usr/local/bin/helm upgrade --install metrics-server metrics-server/metrics-server --namespace kubernetes-dashboard --set=args={--kubelet-insecure-tls=true}" 
 
 - name: generate the dashboard user & role binding manifest
   template:
@@ -20,6 +20,9 @@
   shell: "kubectl apply -f {{ target_dest_folder }}/dashboard-user.yml"
 
 - name: generate secret token
+  shell: kubectl -n kube-system create token admin-user
+
+- name: store secret token in file
   shell: kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d > {{ target_dest_folder }}/dashboard_token
 
 - name: fetch the dashboard authentication token
