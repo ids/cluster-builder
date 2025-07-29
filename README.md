@@ -302,6 +302,26 @@ __Eg.__
 
 	$ bash cluster-control eg/demo-k8s suspend
 
+## Adding Cluster VM Nodes
+To add additional worker nodes:
+
+1. Copy the `hosts` file in the cluster package folder to `hosts_add`.
+2. Remove all existing hosts but leave the file intact.
+3. Add new worker nodes in `[k8s_workers]`.
+4. Run the `./cluster-addnodes <cluster package folder>` script.
+5. This will deploy specified new node VMs ready to join the cluster.  When it completes, follow the instructions displayed on screen by connecting to a MASTER NODE and executing: 
+
+`kubeadm token create --print-join-command`
+
+6. Copy the command created.
+7. SSH into the new node(s) and apply the JOIN COMMAND output in step #5.
+
+Verify the new node(s) have joined the cluster.
+
+__Note:__ make sure to copy added workers into the main `hosts` file, and delete the `hosts_add` when node has been created.
+
+> As this simply creates a compatible VM, it can also be used to add additional `masters`.
+
 ## Extra Packages
 The following packages can be included with the cluster deployment using the `install_package_xxx` directives, or can be added after deployment using the `install-package <cluster spec folder> <package name>` script.
 
