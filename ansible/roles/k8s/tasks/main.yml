@@ -32,9 +32,8 @@
     src: templates/k8s-log-rotation.j2
     dest: /etc/logrotate.d/containers
 
-- name: wait for canal CNI on all workers
-  shell: kubectl wait -n kube-system  pod -l k8s-app=canal --for condition=Ready --timeout={{ pod_readiness_timeout }}
-  when: "inventory_hostname == groups['k8s_masters'][0]"
-
+#- name: wait for canal CNI on all workers
+#  shell: kubectl wait -n kube-system  pod -l k8s-app=canal --for condition=Ready --timeout={{ pod_readiness_timeout }}
+#  when: "inventory_hostname == groups['k8s_masters'][0]"
 
 

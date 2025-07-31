@@ -1,8 +1,5 @@
 
 ---
-- name: enable chrony
-  shell: apt install -y chrony
-
 - name: configure the chrony time servers
   template:
     src: templates/chrony-conf.j2

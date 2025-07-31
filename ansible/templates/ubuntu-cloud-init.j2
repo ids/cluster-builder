@@ -33,10 +33,16 @@ write_files:
     permissions: '0644'
 #scripts-user:
 #  - /usr/local/bin/k8sprep
+power_state:
+      delay: "now"  # or "+5" for 5 minutes delay
+      mode: poweroff # or reboot, halt
+      message: "Cloud-init finished, shutting down."
+      timeout: 300 # maximum time to wait for cloud-init to finish
 runcmd:
-    - apt install -y qemu-guest-agent
     - apt update
-    - apt install -y software-properties-common apt-transport-https nfs-common
+    - apt upgrade -y
+    - apt install -y software-properties-common apt-transport-https nfs-common qemu-guest-agent chrony
+    - systemctl enable qemu-guest-agent
     - add-apt-repository --yes --update ppa:ansible/ansible
     - apt install -y ansible
     - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -56,11 +62,12 @@ runcmd:
     - swapoff -a
     - sed -e '/swap/s/^/#/g' -i /etc/fstab
     - mkdir -p -m 755 /etc/apt/keyrings
-    - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    - echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+    - curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ k8s_version_minor }}/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    - echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version_minor }}/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
     - apt-get update
     - apt-get install -y kubelet kubeadm kubectl
     - apt-mark hold kubelet kubeadm kubectl
+    - kubeadm config images pull 
     - systemctl enable ssh
     - shutdown now
 # Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772

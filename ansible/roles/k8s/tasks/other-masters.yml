@@ -1,41 +1,26 @@
-- name: ensure pki folder exists
-  shell: mkdir -p /etc/kubernetes/pki/
+#- name: ensure pki folder exists
+#  shell: mkdir -p /etc/kubernetes/pki/
 
-- name: ensure pki/etcd folder exists
-  shell: mkdir -p /etc/kubernetes/pki/etcd
+#- name: ensure pki/etcd folder exists
+#  shell: mkdir -p /etc/kubernetes/pki/etcd
 
-- name: copy the PKI certs to the other masters
-  copy:
-    dest: /etc/kubernetes/pki/{{ item }}
-    src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
-    mode: 644
-  with_items:
-    - ca.crt  
-    - front-proxy-ca.crt  
-    - etcd/ca.crt
+#- name: copy the PKI certs to the other masters
+#  copy:
+#    dest: /etc/kubernetes/pki/{{ item }}
+#    src: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/pki/{{ item }}"
+#    mode: 644
+#  with_items:
+#    - ca.crt  
+#    - front-proxy-ca.crt  
+#    - etcd/ca.crt
 #    - front-proxy-client.crt  
 #    - apiserver.crt  
 #    - apiserver-kubelet-client.crt  
 
-- name: copy the master_join_cmd to the other masters
+- name: copy the master_join_cmd
   copy:
-    dest: /root/master_join_cmd
+    dest: /root/
     src: ../clusters/{{ cluster_pkg_folder }}/master_join_cmd
-    mode: 766
- 
-- name: copy the admin.conf to the other masters
-  copy:
-    dest: /etc/kubernetes/
-    src: ../clusters/{{ cluster_pkg_folder }}/admin.conf
-    mode: 766
-
-- name: ensure the /root/.kube folder exists
-  shell: mkdir -p /root/.kube
-
-- name: copy the admin.conf to the other masters root ~/.kube/config
-  copy:
-    dest: /root/.kube/config
-    src: ../clusters/{{ cluster_pkg_folder }}/admin.conf
     mode: 766
 
 - name: start kubelet on other master nodes
@@ -46,7 +31,7 @@
 
 - name: pause to give kubelet time to initialize
   pause:
-    seconds: 45
+    seconds: 30
 
 - name: join other master to cluster
   shell: "/root/master_join_cmd"
@@ -54,6 +39,3 @@
 
 - name: master join result
   debug: msg="{{ master_join.stdout_lines }}"
-
-- name: ensure the kubelet is enabled
-  shell: systemctl enable kubelet

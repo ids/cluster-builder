@@ -1,4 +1,4 @@
 ---
 - name: install Longhorn
-  shell: kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.9.1/deploy/longhorn.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v{{ longhorn_version }}/deploy/longhorn.yaml
   

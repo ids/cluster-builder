@@ -4,7 +4,14 @@
   gather_facts: false
   vars:
     proxmox_storage: local-lvm
+  roles:
+    - role: config
   tasks:
+    - name: verify the cluster is not protected
+      fail:
+        msg: "This cluster is marked as 'cluster_protected' and can not be re-deployed!"
+      when: cluster_protected is defined
+    
     - name: stop existing vm
       ignore_errors: true
       local_action:
@@ -12,7 +19,7 @@
         _raw_params: > 
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm stop {{ vmid }} 
-    
+
     - name: unlock existing vm
       ignore_errors: true
       local_action:
@@ -34,6 +41,8 @@
   gather_facts: false
   serial: 1
   tasks:
+    - debug: msg="cloning the template for {{ inventory_hostname }}"
+
     - name: clone the template
       local_action:
         module: shell
@@ -76,29 +85,35 @@
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm set {{ vmid }} --memory {{ memsize }}
 
-    
-    - name: start the vm for cloud-init regen
-      local_action:
-        module: shell
-        _raw_params: > 
-          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-          qm start {{ vmid }} 
+# removed cloud init from template after initial build, rebuild template to update software between
+# cluster builds
+#
+ #   - name: start the vm for cloud-init regen
+ #     local_action:
+ #       module: shell
+ #       _raw_params: > 
+ #         ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+ #         qm start {{ vmid }} 
+ #     when: cluster_protected is undefined
 
-    - name: wait before waiting
-      pause:
-          seconds: 3
+ #   - name: wait before waiting
+ #     pause:
+ #         seconds: 15
+ #     when: cluster_protected is undefined
 
-    - name: wait for the node cloud-init to complete and shutdown
-      ignore_errors: true
-      local_action:
-        module: shell
-        _raw_params: > 
-          ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-          qm wait {{ vmid }} 
+  #  - name: wait for the node cloud-init to complete and shutdown
+  #    ignore_errors: true
+  #    local_action:
+  #      module: shell
+  #      _raw_params: > 
+  #        ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+  #        qm wait {{ vmid }} 
+  #    when: cluster_protected is undefined
 
-    - name: wait before starting again
-      pause:
-          seconds: 5
+  #  - name: wait before starting again
+  #    pause:
+  #        seconds: 10
+  #    when: cluster_protected is undefined
 
     - name: start the node
       ignore_errors: true
@@ -108,9 +123,9 @@
           ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
           qm start {{ vmid }} 
 
-    - name: give the node 15 seconds to boot
+    - name: give the node 5 seconds to boot
       pause:
-          seconds: 15
+          seconds: 5
 
     - name: list the running vms
       local_action:

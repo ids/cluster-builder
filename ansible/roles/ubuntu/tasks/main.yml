@@ -1,4 +1,7 @@
 ---
+- name: ensure all hosts are reachable
+  ansible.builtin.ping:
+  
 - name: configure chronyd
   include_tasks: chronyd.yml
   

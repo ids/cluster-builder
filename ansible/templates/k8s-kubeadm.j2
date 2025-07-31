@@ -1,17 +1,18 @@
 ---
 kind: InitConfiguration
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 localAPIEndpoint:
   advertiseAddress: {{ ansible_host }}
   bindPort: 6443
 ---
 kind: ClusterConfiguration
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 networking:
   serviceSubnet: "10.96.0.0/16"
   podSubnet: "10.244.0.0/16"
   dnsDomain: "cluster.local"
-kubernetesVersion: "{{ kubernetes_version }}"
+controlPlaneEndpoint: "{{ k8s_control_plane_uri }}:6443"  
+kubernetesVersion: "{{ k8s_version }}"
 clusterName: "{{ cluster_name }}"
 ---
 kind: KubeletConfiguration

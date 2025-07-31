@@ -1,6 +1,6 @@
 ---
 - name: install metallb
-  shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
+  shell: kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v{{ metallb_version }}/config/manifests/metallb-native.yaml
   when: "metallb_address_range is defined"
 
 - name: give metalLB a few seconds

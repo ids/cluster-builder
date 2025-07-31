@@ -12,7 +12,7 @@ echo "Update the system..."
 sudo dnf -y update
 
 echo "Install utility packages..."
-sudo dnf -y install mlocate net-tools unzip wget sudo tar xz curl bind-utils sed
+sudo dnf -y install mlocate net-tools unzip wget sudo tar xz curl bind-utils sed chrony
 
 echo "Install base dependencies..."
 sudo dnf install -y python3 python3-devel python3-pip libffi-devel openssl-devel gcc 

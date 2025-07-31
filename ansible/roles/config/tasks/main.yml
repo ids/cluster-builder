@@ -116,15 +116,6 @@
 - debug: msg="pod_readiness_timeout = {{ pod_readiness_timeout }}"
   run_once: true  
 
-- name: set kubernetes_version
-  set_fact:
-    kubernetes_version: v1.30.6
-  run_once: true
-  when: kubernetes_version is undefined
-
-- debug: msg="kubernetes_version = {{ kubernetes_version }}"
-  run_once: true  
-
 - name: set target_dest_folder
   set_fact:
     target_dest_folder: /root
@@ -140,6 +131,15 @@
 - debug: msg="target_dest_folder = {{ target_dest_folder }}"
   run_once: true  
 
+- name: set canal_version
+  set_fact:
+    canal_version: 3.30.2
+  run_once: true
+  when: canal_version is undefined
+
+- debug: msg="canal_version = {{ canal_version }}"
+  run_once: true  
+
 - name: set install_package_longhorn
   set_fact:
     install_package_longhorn: false
@@ -147,6 +147,15 @@
   when: install_package_longhorn is undefined
 
 - debug: msg="install_package_longhorn = {{ install_package_longhorn }}"
+  run_once: true  
+
+- name: set longhorn_version
+  set_fact:
+    longhorn_version: 1.9.1
+  run_once: true
+  when: longhorn_version is undefined
+
+- debug: msg="longhorn_version = {{ longhorn_version }}"
   run_once: true  
 
 - name: set install_package_nginx
@@ -158,6 +167,15 @@
 - debug: msg="install_package_nginx = {{ install_package_nginx }}"
   run_once: true  
 
+- name: set nginx_version
+  set_fact:
+    nginx_version: 1.13.0
+  run_once: true
+  when: nginx_version is undefined
+
+- debug: msg="nginx_version = {{ nginx_version }}"
+  run_once: true  
+
 - name: set install_package_metallb
   set_fact:
     install_package_metallb: true
@@ -165,6 +183,15 @@
   when: install_package_metallb is undefined
 
 - debug: msg="install_package_metallb = {{ install_package_metallb }}"
+  run_once: true  
+
+- name: set metallb_version
+  set_fact:
+    metallb_version: 0.15.2
+  run_once: true
+  when: metallb_version is undefined
+
+- debug: msg="metallb_version = {{ metallb_version }}"
   run_once: true  
 
 - name: set install_package_dashboard
@@ -175,3 +202,22 @@
 
 - debug: msg="install_package_dashboard = {{ install_package_dashboard }}"
   run_once: true  
+
+- name: set k8s_version
+  set_fact:
+    k8s_version: 1.33.0
+  run_once: true
+  when: k8s_version is undefined
+
+- debug: msg="k8s_version = {{ k8s_version }}"
+  run_once: true  
+
+- name: set k8s_version_minor
+  set_fact:
+    k8s_version_minor: "{{ k8s_version | regex_replace(\"\\.[^.]*$\", '') }}"
+  run_once: true
+  when: k8s_version_minor is undefined
+
+- debug: msg="k8s_version_minor = {{ k8s_version_minor }}"
+  run_once: true  
+

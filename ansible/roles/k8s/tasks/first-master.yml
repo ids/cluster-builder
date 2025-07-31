@@ -6,9 +6,24 @@
 - name: ensure the kubelet is enabled
   shell: systemctl enable kubelet
 
+- debug: msg="intializing kubeadm cluster..."
+
 - name: initialize cluster on first master
-  shell: "kubeadm init --config {{ target_dest_folder }}/kube-adm.yml --upload-certs"
+  shell: "kubeadm init --config {{ target_dest_folder }}/kube-adm.yml --upload-certs > /root/kube_init_output"
   ignore_errors: false
+
+- name: create master join command
+  shell: "grep -A 4 \"You can now join any number of control-plane nodes\" /root/kube_init_output | sed '1,2d' > /root/master_join_cmd"
+  ignore_errors: true
+
+- name: get master join command
+  shell: "cat /root/master_join_cmd"
+  register: master_join_cmd
+  ignore_errors: true
+
+- name: kubeadm master join command
+  debug: msg="{{ master_join_cmd.stdout }}"
+  ignore_errors: true
 
 - name: get worker join command
   shell: "kubeadm token create --print-join-command"
@@ -27,6 +42,19 @@
 
 - name: setup kubectl configuration
   shell: rm -rf $HOME/.kube && mkdir -p $HOME/.kube && cp /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config
+
+- name: fetch the kube_init_output file
+  fetch:
+    src: "{{ target_dest_folder }}/kube_init_output"
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+
+- name: fetch the master_join_cmd file
+  fetch:
+    src: "{{ target_dest_folder }}/master_join_cmd"
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/"
+    flat: yes     
+  ignore_errors: true
 
 - name: fetch the join_cmd file
   fetch:
