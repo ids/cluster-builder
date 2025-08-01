@@ -23,7 +23,7 @@
   shell: kubectl -n kube-system create token admin-user
 
 - name: store secret token in file
-  shell: kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d > {{ target_dest_folder }}/dashboard_token
+  shell: kubectl get secret admin-user -n kube-system -o jsonpath={".data.token"} | base64 -d > {{ target_dest_folder }}/dashboard_token
 
 - name: fetch the dashboard authentication token
   fetch:
