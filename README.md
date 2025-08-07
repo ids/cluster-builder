@@ -374,3 +374,62 @@ To include it in the cluster deployment add the following line to your cluster `
 install_package_longhorn=true
 ```
 
+### Flux Operator
+Can be controlled with the option `install_package_flux | false`.
+
+This will install the flux operator, enabling for declarative management of the flux instance:
+
+To include it in the cluster deployment add the following line to your cluster `hosts` file:
+
+```
+install_package_flux=true
+install_package_sealedsecrets=true
+...
+
+# recommend deploying all other packages via Flux, but keeping sealed-secrets a part of cluster-builder
+# deployment to enable cluster recreation with the same externally managed sealed-secret cert
+
+install_package_longhorn=false
+install_package_metallb=false
+install_package_nginx=false
+install_package_dashboard=false
+
+```
+
+The sealed-secrets package is designed to work with the flux package to enable all other deployments to be flux driven
+
+### Sealed Secrets
+Can be controlled with the option `install_package_sealedsecrets | false`.
+
+The `cluster-builder` sealed secrets deployment is designed to use pre-generated keys to enable cluster re-creation in concert with a `Flux CD` backend.
+
+First, generate the necessary certificate:
+
+```
+export PRIVATEKEY="my-tls.key"
+export PUBLICKEY="my-tls.crt"
+
+openssl req -x509 -nodes -newkey rsa:4096 -keyout "$PRIVATEKEY" -out "$PUBLICKEY" -subj "/CN=sealed-secret/O=sealed-secret"
+```
+
+Copy the keys somewhere safe, for this example: `~/Keys`.
+
+Then to include `sealed-secrets` in the cluster deployment add the following configuration to your cluster `hosts` file:
+
+```
+install_package_sealedsecrets=true
+sealedsecrets_ns=sealed-secrets
+sealedsecrets_cert_folder=~/Keys
+sealedsecrets_cert_file=my-tls.crt
+sealedsecrets_key_file=my-tls.key
+```
+
+Create a test secret:
+```
+kubectl create secret generic secret-name --dry-run=client --from-literal=foo=bar -o yaml | kubeseal --controller-name=sealed-secrets-controller --controller-namespace=sealed-secrets -o yaml --cert=$PUBLICKEY | kubectl apply -f -
+```
+
+Verify:
+```
+kubectl logs sealed-secrets-controller -n sealed-secrets
+```

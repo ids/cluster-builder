@@ -16,6 +16,8 @@
     - role: nginx
     - role: dashboard
     - role: longhorn
+    - role: flux
+    - role: sealed-secrets
     - role: k8s-inspect
 
 

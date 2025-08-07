@@ -1,0 +1,5 @@
+---
+- name: install Sealed Secrets
+  include_tasks: sealed-secrets.yml
+  when: "inventory_hostname == groups['k8s_masters'][0] and install_package_sealedsecrets|bool"
+

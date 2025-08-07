@@ -1,0 +1,9 @@
+---
+- name: Flux config option
+  debug: msg="install_package_flux = {{ install_package_flux }}"
+  when: "inventory_hostname == groups['k8s_masters'][0]"
+
+- name: install Flux
+  include_tasks: flux-operator.yml
+  when: "inventory_hostname == groups['k8s_masters'][0] and install_package_flux|bool"
+

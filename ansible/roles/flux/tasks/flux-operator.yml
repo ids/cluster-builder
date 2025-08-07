@@ -1,0 +1,12 @@
+---
+- name: install latest Flux Operator
+  shell: kubectl apply -f https://github.com/controlplaneio-fluxcd/flux-operator/releases/latest/download/install.yaml
+
+- name: wait for the flux operator 
+  shell: kubectl wait -n flux-system pod -l app.kubernetes.io\/name=flux-operator --for condition=Ready --timeout={{ pod_readiness_timeout }}
+
+- name: list all running pods in flux-system
+  shell: kubectl get pods -n flux-system
+  register: final_pods_out
+
+- debug: msg="{{ final_pods_out.stdout_lines }}"

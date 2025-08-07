@@ -203,6 +203,51 @@
 - debug: msg="install_package_dashboard = {{ install_package_dashboard }}"
   run_once: true  
 
+- name: set install_package_flux
+  set_fact:
+    install_package_flux: false
+  run_once: true
+  when: install_package_flux is undefined
+
+- debug: msg="install_package_flux = {{ install_package_flux }}"
+  run_once: true  
+
+- name: set flux_version
+  set_fact:
+    flux_version: 2.6.x
+  run_once: true
+  when: flux_version is undefined
+
+- debug: msg="flux_version = {{ flux_version }}"
+  run_once: true  
+
+- name: set install_package_sealedsecrets
+  set_fact:
+    install_package_sealedsecrets: false
+  run_once: true
+  when: install_package_sealedsecrets is undefined
+
+- debug: msg="install_package_sealedsecrets = {{ install_package_sealedsecrets }}"
+  run_once: true  
+
+- name: set sealedsecrets_version
+  set_fact:
+    sealedsecrets_version: 2.6.x
+  run_once: true
+  when: sealedsecrets_version is undefined
+
+- debug: msg="sealedsecrets_version = {{ sealedsecrets_version }}"
+  run_once: true  
+
+- name: set sealedsecrets_ns
+  set_fact:
+    sealedsecrets_ns: "sealed-secrets"
+  run_once: true
+  when: sealedsecrets_ns is undefined
+
+- debug: msg="sealedsecrets_ns = {{ sealedsecrets_ns }}"
+  run_once: true  
+
 - name: set k8s_version
   set_fact:
     k8s_version: 1.33.0
