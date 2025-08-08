@@ -31,14 +31,14 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop" />
 <meta property="og:description" content="Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop" />
-<link rel="canonical" href="http://localhost:4000/" />
-<meta property="og:url" content="http://localhost:4000/" />
+<link rel="canonical" href="http://localhost:4000/index%20copy.html" />
+<meta property="og:url" content="http://localhost:4000/index%20copy.html" />
 <meta property="og:site_name" content="Cluster Builder" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Cluster Builder" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop","headline":"Cluster Builder","name":"Cluster Builder","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/logo-2018-icon.png"}},"url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Automatically Deploy Kubernetes Clusters to Proxmox VE and VMware Desktop","headline":"Cluster Builder","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/logo-2018-icon.png"}},"url":"http://localhost:4000/index%20copy.html"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -79,32 +79,30 @@
 <p>Using freely available tools and only an annotated Ansible inventory file <a href="https://github.com/ids/cluster-builder">cluster-builder</a> enables the configuration and deployment of Kubernetes clusters to <a href="https://www.proxmox.com/en/">Proxmox VE kvm</a> hypervisors and local legacy VMware Fusion environments.</p>
 
 <blockquote>
-  <p>One command… and the cluster is deployed and re-deployed as needed.</p>
+  <p>One command… and the cluster is deployed!</p>
 </blockquote>
+
+<script id="asciicast-r6irOhfrbkTKvdo7SlVbGEyUL" src="https://asciinema.org/a/r6irOhfrbkTKvdo7SlVbGEyUL.js" async="" data-autoplay="true" data-rows="41" data-theme="solarized-dark" data-size="small" data-speed="5"></script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-<p>Transparently uses <a href="https://www.ansible.com">Ansible</a> and Bash to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> to <a href="https://www.proxmox.com/en/">Proxmox VE</a>.  Easy to see what is happening, easy to diagnose problems.  Ansible executes commands as a human operator might, making the entire cluster configuration process transparent and configurable.</p>
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> uses primarily <a href="https://www.ansible.com">Ansible</a> and Bash (and sometimes <a href="https://www.packer.io">Packer</a>) to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> into <a href="https://www.proxmox.com/en/">Proxmox VE</a> and VMware desktop environments.</p>
 
-<p>Updated for <strong>2025</strong> with:</p>
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> has been updated for <strong>2024</strong> with:</p>
 
 <ul>
-  <li><a href="https://www.proxmox.com/en/">Proxmox VE</a> deployment of <code class="language-plaintext highlighter-rouge">Ubuntu 24.04 LTS Kubernetes 1.33</code></li>
-  <li>VMware Fusion/Desktop deployment of <code class="language-plaintext highlighter-rouge">Rocky Linux 9.4 Kubernetes 1.33</code></li>
-  <li>VMware ESXi is <em>long</em> gone.</li>
-  <li>The <a href="https://fluxcd.control-plane.io/operator/">Flux CD Operator</a> and <a href="https://github.com/bitnami-labs/sealed-secrets">Sealed Secrets</a> packages have been added to support GitOps clusters.</li>
+  <li><a href="https://www.proxmox.com/en/">Proxmox VE</a> <code class="language-plaintext highlighter-rouge">Ubuntu 24.04 LTS Kubernetes 1.30</code></li>
+  <li>VMware Fusion/Desktop <code class="language-plaintext highlighter-rouge">Rocky Linux 9.4 Kubernetes 1.30</code></li>
+  <li>VMware ESXi is gone.</li>
 </ul>
 
-<p>Clusters may also optionally include:</p>
-
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> clusters include:</p>
 <ul>
   <li><a href="https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel">Canal</a> Networking &amp; Policy</li>
   <li><a href="https://metallb.universe.tf">MetalLB</a> Load Balancer</li>
   <li><a href="https://longhorn.io/">Longhorn</a> PV Storage</li>
   <li><a href="https://github.com/kubernetes/ingress-nginx">NGINX</a> Ingress</li>
   <li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/">Kubernetes Dashboard</a></li>
-  <li><a href="https://github.com/bitnami-labs/sealed-secrets">Sealed Secrets</a></li>
-  <li><a href="https://fluxcd.control-plane.io/operator/">Flux CD Operator</a></li>
 </ul>
 
 <hr />

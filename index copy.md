@@ -7,31 +7,30 @@ layout: default
 
 Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE kvm](https://www.proxmox.com/en/) hypervisors and local legacy VMware Fusion environments.
 
-> One command... and the cluster is deployed and re-deployed as needed. 
+> One command... and the cluster is deployed!
+
+<script id="asciicast-r6irOhfrbkTKvdo7SlVbGEyUL" src="https://asciinema.org/a/r6irOhfrbkTKvdo7SlVbGEyUL.js"  async data-autoplay="true" data-rows="41" data-theme="solarized-dark" data-size="small" data-speed="5"></script>
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-Transparently uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Easy to see what is happening, easy to diagnose problems.  Ansible executes commands as a human operator might, making the entire cluster configuration process transparent and configurable.
+[cluster-builder](https://github.com/ids/cluster-builder) uses primarily [Ansible](https://www.ansible.com) and Bash (and sometimes [Packer](https://www.packer.io)) to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) into [Proxmox VE](https://www.proxmox.com/en/) and VMware desktop environments.  
 
-Updated for __2025__ with:
+[cluster-builder](https://github.com/ids/cluster-builder) has been updated for __2024__ with:
 
-- [Proxmox VE](https://www.proxmox.com/en/) deployment of `Ubuntu 24.04 LTS Kubernetes 1.33`
-- VMware Fusion/Desktop deployment of `Rocky Linux 9.4 Kubernetes 1.33`
-- VMware ESXi is _long_ gone.
-- The [Flux CD Operator](https://fluxcd.control-plane.io/operator/) and [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) packages have been added to support GitOps clusters.
+- [Proxmox VE](https://www.proxmox.com/en/) `Ubuntu 24.04 LTS Kubernetes 1.30`
+- VMware Fusion/Desktop `Rocky Linux 9.4 Kubernetes 1.30`
+- VMware ESXi is gone.
 
-Clusters may also optionally include:
-
+[cluster-builder](https://github.com/ids/cluster-builder) clusters include:
 - [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
 - [MetalLB](https://metallb.universe.tf) Load Balancer
 - [Longhorn](https://longhorn.io/) PV Storage
 - [NGINX](https://github.com/kubernetes/ingress-nginx) Ingress
 - [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
-- [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)
-- [Flux CD Operator](https://fluxcd.control-plane.io/operator/)
+
 
 ---
 <div class="center" style="margin-left: -20px;">
