@@ -9,6 +9,8 @@ Using freely available tools and only an annotated Ansible inventory file [clust
 
 > One command... and the cluster is deployed and re-deployed as needed. 
 
+<script id="asciicast-r6irOhfrbkTKvdo7SlVbGEyUL" src="https://asciinema.org/a/r6irOhfrbkTKvdo7SlVbGEyUL.js"  async data-autoplay="true" data-rows="41" data-theme="solarized-dark" data-size="small" data-speed="5"></script>
+
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
