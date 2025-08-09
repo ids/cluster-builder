@@ -3,7 +3,7 @@ ansible/*.retry
 !clusters/
 clusters/*
 !clusters/README.md
-!clusters/eg/
+!clusters/acme/
 
 docs/images/*.bak 
 

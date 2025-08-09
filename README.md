@@ -108,22 +108,39 @@ network_dns=8.8.8.8
 network_dns2=8.8.4.4
 network_dn=vm.idstudios.io
 
-metallb_address_range=192.168.42.160-192.168.42.179
-
 k8s_control_plane_uri=k8s-m1.vm.idstudios.io
 k8s_ingress_url=k8s-ingress.vm.idstudios.io
 
+metallb_address_range=192.168.42.160-192.168.42.179
+
+# These are legacy ansible install directives
+
+install_package_longhorn=false
+install_package_metallb=false
+install_package_nginx=false
+install_package_dashboard=false
+
+# This sets up the cluster for Flux CD GitOps using external keys
+
+install_package_flux=true
+install_package_sealedsecrets=true
+
+sealedsecrets_ns=sealed-secrets
+sealedsecrets_cert_folder=/path/to/keys
+sealedsecrets_cert_file=acme-tls.crt
+sealedsecrets_key_file=acme-tls.key
+
 [k8s_masters]
-k8s-m1.vm.idstudios.io ansible_host=192.168.42.200 
+k8s-m1.vm.acme.io ansible_host=192.168.42.200 
 
 [k8s_workers]
-k8s-w1.vm.idstudios.io ansible_host=192.168.42.210
-k8s-w2.vm.idstudios.io ansible_host=192.168.42.211
+k8s-w1.vm.acme.io ansible_host=192.168.42.210
+k8s-w2.vm.acme.io ansible_host=192.168.42.211
 
 [vmware_vms]
-k8s-m1.vm.idstudios.io numvcpus=4 memsize=2048
-k8s-w1.vm.idstudios.io numvcpus=4 memsize=4096
-k8s-w2.vm.idstudios.io numvcpus=4 memsize=4096
+k8s-m1.vm.acme.io numvcpus=4 memsize=2048
+k8s-w1.vm.acme.io numvcpus=4 memsize=4096
+k8s-w2.vm.acme.io numvcpus=4 memsize=4096
 
 ```
 - `deploy_target` is either `fusion`, `workstation` (windows), or `proxmox`
@@ -154,23 +171,39 @@ metallb_address_range=192.168.2.220-192.168.2.235
 k8s_control_plane_uri=k8s-m1.lab.idstudios.io
 k8s_ingress_url=k8s-ingress.lab.idstudios.io
 
+# These are legacy ansible install directives
+
+install_package_longhorn=false
+install_package_metallb=false
+install_package_nginx=false
+install_package_dashboard=false
+
+# This sets up the cluster for Flux CD GitOps using external keys
+
+install_package_flux=true
+install_package_sealedsecrets=true
+
+sealedsecrets_ns=sealed-secrets
+sealedsecrets_cert_folder=/path/to/keys
+sealedsecrets_cert_file=acme-tls.crt
+sealedsecrets_key_file=acme-tls.key
+
 pod_readiness_timeout=600s
-use_longhorn_storage=false
 
 # could also be set at the node level
 proxmox_user=root
 proxmox_storage=vm-thinpool
 
 [proxmox_hosts]
-scs-1.lab.idstudios.io template_vmid=777 #ansible_ssh_user=root  
-scs-2.lab.idstudios.io template_vmid=778 #ansible_ssh_user=root  
+scs-1.lab.acme.io template_vmid=777 #ansible_ssh_user=root  
+scs-2.lab.acme.io template_vmid=778 #ansible_ssh_user=root  
 
 [k8s_masters]
-k8s-m1.lab.idstudios.io vmid=1001 template_vmid=777 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.2.101 numvcpus=2 memsize=4096 
+k8s-m1.lab.acme.io vmid=1001 template_vmid=777 proxmox_host=scs-1.lab.acme.io ansible_host=192.168.2.101 numvcpus=2 memsize=4096 
 
 [k8s_workers]
-k8s-w1.lab.idstudios.io vmid=1002 template_vmid=778 proxmox_host=scs-2.lab.idstudios.io ansible_host=192.168.2.111 numvcpus=4 memsize=6128
-k8s-w2.lab.idstudios.io vmid=1003 template_vmid=777 proxmox_host=scs-1.lab.idstudios.io ansible_host=192.168.2.112 numvcpus=4 memsize=6128
+k8s-w1.lab.acme.io vmid=1002 template_vmid=778 proxmox_host=scs-2.lab.acme.io ansible_host=192.168.2.111 numvcpus=4 memsize=6128
+k8s-w2.lab.acme.io vmid=1003 template_vmid=777 proxmox_host=scs-1.lab.acme.io ansible_host=192.168.2.112 numvcpus=4 memsize=6128
 
 ```
 > Note that in the above example, each `proxmox host` in the `proxmox cluster` specifies a unique `template_vmid`, which is then also referenced by the nodes deployed on that host.
@@ -186,7 +219,6 @@ Once a template has been built on the `proxmox` host, setting `build_template` t
 Other settings are fairly self explanatory.
 
 ## Setup Notes - Important
-
 - Make sure that all of the hosts in your `inventory hosts` file resolve.  Deployment requires the DNS names resolve.
 
 - Make sure that `node-packer/build` is using the correct `authorized_key`.  This should happen automatically, but deployment relies on `passwordless ssh`.
@@ -196,6 +228,36 @@ Other settings are fairly self explanatory.
 - When using `proxmox` deployment, ensure all `promox hosts` have been configured for `passwordless ssh`.
 
 - Proxmox template builds, and vm deployment progress can be viewed in the Proxmox GUI, as they tend to take a long time with no feedback to ansible.
+
+## GitOps and Flux
+The recommended approach for cluster building is to bypass the legacy install packages and setup a base cluster with:
+
+- The [Flux Operator](https://fluxcd.control-plane.io/operator/)
+- [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) using an external keypair
+
+With these components in place, it is possible to `kubectl apply -f` a _FluxInstance_ and have the entire cluster profile reconciled using [Flux CD GitOps](fluxcd.io).  These are the configurations shown in the example `hosts` files above.
+
+> It is important to use an external keypair with Sealed Secrets so that clusters can be re-created and used with the same GitOps repo.  It also supports the management of multiple clusters from the same GitOps repo.
+
+### Generate the Keypair
+
+```
+export PRIVATEKEY="acme-tls.key"
+export PUBLICKEY="acme-tls.crt"
+
+openssl req -x509 -nodes -newkey rsa:4096 -keyout "$PRIVATEKEY" -out "$PUBLICKEY" -subj "/CN=sealed-secret/O=sealed-secret"
+```
+
+Copy the keypair to a safe place and then reference it in the `hosts` configuration:
+
+```
+sealedsecrets_ns=sealed-secrets
+sealedsecrets_cert_folder=/path/to/keys
+sealedsecrets_cert_file=acme-tls.crt
+sealedsecrets_key_file=acme-tls.key
+```
+
+This sets the sealed-secrets target namespace to sealed-secrets, and uses the pre-generated keys for encrypting secrets (and decrypting them within the cluster).
 
 ## Deploying Clusters
 The following command would deploy example cluster from above:
@@ -240,56 +302,95 @@ __Longhorn__ can take some time, depending on your network connection, but event
 Should result in:
 
 ```
-NAMESPACE              NAME                                                    READY   STATUS      RESTARTS        AGE
-ingress-nginx          ingress-nginx-admission-create-tg7md                    0/1     Completed   0               12m
-ingress-nginx          ingress-nginx-admission-patch-99lt9                     0/1     Completed   0               12m
-ingress-nginx          ingress-nginx-controller-7f9bbf6ddd-jtgcl               1/1     Running     0               12m
-kube-system            calico-kube-controllers-8d95b6db8-jz4tj                 1/1     Running     1 (2m47s ago)   16m
-kube-system            canal-4mhlf                                             2/2     Running     0               15m
-kube-system            canal-6zgk5                                             2/2     Running     0               16m
-kube-system            canal-zptbs                                             2/2     Running     0               15m
-kube-system            coredns-76f75df574-8mdng                                1/1     Running     0               16m
-kube-system            coredns-76f75df574-rgh2n                                1/1     Running     1 (2m47s ago)   16m
-kube-system            etcd-k8s-m1.vm.idstudios.io                             1/1     Running     0               16m
-kube-system            kube-apiserver-k8s-m1.vm.idstudios.io                   1/1     Running     0               16m
-kube-system            kube-controller-manager-k8s-m1.vm.idstudios.io          1/1     Running     1 (2m47s ago)   16m
-kube-system            kube-proxy-bpv9x                                        1/1     Running     0               15m
-kube-system            kube-proxy-kqtkc                                        1/1     Running     0               15m
-kube-system            kube-proxy-l7qbf                                        1/1     Running     0               16m
-kube-system            kube-scheduler-k8s-m1.vm.idstudios.io                   1/1     Running     1 (2m47s ago)   16m
-kubernetes-dashboard   kubernetes-dashboard-api-67c5cffbb6-xs7dz               1/1     Running     0               12m
-kubernetes-dashboard   kubernetes-dashboard-auth-cf8c45468-4lglm               1/1     Running     0               12m
-kubernetes-dashboard   kubernetes-dashboard-kong-75bb76dd5f-vns4v              1/1     Running     0               12m
-kubernetes-dashboard   kubernetes-dashboard-metrics-scraper-5f645f778c-6pk46   1/1     Running     0               12m
-kubernetes-dashboard   kubernetes-dashboard-web-5bf7668478-52h5t               1/1     Running     0               12m
-longhorn-system        csi-attacher-7966f6d44c-jj5j5                           1/1     Running     5 (4m35s ago)   9m33s
-longhorn-system        csi-attacher-7966f6d44c-qxq4q                           1/1     Running     5 (2m52s ago)   9m33s
-longhorn-system        csi-attacher-7966f6d44c-rwxtj                           1/1     Running     4 (5m34s ago)   9m33s
-longhorn-system        csi-provisioner-c79d98559-8q4l4                         1/1     Running     5 (4m22s ago)   9m33s
-longhorn-system        csi-provisioner-c79d98559-l2hvl                         1/1     Running     4 (2m52s ago)   9m33s
-longhorn-system        csi-provisioner-c79d98559-sh4pv                         1/1     Running     5 (4m12s ago)   9m33s
-longhorn-system        csi-resizer-5885f7bb5f-7m4w2                            1/1     Running     5 (2m52s ago)   9m33s
-longhorn-system        csi-resizer-5885f7bb5f-tm794                            1/1     Running     2 (3m28s ago)   9m33s
-longhorn-system        csi-resizer-5885f7bb5f-wkjgt                            1/1     Running     2 (3m32s ago)   9m33s
-longhorn-system        csi-snapshotter-54946f7f44-vdvcn                        1/1     Running     5 (3m57s ago)   9m33s
-longhorn-system        csi-snapshotter-54946f7f44-wdwqb                        1/1     Running     4 (2m48s ago)   9m33s
-longhorn-system        csi-snapshotter-54946f7f44-xbkx9                        1/1     Running     5 (3m47s ago)   9m33s
-longhorn-system        engine-image-ei-51cc7b9c-4f2g9                          1/1     Running     0               10m
-longhorn-system        engine-image-ei-51cc7b9c-xp94x                          1/1     Running     0               10m
-longhorn-system        instance-manager-7abf2155155ca9be5d4067b024cc0aaa       1/1     Running     0               9m44s
-longhorn-system        instance-manager-b6af5be1cdfb875481def9f9657ab159       1/1     Running     0               9m44s
-longhorn-system        longhorn-csi-plugin-k75b8                               3/3     Running     1 (7m19s ago)   9m33s
-longhorn-system        longhorn-csi-plugin-ls6wm                               3/3     Running     1 (7m12s ago)   9m33s
-longhorn-system        longhorn-driver-deployer-799445c664-tsjjl               1/1     Running     0               12m
-longhorn-system        longhorn-manager-gjplc                                  2/2     Running     0               12m
-longhorn-system        longhorn-manager-qnmhw                                  2/2     Running     0               12m
-longhorn-system        longhorn-ui-757d79dd7f-b8xdw                            1/1     Running     0               12m
-longhorn-system        longhorn-ui-757d79dd7f-qv5g9                            1/1     Running     0               12m
-metallb-system         controller-77676c78d9-5qfhj                             1/1     Running     0               13m
-metallb-system         speaker-f2cq2                                           1/1     Running     1 (2m47s ago)   13m
-metallb-system         speaker-j6675                                           1/1     Running     0               13m
-metallb-system         speaker-kwt6r                                           1/1     Running     0               13m
+NAMESPACE        NAME                                           READY   STATUS              RESTARTS   AGE
+flux-system      flux-operator-5dff77b8b4-4ggfg                 1/1     Running             0          10m
+kube-system      calico-kube-controllers-576865d959-p55pk       1/1     Running             0          11m
+kube-system      canal-9mlwm                                    2/2     Running             0          11m
+kube-system      canal-mzrpg                                    2/2     Running             0          10m
+kube-system      canal-p2nnn                                    2/2     Running             0          10m
+kube-system      canal-ptjkj                                    2/2     Running             0          10m
+kube-system      coredns-674b8bbfcf-r2gdd                       1/1     Running             0          11m
+kube-system      coredns-674b8bbfcf-wjtkm                       1/1     Running             0          11m
+kube-system      etcd-kb-m1                                     1/1     Running             0          11m
+kube-system      kube-apiserver-kb-m1                           1/1     Running             0          11m
+kube-system      kube-controller-manager-kb-m1                  1/1     Running             0          11m
+kube-system      kube-proxy-2ksqg                               1/1     Running             0          11m
+kube-system      kube-proxy-bsbfs                               1/1     Running             0          10m
+kube-system      kube-proxy-pb722                               1/1     Running             0          10m
+kube-system      kube-proxy-rpr86                               1/1     Running             0          10m
+kube-system      kube-scheduler-kb-m1                           1/1     Running             0          11m
+sealed-secrets   sealed-secrets-controller-859768467-r5fzj      1/1     Running             0          5m11s
 ```
+
+> At this point it is a good idea to merge the cluster package `kube-config` into your main `~/.kube/config`, or however you manage `k8s` context.
+
+### Completing the GitOps Deployment
+Once the base cluster has been deployed and all pods are up and running, the flux instance can be deployed.  This involves a few setup steps:
+
+1. Ensure a supported Flux Operator repository exists with the credentials to access it, in the example we use a fork of [cluster-builder-flux-template]() in Github, and a Github App to grant Flux the permissions to access it.
+2. Ensure the [flux](https://fluxcd.io) tool is installed.  On `macOS` this is `brew install flux`.
+3. Create and deploy a manifest for the _FluxInstance_, along with a secret storing the Github App credentials for accessing the GitOps repo
+
+#### Create Github App
+In the Github account, create a new Github App.  Note the `App ID`.  Create a private access key for the application, this will download a `pem` file.  Store this securely with other secrets.
+
+Once the app has been created, install it into the account.  Select to restrict the access only to the forked [cluster-builder-flux-template](https://github.com/ids/cluster-builder-flux-template) repo. After the Github App is installed, there will be a `Configure` button.  Selecting this button will review the `App Instance ID` in the url to configure.  Note this value.
+
+#### Create FluxInstance Manifest and Secret
+
+```
+apiVersion: fluxcd.controlplane.io/v1
+kind: FluxInstance
+metadata:
+  name: flux
+  namespace: flux-system
+spec:
+  distribution:
+    version: "2.x"
+    registry: "ghcr.io/fluxcd"
+  components:
+    - source-controller
+    - kustomize-controller
+    - helm-controller
+    - notification-controller
+    - image-reflector-controller
+    - image-automation-controller
+  sync:
+    interval: 3m
+    kind: GitRepository
+    provider: github
+    url: "https://github.com/<your account>/<gitops repo | forked cluster-builder-flux-template>.git"
+    ref: "refs/heads/main"
+    path: "cluster/baseline" 
+    pullSecret: "flux-system"
+```
+`kubectl apply -f` the manifest and create the secret with the Github App credentials:
+
+```
+flux create secret githubapp flux-system \
+  --app-id=<App ID from above> \
+  --app-installation-id=< App Instance ID from above> \
+  --app-private-key=../../certs/<downloaded access key file>.pem
+```
+
+This will install the specified instance of [Flux](https://fluxcd.io) and boostrap the cluster using the supplied GitOps repo.
+
+##### View Flux Logs
+```
+flux logs
+```
+##### Reconcile Flux Repo
+```
+flux reconcile source git flux-system
+```
+##### Check Flux Kustomizations
+```
+flux get kustomizations
+``` 
+##### Check Flux HelmReleases
+```
+flux get helmreleases
+``` 
 
 ### Controlling Cluster VM Nodes
 There are ansible tasks that use the inventory files to execute VM control commands.  This is useful for __suspending__ or __restarting__ the entire cluster.  It also enables complete deletion of a cluster using the __destroy__ action directive.
@@ -322,19 +423,28 @@ __Note:__ make sure to copy added workers into the main `hosts` file, and delete
 
 > As this simply creates a compatible VM, it can also be used to add additional `masters`.
 
-## Extra Packages
+## Legacy Ansible Install Packages
 The following packages can be included with the cluster deployment using the `install_package_xxx` directives, or can be added after deployment using the `install-package <cluster spec folder> <package name>` script.
+
+> This approach is deprecated in favor of a Flux CD GitOps model.
 
 Default settings for deployments are:
 
 ```
-install_package_metallb		= true 
-install_package_nginx		= true
-install_package_dashboard	= true
+install_package_metallb		= false 
+install_package_nginx		= false
+install_package_dashboard	= false
 install_packqge_longhorn	= false
+
+install_package_flux			= true
+install_package_sealedsecrets	= false
+
+sealedsecrets_version = 2.6.x
 ```
 
 These can be overriden in the `hosts` file and added after the fact using the `install-package` script.
+
+Package versions can be set with `<pkg name>_version=<value>`.  See the [ansible config play](./ansible/roles/config/tasks/main.yml) for details on default values.
 
 ### MetalLB
 Can be controlled with the option `install_package_metallb=true | false`.
@@ -375,7 +485,7 @@ install_package_longhorn=true
 ```
 
 ### Flux Operator
-Can be controlled with the option `install_package_flux | false`.
+Can be controlled with the option `install_package_flux | true`.
 
 This will install the flux operator, enabling for declarative management of the flux instance:
 
@@ -412,7 +522,7 @@ export PUBLICKEY="my-tls.crt"
 openssl req -x509 -nodes -newkey rsa:4096 -keyout "$PRIVATEKEY" -out "$PUBLICKEY" -subj "/CN=sealed-secret/O=sealed-secret"
 ```
 
-Copy the keys somewhere safe, for this example: `~/Keys`.
+Copy the keys to a safe place, for this example: `~/Keys`.
 
 Then to include `sealed-secrets` in the cluster deployment add the following configuration to your cluster `hosts` file:
 

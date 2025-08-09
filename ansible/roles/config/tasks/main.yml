@@ -160,7 +160,7 @@
 
 - name: set install_package_nginx
   set_fact:
-    install_package_nginx: true
+    install_package_nginx: false
   run_once: true
   when: install_package_nginx is undefined
 
@@ -178,7 +178,7 @@
 
 - name: set install_package_metallb
   set_fact:
-    install_package_metallb: true
+    install_package_metallb: false
   run_once: true
   when: install_package_metallb is undefined
 
@@ -196,7 +196,7 @@
 
 - name: set install_package_dashboard
   set_fact:
-    install_package_dashboard: true
+    install_package_dashboard: false
   run_once: true
   when: install_package_dashboard is undefined
 
@@ -205,7 +205,7 @@
 
 - name: set install_package_flux
   set_fact:
-    install_package_flux: false
+    install_package_flux: true
   run_once: true
   when: install_package_flux is undefined
 
