@@ -30,7 +30,7 @@ Clusters may also optionally include:
 - [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
 - [MetalLB](https://metallb.universe.tf) Load Balancer
 - [Longhorn](https://longhorn.io/) PV Storage
-- [NGINX](https://github.com/kubernetes/ingress-nginx) Ingress
+- [Nginx Ingress](https://github.com/kubernetes/ingress-nginx) Ingress
 - [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 - [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)
 - [Flux CD Operator](https://fluxcd.control-plane.io/operator/)
