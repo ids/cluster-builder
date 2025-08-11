@@ -9,7 +9,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
 
 > One command... and the cluster is deployed and re-deployed as needed. 
 
-<script id="asciicast-r6irOhfrbkTKvdo7SlVbGEyUL" src="https://asciinema.org/a/r6irOhfrbkTKvdo7SlVbGEyUL.js"  async data-autoplay="true" data-rows="41" data-theme="solarized-dark" data-size="small" data-speed="5"></script>
+<script src="https://asciinema.org/a/733013.js" id="asciicast-733013" async data-autoplay="true" data-rows="50" data-theme="solarized-dark" data-size="small" data-speed="10" data-idle-time-limit="5"></script>
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
