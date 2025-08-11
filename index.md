@@ -5,7 +5,7 @@ layout: default
 
 ##### Updated for 2025!
 
-Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE kvm](https://www.proxmox.com/en/) hypervisors and local legacy VMware Fusion environments.
+Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) KVM hypervisors and local legacy VMware Fusion environments.
 
 > One command... and the cluster is deployed and re-deployed as needed. 
 
