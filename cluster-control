@@ -48,7 +48,7 @@ fi
 
 CLUSTER_TYPE=`sed -n '/^cluster_type=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 DEPLOY_TARGET=`sed -n '/^deploy_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+CLUSTER_PROTECTED=`sed -n '/^cluster_protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 
 if [ "$DEPLOY_TARGET" == "fusion" ]; then
   DEPLOY_TARGET=desktop
@@ -56,12 +56,13 @@ fi
 
 if [ "$ACTION" == "destroy" ] && [ "$CLUSTER_PROTECTED" == "true" ]; then
   echo
-  echo "Destroy Blocked!"
-  echo "Cluster Protected: destroy may not be used on clusters where protected=true" 
-  echo "Remove this flag from the cluster hosts file to delete the cluster when all jobs have been transitioned."
+  echo -e "${TC}Destroy Blocked!${NC}"
+  echo -e "The cluster has been marked ${TC}cluster_protected=true${NC}" 
+  echo
+  echo -e "To destroy the cluster ${TC}${CLUSTER_NAME}${NC}, remove this flag from the ${TC}${CLUSTER_PKG_FOLDER}/hosts${NC} file."
   echo
   exit 1
-fi  
+fi
 
 if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/$DEPLOY_TARGET-control-vms.yml --e "vm_action=$ACTION"

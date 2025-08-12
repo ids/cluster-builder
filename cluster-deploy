@@ -82,7 +82,6 @@ if [[ $DEPLOY_TARGET != "proxmox" ]]; then
 fi
   echo -e " Target          : ${TC}${DEPLOY_TARGET}${NC}"
   echo -e "${TC}-----------------------------------------------------------------------------------${NC}"
-  echo
 
 }
 
@@ -112,20 +111,8 @@ BUILD_TEMPLATE=`sed -n '/^build_template=/ {s///p;q;}' $INVENTORY_FILE | tr -d '
 DEPLOY_TARGET=`sed -n '/^deploy_target=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 CLUSTER_NAME=`sed -n '/^cluster_name=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 REMOTE_USER=`sed -n '/^remote_user=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-CLUSTER_PROTECTED=`sed -n '/^protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
+CLUSTER_PROTECTED=`sed -n '/^cluster_protected=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
 INSTALL_DASHBOARD=`sed -n '/^install_package_dashboard=/ {s///p;q;}' $INVENTORY_FILE | tr -d '\n' | tr -d '\r'`
-
-
-if [ "$CLUSTER_PROTECTED" == "true" ]; then
-  echo
-  echo -e "${TC}Deployment Blocked!${NC}"
-  echo "The cluster has been marked protected=true" 
-  echo
-  echo "To redeploy the cluster ${CLUSTER_NAME} (destroying any existing instance), "
-  echo "remove this flag from the ${CLUSTER_PKG_FOLDER}/hosts file."
-  echo
-  exit 1
-fi  
 
 CLUSTER_PKG_PATH=`dirname $INVENTORY_FILE`
 CLUSTER_PKG_FOLDER=${CLUSTER_PKG_PATH//.\/clusters\//} 
@@ -154,6 +141,22 @@ if [ "$TERM" == "xterm-256color" ]; then
 fi 
 
 cluster_info_display
+
+if [ "$CLUSTER_PROTECTED" == "true" ]; then
+  echo
+  echo -e "${TC}Deployment Blocked!${NC}"
+  echo -e "The cluster has been marked ${TC}cluster_protected=true${NC}" 
+  echo
+  echo -e "To redeploy the cluster ${TC}${CLUSTER_NAME}${NC} (destroying any existing instance), remove this flag from the ${TC}${CLUSTER_PKG_FOLDER}/hosts${NC} file."
+  echo
+  exit 1
+else
+  echo
+  echo -e " Press ${TC}Ctrl-C${NC} to exit now if deployment details are not correct"
+  echo 
+fi
+
+sleep 10
 
 START_TIME=$SECONDS
 
