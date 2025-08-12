@@ -16,7 +16,9 @@ Using freely available tools and only an annotated Ansible inventory file [clust
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-Transparently uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Easy to see what is happening, easy to diagnose problems.  Ansible executes commands as a human operator might, making the entire cluster configuration process transparent and configurable.
+[cluster-builder]() uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years `cluster-builder` has been used to deploy `kubadm k8s` to VSphere/VMWare ESXi, Virtual Box and now Proxmox VE.  
+
+Deploying stable `kubeadm k8s` since `1.12`.
 
 Updated for __2025__ with:
 
