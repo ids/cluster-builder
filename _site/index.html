@@ -86,7 +86,11 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-<p>Transparently uses <a href="https://www.ansible.com">Ansible</a> and Bash to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> to <a href="https://www.proxmox.com/en/">Proxmox VE</a>.  Easy to see what is happening, easy to diagnose problems.  Ansible executes commands as a human operator might, making the entire cluster configuration process transparent and configurable.</p>
+<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> uses <a href="https://www.ansible.com">Ansible</a> and Bash to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> to <a href="https://www.proxmox.com/en/">Proxmox VE</a>.  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years <strong>cluster-builder</strong> has been used to deploy <strong>kubeadm k8s</strong> to <strong>VSphere/VMWare ESXi</strong>, <strong>Virtual Box</strong> and now <strong>Proxmox VE</strong>.</p>
+
+<p><strong>Kubernetes</strong> clusters are configured and deployed using only an <strong>Ansible hosts</strong> file.  <code class="language-plaintext highlighter-rouge">Simple and easy</code>.</p>
+
+<p>Deploying stable <code class="language-plaintext highlighter-rouge">kubeadm k8s</code> since <code class="language-plaintext highlighter-rouge">1.12</code>.</p>
 
 <p>Updated for <strong>2025</strong> with:</p>
 
