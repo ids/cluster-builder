@@ -9,8 +9,8 @@
       module: shell
       _raw_params: > 
         ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-        qm start {{ vmid.stdout }}
-    when: vmid.stdout is defined and vm_action == 'start'
+        qm start {{ vmid }}
+    when: vmid is defined and vm_action == 'start'
     register: result
     until: result.rc is defined and result.rc == 0
 
@@ -19,8 +19,8 @@
       module: shell
       _raw_params: > 
         ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-        qm shutdown {{ vmid.stdout }}
-    when: vmid.stdout is defined and vm_action == 'stop'
+        qm shutdown {{ vmid }}
+    when: vmid is defined and vm_action == 'stop'
     register: result
     until: result.rc is defined and result.rc == 0
 
@@ -29,23 +29,23 @@
       module: shell
       _raw_params: > 
         ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-        qm suspend {{ vmid.stdout}}
-    when: vmid.stdout is defined and vm_action == 'suspend'
+        qm suspend {{ vmid}}
+    when: vmid is defined and vm_action == 'suspend'
 
   - name: kill the VMs 
     local_action:
       module: shell
       _raw_params: > 
         ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-        qm stop {{ vmid.stdout }}
+        qm stop {{ vmid }}
     ignore_errors: true
-    when: vmid.stdout is defined and vm_action == 'destroy'
+    when: vmid is defined and vm_action == 'destroy'
   
   - name: destroy the VMs 
     local_action:
       module: shell
       _raw_params: > 
         ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
-        qm destroy {{ vmid.stdout }}
-    when: vmid.stdout is defined and vm_action == 'destroy'
+        qm destroy {{ vmid }}
+    when: vmid is defined and vm_action == 'destroy'
 
