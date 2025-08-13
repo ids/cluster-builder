@@ -7,7 +7,7 @@
   remote_user: admin
   become: true
   vars:
-    kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
+    kube_config_file: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kubeconfig"
   roles:
     - role: config
     - role: rocky9

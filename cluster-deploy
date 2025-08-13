@@ -184,15 +184,15 @@ echo "${EMOJIPRE}Deployed in: $(($ELAPSED_TIME/60)) min $(($ELAPSED_TIME%60)) se
 echo -e "${TC}------------------------------------------------------------${NC}"
 echo
 
-echo -e "The ${TC}kube-config${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kube-config${NC}"
+echo -e "The ${TC}kubeconfig${NC} file can be found at clusters/${TC}${CLUSTER_PKG_FOLDER}/kubeconfig${NC}"
 echo 
-echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config get pods --all-namespaces${NC}"
+echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kubeconfig get pods --all-namespaces${NC}"
 
 if [ "$INSTALL_DASHBOARD" == "true" ]; then
 echo 
 echo -e "To connect to the Kubernetes Dashboard:"
 echo
-echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kube-config -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443${NC}"
+echo -e "${TC}kubectl --kubeconfig=clusters/${CLUSTER_PKG_FOLDER}/kubeconfig -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443${NC}"
 echo
 echo -e "Then open:"
 echo -e "${TC}https://localhost:8443${NC}"

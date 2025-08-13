@@ -71,7 +71,7 @@
 - name: fetch the kube config from the first master
   fetch:
     src: /etc/kubernetes/admin.conf
-    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kube-config"
+    dest: "{{ playbook_dir | replace('/ansible', '') }}/clusters/{{ cluster_pkg_folder }}/kubeconfig"
     flat: yes     
 
 - name: get master node status

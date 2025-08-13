@@ -274,13 +274,13 @@ SUCCESS: VMware Fusion Rocky 9.4 Kubernetes!
 Deployed in: 10 min 7 sec
 ------------------------------------------------------------
 
-The kube-config file can be found at clusters/acme/demo-k8s/kube-config
+The kubeconfig file can be found at clusters/acme/demo-k8s/kubeconfig
 
-kubectl --kubeconfig=clusters/acme/demo-k8s/kube-config get pods --all-namespaces
+kubectl --kubeconfig=clusters/acme/demo-k8s/kubeconfig get pods --all-namespaces
 
 To connect to the Kubernetes Dashboard:
 
-kubectl --kubeconfig=clusters/acme/demo-k8s/kube-config proxy
+kubectl --kubeconfig=clusters/acme/demo-k8s/kubeconfig proxy
 
 Then open:
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
@@ -296,7 +296,7 @@ At this point your cluster is up and running.
 __Longhorn__ can take some time, depending on your network connection, but eventually it will settle and:
 
 ```
- kubectl --kubeconfig=clusters/acme/demo-k8s/kube-config get pods --all-namespaces
+ kubectl --kubeconfig=clusters/acme/demo-k8s/kubeconfig get pods --all-namespaces
 ```
 
 Should result in:
@@ -322,7 +322,7 @@ kube-system      kube-scheduler-kb-m1                           1/1     Running 
 sealed-secrets   sealed-secrets-controller-859768467-r5fzj      1/1     Running             0          5m11s
 ```
 
-> At this point it is a good idea to merge the cluster package `kube-config` into your main `~/.kube/config`, or however you manage `k8s` context.
+> At this point it is a good idea to merge the cluster package `kubeconfig` into your main `~/.kube/config`, or however you manage `k8s` context.
 
 ### Completing the GitOps Deployment
 Once the base cluster has been deployed and all pods are up and running, the flux instance can be deployed.  This involves a few setup steps:
@@ -467,7 +467,7 @@ Can be controlled with the option `install_package_dashboard=true | false`.
 
 Launch the proxy:
 
-`kubectl --kubeconfig <mycluster-kube-config>  -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443`
+`kubectl --kubeconfig <mycluster-kubeconfig>  -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443`
 
 Browse to `https://localhost:8443`
 
