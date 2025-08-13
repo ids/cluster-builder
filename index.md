@@ -29,15 +29,13 @@ Updated for __2025__ with:
 - VMware ESXi is _long_ gone.
 - The [Flux CD Operator](https://fluxcd.control-plane.io/operator/) and [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) packages have been added to support GitOps clusters.
 
-Clusters may also optionally include:
+Clusters currently include:
 
 - [Canal](https://docs.tigera.io/calico/latest/getting-started/kubernetes/flannel/install-for-flannel) Networking & Policy
-- [MetalLB](https://metallb.universe.tf) Load Balancer
-- [Longhorn](https://longhorn.io/) PV Storage
-- [Nginx Ingress](https://github.com/kubernetes/ingress-nginx) Ingress
-- [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 - [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)
 - [Flux CD Operator](https://fluxcd.control-plane.io/operator/)
+
+Enabling all other package deployments via [Flux CD](fluxcd.io) and a _FluxInstance_.  See the [README](https://github.com/ids/cluster-builder/README.md) for more details.
 
 ---
 <div class="center" style="margin-left: -20px;">
