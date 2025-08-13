@@ -24,6 +24,14 @@
     register: result
     until: result.rc is defined and result.rc == 0
 
+  - name: hibernate the VMs
+    local_action:
+      module: shell
+      _raw_params: > 
+        ssh -o LogLevel=Error -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ proxmox_user }}@{{ proxmox_host }} 
+        qm suspend {{ vmid}} --todisk 1
+    when: vmid is defined and vm_action == 'hibernate'
+
   - name: suspend the VMs
     local_action:
       module: shell

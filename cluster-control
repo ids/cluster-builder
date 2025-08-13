@@ -64,7 +64,7 @@ if [ "$ACTION" == "destroy" ] && [ "$CLUSTER_PROTECTED" == "true" ]; then
   exit 1
 fi
 
-if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
+if [ "$ACTION" == "start" ] || [ "$ACTION" == "stop" ] || [ "$ACTION" == "hibernate" ] || [ "$ACTION" == "suspend" ] || [ "$ACTION" == "destroy" ]; then
   ansible-playbook -i $INVENTORY_FILE ansible/$DEPLOY_TARGET-control-vms.yml --e "vm_action=$ACTION"
   if [ "$DEPLOY_TARGET" == "desktop" ]; then 
     ${VMRUN_CMD} list
