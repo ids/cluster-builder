@@ -17,6 +17,7 @@
     - role: longhorn
     - role: flux
     - role: sealed-secrets
+    - role: openobserve
     - role: k8s-inspect
 
 

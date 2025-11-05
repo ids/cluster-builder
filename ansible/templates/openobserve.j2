@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openobserve
+  namespace: openobserve
+spec:
+  clusterIP: None
+  selector:
+    app: openobserve
+  ports:
+  - name: http
+    port: 5080
+    targetPort: 5080
+
+---
+
+# create statefulset
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: openobserve
+  namespace: openobserve
+  labels:
+    name: openobserve
+spec:
+  serviceName: openobserve
+  replicas: 1
+  selector:
+    matchLabels:
+      name: openobserve
+      app: openobserve
+  template:
+    metadata:
+      labels:
+        name: openobserve
+        app: openobserve
+    spec:
+      securityContext:
+        fsGroup: 2000
+        runAsUser: 10000
+        runAsGroup: 3000
+        runAsNonRoot: true
+      # terminationGracePeriodSeconds: 0
+      containers:
+        - name: openobserve
+          image: o2cr.ai/openobserve/openobserve:latest
+          env:
+            - name: ZO_ROOT_USER_EMAIL
+              value: {{ openobserve_root_user_email }}
+            - name: ZO_ROOT_USER_PASSWORD
+              value: {{ openobserve_root_user_password }}
+            - name: ZO_DATA_DIR
+              value: /data
+            - name: ZO_INGEST_ALLOWED_UPTO
+              value: "720"                            
+          # command: ["/bin/bash", "-c", "while true; do sleep 1; done"]
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 4096m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 50Mi
+          ports:
+            - containerPort: 5080
+              name: http
+          volumeMounts:
+          - name: data
+            mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      # storageClassName: default
+      # NOTE: You can increase the storage size
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openobserve-lb
+  namespace: openobserve
+  annotations:
+    metallb.universe.tf/address-pool: {{ openobserve_lb_pool }}
+spec:
+  selector:
+    app: openobserve # Selects OpenObserve pods
+  type: LoadBalancer
+  loadBalancerIP: {{ openobserve_lb_ip }} # An IP from your MetalLB pool
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ openobserve_lb_port }} # The LB's exposed port
+      targetPort: 5080 # The port OpenObserve listens on

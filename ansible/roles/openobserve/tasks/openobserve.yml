@@ -1,0 +1,15 @@
+---
+- name: install cert-manager
+  shell: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml
+
+- name: create OpenObserve ns
+  shell: kubectl create ns openobserve
+
+- name: generate the OpenObserve manifest
+  template:
+    src: templates/openobserve.j2
+    dest: "{{ target_dest_folder }}/openobserve.yml"
+
+- name: install OpenObserve
+  shell: kubectl apply -f openobserve.yml
+  
