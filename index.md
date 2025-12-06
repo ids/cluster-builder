@@ -5,6 +5,8 @@ layout: default
 
 ##### Updated for 2025!
 
+> We've moved to [Codeberg](https://codeberg.org/idstudios/cluster-builder) You probably should too.
+
 Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) KVM hypervisors and local legacy VMware Fusion environments.
 
 > One command... and the cluster is deployed and re-deployed as needed. 
@@ -24,8 +26,8 @@ Deploying stable `kubeadm k8s` since `1.12`.
 
 Updated for __2025__ with:
 
-- [Proxmox VE](https://www.proxmox.com/en/) deployment of `Ubuntu 24.04 LTS Kubernetes 1.33`
-- VMware Fusion/Desktop deployment of `Rocky Linux 9.4 Kubernetes 1.33`
+- [Proxmox VE](https://www.proxmox.com/en/) deployment of `Ubuntu 24.04 LTS Kubernetes 1.34`
+- VMware Fusion/Desktop deployment of `Rocky Linux 9.4 Kubernetes 1.34`
 - VMware ESXi is _long_ gone.
 - The [Flux CD Operator](https://fluxcd.control-plane.io/operator/) and [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) packages have been added to support GitOps clusters.
 
