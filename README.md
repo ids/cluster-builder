@@ -9,9 +9,7 @@ Cluster Builder
 - [NGINX](https://github.com/kubernetes/ingress-nginx) Ingress
 - [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 
-> Updated for 2024! 
-
-> Many of the tips and how-to articles I used came from ex-VMware pros who migrated their home labs to [Proxmox VE](https://www.proxmox.com/en/) after Broadcom decided to kill ESXi and anyone's interest in it. The good news is that `Proxmox` is __a big step up__, in so many ways.  Migrating to the `kvm hypervisor` also meant tossing out `Packer` in favor of `cloud-init`, which offers a much more cloud centric deployment model, and has greatly simplified the codebase. With the `proxmox` deployment, everything happens on the `proxmox hosts`, including the node template build.  The proxmox CLI is simple and effective, and creating the necessary plays took only a few days.  
+> Updated for 2025 to primarily target [Proxmox VE](https://www.proxmox.com/en/)! 
 
 [Proxmox VE](https://www.proxmox.com/en/) feels like a private cloud, and no one misses ESXi.  
 
@@ -21,6 +19,8 @@ Cluster Builder
 - Deploy [Ubuntu 24.04 LTS](https://ubuntu.com/blog/tag/ubuntu-24-04-lts) Kubernetes clusters on [Proxmox VE](https://www.proxmox.com/en/)
 
 A simple `ansible hosts` file describes the size and shape of the cluster, and `cluster-builder` does the rest.
+
+> Cluster-builder has moved to [Codeberg](https://codeberg.org/idstudios/cluster-builder), and you probably should too.  If you are not viewing this on codeberg, it is likely out of date.
 
 ### Requirements
 
