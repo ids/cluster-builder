@@ -18,7 +18,7 @@ Using freely available tools and only an annotated Ansible inventory file [clust
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-[cluster-builder](https://github.com/ids/cluster-builder) uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years __cluster-builder__ has been used to deploy __kubeadm k8s__ to __VSphere/VMWare ESXi__, __Virtual Box__ and now __Proxmox VE__.
+[cluster-builder](https://codeberg.org/idstudios/cluster-builder) uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years __cluster-builder__ has been used to deploy __kubeadm k8s__ to __VSphere/VMWare ESXi__, __Virtual Box__ and now __Proxmox VE__.
 
 __Kubernetes__ clusters are configured and deployed using only an __Ansible hosts__ file.  `Simple and easy`.
 
@@ -37,14 +37,14 @@ Clusters currently include:
 - [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)
 - [Flux CD Operator](https://fluxcd.control-plane.io/operator/)
 
-Enabling all other package deployments via [Flux CD](fluxcd.io) and a _FluxInstance_.  See the [README](https://github.com/ids/cluster-builder/README.md) for more details.
+Enabling all other package deployments via [Flux CD](fluxcd.io) and a _FluxInstance_.  See the [README](https://codeberg.org/idstudios/cluster-builder/README.md) for more details.
 
 ---
 <div class="center" style="margin-left: -20px;">
 <img style="width: 100px;box-shadow:none;margin-bottom:0px" src="/assets/images/cbLogo2-100.png" >
 </div>
 <div class="center" style="margin-left: -20px;">
-<a id="try-cb-link" href="https://github.com/ids/cluster-builder">Try Cluster Builder</a>
+<a id="try-cb-link" href="https://codeberg.org/idstudios/cluster-builder">Try Cluster Builder</a>
 </div>
 ---
 <style>
