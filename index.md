@@ -7,7 +7,7 @@ layout: default
 
 > We've moved to [Codeberg](https://codeberg.org/idstudios/cluster-builder) You probably should too.
 
-Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://github.com/ids/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) KVM hypervisors and local legacy VMware Fusion environments.
+Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://codeberg.org/idstudios/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) KVM hypervisors and local legacy VMware Fusion environments.
 
 > One command... and the cluster is deployed and re-deployed as needed. 
 
