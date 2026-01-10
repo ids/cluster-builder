@@ -25,12 +25,12 @@
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Cluster Builder | Deploy Kubernetes to Proxmox VE and VMware Desktop</title>
+<title>Cluster Builder | Deploy Complete Kubernetes Clusters on Proxmox VE and QEMU</title>
 <meta name="generator" content="Jekyll v4.3.4" />
 <meta property="og:title" content="Cluster Builder" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Deploy Kubernetes to Proxmox VE and VMware Desktop" />
-<meta property="og:description" content="Deploy Kubernetes to Proxmox VE and VMware Desktop" />
+<meta name="description" content="Deploy Complete Kubernetes Clusters on Proxmox VE and QEMU" />
+<meta property="og:description" content="Deploy Complete Kubernetes Clusters on Proxmox VE and QEMU" />
 <link rel="canonical" href="http://localhost:4000/" />
 <meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Cluster Builder" />
@@ -38,7 +38,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Cluster Builder" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Deploy Kubernetes to Proxmox VE and VMware Desktop","headline":"Cluster Builder","name":"Cluster Builder","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/logo-2018-icon.png"}},"url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","description":"Deploy Complete Kubernetes Clusters on Proxmox VE and QEMU","headline":"Cluster Builder","name":"Cluster Builder","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/images/logo-2018-icon.png"}},"url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
   </head>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="col project-cell">
                         <h1 id="project_title">Cluster Builder</h1>
-                        <h2 id="project_tagline2">Deploy Kubernetes to Proxmox VE and VMware Desktop</h2>
+                        <h2 id="project_tagline2">Deploy Complete Kubernetes Clusters on Proxmox VE and QEMU</h2>
                     </div>
                     <div class="col col-1 col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     </div>
@@ -74,13 +74,7 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-          <h5 id="updated-for-2025">Updated for 2025!</h5>
-
-<blockquote>
-  <p>We’ve moved to <a href="https://codeberg.org/idstudios/cluster-builder">Codeberg</a> You probably should too.</p>
-</blockquote>
-
-<p>Using freely available tools and only an annotated Ansible inventory file <a href="https://github.com/ids/cluster-builder">cluster-builder</a> enables the configuration and deployment of Kubernetes clusters to <a href="https://www.proxmox.com/en/">Proxmox VE</a> KVM hypervisors and local legacy VMware Fusion environments.</p>
+          <p>Using freely available tools and only an annotated Ansible inventory file <a href="https://codeberg.org/idstudios/cluster-builder">cluster-builder</a> enables the configuration and deployment of Kubernetes clusters to <a href="https://www.proxmox.com/en/">Proxmox VE</a> or local <code class="language-plaintext highlighter-rouge">QEMU</code>.</p>
 
 <blockquote>
   <p>One command… and the cluster is deployed and re-deployed as needed.</p>
@@ -88,21 +82,25 @@
 
 <script src="https://asciinema.org/a/EefvOquP3o4Tx91ectQIFnSJN.js" id="asciicast-EefvOquP3o4Tx91ectQIFnSJN" async="" data-autoplay="true" data-rows="50" data-theme="solarized-dark" data-size="small" data-speed="10" data-idle-time-limit="25"></script>
 
+<blockquote>
+  <p>Cluster-Builder has moved to <a href="https://codeberg.org/idstudios/cluster-builder">Codeberg</a> You probably should too.</p>
+</blockquote>
+
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-<p><a href="https://github.com/ids/cluster-builder">cluster-builder</a> uses <a href="https://www.ansible.com">Ansible</a> and Bash to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> to <a href="https://www.proxmox.com/en/">Proxmox VE</a>.  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years <strong>cluster-builder</strong> has been used to deploy <strong>kubeadm k8s</strong> to <strong>VSphere/VMWare ESXi</strong>, <strong>Virtual Box</strong> and now <strong>Proxmox VE</strong>.</p>
+<p><a href="https://codeberg.org/idstudios/cluster-builder">cluster-builder</a> uses <a href="https://www.ansible.com">Ansible</a> and Bash to deploy <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Kubernetes kubeadm clusters</a> to <a href="https://www.proxmox.com/en/">Proxmox VE</a>.  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years <strong>cluster-builder</strong> has been used to deploy <strong>kubeadm k8s</strong> to <strong>VSphere/VMWare ESXi</strong>, <strong>Virtual Box</strong>, but those legacy platforms have been replaced with modern <strong>Proxmox VE</strong> and <strong>QEMU</strong> deployments.</p>
 
-<p><strong>Kubernetes</strong> clusters are configured and deployed using only an <strong>Ansible hosts</strong> file.  <code class="language-plaintext highlighter-rouge">Simple and easy</code>.</p>
+<p><strong>Kubernetes</strong> clusters are configured and deployed using only an <strong>Ansible hosts</strong> file.  <code class="language-plaintext highlighter-rouge">Simple</code>. <code class="language-plaintext highlighter-rouge">cluster-builder</code> is designed to deploy the virtual machines and the Kubernetes for a complete one command solution.</p>
 
-<p>Deploying stable <code class="language-plaintext highlighter-rouge">kubeadm k8s</code> since <code class="language-plaintext highlighter-rouge">1.12</code>.</p>
+<blockquote>
+  <p>Deploying stable <code class="language-plaintext highlighter-rouge">kubeadm k8s</code> since <code class="language-plaintext highlighter-rouge">1.12</code>.</p>
+</blockquote>
 
-<p>Updated for <strong>2025</strong> with:</p>
+<p>Recently updated with support for:</p>
 
 <ul>
-  <li><a href="https://www.proxmox.com/en/">Proxmox VE</a> deployment of <code class="language-plaintext highlighter-rouge">Ubuntu 24.04 LTS Kubernetes 1.34</code></li>
-  <li>VMware Fusion/Desktop deployment of <code class="language-plaintext highlighter-rouge">Rocky Linux 9.4 Kubernetes 1.34</code></li>
-  <li>VMware ESXi is <em>long</em> gone.</li>
-  <li>The <a href="https://fluxcd.control-plane.io/operator/">Flux CD Operator</a> and <a href="https://github.com/bitnami-labs/sealed-secrets">Sealed Secrets</a> packages have been added to support GitOps clusters.</li>
+  <li><a href="https://www.proxmox.com/en/">Proxmox VE</a> deployment of <code class="language-plaintext highlighter-rouge">Ubuntu 24.04 LTS Kubernetes 1.35</code></li>
+  <li><code class="language-plaintext highlighter-rouge">QEMU</code> for multi-node local workstation clusters of <code class="language-plaintext highlighter-rouge">Ubuntu 24.04 LTS Kubernetes 1.35</code>.</li>
 </ul>
 
 <p>Clusters currently include:</p>
@@ -113,14 +111,14 @@
   <li><a href="https://fluxcd.control-plane.io/operator/">Flux CD Operator</a></li>
 </ul>
 
-<p>Enabling all other package deployments via <a href="fluxcd.io">Flux CD</a> and a <em>FluxInstance</em>.  See the <a href="https://github.com/ids/cluster-builder/README.md">README</a> for more details.</p>
+<p>Enabling all other package deployments via <a href="fluxcd.io">Flux CD</a> and a <em>FluxInstance</em>.  See the <a href="https://codeberg.org/idstudios/cluster-builder/README.md">README</a> for more details.</p>
 
 <hr />
 <div class="center" style="margin-left: -20px;">
 <img style="width: 100px;box-shadow:none;margin-bottom:0px" src="/assets/images/cbLogo2-100.png" />
 </div>
 <div class="center" style="margin-left: -20px;">
-<a id="try-cb-link" href="https://github.com/ids/cluster-builder">Try Cluster Builder</a>
+<a id="try-cb-link" href="https://codeberg.org/idstudios/cluster-builder">Try Cluster Builder</a>
 </div>
 <hr />
 <style>

@@ -405,12 +405,14 @@ blockquote {
 
 #main_content p {
   font-weight: 300;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 0px;
 }
 
 #main_content {
   font-size: 1.2em;
+  padding-top: 0px;
 }
 
 .asciicast {

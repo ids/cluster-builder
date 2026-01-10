@@ -2,34 +2,29 @@
 title:  Cluster Builder
 layout: default
 ---
-
-##### Updated for 2025!
-
-> We've moved to [Codeberg](https://codeberg.org/idstudios/cluster-builder) You probably should too.
-
-Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://codeberg.org/idstudios/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) KVM hypervisors and local legacy VMware Fusion environments.
+Using freely available tools and only an annotated Ansible inventory file [cluster-builder](https://codeberg.org/idstudios/cluster-builder) enables the configuration and deployment of Kubernetes clusters to [Proxmox VE](https://www.proxmox.com/en/) or local `QEMU`.
 
 > One command... and the cluster is deployed and re-deployed as needed. 
 
 <script src="https://asciinema.org/a/EefvOquP3o4Tx91ectQIFnSJN.js" id="asciicast-EefvOquP3o4Tx91ectQIFnSJN" async data-autoplay="true" data-rows="50" data-theme="solarized-dark" data-size="small" data-speed="10" data-idle-time-limit="25"></script>
+
+> Cluster-Builder has moved to [Codeberg](https://codeberg.org/idstudios/cluster-builder) You probably should too.
 
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-[cluster-builder](https://codeberg.org/idstudios/cluster-builder) uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years __cluster-builder__ has been used to deploy __kubeadm k8s__ to __VSphere/VMWare ESXi__, __Virtual Box__ and now __Proxmox VE__.
+[cluster-builder](https://codeberg.org/idstudios/cluster-builder) uses [Ansible](https://www.ansible.com) and Bash to deploy [Kubernetes kubeadm clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) to [Proxmox VE](https://www.proxmox.com/en/).  Ansible executes commands (plays) as a human operator might, making the entire cluster configuration process transparent and configurable. Easy to see what is happening, easy to diagnose problems.  Easy to customize.  Over the years __cluster-builder__ has been used to deploy __kubeadm k8s__ to __VSphere/VMWare ESXi__, __Virtual Box__, but those legacy platforms have been replaced with modern __Proxmox VE__ and __QEMU__ deployments.
 
-__Kubernetes__ clusters are configured and deployed using only an __Ansible hosts__ file.  `Simple and easy`.
+__Kubernetes__ clusters are configured and deployed using only an __Ansible hosts__ file.  `Simple`. `cluster-builder` is designed to deploy the virtual machines and the Kubernetes for a complete one command solution.
 
-Deploying stable `kubeadm k8s` since `1.12`.
+> Deploying stable `kubeadm k8s` since `1.12`.
 
-Updated for __2025__ with:
+Recently updated with support for:
 
-- [Proxmox VE](https://www.proxmox.com/en/) deployment of `Ubuntu 24.04 LTS Kubernetes 1.34`
-- VMware Fusion/Desktop deployment of `Rocky Linux 9.4 Kubernetes 1.34`
-- VMware ESXi is _long_ gone.
-- The [Flux CD Operator](https://fluxcd.control-plane.io/operator/) and [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) packages have been added to support GitOps clusters.
+- [Proxmox VE](https://www.proxmox.com/en/) deployment of `Ubuntu 24.04 LTS Kubernetes 1.35`
+- `QEMU` for multi-node local workstation clusters of `Ubuntu 24.04 LTS Kubernetes 1.35`.
 
 Clusters currently include:
 
